@@ -18,9 +18,7 @@ class ThirdSubPage extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        const SizedBox(
-          height: 40,
-        ),
+        SizedBox(height: 24),
         InputRegisterLayout(
           title: "Введіть пароль*",
           focusNode: firstPasswordFocusNode,
@@ -33,9 +31,7 @@ class ThirdSubPage extends StatelessWidget {
             FocusScope.of(context).requestFocus(secondPasswordFocusNode);
           },textInputType: TextInputType.text,
         ),
-        const SizedBox(
-          height: 40,
-        ),
+        SizedBox(height: 24),
         InputRegisterLayout(
           title: "Повторіть пароль*",
           focusNode: secondPasswordFocusNode,

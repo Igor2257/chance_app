@@ -13,9 +13,7 @@ class SecondSubPage extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        const SizedBox(
-          height: 40,
-        ),
+        SizedBox(height: 24),
         InputRegisterLayout(
           title: "Введіть номер телефону*",
           focusNode: phoneFocusNode,
@@ -28,9 +26,7 @@ class SecondSubPage extends StatelessWidget {
             FocusScope.of(context).requestFocus(emailFocusNode);
           },textInputType: TextInputType.phone,
         ),
-        const SizedBox(
-          height: 40,
-        ),
+        SizedBox(height: 24),
         InputRegisterLayout(
           title: "Введіть електрону пошту*",
           focusNode: emailFocusNode,

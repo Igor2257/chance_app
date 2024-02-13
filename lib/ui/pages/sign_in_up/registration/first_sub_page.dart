@@ -23,9 +23,7 @@ class _FirstSubPageState extends State<FirstSubPage> {
     return  Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const SizedBox(
-              height: 40,
-            ),
+            SizedBox(height: 24),
             InputRegisterLayout(
               title: "Введіть ім`я*",
               focusNode: lastNameFocusNode,
@@ -38,9 +36,7 @@ class _FirstSubPageState extends State<FirstSubPage> {
                 FocusScope.of(context).requestFocus(firstNameFocusNode);
               }, textInputType: TextInputType.name,
             ),
-            const SizedBox(
-              height: 40,
-            ),
+            SizedBox(height: 24),
             InputRegisterLayout(
               title: "Введіть прізвище*",
 

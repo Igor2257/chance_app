@@ -33,18 +33,26 @@ class _MainPageState extends State<MainPage> {
               const Spacer(),
               const LogoName(),
               const Spacer(),
-              Row(children: [
-                CustomCard(
-                  icon: Image.asset(
-                    "assets/menu_icons/reminders.png",
-                    height: 44,
-                    width: 44,
+              Row(
+                children: [
+                  CustomCard(
+                    icon: Image.asset(
+                      "assets/menu_icons/reminders.png",
+                      height: 44,
+                      width: 44,
+                    ),
+                    text: Text(
+                      "Нагадування",
+                      style: TextStyle(color: primaryText),
+                    ),
+                    width: cardWidth,
+                    margin: const EdgeInsets.only(bottom: 8, top: 8, right: 8),
+                    onPress: () {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          "/reminders", (route) => true);
+                    },
                   ),
-                  text: Text(
-                    "Нагадування",
-                    style: TextStyle(color: primaryText),
-                  ), width:cardWidth, margin: EdgeInsets.only(bottom: 8,top: 8,right: 8) ,),
-                CustomCard(
+                  CustomCard(
                     icon: Image.asset(
                       "assets/menu_icons/navigation.png",
                       height: 45,
@@ -53,10 +61,16 @@ class _MainPageState extends State<MainPage> {
                     text: Text(
                       "Навігація",
                       style: TextStyle(color: primaryText),
-                    ), width:cardWidth ,margin: EdgeInsets.only(bottom: 8,top: 8,left: 8)),
-              ],),
-              Row(children: [
-                CustomCard(
+                    ),
+                    width: cardWidth,
+                    margin: const EdgeInsets.only(bottom: 8, top: 8, left: 8),
+                    onPress: () {},
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  CustomCard(
                     icon: Image.asset(
                       "assets/menu_icons/chat.png",
                       height: 44,
@@ -65,8 +79,12 @@ class _MainPageState extends State<MainPage> {
                     text: Text(
                       "Спілкування",
                       style: TextStyle(color: primaryText),
-                    ), width:cardWidth ,margin: EdgeInsets.only(bottom: 8,top: 8,right: 8)),
-                CustomCard(
+                    ),
+                    width: cardWidth,
+                    margin: const EdgeInsets.only(bottom: 8, top: 8, right: 8),
+                    onPress: () {},
+                  ),
+                  CustomCard(
                     icon: Image.asset(
                       "assets/menu_icons/appointment.png",
                       height: 44,
@@ -75,18 +93,27 @@ class _MainPageState extends State<MainPage> {
                     text: Text(
                       "Запис до лікаря",
                       style: TextStyle(color: primaryText),
-                    ), width:cardWidth ,margin: EdgeInsets.only(bottom: 8,top: 8,left: 8)),
-              ],),
-              CustomCard(
-                  icon: Image.asset(
-                    "assets/menu_icons/job_search.png",
-                    height: 44,
-                    width: 44,
+                    ),
+                    width: cardWidth,
+                    margin: const EdgeInsets.only(bottom: 8, top: 8, left: 8),
+                    onPress: () {},
                   ),
-                  text: Text(
-                    "Пошук роботи",
-                    style: TextStyle(color: primaryText),
-                  ), width:cardWidth ,margin: EdgeInsets.only(bottom: 8,top: 8)),
+                ],
+              ),
+              CustomCard(
+                icon: Image.asset(
+                  "assets/menu_icons/job_search.png",
+                  height: 44,
+                  width: 44,
+                ),
+                text: Text(
+                  "Пошук роботи",
+                  style: TextStyle(color: primaryText),
+                ),
+                width: cardWidth,
+                margin: const EdgeInsets.only(bottom: 8, top: 8),
+                onPress: () {},
+              ),
               const Spacer(),
               const Spacer(),
             ],
