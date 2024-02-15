@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LogoName extends  StatelessWidget {
   const LogoName({super.key});
@@ -6,7 +7,7 @@ class LogoName extends  StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Column(children: [
-      Image.asset("assets/logo.png"),
+      SvgPicture.asset("assets/logo.svg",width: 78,height: 78,),
       const Text(
         "Chance app",
         style: TextStyle(

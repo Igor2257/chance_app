@@ -14,7 +14,7 @@ class CalendarView extends StatelessWidget {
     return BlocBuilder<RemindersBloc, RemindersState>(
         builder: (context, state) {
       List<Map<String, dynamic>> week = List.from(state.week), days = List.from(state.days);
-      DateTime dateTime = state.currentDate ?? DateTime.now();
+      DateTime dateTime =  DateTime.now();
       if(state.isCalendarOpened){
         int count=getCount(days.first["weekDay"].toString());
         for(int i=0;i<count;i++){
@@ -38,7 +38,7 @@ class CalendarView extends StatelessWidget {
                     },
                     icon: Icon(Icons.arrow_back_ios, color: primary50)),
                 Text(
-                  "${getMonthName(state.chosenDate?.month ?? 0)}, ${state.chosenDate?.year ?? ""}",
+                  "${getMonthName(state.dateForSwiping?.month ?? 0)}, ${state.dateForSwiping?.year ?? ""}",
                   style: TextStyle(fontSize: 22, color: primary50),
                 ),
                 IconButton(
@@ -203,7 +203,7 @@ class CalendarView extends StatelessWidget {
                                   Container(
                                     height: 10,
                                     width: 10,
-                                    margin: EdgeInsets.only(bottom: 2),
+                                    margin: const EdgeInsets.only(bottom: 2),
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(90),
                                         color: primary400),

@@ -27,3 +27,27 @@ class ChangeMonth extends RemindersEvent{
 
   ChangeMonth({required this.sideSwipe});
 }
+
+class SelectWhatPersonWouldLikeToAdd extends RemindersEvent{
+  final Reminders reminders;
+
+  SelectWhatPersonWouldLikeToAdd({required this.reminders});
+}
+
+class SaveTaskName extends RemindersEvent{
+final String name;
+
+  SaveTaskName({required this.name});
+}
+
+class ChangeMonthForTasks extends RemindersEvent{
+  final SideSwipe sideSwipe;
+
+  ChangeMonthForTasks({required this.sideSwipe});
+}
+
+class SelectedDateForTasks extends RemindersEvent{
+  final Map<String,dynamic> selectedDate;
+
+  SelectedDateForTasks({required this.selectedDate});
+}

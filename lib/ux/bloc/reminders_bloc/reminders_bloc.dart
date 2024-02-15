@@ -7,7 +7,6 @@ import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
 import 'package:meta/meta.dart';
 
 part 'reminders_event.dart';
-
 part 'reminders_state.dart';
 
 class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
@@ -17,6 +16,10 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     on<SelectedDate>(_onSelectedDate);
     on<ChangeCalendarState>(_onChangeCalendarState);
     on<ChangeMonth>(_onChangeMonth);
+    on<SelectWhatPersonWouldLikeToAdd>(_onSelectWhatPersonWouldLikeToAdd);
+    on<SaveTaskName>(_onSaveTaskName);
+    on<ChangeMonthForTasks>(_onChangeMonthForTasks);
+    on<SelectedDateForTasks>(_onSelectedDateForTasks);
   }
 
   FutureOr<void> _onChangeReminders(
@@ -41,7 +44,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         "month": month,
         "year": year,
         "isSelected": day == i ||
-            (state.selectedDate != null ??
+            (state.selectedDate != null &&
                 (state.selectedDate!.day == i &&
                     state.selectedDate!.month == month &&
                     state.selectedDate!.year == year))
@@ -62,7 +65,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         "month": month,
         "year": year,
         "isSelected": day == i ||
-            (state.selectedDate != null ??
+            (state.selectedDate != null &&
                 (state.selectedDate!.day == i &&
                     state.selectedDate!.month == month &&
                     state.selectedDate!.year == year))
@@ -72,9 +75,8 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     emit(state.copyWith(
       days: dates,
       week: week,
-      currentDate: DateTime.now(),
       selectedDate: DateTime.now(),
-      chosenDate: DateTime.now(),
+      dateForSwiping: DateTime.now(),
     ));
   }
 
@@ -97,7 +99,11 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     if (index2 != -1) {
       week[index2]["isSelected"] = true;
     }
-    emit(state.copyWith(week: week, days: dates));
+    emit(state.copyWith(
+        week: week,
+        days: dates,
+        selectedDate: DateTime(dates[index]["year"], dates[index]["month"],
+            int.parse(dates[index]["number"]))));
   }
 
   FutureOr<void> _onChangeCalendarState(
@@ -108,24 +114,24 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
   FutureOr<void> _onChangeMonth(
       ChangeMonth event, Emitter<RemindersState> emit) {
     List<Map<String, dynamic>> dates = [], week = [];
-    DateTime now = state.chosenDate ?? DateTime.now();
+    DateTime now = state.dateForSwiping ?? DateTime.now();
     int plusOrMinus = event.sideSwipe == SideSwipe.left ? -1 : 1;
     int year = now.year;
     int month = now.month;
-    int day = now.day;
     if (month + plusOrMinus <= 12 && month + plusOrMinus >= 0) {
       month = now.month + plusOrMinus;
     } else {
       if (event.sideSwipe == SideSwipe.left) {
         year = now.year - 1;
-        month=12;
+        month = 12;
       } else {
         year = now.year + 1;
-        month=1;
+        month = 1;
       }
     }
 
     int daysInMonth = DateTime(year, month + 1, 0).day;
+    DateTime? selectedDate = state.selectedDate;
 
     for (int i = 1; i <= daysInMonth; i++) {
       DateTime date = DateTime(year, month, i);
@@ -135,11 +141,17 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         "number": i.toString(),
         "month": month,
         "year": year,
-        "isSelected": false
+        "isSelected": (selectedDate != null &&
+            (selectedDate.day == i &&
+                selectedDate.month == month &&
+                selectedDate.year == year))
       });
     }
 
-    int startOfWeek = day - now.weekday + 1;
+    int startOfWeek =
+        (month == DateTime.now().month && year == DateTime.now().year)
+            ? DateTime.now().day - DateTime.now().weekday + 1
+            : 1;
     int endOfWeek = startOfWeek + 6;
     for (int i = startOfWeek; i <= endOfWeek; i++) {
       if (i <= 0 || i > DateTime(year, month + 1, 0).day) {
@@ -152,11 +164,83 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         "number": i.toString(),
         "month": month,
         "year": year,
-        "isSelected": false
+        "isSelected": (selectedDate != null &&
+            (selectedDate.day == i &&
+                selectedDate.month == month &&
+                selectedDate.year == year))
       });
     }
 
     emit(state.copyWith(
-        days: dates, week: week, chosenDate: DateTime(year, month)));
+        days: dates, week: week, dateForSwiping: DateTime(year, month)));
+  }
+
+  FutureOr<void> _onSelectWhatPersonWouldLikeToAdd(
+      SelectWhatPersonWouldLikeToAdd event, Emitter<RemindersState> emit) {
+    emit(state.copyWith(reminders: event.reminders));
+  }
+
+  FutureOr<void> _onSaveTaskName(
+      SaveTaskName event, Emitter<RemindersState> emit) {
+    emit(state.copyWith(taskTitle: event.name));
+  }
+
+  FutureOr<void> _onChangeMonthForTasks(
+      ChangeMonthForTasks event, Emitter<RemindersState> emit) {
+    List<Map<String, dynamic>> dates = [];
+    DateTime now = state.dateForSwiping ?? DateTime.now();
+    int plusOrMinus = event.sideSwipe == SideSwipe.left ? -1 : 1;
+    int year = now.year;
+    int month = now.month;
+    if (month + plusOrMinus <= 12 && month + plusOrMinus >= 0) {
+      month = now.month + plusOrMinus;
+    } else {
+      if (event.sideSwipe == SideSwipe.left) {
+        year = now.year - 1;
+        month = 12;
+      } else {
+        year = now.year + 1;
+        month = 1;
+      }
+    }
+
+    int daysInMonth = DateTime(year, month + 1, 0).day;
+    DateTime? selectedDate = state.selectedDate;
+
+    for (int i = 1; i <= daysInMonth; i++) {
+      DateTime date = DateTime(year, month, i);
+      String weekDay = getWeekdayName(date.weekday);
+      dates.add({
+        "weekDay": weekDay,
+        "number": i.toString(),
+        "month": month,
+        "year": year,
+        "isSelected": (selectedDate != null &&
+            (selectedDate.day == i &&
+                selectedDate.month == month &&
+                selectedDate.year == year))
+      });
+    }
+
+    emit(state.copyWith(
+        daysForTasks: dates, dateForSwipingForTasks: DateTime(year, month)));
+  }
+
+  FutureOr<void> _onSelectedDateForTasks(
+      SelectedDateForTasks event, Emitter<RemindersState> emit) {
+    List<Map<String, dynamic>> dates = state.daysForTasks;
+    Map<String, dynamic> date = event.selectedDate;
+    date["isSelected"] = true;
+
+    int index = dates.indexWhere((e) => e["number"] == date["number"]);
+    for (int i = 0; i < dates.length; i++) {
+      dates[i]["isSelected"] = false;
+    }
+    dates[index]["isSelected"] = true;
+
+    emit(state.copyWith(
+        daysForTasks: dates,
+        selectedDateForTasks: DateTime(dates[index]["year"], dates[index]["month"],
+            int.parse(dates[index]["number"]))));
   }
 }
