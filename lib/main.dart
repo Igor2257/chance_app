@@ -1,6 +1,6 @@
 import 'package:chance_app/ui/pages/main_page/main_page.dart';
-import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/tasks/calendar_task_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
+import 'package:chance_app/ui/pages/reminders_page/tasks/calendar_task_page.dart';
 import 'package:chance_app/ui/pages/sign_in_up/log_in/log_in_page.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/registration_page.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/subscription_page.dart';
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
             "/login": (context) => LoginPage(),
             "/subscription_page": (context) => const SubscriptionPage(),
             "/reminders": (context) => const RemindersPage(),
-            "/date_picker_for_tasks": (context) => const CalendarTaskPage(),
+            "/date_picker_for_tasks": (context) => CalendarTaskPage(),
           },
         ));
   }

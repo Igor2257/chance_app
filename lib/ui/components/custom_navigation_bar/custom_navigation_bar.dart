@@ -26,7 +26,7 @@ class CustomNavigationBar extends  StatelessWidget {
           SizedBox(
             width: size.width * 0.8,
             height: size.height / 10,
-            child: Center(
+            child: const Center(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

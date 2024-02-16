@@ -4,9 +4,12 @@ import 'package:bloc/bloc.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/calendar.dart';
 import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
+import 'package:chance_app/ui/pages/reminders_page/tasks/custom_bottom_sheet_notificatenion_picker.dart';
+import 'package:chance_app/ux/model/tasks_model.dart';
 import 'package:meta/meta.dart';
 
 part 'reminders_event.dart';
+
 part 'reminders_state.dart';
 
 class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
@@ -20,6 +23,12 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     on<SaveTaskName>(_onSaveTaskName);
     on<ChangeMonthForTasks>(_onChangeMonthForTasks);
     on<SelectedDateForTasks>(_onSelectedDateForTasks);
+    on<SaveDeadlineForTask>(_onSaveDeadlineForTask);
+    on<SelectNotificationBefore>(_onSelectNotificationBefore);
+    on<CancelNotificationBefore>(_onCancelNotificationBefore);
+    on<CancelAllDataNotificationBefore>(_onCancelAllDataNotificationBefore);
+    on<LoadDataForSelectDateForTasks>(_onLoadDataForSelectDateForTasks);
+    on<SaveTasks>(_onSaveTasks);
   }
 
   FutureOr<void> _onChangeReminders(
@@ -40,7 +49,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
       String weekDay = getWeekdayName(date.weekday);
       dates.add({
         "weekDay": weekDay,
-        "number": i.toString(),
+        "number": (i.toString()).padLeft(2, "0"),
         "month": month,
         "year": year,
         "isSelected": day == i ||
@@ -61,7 +70,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
       String weekDay = getWeekdayName(date.weekday);
       week.add({
         "weekDay": weekDay,
-        "number": i.toString(),
+        "number": (i.toString()).padLeft(2, "0"),
         "month": month,
         "year": year,
         "isSelected": day == i ||
@@ -138,7 +147,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
       String weekDay = getWeekdayName(date.weekday);
       dates.add({
         "weekDay": weekDay,
-        "number": i.toString(),
+        "number": (i.toString()).padLeft(2, "0"),
         "month": month,
         "year": year,
         "isSelected": (selectedDate != null &&
@@ -161,7 +170,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
       String weekDay = getWeekdayName(date.weekday);
       week.add({
         "weekDay": weekDay,
-        "number": i.toString(),
+        "number": (i.toString()).padLeft(2, "0"),
         "month": month,
         "year": year,
         "isSelected": (selectedDate != null &&
@@ -212,7 +221,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
       String weekDay = getWeekdayName(date.weekday);
       dates.add({
         "weekDay": weekDay,
-        "number": i.toString(),
+        "number": (i.toString()).padLeft(2, "0"),
         "month": month,
         "year": year,
         "isSelected": (selectedDate != null &&
@@ -230,17 +239,114 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
       SelectedDateForTasks event, Emitter<RemindersState> emit) {
     List<Map<String, dynamic>> dates = state.daysForTasks;
     Map<String, dynamic> date = event.selectedDate;
-    date["isSelected"] = true;
-
     int index = dates.indexWhere((e) => e["number"] == date["number"]);
     for (int i = 0; i < dates.length; i++) {
       dates[i]["isSelected"] = false;
     }
     dates[index]["isSelected"] = true;
-
     emit(state.copyWith(
         daysForTasks: dates,
-        selectedDateForTasks: DateTime(dates[index]["year"], dates[index]["month"],
-            int.parse(dates[index]["number"]))));
+        oldSelectedDateForTasks: state.newSelectedDateForTasks,
+        newSelectedDateForTasks: DateTime(dates[index]["year"],
+            dates[index]["month"], int.parse(dates[index]["number"]))));
+  }
+
+  FutureOr<void> _onSaveDeadlineForTask(
+      SaveDeadlineForTask event, Emitter<RemindersState> emit) {
+    emit(state.copyWith(
+        oldDeadlineForTask: state.newDeadlineForTask,
+        newDeadlineForTask: event.dateTime));
+  }
+
+  FutureOr<void> _onSelectNotificationBefore(
+      SelectNotificationBefore event, Emitter<RemindersState> emit) {
+    emit(state.copyWith(
+        oldNotificationsBefore: state.newNotificationsBefore,
+        newNotificationsBefore: event.notificationsBefore,
+        sessionForNotification: event.session));
+  }
+
+  FutureOr<void> _onCancelNotificationBefore(
+      CancelNotificationBefore event, Emitter<RemindersState> emit) {
+    if (event.session == state.sessionForNotification) {
+      emit(
+          state.copyWith(newNotificationsBefore: state.oldNotificationsBefore));
+    }
+  }
+
+  FutureOr<void> _onCancelAllDataNotificationBefore(
+      CancelAllDataNotificationBefore event, Emitter<RemindersState> emit) {
+    if (event.session == state.sessionForSelectingDateForTask) {
+      emit(state.copyWith(
+          newNotificationsBefore: state.fromLastSession,
+          newDeadlineForTask: 0,
+          newSelectedDateForTasks: state.oldSelectedDateForTasks));
+    }
+  }
+
+  FutureOr<void> _onLoadDataForSelectDateForTasks(
+      LoadDataForSelectDateForTasks event, Emitter<RemindersState> emit) {
+    List<Map<String, dynamic>> dates = [], week = [];
+    DateTime now = DateTime.now();
+    int year = now.year;
+    int month = now.month;
+    int day = now.day;
+    int daysInMonth = DateTime(year, month + 1, 0).day;
+
+    for (int i = 1; i <= daysInMonth; i++) {
+      DateTime date = DateTime(year, month, i);
+      String weekDay = getWeekdayName(date.weekday);
+      dates.add({
+        "weekDay": weekDay,
+        "number": (i.toString()).padLeft(2, "0"),
+        "month": month,
+        "year": year,
+        "isSelected": day == i ||
+            (state.selectedDate != null &&
+                (state.selectedDate!.day == i &&
+                    state.selectedDate!.month == month &&
+                    state.selectedDate!.year == year))
+      });
+    }
+
+    int startOfWeek = day - now.weekday + 1;
+    int endOfWeek = startOfWeek + 6;
+    for (int i = startOfWeek; i <= endOfWeek; i++) {
+      if (i <= 0 || i > DateTime(year, month + 1, 0).day) {
+        continue;
+      }
+      DateTime date = DateTime(year, month, i);
+      String weekDay = getWeekdayName(date.weekday);
+      week.add({
+        "weekDay": weekDay,
+        "number": (i.toString()).padLeft(2, "0"),
+        "month": month,
+        "year": year,
+        "isSelected": day == i ||
+            (state.selectedDate != null &&
+                (state.selectedDate!.day == i &&
+                    state.selectedDate!.month == month &&
+                    state.selectedDate!.year == year))
+      });
+    }
+
+    emit(state.copyWith(
+      daysForTasks: dates,
+      selectedDate: DateTime.now(),
+      newSelectedDateForTasks: DateTime.now(),
+      dateForSwiping: DateTime.now(),
+    ));
+  }
+
+  FutureOr<void> _onSaveTasks(SaveTasks event, Emitter<RemindersState> emit) {
+    DateTime dateTime = DateTime.now();
+    emit(state.copyWith(
+        taskModel: TaskModel(
+      id: dateTime.millisecondsSinceEpoch,
+      createdAt: dateTime,
+      name: state.taskTitle,
+      taskTo: state.newSelectedDateForTasks,
+      notificationsBefore: state.oldNotificationsBefore,
+    )));
   }
 }

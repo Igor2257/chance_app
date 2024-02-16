@@ -6,17 +6,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 enum SideSwipe{left,right}
 class CalendarView extends StatelessWidget {
-  const CalendarView({super.key});
+  CalendarView({super.key});
+
+  final DateTime now = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return BlocBuilder<RemindersBloc, RemindersState>(
         builder: (context, state) {
-      List<Map<String, dynamic>> week = List.from(state.week), days = List.from(state.days);
-      DateTime dateTime =  DateTime.now();
-      if(state.isCalendarOpened){
-        int count=getCount(days.first["weekDay"].toString());
+      List<Map<String, dynamic>> week = List.from(state.week),
+          days = List.from(state.days);
+      DateTime dateTime = DateTime.now();
+      if (state.isCalendarOpened) {
+        int count = getCount(days.first["weekDay"].toString());
         for(int i=0;i<count;i++){
           days.insert(0, {"number":-1});
         }
@@ -181,12 +184,19 @@ class CalendarView extends StatelessWidget {
                                   height: size.width / 8,
                                   width: size.width / 8,
                                   alignment: Alignment.center,
-                                  decoration: e["isSelected"]
+                                  decoration:e["isSelected"]
+                                      ? BoxDecoration(
+                                      borderRadius:
+                                      BorderRadius.circular(90),
+                                      color: beige200)
+                                      : int.parse(e["number"]) == now.day &&
+                                          e["month"] == now.month &&
+                                          e["year"] == now.year
                                       ? BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(90),
-                                          color: beige200)
-                                      : null,
+                                          border: Border.all(color: beige200))
+                                      :  null,
                                   child: Text(
                                     e["number"].toString(),
                                     style: TextStyle(

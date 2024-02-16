@@ -1,6 +1,6 @@
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/tasks/first_task_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
+import 'package:chance_app/ui/pages/reminders_page/tasks/first_task_page.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

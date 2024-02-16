@@ -61,7 +61,7 @@ String getWeekdayName(int weekday) {
   }
 }
 String getMonthName(int month) {
-  print(month);
+
   switch (month) {
     case DateTime.january:
       return 'Січень';

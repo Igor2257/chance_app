@@ -82,7 +82,7 @@ class _RemindersPageState extends State<RemindersPage>
       backgroundColor: beigeBG,
       body: Column(
         children: [
-          const CalendarView(),
+          CalendarView(),
           Container(
             padding: const EdgeInsets.all(16),
             child: const Column(

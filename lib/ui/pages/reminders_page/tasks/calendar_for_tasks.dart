@@ -6,69 +6,50 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CalendarForTasks extends StatelessWidget {
-  const CalendarForTasks({super.key});
-
+  CalendarForTasks({super.key});
+final DateTime now=DateTime.now();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return BlocBuilder<RemindersBloc, RemindersState>(
         builder: (context, state) {
-      List<Map<String, dynamic>> week = List.from(state.week),
-          days = List.from(state.days);
+      List<Map<String, dynamic>>
+          days = List.from(state.daysForTasks);
       DateTime dateTime = DateTime.now();
-      if (state.isCalendarOpened) {
-        int count = getCount(days.first["weekDay"].toString());
-        for (int i = 0; i < count; i++) {
-          days.insert(0, {"number": -1});
-        }
+      int count = getCount(days.first["weekDay"].toString());
+      for (int i = 0; i < count; i++) {
+        days.insert(0, {"number": -1,});
       }
-      return AnimatedContainer(
-        decoration: BoxDecoration(
-            color: darkNeutral600, borderRadius: BorderRadius.circular(16)),
-        height: state.isCalendarOpened ? 400 : 146,
+      return Container(
+        width: size.width,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
         padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
-        duration: const Duration(milliseconds: 200),
         child: Flex(
           direction: Axis.vertical,
           children: [
             Row(
               children: [
+
+                Text(
+                  "${getMonthName(state.dateForSwiping?.month ?? 0)}, ${state.dateForSwiping?.year ?? ""}",
+                  style: TextStyle(fontSize: 22, color: primaryText),
+                ),
+                const Spacer(),
                 IconButton(
                     onPressed: () {
                       BlocProvider.of<RemindersBloc>(context)
                           .add(ChangeMonth(sideSwipe: SideSwipe.left));
                     },
-                    icon: Icon(Icons.arrow_back_ios, color: primary50)),
-                Text(
-                  "${getMonthName(state.dateForSwiping?.month ?? 0)}, ${state.dateForSwiping?.year ?? ""}",
-                  style: TextStyle(fontSize: 22, color: primary50),
-                ),
+                    icon: Icon(Icons.arrow_back_ios, color: primaryText)),
                 IconButton(
                     onPressed: () {
                       BlocProvider.of<RemindersBloc>(context)
                           .add(ChangeMonth(sideSwipe: SideSwipe.right));
                     },
-                    icon: Icon(Icons.arrow_forward_ios, color: primary50)),
-                const Spacer(),
-                InkWell(
-                  onTap: () {
-                    BlocProvider.of<RemindersBloc>(context)
-                        .add(ChangeCalendarState());
-                  },
-                  child: Container(
-                    height: 44,
-                    width: 44,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(90),
-                        color: beige200),
-                    child: Center(
-                      child: SvgPicture.asset("assets/icons/calendar.svg"),
-                    ),
-                  ),
-                ),
+                    icon: Icon(Icons.arrow_forward_ios, color: primaryText)),
+
               ],
             ),
-            const Spacer(),
             SizedBox(
                 child: Flex(
               direction: Axis.vertical,
@@ -83,7 +64,7 @@ class CalendarForTasks extends StatelessWidget {
                       child: Text(
                         "ПН",
                         style: TextStyle(
-                            color: beige0, fontSize: 16, letterSpacing: 0.15),
+                            color: primaryText, fontSize: 16, letterSpacing: 0.15),
                       ),
                     ),
                     Container(
@@ -93,7 +74,7 @@ class CalendarForTasks extends StatelessWidget {
                       child: Text(
                         "ВТ",
                         style: TextStyle(
-                            color: beige0, fontSize: 16, letterSpacing: 0.15),
+                            color: primaryText, fontSize: 16, letterSpacing: 0.15),
                       ),
                     ),
                     Container(
@@ -103,7 +84,7 @@ class CalendarForTasks extends StatelessWidget {
                       child: Text(
                         "СР",
                         style: TextStyle(
-                            color: beige0, fontSize: 16, letterSpacing: 0.15),
+                            color: primaryText, fontSize: 16, letterSpacing: 0.15),
                       ),
                     ),
                     Container(
@@ -113,7 +94,7 @@ class CalendarForTasks extends StatelessWidget {
                       child: Text(
                         "ЧТ",
                         style: TextStyle(
-                            color: beige0, fontSize: 16, letterSpacing: 0.15),
+                            color: primaryText, fontSize: 16, letterSpacing: 0.15),
                       ),
                     ),
                     Container(
@@ -123,7 +104,7 @@ class CalendarForTasks extends StatelessWidget {
                       child: Text(
                         "ПТ",
                         style: TextStyle(
-                            color: beige0, fontSize: 16, letterSpacing: 0.15),
+                            color: primaryText, fontSize: 16, letterSpacing: 0.15),
                       ),
                     ),
                     Container(
@@ -133,7 +114,7 @@ class CalendarForTasks extends StatelessWidget {
                       child: Text(
                         "СБ",
                         style: TextStyle(
-                            color: beige0, fontSize: 16, letterSpacing: 0.15),
+                            color: primaryText, fontSize: 16, letterSpacing: 0.15),
                       ),
                     ),
                     Container(
@@ -143,13 +124,13 @@ class CalendarForTasks extends StatelessWidget {
                       child: Text(
                         "НД",
                         style: TextStyle(
-                            color: beige0, fontSize: 16, letterSpacing: 0.15),
+                            color: primaryText, fontSize: 16, letterSpacing: 0.15),
                       ),
                     ),
                   ],
                 ),
                 Divider(
-                  color: darkNeutral400,
+                  color: beige300,
                 ),
                 Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
@@ -165,7 +146,7 @@ class CalendarForTasks extends StatelessWidget {
                     return GestureDetector(
                       onTap: () {
                         BlocProvider.of<RemindersBloc>(context)
-                            .add(SelectedDate(selectedDate: e));
+                            .add(SelectedDateForTasks(selectedDate: e));
                       },
                       child: Stack(
                         alignment: Alignment.bottomCenter,
@@ -177,12 +158,19 @@ class CalendarForTasks extends StatelessWidget {
                             decoration: e["isSelected"]
                                 ? BoxDecoration(
                                     borderRadius: BorderRadius.circular(90),
-                                    color: beige200)
-                                : null,
+                                    color: primary800)
+                                : int.parse(e["number"]) == now.day &&
+                                e["month"] == now.month &&
+                                e["year"] == now.year
+                                ? BoxDecoration(
+                                borderRadius:
+                                BorderRadius.circular(90),
+                                border: Border.all(color: primary800))
+                                :null,
                             child: Text(
                               e["number"].toString(),
                               style: TextStyle(
-                                  color: e["isSelected"] ? primaryText : beige0,
+                                  color: e["isSelected"] ? primary50 : primaryText,
                                   letterSpacing: 0.5,
                                   fontSize: 16),
                             ),

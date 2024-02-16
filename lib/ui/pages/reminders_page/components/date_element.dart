@@ -34,6 +34,11 @@ class DateElement extends StatelessWidget {
                 decoration: date["isSelected"]
                     ? BoxDecoration(
                     borderRadius: BorderRadius.circular(90), color: beige200)
+                    :isCurrentDate
+                    ? BoxDecoration(
+                    borderRadius:
+                    BorderRadius.circular(90),
+                    border: Border.all(color: beige200))
                     : null,
                 child: Text(
                   date["number"].toString(),

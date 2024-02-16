@@ -60,7 +60,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       IncreaseCurrentStep event, Emitter<RegistrationState> emit) {
     int currentStep = state.currentStep+1;
     if (currentStep < 2) {
-      print("currentStep1 $currentStep");
+
       state.pageController!.animateToPage(currentStep,
           duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
       double plusPercentage = 0.33;
@@ -84,7 +84,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       DecreaseCurrentStep event, Emitter<RegistrationState> emit) {
     int currentStep = state.currentStep-1;
     if (currentStep > -1) {
-      print("currentStep2 $currentStep");
+
       state.pageController!.animateToPage(currentStep ,
           duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
       double plusPercentage = 0.33;
@@ -116,7 +116,6 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
           break;
         } else {
           emit(state.copyWith(errorLastName: ""));
-          print("state.errorLastName ${state.errorLastName}");
         }
 
         break;
