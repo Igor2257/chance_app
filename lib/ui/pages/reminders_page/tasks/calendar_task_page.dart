@@ -52,7 +52,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
           actions: [
             IconButton(
                 onPressed: () {
-                  BlocProvider.of<RemindersBloc>(context).add(SaveTasks());
+                  BlocProvider.of<RemindersBloc>(context).add(SaveTasks(context: context));
                   Navigator.of(context).pop();
                 },
                 icon: Icon(

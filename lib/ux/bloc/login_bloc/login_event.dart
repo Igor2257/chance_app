@@ -3,10 +3,10 @@ part of 'login_bloc.dart';
 @immutable
 abstract class LoginEvent {}
 
-class SavePhone extends LoginEvent{
-  final String phone;
+class SaveEmail extends LoginEvent{
+  final String email;
 
-  SavePhone({required this.phone});
+  SaveEmail({required this.email});
 }
 class SavePassword extends LoginEvent{
   final String password;

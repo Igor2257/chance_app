@@ -65,6 +65,7 @@ class _InputRemindersLayoutState extends State<InputRemindersLayout> {
                         labelStyle: TextStyle(
                             fontSize: 14,
                             color: isError ? red900 : primaryText),
+                        labelText: title
                       ),
                       focusNode: focusNode,
                       controller: textEditingController,
@@ -74,6 +75,7 @@ class _InputRemindersLayoutState extends State<InputRemindersLayout> {
                       onPressed: () {
                         textEditingController.text = "";
                         widget.clearData();
+                        focusNode.unfocus();
                       },
                       icon: Icon(
                         Icons.cancel,

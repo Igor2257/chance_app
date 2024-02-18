@@ -3,7 +3,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
 
 part 'tasks_model.freezed.dart';
-
 part 'tasks_model.g.dart';
 
 @freezed

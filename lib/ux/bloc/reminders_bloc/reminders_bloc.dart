@@ -6,10 +6,11 @@ import 'package:chance_app/ui/pages/reminders_page/components/calendar.dart';
 import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/custom_bottom_sheet_notificatenion_picker.dart';
 import 'package:chance_app/ux/model/tasks_model.dart';
-import 'package:meta/meta.dart';
+import 'package:chance_app/ux/repository.dart';
+import 'package:chance_app/ux/services.dart';
+import 'package:flutter/material.dart';
 
 part 'reminders_event.dart';
-
 part 'reminders_state.dart';
 
 class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
@@ -338,15 +339,65 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     ));
   }
 
-  FutureOr<void> _onSaveTasks(SaveTasks event, Emitter<RemindersState> emit) {
+  Future delay(BuildContext context) async {
+    await Future.delayed(const Duration(seconds: 5)).then((value) {
+      Navigator.of(context).pop();
+    });
+  }
+
+  FutureOr<void> _onSaveTasks(SaveTasks event, Emitter<RemindersState> emit)async {
     DateTime dateTime = DateTime.now();
-    emit(state.copyWith(
-        taskModel: TaskModel(
-      id: dateTime.millisecondsSinceEpoch,
-      createdAt: dateTime,
-      name: state.taskTitle,
-      taskTo: state.newSelectedDateForTasks,
-      notificationsBefore: state.oldNotificationsBefore,
-    )));
+    String name = state.taskTitle;
+    if (name.trim().isNotEmpty) {
+      TaskModel taskModel = TaskModel(
+        id: dateTime.millisecondsSinceEpoch,
+        createdAt: dateTime,
+        name: name,
+        taskTo: state.newSelectedDateForTasks,
+        notificationsBefore: state.oldNotificationsBefore,
+      );
+      emit(state.copyWith(taskModel: taskModel));
+      await Repository().addTask(taskModel).then((value) {
+        showDialog(
+            context: event.context,
+            builder: (context) {
+              return SizedBox(
+                height: 160,
+                width: MediaQuery.of(context).size.width,
+                child: FutureBuilder(
+                    future: delay(context),
+                    builder: (context, snapshot) {
+                      return AlertDialog(
+                        backgroundColor: beige100,
+                        content: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              const Icon(Icons.done),
+                              const SizedBox(
+                                height: 40,
+                              ),
+                              Text(
+                                "Завдання додано",
+                                style:
+                                TextStyle(fontSize: 24, color: primaryText),
+                              ),
+                              Text(
+                                "”${state.taskModel!.name}”",
+                                style:
+                                TextStyle(fontSize: 16, color: primaryText),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+              );
+            });
+      });
+
+    }
   }
 }

@@ -26,15 +26,15 @@ class LoginPage extends StatelessWidget {
           children: <Widget>[
             const SizedBox(height: 24),
             InputLoginLayout(
-                title: "Введіть номер телефону*",
+                title: "Введіть електронну пошту*",
                 focusNode: phoneFocusNode,
                 obscureText: false,
                 textInputAction: TextInputAction.next,
-                inputLoginLayouts: InputLoginLayouts.phone,
+                inputLoginLayouts: InputLoginLayouts.email,
                 textInputType: TextInputType.phone),
             const SizedBox(height: 24),
             InputLoginLayout(
-                title: "Введіть номер телефону*",
+                title: "Введіть пароль*",
                 focusNode: passwordFocusNode,
                 obscureText: true,
                 textInputAction: TextInputAction.done,

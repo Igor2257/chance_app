@@ -77,5 +77,7 @@ final int session;
 }
 
 class SaveTasks extends RemindersEvent{
-  SaveTasks();
+  final BuildContext context;
+
+  SaveTasks({required this.context});
 }

@@ -3,7 +3,7 @@ import 'package:chance_app/ux/bloc/login_bloc/login_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-enum InputLoginLayouts { phone, password }
+enum InputLoginLayouts { email, password }
 
 class InputLoginLayout extends StatefulWidget {
   const InputLoginLayout(
@@ -90,9 +90,9 @@ class _InputLoginLayoutState extends State<InputLoginLayout> {
                   },
                   onChanged: (value) {
                     switch (inputLoginLayouts) {
-                      case InputLoginLayouts.phone:
+                      case InputLoginLayouts.email:
                         BlocProvider.of<LoginBloc>(context)
-                            .add(SavePhone(phone: value));
+                            .add(SaveEmail(email: value));
                         break;
                       case InputLoginLayouts.password:
                         BlocProvider.of<LoginBloc>(context)
@@ -149,9 +149,9 @@ class _InputLoginLayoutState extends State<InputLoginLayout> {
 
   void validate(LoginState state) {
     switch (inputLoginLayouts) {
-      case InputLoginLayouts.phone:
-        errorText = state.errorPhone;
-        textEditingController.text = state.phone;
+      case InputLoginLayouts.email:
+        errorText = state.errorEmail;
+        textEditingController.text = state.email;
         break;
       case InputLoginLayouts.password:
         errorText = state.errorPassword;

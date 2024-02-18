@@ -16,11 +16,15 @@ class FirstTaskPage extends StatefulWidget {
 class _FirstTaskPageState extends State<FirstTaskPage> {
   final TextEditingController nameTextEditingController =
       TextEditingController();
+
   @override
   void initState() {
-    BlocProvider.of<RemindersBloc>(context).add(LoadDataForSelectDateForTasks());
+    BlocProvider.of<RemindersBloc>(context)
+        .add(LoadDataForSelectDateForTasks());
     super.initState();
   }
+
+
 
   final DateTime now = DateTime.now();
 
@@ -36,54 +40,60 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
         children: [
           InputRemindersLayout(
             textEditingController: nameTextEditingController,
-            title: '',
+            title: 'Введіть завдання',
             subTitle: '',
             saveData: (String value) {
               BlocProvider.of<RemindersBloc>(context)
                   .add(SaveTaskName(name: value));
-                },
-                clearData: () {
-                  BlocProvider.of<RemindersBloc>(context)
-                      .add(SaveTaskName(name: ""));
-                },
-              ),
-              if (state.taskTitle.trim().isNotEmpty)
-                Container(
-                  height: 48,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      border: Border(bottom: BorderSide(color: darkNeutral600))),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        state.taskTitle,
-                        style: TextStyle(fontSize: 16, color: primaryText),
-                      ),
-                      const Icon(Icons.arrow_forward_ios),
-                    ],
-                  ),
+            },
+            clearData: () {
+              BlocProvider.of<RemindersBloc>(context)
+                  .add(SaveTaskName(name: ""));
+            },
+          ),
+          if (state.taskTitle.trim().isNotEmpty)
+            GestureDetector(
+              onTap: () {
+                BlocProvider.of<RemindersBloc>(context).add(SaveTasks(context: context));
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                height: 48,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    border: Border(bottom: BorderSide(color: darkNeutral600))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      state.taskTitle,
+                      style: TextStyle(fontSize: 16, color: primaryText),
+                    ),
+                    const Icon(Icons.arrow_forward_ios),
+                  ],
                 ),
-              const SizedBox(
-                height: 100,
               ),
-              InkWell(
+            ),
+          const SizedBox(
+            height: 100,
+          ),
+          InkWell(
             onTap: () {
               Navigator.of(context).pushNamedAndRemoveUntil(
                   "/date_picker_for_tasks", (route) => true);
             },
             child: Container(
               height: 40,
-              width: 120,
+              constraints: const BoxConstraints(minWidth: 120),
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               decoration: BoxDecoration(
                   color: primary100, borderRadius: BorderRadius.circular(16)),
               child: Row(
-                mainAxisSize: MainAxisSize.max,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   SvgPicture.asset("assets/icons/calendar.svg"),
-                      Text(
+                  Text(
                     (taskModel == null) ||
                             (taskModel.taskTo == null) ||
                             (taskModel.taskTo != null &&

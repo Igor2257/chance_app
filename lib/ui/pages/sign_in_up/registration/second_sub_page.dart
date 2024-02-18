@@ -1,6 +1,7 @@
 import 'package:chance_app/ui/pages/sign_in_up/registration/input_register_layout.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/continue_log_in.dart';
 import 'package:flutter/material.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class SecondSubPage extends StatelessWidget {
   SecondSubPage( {super.key});
@@ -14,6 +15,7 @@ class SecondSubPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         SizedBox(height: 24),
+        InternationalPhoneNumberInput(onInputChanged: ,o),
         InputRegisterLayout(
           title: "Введіть номер телефону*",
           focusNode: phoneFocusNode,

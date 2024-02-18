@@ -8,11 +8,18 @@ import 'package:chance_app/ui/pages/sign_in_up/sign_in_up_page.dart';
 import 'package:chance_app/ux/bloc/login_bloc/login_bloc.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
+import 'package:chance_app/ux/model/tasks_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await _initBoxes().then((value) {
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -39,7 +46,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          initialRoute: "/",
+          initialRoute: "/signinup",
           routes: {
             "/": (context) => const MainPage(),
             "/signinup": (context) => const SignInUpPage(),
@@ -51,4 +58,16 @@ class MyApp extends StatelessWidget {
           },
         ));
   }
+}
+
+Box? tasksBox;
+
+Future<bool> _initBoxes() async {
+  final documentsDirectory = await getApplicationDocumentsDirectory();
+  Hive.init(documentsDirectory.path);
+  //await Hive.deleteBoxFromDisk('user');
+  Hive.registerAdapter(TaskModelAdapter());
+  tasksBox = await Hive.openBox<TaskModel>("myTasks");
+
+  return true;
 }

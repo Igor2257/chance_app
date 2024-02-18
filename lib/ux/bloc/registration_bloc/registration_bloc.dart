@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/input_register_layout.dart';
+import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 part 'registration_event.dart';
-
 part 'registration_state.dart';
 
 class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
@@ -57,10 +57,9 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   }
 
   FutureOr<void> _onIncreaseCurrentStep(
-      IncreaseCurrentStep event, Emitter<RegistrationState> emit) {
-    int currentStep = state.currentStep+1;
+      IncreaseCurrentStep event, Emitter<RegistrationState> emit) async {
+    int currentStep = state.currentStep + 1;
     if (currentStep < 2) {
-
       state.pageController!.animateToPage(currentStep,
           duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
       double plusPercentage = 0.33;
@@ -74,8 +73,14 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       }
     } else {
       if (validate(emit)) {
-        Navigator.of(event.context)
-            .pushNamedAndRemoveUntil("/subscription_page", (route) => false);
+        await Repository()
+            .sendRegisterData(state.lastName, state.firstName, state.phone, state.email, state.passwordFirst)
+            .then((value) {
+          if(value){
+            Navigator.of(event.context)
+                .pushNamedAndRemoveUntil("/subscription_page", (route) => false);
+          }
+        });
       }
     }
   }
@@ -241,19 +246,28 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         .hasMatch(text)) {
       errorTextEmail = 'Невірний формат електронної пошти';
     }
+    if (text.trim().isNotEmpty &&
+        text.trim().length > 4 &&
+        (text.contains(".ru", text.length - 4) ||
+            text.contains(".by", text.length - 4) ||
+            text.contains(".рф", text.length - 4))) {
+      errorTextEmail = 'Невірний формат електронної пошти';
+    }
 
     text = state.passwordFirst;
-    if (text.trim().isEmpty ||
-        (text.trim().isNotEmpty && text.trim().length < 8)) {
+    if (text.trim().length < 8) {
       errorTextFP = 'Пароль має бути 8 або більше символів';
+    }
+    if (text.trim().length > 14) {
+      errorTextFP = "Пароль має бути менше 14 символів";
     }
 
     text = state.passwordSecond;
-    if (text.trim().isEmpty ||
-        (text.trim().isNotEmpty && text.trim().length < 8)) {
+    if (text.trim().length < 8) {
       errorTextLP = 'Пароль має бути 8 або більше символів';
-    } else if (state.passwordFirst != state.passwordSecond) {
-      errorTextLP = 'Пароль не співпадає';
+    }
+    if (text.trim().length > 14) {
+      errorTextLP = "Пароль має бути менше 14 символів";
     }
 
     emit(state.copyWith(

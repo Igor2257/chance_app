@@ -1,33 +1,33 @@
 part of 'login_bloc.dart';
 
 class LoginState {
-  String phone, password;
-  String errorPhone, errorPassword;
+  String email, password;
+  String errorEmail, errorPassword;
 
   LoginState({
-    this.phone = "",
+    this.email = "",
     this.password = "",
-    this.errorPhone = "",
+    this.errorEmail = "",
     this.errorPassword = "",
   });
 
   LoginState copyWith({
-    String? phone,
-    password,errorPhone,errorPassword,
+    String? email,
+    password,errorEmail,errorPassword,
   }) {
     return LoginState(
-      phone: phone ?? this.phone,
+      email: email ?? this.email,
       password: password ?? this.password,
-      errorPhone: errorPhone ?? this.errorPhone,
+      errorEmail: errorEmail ?? this.errorEmail,
       errorPassword: errorPassword ?? this.errorPassword,
     );
   }
 
   LoginState clear(){
     return LoginState(
-      phone: "",
+      email: "",
       password: "",
-      errorPhone: "",
+      errorEmail: "",
       errorPassword: "",
     );
   }
