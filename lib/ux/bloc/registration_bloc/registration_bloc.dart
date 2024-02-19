@@ -78,7 +78,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
             .then((value) {
           if(value){
             Navigator.of(event.context)
-                .pushNamedAndRemoveUntil("/subscription_page", (route) => false);
+                .pushNamedAndRemoveUntil("/enter_code", (route) => false);
           }
         });
       }
@@ -114,7 +114,6 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     switch (event.inputLayouts) {
       case InputLayouts.lastName:
         emit(state.copyWith(lastName: text));
-        add(SaveLastName(lastName: text));
         if (text.trim().isEmpty) {
           errorText = 'Ім`я порожнє';
           emit(state.copyWith(errorLastName: errorText));
@@ -126,7 +125,6 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         break;
       case InputLayouts.firstName:
         emit(state.copyWith(firstName: text));
-        add(SaveFirstName(firstName: text));
         if (text.trim().isEmpty) {
           errorText = 'Прізвище порожнє';
           emit(state.copyWith(errorFirstName: errorText));
@@ -137,13 +135,13 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         break;
       case InputLayouts.phone:
         emit(state.copyWith(phone: text));
-        add(SavePhone(phone: text));
         if (text.trim().isEmpty) {
           errorText = 'Невірний формат номеру телефону';
           emit(state.copyWith(errorPhone: errorText));
           break;
         }
-        if (!RegExp(r'^[0-9]{10}$').hasMatch(text)) {
+        if (!RegExp(r'^\+380\d{9}$').hasMatch(text)
+        ) {
           errorText = 'Невірний формат номеру телефону';
           emit(state.copyWith(errorPhone: errorText));
         } else {
@@ -152,7 +150,6 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         break;
       case InputLayouts.email:
         emit(state.copyWith(email: text));
-        add(SaveEmail(email: text));
         if (text.trim().isEmpty) {
           errorText = 'Невірний формат електронної пошти';
           emit(state.copyWith(errorEmail: errorText));
@@ -170,31 +167,29 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
         break;
       case InputLayouts.firstPassword:
-        emit(state.copyWith(passwordFirst: text));
-        add(SavePasswordFirst(passwordFirst: text));
-        if (text.trim().isEmpty ||
-            (text.trim().isNotEmpty && text.trim().length < 8)) {
+        if (text.trim().length < 8) {
           errorText = 'Пароль має бути 8 або більше символів';
-          emit(state.copyWith(errorFirstPassword: errorText));
-          break;
-        } else {
-          emit(state.copyWith(errorFirstPassword: ""));
         }
+        if (text.trim().length > 14) {
+          errorText = "Пароль має бути менше 14 символів";
+        }
+        emit(state.copyWith(passwordFirst: text,errorFirstPassword: errorText));
         break;
       case InputLayouts.lastPassword:
-        emit(state.copyWith(passwordSecond: text));
-        add(SavePasswordSecond(passwordSecond: text));
-        if (text.trim().isEmpty ||
-            (text.trim().isNotEmpty && text.trim().length < 8)) {
+        if (text.trim().length < 8) {
           errorText = 'Пароль має бути 8 або більше символів';
-          emit(state.copyWith(errorSecondPassword: errorText));
-          break;
-        } else if (state.passwordFirst != state.passwordSecond) {
-          errorText = 'Пароль не співпадає';
-          emit(state.copyWith(errorSecondPassword: errorText));
-        } else {
-          emit(state.copyWith(errorSecondPassword: ""));
         }
+        if (text.trim().length > 14) {
+          errorText = "Пароль має бути менше 14 символів";
+        }
+        if(errorText==null||(errorText.isEmpty)){
+          if(state.passwordFirst!=text){
+            errorText = "Паролі не співпадають";
+          }
+        }
+        emit(state.copyWith(
+            passwordSecond: text, errorSecondPassword: errorText));
+
 
         break;
     }
@@ -232,7 +227,8 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     if (text.trim().isEmpty) {
       errorTextPhone = 'Невірний формат номеру телефону';
     }
-    if (!RegExp(r'^[0-9]{10}$').hasMatch(text)) {
+    if (!RegExp(r'^\+380\d{9}$').hasMatch(text)
+    ){
       errorTextPhone = 'Невірний формат номеру телефону';
     }
 
@@ -268,6 +264,10 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     }
     if (text.trim().length > 14) {
       errorTextLP = "Пароль має бути менше 14 символів";
+    }
+    if(state.passwordFirst!=state.passwordSecond){
+      errorTextFP = "Пароль має cпівпадати";
+      errorTextLP = "Пароль має cпівпадати";
     }
 
     emit(state.copyWith(

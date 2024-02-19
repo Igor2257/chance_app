@@ -94,26 +94,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         } else {
           emit(state.copyWith(errorEmail: ""));
           text = state.password;
-          if (text.isEmpty) {
-            String error = "Пароль не має бути порожнім";
-            emit(state.copyWith(errorPassword: error));
-            Fluttertoast.showToast(msg: errorTextEmail);
-            return false;
-          } else {
-            if ((text.trim().length < 8)) {
-              Fluttertoast.showToast(msg: errorTextPassword);
-              emit(state.copyWith(errorPassword: errorTextPassword));
-              return false;
-            } else {
-              if ((text.trim().length > 14)) {
-                String error = "Пароль має бути менше 14 символів";
-                Fluttertoast.showToast(msg: error);
-                emit(state.copyWith(errorPassword: error));
-                return false;
-              } else {
-                emit(state.copyWith(errorPassword: ""));
-              }
-            }
+          if (text.trim().length < 8) {
+            errorTextPassword = 'Пароль має бути 8 або більше символів';
+          }
+          if (text.trim().length > 14) {
+            errorTextPassword = "Пароль має бути менше 14 символів";
           }
         }
       }

@@ -47,7 +47,7 @@ class ThirdSubPage extends StatelessWidget {
         const Spacer(),
         const GivePermission(),
         SizedBox(height: 20,),
-        const ContinueLogIn(name: "Завершити",),
+        const ContinueLogIn(name: "Продовжити",),
         const Spacer(),
       ],
     );

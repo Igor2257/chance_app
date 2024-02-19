@@ -1,0 +1,211 @@
+import 'package:chance_app/ui/components/rounded_button.dart';
+import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ux/repository.dart';
+import 'package:flutter/material.dart';
+
+class ResetPasswordEnterNewPassword extends StatefulWidget {
+  const ResetPasswordEnterNewPassword(
+      {super.key, required this.email, required this.code});
+
+  final String email, code;
+
+  @override
+  State<ResetPasswordEnterNewPassword> createState() =>
+      _ResetPasswordEnterNewPasswordState();
+}
+
+class _ResetPasswordEnterNewPasswordState
+    extends State<ResetPasswordEnterNewPassword> {
+  TextEditingController firstPassword = TextEditingController(),
+      secondPassword = TextEditingController();
+  FocusNode firstFocusNode = FocusNode(),
+      secondFocusNode = FocusNode();
+  String errorTextFirst = "",
+      errorTextSecond = "";
+  bool isErrorFirst = false,
+      isErrorSecond = false;
+  bool obscureTextFirst = true,
+      obscureTextSecond = true;
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery
+        .of(context)
+        .size;
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        centerTitle: true,
+        title: const Text("Відновити пароль"),
+      ),
+      backgroundColor: beigeBG,
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Text(
+                "Введіть новий пароль",
+                style: TextStyle(
+                    fontSize: 14, color: isErrorFirst ? red900 : primaryText),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.only(left: 16),
+              decoration: BoxDecoration(
+                  border: Border.all(color: isErrorFirst ? red900 : beige300),
+                  borderRadius: BorderRadius.circular(16)),
+              child: TextField(
+                keyboardType: TextInputType.emailAddress,
+                style: TextStyle(
+                    fontSize: 16, color: isErrorFirst ? red900 : primaryText),
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () {
+                  validate();
+                },
+                obscureText: obscureTextFirst,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  suffixIcon: obscureTextFirst
+                      ? IconButton(
+                    onPressed: () {
+                      setState(() {
+                        obscureTextFirst = !obscureTextFirst;
+                      });
+                    },
+                    icon: Icon(obscureTextFirst
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined),
+                  )
+                      : const SizedBox(),
+                ),
+                focusNode: firstFocusNode,
+                controller: firstPassword,
+              ),
+            ),
+            if (errorTextFirst
+                .trim()
+                .isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Text(
+                  errorTextFirst,
+                  style: TextStyle(fontSize: 14, color: red900),
+                ),
+              ),
+            const SizedBox(
+              height: 40,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Text(
+                "Введіть новий пароль ще раз",
+                style: TextStyle(
+                    fontSize: 14, color: isErrorSecond ? red900 : primaryText),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.only(left: 16),
+              decoration: BoxDecoration(
+                  border: Border.all(color: isErrorSecond ? red900 : beige300),
+                  borderRadius: BorderRadius.circular(16)),
+              child: TextField(
+                keyboardType: TextInputType.emailAddress,
+                style: TextStyle(
+                    fontSize: 16, color: isErrorSecond ? red900 : primaryText),
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () {
+                  validate();
+                },
+                obscureText: obscureTextSecond,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  suffixIcon: obscureTextSecond
+                      ? IconButton(
+                    onPressed: () {
+                      setState(() {
+                        obscureTextSecond = !obscureTextSecond;
+                      });
+                    },
+                    icon: Icon(obscureTextSecond
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined),
+                  )
+                      : const SizedBox(),
+                ),
+                focusNode: secondFocusNode,
+                controller: secondPassword,
+              ),
+            ),
+            if (errorTextSecond
+                .trim()
+                .isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Text(
+                  errorTextSecond,
+                  style: TextStyle(fontSize: 14, color: red900),
+                ),
+              ),
+            const Spacer(),
+            RoundedButton(
+                onPress: () async {
+                  validate();
+                  if (!isErrorFirst && !isErrorSecond) {
+                    await Repository().resetPassword(
+                        widget.email, widget.code, firstPassword.text).then((
+                        value) => null);
+                  }
+                },
+                color: primary1000,
+                child: Text(
+                  "Зберегти",
+                  style: TextStyle(fontSize: 16, color: primary50),
+                )),
+            const Spacer(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void validate() {
+    if (firstPassword.text
+        .trim()
+        .length < 8) {
+      errorTextFirst = 'Пароль має бути 8 або більше символів';
+      isErrorFirst = true;
+    }
+    if (firstPassword.text
+        .trim()
+        .length > 14) {
+      errorTextFirst = "Пароль має бути менше 14 символів";
+      isErrorFirst = true;
+    }
+
+    if (secondPassword.text
+        .trim()
+        .length < 8) {
+      errorTextSecond = 'Пароль має бути 8 або більше символів';
+      isErrorSecond = true;
+    }
+    if (secondPassword.text
+        .trim()
+        .length > 14) {
+      errorTextSecond = "Пароль має бути менше 14 символів";
+      isErrorSecond = true;
+    }
+    if (!isErrorFirst) {
+      if (!isErrorSecond) {
+        if (firstPassword.text != secondPassword.text) {
+          errorTextSecond = 'Паролі не співпадають';
+        }
+      }
+    }
+
+    setState(() {});
+  }
+}

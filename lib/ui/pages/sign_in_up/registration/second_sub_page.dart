@@ -1,11 +1,12 @@
-import 'package:chance_app/ui/pages/sign_in_up/registration/input_register_layout.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/continue_log_in.dart';
+import 'package:chance_app/ui/pages/sign_in_up/registration/input_register_layout.dart';
+import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class SecondSubPage extends StatelessWidget {
-  SecondSubPage( {super.key});
-
+  SecondSubPage({super.key});
 
   final FocusNode phoneFocusNode = FocusNode(), emailFocusNode = FocusNode();
 
@@ -15,7 +16,6 @@ class SecondSubPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         SizedBox(height: 24),
-        InternationalPhoneNumberInput(onInputChanged: ,o),
         InputRegisterLayout(
           title: "Введіть номер телефону*",
           focusNode: phoneFocusNode,

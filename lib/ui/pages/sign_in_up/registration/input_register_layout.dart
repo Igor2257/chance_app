@@ -2,6 +2,7 @@ import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 enum InputLayouts {
   lastName,
@@ -65,7 +66,52 @@ class _InputRegisterLayoutState extends State<InputRegisterLayout> {
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
         builder: (context, state) {
-      validate(state);
+          validate(state);
+      if (inputLayouts == InputLayouts.phone) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (widget.title != null)
+              Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Text(
+                  widget.title!,
+                  style: TextStyle(
+                      fontSize: 14, color: isError ? red900 : primaryText),
+                ),
+              ),
+            Container(
+                padding: const EdgeInsets.only(left: 16),
+                decoration: BoxDecoration(
+                    border: Border.all(color: isError ? red900 : beige300),
+                    borderRadius: BorderRadius.circular(16)),
+                child: InternationalPhoneNumberInput(
+                  maxLength: 11,
+                    hintText: "Номер телефону",
+                    errorMessage: "",
+                    locale: "uk",
+                    countries: const ["UA"],
+                    onInputChanged: (number) {
+                      BlocProvider.of<RegistrationBloc>(context).add(
+                          ValidateForm(
+                              inputLayouts: inputLayouts,
+                              text: number.phoneNumber??""));
+                    },
+                    onSaved: (number){
+
+                      widget.focusOtherField!();
+                    },)),
+            if (errorText != null && errorText!.trim().isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Text(
+                  errorText!,
+                  style: TextStyle(fontSize: 14, color: red900),
+                ),
+              ),
+          ],
+        );
+      }
       return Form(
           key: form,
           child: Column(

@@ -74,7 +74,10 @@ class LoginPage extends StatelessWidget {
                 )),
             const SizedBox(height: 24),
             GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      "/reset_password", (route) => true);
+                },
                 child: SizedBox(
                   height: 44,
                   child: Center(

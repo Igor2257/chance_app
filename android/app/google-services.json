@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "851944893842",
+    "project_id": "chance-app-b381c",
+    "storage_bucket": "chance-app-b381c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:851944893842:android:bc3e5cd8dcaca47aa6254b",
+        "android_client_info": {
+          "package_name": "com.chance_app.chance_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkALiGGYe1N1L8XJEwWq22tWZbPOmVyss"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
