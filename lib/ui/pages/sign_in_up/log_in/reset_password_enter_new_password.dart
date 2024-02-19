@@ -69,8 +69,7 @@ class _ResetPasswordEnterNewPasswordState
                 obscureText: obscureTextFirst,
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  suffixIcon: obscureTextFirst
-                      ? IconButton(
+                  suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
                         obscureTextFirst = !obscureTextFirst;
@@ -79,8 +78,7 @@ class _ResetPasswordEnterNewPasswordState
                     icon: Icon(obscureTextFirst
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined),
-                  )
-                      : const SizedBox(),
+                  ),
                 ),
                 focusNode: firstFocusNode,
                 controller: firstPassword,
@@ -123,8 +121,7 @@ class _ResetPasswordEnterNewPasswordState
                 obscureText: obscureTextSecond,
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  suffixIcon: obscureTextSecond
-                      ? IconButton(
+                  suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
                         obscureTextSecond = !obscureTextSecond;
@@ -133,8 +130,7 @@ class _ResetPasswordEnterNewPasswordState
                     icon: Icon(obscureTextSecond
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined),
-                  )
-                      : const SizedBox(),
+                  ),
                 ),
                 focusNode: secondFocusNode,
                 controller: secondPassword,
@@ -155,9 +151,13 @@ class _ResetPasswordEnterNewPasswordState
                 onPress: () async {
                   validate();
                   if (!isErrorFirst && !isErrorSecond) {
-                    await Repository().resetPassword(
-                        widget.email, widget.code, firstPassword.text).then((
-                        value) => null);
+                    await Repository()
+                        .resetPassword(
+                            widget.email, widget.code, firstPassword.text)
+                        .then((value) {
+                      Navigator.of(context)
+                          .pushNamedAndRemoveUntil('/', (route) => false);
+                    });
                   }
                 },
                 color: primary1000,
@@ -173,30 +173,34 @@ class _ResetPasswordEnterNewPasswordState
   }
 
   void validate() {
-    if (firstPassword.text
-        .trim()
-        .length < 8) {
+    if (firstPassword.text.trim().length < 8) {
       errorTextFirst = 'Пароль має бути 8 або більше символів';
       isErrorFirst = true;
+    } else {
+      errorTextFirst = '';
+      isErrorFirst = false;
     }
-    if (firstPassword.text
-        .trim()
-        .length > 14) {
+    if (firstPassword.text.trim().length > 14) {
       errorTextFirst = "Пароль має бути менше 14 символів";
       isErrorFirst = true;
+    } else {
+      errorTextFirst = '';
+      isErrorFirst = false;
     }
 
-    if (secondPassword.text
-        .trim()
-        .length < 8) {
+    if (secondPassword.text.trim().length < 8) {
       errorTextSecond = 'Пароль має бути 8 або більше символів';
       isErrorSecond = true;
+    } else {
+      errorTextFirst = '';
+      isErrorSecond = false;
     }
-    if (secondPassword.text
-        .trim()
-        .length > 14) {
+    if (secondPassword.text.trim().length > 14) {
       errorTextSecond = "Пароль має бути менше 14 символів";
       isErrorSecond = true;
+    } else {
+      errorTextSecond = '';
+      isErrorSecond = false;
     }
     if (!isErrorFirst) {
       if (!isErrorSecond) {

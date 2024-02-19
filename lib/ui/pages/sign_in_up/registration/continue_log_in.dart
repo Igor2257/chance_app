@@ -1,7 +1,6 @@
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,7 +25,10 @@ class ContinueLogIn extends StatelessWidget {
                   fontWeight: FontWeight.w500, fontSize: 16, color: primary50),
             )),
         TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil("/signinup", (route) => false);
+            },
             child: Text(
               "Вже маєте аккаунт? Увійти",
               style: TextStyle(
