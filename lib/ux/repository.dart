@@ -34,12 +34,14 @@ class Repository {
             {"password": hash.toString().substring(0, 13), "email": email}),
       )
           .then((value) async {
+        final cookie = _getCookie(value);
         if (value.statusCode > 199 && value.statusCode < 300) {
           var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/me');
           await http.get(
             url,
             headers: <String, String>{
               'Content-Type': 'application/json',
+              if (cookie != null) 'Cookie': cookie,
             },
           ).then((value) {
             if (value.statusCode > 199 && value.statusCode < 300) {
@@ -244,5 +246,12 @@ class Repository {
 
   Future updateUser(MeUser meUser) async {
     userBox!.put('user', meUser);
+  }
+
+  String? _getCookie(http.Response response) {
+    final rawCookie = response.headers['set-cookie'];
+    if (rawCookie == null) return null;
+    final index = rawCookie.indexOf(';');
+    return (index == -1) ? rawCookie : rawCookie.substring(0, index);
   }
 }
