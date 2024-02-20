@@ -35,7 +35,7 @@ class Repository {
             {"password": hash.toString().substring(0, 13), "email": email}),
       )
           .then((value) async {
-        final cookie = _getCookieFromLogin(value);
+        final cookie = _parseCookieFromLogin(value);
         if (value.statusCode > 199 && value.statusCode < 300) {
           var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/me');
           await http.get(
@@ -410,13 +410,13 @@ class Repository {
     await userBox!.put("user", meUser);
   }
 
-  String? _getCookieFromLogin(http.Response response) {
-    saveCookie(response.headers['set-cookie']);
-
+  String? _parseCookieFromLogin(http.Response response) {
     final rawCookie = response.headers['set-cookie'];
     if (rawCookie == null) return null;
     final index = rawCookie.indexOf(';');
-    return (index == -1) ? rawCookie : rawCookie.substring(0, index);
+    final cookie = (index == -1) ? rawCookie : rawCookie.substring(0, index);
+    saveCookie(cookie);
+    return cookie;
   }
 
   void saveCookie(String? header) async {
