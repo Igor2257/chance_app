@@ -18,13 +18,13 @@ class MeUserAdapter extends TypeAdapter<MeUser> {
     };
     return MeUser(
       id: fields[0] as String,
-      name: fields[1] as String,
-      lastName: fields[2] as String,
-      phone: fields[3] as String,
-      email: fields[4] as String,
-      isGoogle: fields[5] as bool,
-      isConfirmed: fields[6] as bool,
-      deviceId: fields[7] as String,
+      name: fields[1] as String?,
+      lastName: fields[2] as String?,
+      phone: fields[3] as String?,
+      email: fields[4] as String?,
+      isGoogle: fields[5] as bool?,
+      isConfirmed: fields[6] as bool?,
+      deviceId: fields[7] as String?,
     );
   }
 

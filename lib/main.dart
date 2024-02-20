@@ -41,16 +41,26 @@ void main() async {
     return false;
   };
 
+
  // FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
   FirebaseMessaging.instance.requestPermission();
-  await _initBoxes().then((value) {
-    runApp(const MyApp());
+  await _initBoxes().then((value)async {
+    await Repository().getUser().then((user) {
+      String route="/signinup";
+      print(user);
+      if(user!=null){
+        route="/";
+      }
+      runApp( MyApp(route));
+    });
+
+
   });
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+  const MyApp(this.route, {super.key});
+final String route;
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -72,7 +82,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          initialRoute: Repository().user!=null?"/signinup":"/",
+          initialRoute: route,
           routes: {
             "/": (context) => const MainPage(),
             "/signinup": (context) => const SignInUpPage(),

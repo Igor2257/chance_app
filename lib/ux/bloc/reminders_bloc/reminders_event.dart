@@ -95,13 +95,13 @@ class LoadTasksForToday extends RemindersEvent{
 }
 
 class ChangeIsDoneForTask extends RemindersEvent{
-  final int id;
+  final String id;
 
   ChangeIsDoneForTask({required this.id});
 }
 
 class DeleteTask extends RemindersEvent{
-  final int id;
+  final String id;
 
   DeleteTask({required this.id});
 }

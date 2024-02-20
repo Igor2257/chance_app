@@ -83,7 +83,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                   height: 40,
                                 ),
                                 Text(
-                                  task.name,
+                                  task.message,
                                   style: TextStyle(
                                       fontSize: 24, color: primaryText),
                                 ),
@@ -116,7 +116,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                             width: 10,
                                           ),
                                           Text(
-                                            "${task.taskTo!.hour.toString().padLeft(2, "0")}:${task.taskTo!.minute.toString().padLeft(2, "0")}",
+                                            "${task.date!.hour.toString().padLeft(2, "0")}:${task.date!.minute.toString().padLeft(2, "0")}",
                                             style: TextStyle(
                                                 fontSize: 24,
                                                 color: primaryText),
@@ -195,7 +195,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                                             primaryText),
                                                                   ),
                                                                   Text(
-                                                                    "”${task.name}”",
+                                                                    "”${task.message}”",
                                                                     style: TextStyle(
                                                                         fontSize:
                                                                             16,
@@ -323,7 +323,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                                                                   style: TextStyle(fontSize: 24, color: primaryText),
                                                                                                 ),
                                                                                                 Text(
-                                                                                                  "”${task.name}”",
+                                                                                                  "”${task.message}”",
                                                                                                   style: TextStyle(fontSize: 16, color: primaryText),
                                                                                                 ),
                                                                                               ],

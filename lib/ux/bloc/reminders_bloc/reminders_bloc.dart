@@ -43,7 +43,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
   bool checkIfDayHasTask(
       List<TaskModel> myTasks, int day, int month, int year) {
     for (int i = 0; i < myTasks.length; i++) {
-      DateTime taskDate = myTasks[i].taskTo!;
+      DateTime taskDate = myTasks[i].date!;
       print(taskDate);
       print(day);
       print(month);
@@ -68,7 +68,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     int daysInMonth = DateTime(year, month + 1, 0).day;
     List<TaskModel>? myTasks = List.from(Repository().myTasks);
 
-    print(myTasks.map((e) => e.taskTo));
+    print(myTasks.map((e) => e.date));
     for (int i = 1; i <= daysInMonth; i++) {
       DateTime date = DateTime(year, month, i);
       String weekDay = getWeekdayName(date.weekday);
@@ -87,11 +87,11 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     }
     myTasks = myTasks
         .where((element) =>
-            element.taskTo!.day == now.day &&
-            element.taskTo!.month == now.month &&
-            element.taskTo!.year == now.year)
+            element.date!.day == now.day &&
+            element.date!.month == now.month &&
+            element.date!.year == now.year)
         .toList();
-    myTasks.sort((a, b) => a.taskTo!.compareTo(b.taskTo!));
+    myTasks.sort((a, b) => a.date!.compareTo(b.date!));
     int startOfWeek = day - now.weekday;
     int endOfWeek = startOfWeek + 6;
     week = dates.getRange(startOfWeek, endOfWeek).toList();
@@ -129,11 +129,11 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     List<TaskModel>? myTasks = List.from(Repository().myTasks);
     myTasks = myTasks
         .where((element) =>
-            element.taskTo!.day == selectedDate.day &&
-            element.taskTo!.month == selectedDate.month &&
-            element.taskTo!.year == selectedDate.year)
+            element.date!.day == selectedDate.day &&
+            element.date!.month == selectedDate.month &&
+            element.date!.year == selectedDate.year)
         .toList();
-    myTasks.sort((a, b) => a.taskTo!.compareTo(b.taskTo!));
+    myTasks.sort((a, b) => a.date!.compareTo(b.date!));
     emit(state.copyWith(
         myTasks: myTasks, week: week, days: dates, selectedDate: selectedDate));
   }
@@ -207,11 +207,11 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     }
     myTasks = myTasks
         .where((element) =>
-            element.taskTo!.day == now.day &&
-            element.taskTo!.month == now.month &&
-            element.taskTo!.year == now.year)
+            element.date!.day == now.day &&
+            element.date!.month == now.month &&
+            element.date!.year == now.year)
         .toList();
-    myTasks.sort((a, b) => a.taskTo!.compareTo(b.taskTo!));
+    myTasks.sort((a, b) => a.date!.compareTo(b.date!));
     emit(state.copyWith(
         days: dates, week: week, dateForSwiping: DateTime(year, month)));
   }
@@ -266,11 +266,11 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     }
     myTasks = myTasks
         .where((element) =>
-            element.taskTo!.day == now.day &&
-            element.taskTo!.month == now.month &&
-            element.taskTo!.year == now.year)
+            element.date!.day == now.day &&
+            element.date!.month == now.month &&
+            element.date!.year == now.year)
         .toList();
-    myTasks.sort((a, b) => a.taskTo!.compareTo(b.taskTo!));
+    myTasks.sort((a, b) => a.date!.compareTo(b.date!));
     emit(state.copyWith(
         daysForTasks: dates, dateForSwipingForTasks: DateTime(year, month)));
   }
@@ -352,11 +352,11 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     }
     myTasks = myTasks
         .where((element) =>
-            element.taskTo!.day == now.day &&
-            element.taskTo!.month == now.month &&
-            element.taskTo!.year == now.year)
+            element.date!.day == now.day &&
+            element.date!.month == now.month &&
+            element.date!.year == now.year)
         .toList();
-    myTasks.sort((a, b) => a.taskTo!.compareTo(b.taskTo!));
+    myTasks.sort((a, b) => a.date!.compareTo(b.date!));
     emit(state.copyWith(
       daysForTasks: dates,
       selectedDate: DateTime.now(),
@@ -377,26 +377,25 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     String name = state.taskTitle;
     if (name.trim().isNotEmpty) {
       TaskModel taskModel = TaskModel(
-        id: now.millisecondsSinceEpoch,
-        name: name,
-        taskTo: state.newSelectedDateForTasks,
-        notificationsBefore: state.oldNotificationsBefore.name,
+        message: name,
+        date: state.newSelectedDateForTasks,
+        //notificationsBefore: state.oldNotificationsBefore.name,
       );
       List<TaskModel>? myTasks = List.from(Repository().myTasks);
       myTasks = myTasks
           .where((element) =>
-              element.taskTo!.day == now.day &&
-              element.taskTo!.month == now.month &&
-              element.taskTo!.year == now.year)
+              element.date!.day == now.day &&
+              element.date!.month == now.month &&
+              element.date!.year == now.year)
           .toList();
       myTasks.add(taskModel);
-      myTasks.sort((a, b) => a.taskTo!.compareTo(b.taskTo!));
+      myTasks.sort((a, b) => a.date!.compareTo(b.date!));
 
       emit(state.copyWith(
         taskModel: taskModel,
         myTasks: myTasks,
       ));
-      await Repository().addTask(taskModel).then((value) {
+      await Repository().saveTask(taskModel).then((value) {
         showDialog(
             barrierDismissible: false,
             context: event.context,
@@ -425,7 +424,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
                                 TextStyle(fontSize: 24, color: primaryText),
                               ),
                               Text(
-                                "”${state.taskModel!.name}”",
+                                "”${state.taskModel!.message}”",
                                 style:
                                     TextStyle(fontSize: 16, color: primaryText),
                               ),
@@ -456,9 +455,9 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     List<TaskModel> myTasks = List.from(Repository()
         .myTasks
         .where((element) =>
-            element.taskTo!.day == now.day &&
-            element.taskTo!.month == now.month &&
-            element.taskTo!.year == now.year)
+            element.date!.day == now.day &&
+            element.date!.month == now.month &&
+            element.date!.year == now.year)
         .toList());
     emit(state.copyWith(tasksForToday: myTasks));
   }
@@ -471,7 +470,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     await Repository().updateTask(myTask).then((value) {
       add(LoadTasksForToday(
           datetime: DateTime(
-              myTask.taskTo!.year, myTask.taskTo!.month, myTask.taskTo!.day)));
+              myTask.date!.year, myTask.date!.month, myTask.date!.day)));
     });
   }
 

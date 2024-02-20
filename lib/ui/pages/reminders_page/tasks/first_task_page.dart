@@ -94,13 +94,13 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
                   SvgPicture.asset("assets/icons/calendar.svg"),
                   Text(
                     (taskModel == null) ||
-                            (taskModel.taskTo == null) ||
-                            (taskModel.taskTo != null &&
-                                taskModel.taskTo!.day == now.day &&
-                                taskModel.taskTo!.month == now.month &&
-                                taskModel.taskTo!.year == now.year)
+                            (taskModel.date == null) ||
+                            (taskModel.date != null &&
+                                taskModel.date!.day == now.day &&
+                                taskModel.date!.month == now.month &&
+                                taskModel.date!.year == now.year)
                         ? "Сьогодні"
-                        : "${taskModel.taskTo!.day.toString().padLeft(2, "0")}.${taskModel.taskTo!.month.toString().padLeft(2, "0")}.${taskModel.taskTo!.year}",
+                        : "${taskModel.date!.day.toString().padLeft(2, "0")}.${taskModel.date!.month.toString().padLeft(2, "0")}.${taskModel.date!.year}",
                     style: TextStyle(fontSize: 14, color: primaryText),
                   ),
                     ],

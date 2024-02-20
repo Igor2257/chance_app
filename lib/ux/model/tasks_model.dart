@@ -9,11 +9,13 @@ part 'tasks_model.g.dart';
 @HiveType(typeId: 0)
 class TaskModel with _$TaskModel {
   factory TaskModel({
-    @HiveField(0) required int id,
-    @HiveField(1) @Default("") String name,
-    @HiveField(2) @Default(null) DateTime? taskTo,
-    @HiveField(3) @Default("no") String notificationsBefore,
-    @HiveField(4) @Default(false) bool isDone
+    @HiveField(0) @Default("") String id,
+    @HiveField(1) @Default("") String message,
+    @HiveField(2) @Default(null) DateTime? date,
+    //@HiveField(3) @Default("no") String notificationsBefore,
+    @HiveField(3) @Default(false) bool isDone,
+    @HiveField(4) @Default("") String userId,
+    @HiveField(5) @Default(false) bool isSended
   }) = _TaskModel;
 
   factory TaskModel.fromJson(Map<String, dynamic> json) => _$TaskModelFromJson(json);

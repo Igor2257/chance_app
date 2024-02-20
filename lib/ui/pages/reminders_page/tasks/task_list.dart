@@ -31,9 +31,9 @@ class TaskList extends StatelessWidget {
                         BlocProvider.of<RemindersBloc>(context).add(
                             LoadTasksForToday(
                                 datetime: DateTime(
-                                    myTasks.first.taskTo!.year,
-                                    myTasks.first.taskTo!.month,
-                                    myTasks.first.taskTo!.day)));
+                                    myTasks.first.date!.year,
+                                    myTasks.first.date!.month,
+                                    myTasks.first.date!.day)));
                       },
                       child: Text(
                         "Всі завдання",
@@ -75,7 +75,7 @@ class TaskList extends StatelessWidget {
                                   width: 10,
                                 ),
                                 Text(
-                                  task.name,
+                                  task.message,
                                   style: TextStyle(
                                       fontSize: 16,
                                       color: isSelected
@@ -87,7 +87,7 @@ class TaskList extends StatelessWidget {
                                 ),
                                 const Spacer(),
                                 Text(
-                                  "${task.taskTo!.hour.toString().padLeft(2, "0")}:${task.taskTo!.minute.toString().padLeft(2, "0")}",
+                                  "${task.date!.hour.toString().padLeft(2, "0")}:${task.date!.minute.toString().padLeft(2, "0")}",
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: isSelected

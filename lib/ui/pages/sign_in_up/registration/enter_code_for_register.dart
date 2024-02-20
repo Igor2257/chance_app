@@ -29,9 +29,18 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
 
   @override
   void initState() {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      secondsLeft--;
+      if (secondsLeft < 1) {
+        timer.cancel();
+      } else {
+        setState(() {});
+      }
+    });
     loadTimer();
     super.initState();
   }
+
   @override
   void dispose() {
     timer.cancel();
@@ -239,7 +248,7 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 28),
+                padding: const EdgeInsets.symmetric(horizontal: 28),
                 child: Text(
                   "Введіть код",
                   style: TextStyle(color: primaryText, fontSize: 14),
@@ -253,7 +262,8 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
                         "${firstTextEditingController.text}${secondTextEditingController.text}${thirdTextEditingController.text}${fourthTextEditingController.text}";
                     print(code);
                     await Repository()
-                        .checkIsCodeValid(code, state.email)
+                        .checkIsCodeValid(
+                            code, state.email, state.passwordFirst)
                         .then((value) {
                       if (value) {
                         Navigator.of(context).pushNamedAndRemoveUntil(
@@ -310,12 +320,5 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
 
   loadTimer() async {
     secondsLeft = 60;
-    timer=Timer.periodic(Duration(seconds: 1), (timer) {
-      secondsLeft--;
-      if (secondsLeft < 1) {
-        timer.cancel();
-      }
-      setState(() {});
-    });
   }
 }

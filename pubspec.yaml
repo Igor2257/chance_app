@@ -51,6 +51,7 @@ dependencies:
   intl_phone_number_input: ^0.7.4
   firebase_messaging: ^14.4.1
   firebase_crashlytics: ^3.4.15
+  flutter_secure_storage: ^9.0.0
 
 
 

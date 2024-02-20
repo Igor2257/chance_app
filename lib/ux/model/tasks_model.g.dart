@@ -17,28 +17,31 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return TaskModel(
-      id: fields[0] as int,
-      name: fields[1] as String,
-      taskTo: fields[2] as DateTime?,
-      notificationsBefore: fields[3] as String,
-      isDone: fields[4] as bool,
+      id: fields[0] as String,
+      message: fields[1] as String,
+      date: fields[2] as DateTime?,
+      isDone: fields[3] as bool,
+      userId: fields[4] as String,
+      isSended: fields[5] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, TaskModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.name)
+      ..write(obj.message)
       ..writeByte(2)
-      ..write(obj.taskTo)
+      ..write(obj.date)
       ..writeByte(3)
-      ..write(obj.notificationsBefore)
+      ..write(obj.isDone)
       ..writeByte(4)
-      ..write(obj.isDone);
+      ..write(obj.userId)
+      ..writeByte(5)
+      ..write(obj.isSended);
   }
 
   @override
@@ -58,20 +61,21 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
 
 _$TaskModelImpl _$$TaskModelImplFromJson(Map<String, dynamic> json) =>
     _$TaskModelImpl(
-      id: json['id'] as int,
-      name: json['name'] as String? ?? "",
-      taskTo: json['taskTo'] == null
-          ? null
-          : DateTime.parse(json['taskTo'] as String),
-      notificationsBefore: json['notificationsBefore'] as String? ?? "no",
+      id: json['id'] as String? ?? "",
+      message: json['message'] as String? ?? "",
+      date:
+          json['date'] == null ? null : DateTime.parse(json['date'] as String),
       isDone: json['isDone'] as bool? ?? false,
+      userId: json['userId'] as String? ?? "",
+      isSended: json['isSended'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$TaskModelImplToJson(_$TaskModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'name': instance.name,
-      'taskTo': instance.taskTo?.toIso8601String(),
-      'notificationsBefore': instance.notificationsBefore,
+      'message': instance.message,
+      'date': instance.date?.toIso8601String(),
       'isDone': instance.isDone,
+      'userId': instance.userId,
+      'isSended': instance.isSended,
     };

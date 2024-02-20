@@ -3,6 +3,7 @@ import 'package:chance_app/ui/components/custom_navigation_bar/custom_navigation
 import 'package:chance_app/ui/components/logo_name.dart';
 import 'package:chance_app/ui/components/sos_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
@@ -47,9 +48,12 @@ class _MainPageState extends State<MainPage> {
                     ),
                     width: cardWidth,
                     margin: const EdgeInsets.only(bottom: 8, top: 8, right: 8),
-                    onPress: () {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          "/reminders", (route) => true);
+                    onPress: ()async {
+                      await Repository().getTasks().whenComplete(() {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            "/reminders", (route) => true);
+                      });
+
                     },
                   ),
                   CustomCard(

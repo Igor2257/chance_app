@@ -86,6 +86,7 @@ class _InputRegisterLayoutState extends State<InputRegisterLayout> {
                     border: Border.all(color: isError ? red900 : beige300),
                     borderRadius: BorderRadius.circular(16)),
                 child: InternationalPhoneNumberInput(
+                  initialValue: PhoneNumber(phoneNumber:textEditingController.text,dialCode: "+380",isoCode: "+380"),
                   maxLength: 11,
                     hintText: "Номер телефону",
                     errorMessage: "",

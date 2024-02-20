@@ -23,19 +23,19 @@ mixin _$MeUser {
   @HiveField(0)
   String get id => throw _privateConstructorUsedError;
   @HiveField(1)
-  String get name => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
   @HiveField(2)
-  String get lastName => throw _privateConstructorUsedError;
+  String? get lastName => throw _privateConstructorUsedError;
   @HiveField(3)
-  String get phone => throw _privateConstructorUsedError;
+  String? get phone => throw _privateConstructorUsedError;
   @HiveField(4)
-  String get email => throw _privateConstructorUsedError;
+  String? get email => throw _privateConstructorUsedError;
   @HiveField(5)
-  bool get isGoogle => throw _privateConstructorUsedError;
+  bool? get isGoogle => throw _privateConstructorUsedError;
   @HiveField(6)
-  bool get isConfirmed => throw _privateConstructorUsedError;
+  bool? get isConfirmed => throw _privateConstructorUsedError;
   @HiveField(7)
-  String get deviceId => throw _privateConstructorUsedError;
+  String? get deviceId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -49,13 +49,13 @@ abstract class $MeUserCopyWith<$Res> {
   @useResult
   $Res call(
       {@HiveField(0) String id,
-      @HiveField(1) String name,
-      @HiveField(2) String lastName,
-      @HiveField(3) String phone,
-      @HiveField(4) String email,
-      @HiveField(5) bool isGoogle,
-      @HiveField(6) bool isConfirmed,
-      @HiveField(7) String deviceId});
+      @HiveField(1) String? name,
+      @HiveField(2) String? lastName,
+      @HiveField(3) String? phone,
+      @HiveField(4) String? email,
+      @HiveField(5) bool? isGoogle,
+      @HiveField(6) bool? isConfirmed,
+      @HiveField(7) String? deviceId});
 }
 
 /// @nodoc
@@ -72,47 +72,47 @@ class _$MeUserCopyWithImpl<$Res, $Val extends MeUser>
   @override
   $Res call({
     Object? id = null,
-    Object? name = null,
-    Object? lastName = null,
-    Object? phone = null,
-    Object? email = null,
-    Object? isGoogle = null,
-    Object? isConfirmed = null,
-    Object? deviceId = null,
+    Object? name = freezed,
+    Object? lastName = freezed,
+    Object? phone = freezed,
+    Object? email = freezed,
+    Object? isGoogle = freezed,
+    Object? isConfirmed = freezed,
+    Object? deviceId = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      name: null == name
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      lastName: null == lastName
+              as String?,
+      lastName: freezed == lastName
           ? _value.lastName
           : lastName // ignore: cast_nullable_to_non_nullable
-              as String,
-      phone: null == phone
+              as String?,
+      phone: freezed == phone
           ? _value.phone
           : phone // ignore: cast_nullable_to_non_nullable
-              as String,
-      email: null == email
+              as String?,
+      email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      isGoogle: null == isGoogle
+              as String?,
+      isGoogle: freezed == isGoogle
           ? _value.isGoogle
           : isGoogle // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isConfirmed: null == isConfirmed
+              as bool?,
+      isConfirmed: freezed == isConfirmed
           ? _value.isConfirmed
           : isConfirmed // ignore: cast_nullable_to_non_nullable
-              as bool,
-      deviceId: null == deviceId
+              as bool?,
+      deviceId: freezed == deviceId
           ? _value.deviceId
           : deviceId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ) as $Val);
   }
 }
@@ -126,13 +126,13 @@ abstract class _$$MeUserImplCopyWith<$Res> implements $MeUserCopyWith<$Res> {
   @useResult
   $Res call(
       {@HiveField(0) String id,
-      @HiveField(1) String name,
-      @HiveField(2) String lastName,
-      @HiveField(3) String phone,
-      @HiveField(4) String email,
-      @HiveField(5) bool isGoogle,
-      @HiveField(6) bool isConfirmed,
-      @HiveField(7) String deviceId});
+      @HiveField(1) String? name,
+      @HiveField(2) String? lastName,
+      @HiveField(3) String? phone,
+      @HiveField(4) String? email,
+      @HiveField(5) bool? isGoogle,
+      @HiveField(6) bool? isConfirmed,
+      @HiveField(7) String? deviceId});
 }
 
 /// @nodoc
@@ -147,47 +147,47 @@ class __$$MeUserImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? name = null,
-    Object? lastName = null,
-    Object? phone = null,
-    Object? email = null,
-    Object? isGoogle = null,
-    Object? isConfirmed = null,
-    Object? deviceId = null,
+    Object? name = freezed,
+    Object? lastName = freezed,
+    Object? phone = freezed,
+    Object? email = freezed,
+    Object? isGoogle = freezed,
+    Object? isConfirmed = freezed,
+    Object? deviceId = freezed,
   }) {
     return _then(_$MeUserImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      name: null == name
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      lastName: null == lastName
+              as String?,
+      lastName: freezed == lastName
           ? _value.lastName
           : lastName // ignore: cast_nullable_to_non_nullable
-              as String,
-      phone: null == phone
+              as String?,
+      phone: freezed == phone
           ? _value.phone
           : phone // ignore: cast_nullable_to_non_nullable
-              as String,
-      email: null == email
+              as String?,
+      email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      isGoogle: null == isGoogle
+              as String?,
+      isGoogle: freezed == isGoogle
           ? _value.isGoogle
           : isGoogle // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isConfirmed: null == isConfirmed
+              as bool?,
+      isConfirmed: freezed == isConfirmed
           ? _value.isConfirmed
           : isConfirmed // ignore: cast_nullable_to_non_nullable
-              as bool,
-      deviceId: null == deviceId
+              as bool?,
+      deviceId: freezed == deviceId
           ? _value.deviceId
           : deviceId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }
@@ -214,31 +214,31 @@ class _$MeUserImpl implements _MeUser {
   @override
   @JsonKey()
   @HiveField(1)
-  final String name;
+  final String? name;
   @override
   @JsonKey()
   @HiveField(2)
-  final String lastName;
+  final String? lastName;
   @override
   @JsonKey()
   @HiveField(3)
-  final String phone;
+  final String? phone;
   @override
   @JsonKey()
   @HiveField(4)
-  final String email;
+  final String? email;
   @override
   @JsonKey()
   @HiveField(5)
-  final bool isGoogle;
+  final bool? isGoogle;
   @override
   @JsonKey()
   @HiveField(6)
-  final bool isConfirmed;
+  final bool? isConfirmed;
   @override
   @JsonKey()
   @HiveField(7)
-  final String deviceId;
+  final String? deviceId;
 
   @override
   String toString() {
@@ -286,13 +286,13 @@ class _$MeUserImpl implements _MeUser {
 abstract class _MeUser implements MeUser {
   factory _MeUser(
       {@HiveField(0) required final String id,
-      @HiveField(1) final String name,
-      @HiveField(2) final String lastName,
-      @HiveField(3) final String phone,
-      @HiveField(4) final String email,
-      @HiveField(5) final bool isGoogle,
-      @HiveField(6) final bool isConfirmed,
-      @HiveField(7) final String deviceId}) = _$MeUserImpl;
+      @HiveField(1) final String? name,
+      @HiveField(2) final String? lastName,
+      @HiveField(3) final String? phone,
+      @HiveField(4) final String? email,
+      @HiveField(5) final bool? isGoogle,
+      @HiveField(6) final bool? isConfirmed,
+      @HiveField(7) final String? deviceId}) = _$MeUserImpl;
 
   factory _MeUser.fromJson(Map<String, dynamic> json) = _$MeUserImpl.fromJson;
 
@@ -301,25 +301,25 @@ abstract class _MeUser implements MeUser {
   String get id;
   @override
   @HiveField(1)
-  String get name;
+  String? get name;
   @override
   @HiveField(2)
-  String get lastName;
+  String? get lastName;
   @override
   @HiveField(3)
-  String get phone;
+  String? get phone;
   @override
   @HiveField(4)
-  String get email;
+  String? get email;
   @override
   @HiveField(5)
-  bool get isGoogle;
+  bool? get isGoogle;
   @override
   @HiveField(6)
-  bool get isConfirmed;
+  bool? get isConfirmed;
   @override
   @HiveField(7)
-  String get deviceId;
+  String? get deviceId;
   @override
   @JsonKey(ignore: true)
   _$$MeUserImplCopyWith<_$MeUserImpl> get copyWith =>

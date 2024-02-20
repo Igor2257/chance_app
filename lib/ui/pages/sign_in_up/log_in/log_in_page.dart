@@ -39,7 +39,7 @@ class LoginPage extends StatelessWidget {
                 obscureText: false,
                 textInputAction: TextInputAction.next,
                 inputLoginLayouts: InputLoginLayouts.email,
-                textInputType: TextInputType.phone),
+                textInputType: TextInputType.emailAddress),
             const SizedBox(height: 24),
             InputLoginLayout(
                 title: "Введіть пароль*",
