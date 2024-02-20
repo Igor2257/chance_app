@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:chance_app/ui/pages/reminders_page/tasks/custom_bottom_sheet_notificatenion_picker.dart';
 import 'package:flutter/material.dart';
 
 Color beigeTransparent = const Color(0xfffbf6f0),
@@ -92,5 +91,11 @@ String getMonthName(int month) {
   }
 }
 
-
-
+const NotificationsBeforeEnumMap = {
+  NotificationsBefore.no: 'no',
+  NotificationsBefore.atTime: 'atTime',
+  NotificationsBefore.fiveMinute: 'fiveMinute',
+  NotificationsBefore.thirtyMinute: 'thirtyMinute',
+  NotificationsBefore.oneHour: 'oneHour',
+  NotificationsBefore.oneDay: 'oneDay',
+};

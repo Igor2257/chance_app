@@ -3,7 +3,6 @@ import 'package:chance_app/ui/pages/reminders_page/components/calendar.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class CalendarForTasks extends StatelessWidget {
   CalendarForTasks({super.key});
@@ -175,9 +174,7 @@ final DateTime now=DateTime.now();
                                   fontSize: 16),
                             ),
                           ),
-                          if ((e["number"] == dateTime.day.toString()) &&
-                              (e["month"] == dateTime.month) &&
-                              (e["year"] == dateTime.year))
+                          if (e["hasTasks"])
                             Container(
                               height: 10,
                               width: 10,

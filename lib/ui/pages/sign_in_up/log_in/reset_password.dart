@@ -82,7 +82,7 @@ class _ResetPasswordState extends State<ResetPassword> {
               onPress: () async {
                 validate();
                 if (!isError) {
-                  await Repository().forgotPassword(editingController.text);
+                  await Repository().forgotPassword(editingController.text).then((value) {
                   showDialog(
                       context: context,
                       builder: (context) {
@@ -129,6 +129,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                           ),
                         );
                       });
+                  });
                 }
               },
             ),

@@ -48,7 +48,7 @@ class DateElement extends StatelessWidget {
                       fontSize: 16),
                 ),
               ),
-              if(isCurrentDate)
+              if (date["hasTasks"])
                 Container(
                   margin: EdgeInsets.only(bottom: 2),
                   height: 6,width: 6,

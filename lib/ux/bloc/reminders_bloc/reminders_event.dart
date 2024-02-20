@@ -81,3 +81,27 @@ class SaveTasks extends RemindersEvent{
 
   SaveTasks({required this.context});
 }
+
+class SelectTask extends RemindersEvent{
+  final int position;
+
+  SelectTask({required this.position});
+}
+
+class LoadTasksForToday extends RemindersEvent{
+  final DateTime datetime;
+
+  LoadTasksForToday({required this.datetime});
+}
+
+class ChangeIsDoneForTask extends RemindersEvent{
+  final int id;
+
+  ChangeIsDoneForTask({required this.id});
+}
+
+class DeleteTask extends RemindersEvent{
+  final int id;
+
+  DeleteTask({required this.id});
+}

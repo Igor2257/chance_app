@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/calendar.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/custom_bottom_sheet.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/custom_tab_bar.dart';
+import 'package:chance_app/ui/pages/reminders_page/tasks/task_list.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,6 +40,13 @@ class _RemindersPageState extends State<RemindersPage>
           "Нагадування",
           style: TextStyle(fontSize: 22, color: primaryText),
         ),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil("/", (route) => false);
+            },
+            icon: Icon(
+                Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios)),
         actions: [
           IconButton(
               onPressed: () {},
@@ -91,10 +101,7 @@ class _RemindersPageState extends State<RemindersPage>
                 SizedBox(
                   height: 24,
                 ),
-                Text(
-                  "Додайте завдання",
-                  style: TextStyle(fontSize: 24),
-                ),
+                TaskList(),
               ],
             ),
           )

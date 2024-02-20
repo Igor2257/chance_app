@@ -81,7 +81,8 @@ class _CustomTabBarState extends State<CustomTabBar> {
                 ),
               ],
             ),
-          )
+          ),
+
         ],
       ),
     );

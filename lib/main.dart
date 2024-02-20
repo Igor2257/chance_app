@@ -4,6 +4,8 @@ import 'package:chance_app/firebase_options.dart';
 import 'package:chance_app/ui/pages/main_page/main_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/calendar_task_page.dart';
+import 'package:chance_app/ui/pages/reminders_page/tasks/custom_bottom_sheet_notificatenion_picker.dart';
+import 'package:chance_app/ui/pages/reminders_page/tasks/tasks_for_today.dart';
 import 'package:chance_app/ui/pages/sign_in_up/log_in/log_in_page.dart';
 import 'package:chance_app/ui/pages/sign_in_up/log_in/reset_password.dart';
 import 'package:chance_app/ui/pages/sign_in_up/log_in/reset_password_enter_code.dart';
@@ -16,6 +18,7 @@ import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/model/tasks_model.dart';
+import 'package:chance_app/ux/repository.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -38,7 +41,7 @@ void main() async {
     return false;
   };
 
-  FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
+ // FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
   FirebaseMessaging.instance.requestPermission();
   await _initBoxes().then((value) {
     runApp(const MyApp());
@@ -69,7 +72,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          initialRoute: "/",
+          initialRoute: Repository().user!=null?"/signinup":"/",
           routes: {
             "/": (context) => const MainPage(),
             "/signinup": (context) => const SignInUpPage(),
@@ -80,6 +83,7 @@ class MyApp extends StatelessWidget {
             "/reminders": (context) => const RemindersPage(),
             "/date_picker_for_tasks": (context) => const CalendarTaskPage(),
             "/reset_password": (context) => const ResetPassword(),
+            "/tasks_for_today": (context) => const TasksForToday(),
           },
         ));
   }
@@ -91,7 +95,7 @@ Box? userBox;
 Future<bool> _initBoxes() async {
   final documentsDirectory = await getApplicationDocumentsDirectory();
   Hive.init(documentsDirectory.path);
-  //await Hive.deleteBoxFromDisk('user');
+  //await Hive.deleteBoxFromDisk('myTasks');
   Hive.registerAdapter(MeUserAdapter());
   Hive.registerAdapter(TaskModelAdapter());
   tasksBox = await Hive.openBox<TaskModel>("myTasks");

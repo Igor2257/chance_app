@@ -207,9 +207,7 @@ class CalendarView extends StatelessWidget {
                                         fontSize: 16),
                                   ),
                                 ),
-                                if ((e["number"] == dateTime.day.toString()) &&
-                                    (e["month"] == dateTime.month) &&
-                                    (e["year"] == dateTime.year))
+                                if (e["hasTasks"])
                                   Container(
                                     height: 10,
                                     width: 10,

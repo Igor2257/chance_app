@@ -219,16 +219,19 @@ class Repository {
     return isOkay;
   }
 
+  Future<bool> saveTask(String email, String code, String newPassword) async {
+    bool isOkay = false;
+
+    return isOkay;
+  }
+
   Future addTask(TaskModel taskModel) async {
     await tasksBox!.put(taskModel.id ~/ 1000, taskModel);
   }
 
   Future updateTask(TaskModel taskModel) async {
-    var list = tasksBox!.values.where((element) => element.id != taskModel.id);
-    for (var task in list) {
-      tasksBox!.put(task.id, task);
-    }
     tasksBox!.put(taskModel.id ~/ 1000, taskModel);
+
   }
 
   Future removeTask(int id) async {

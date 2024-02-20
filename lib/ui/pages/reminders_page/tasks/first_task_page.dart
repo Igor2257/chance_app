@@ -55,7 +55,6 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
             GestureDetector(
               onTap: () {
                 BlocProvider.of<RemindersBloc>(context).add(SaveTasks(context: context));
-                Navigator.of(context).pop();
               },
               child: Container(
                 height: 48,

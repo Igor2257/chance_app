@@ -25,6 +25,7 @@ class RemindersState {
     "за 1 год",
     "за 1 день",
   ];
+  List<TaskModel> myTasks,tasksForToday;
 
   RemindersState({
     this.reminders = Reminders.empty,
@@ -32,6 +33,8 @@ class RemindersState {
     this.isCalendarOpened = false,
     this.days = const [],
     this.week = const [],
+    this.myTasks = const [],
+    this.tasksForToday = const [],
     this.daysForTasks = const [],
     this.selectedDate,
     this.dateForSwiping,
@@ -67,6 +70,7 @@ class RemindersState {
     pageForTasks,sessionForNotification,sessionForSelectingDateForTask,
     NotificationsBefore? oldNotificationsBefore,newNotificationsBefore,fromLastSession,
     TaskModel? taskModel,
+    List<TaskModel>? myTasks,tasksForToday,
   }) {
     return RemindersState(
       reminders: reminders ?? this.reminders,
@@ -91,6 +95,8 @@ class RemindersState {
       fromLastSession: fromLastSession ?? this.fromLastSession,
       taskModel: taskModel ?? this.taskModel,
       sessionForSelectingDateForTask: sessionForSelectingDateForTask ?? this.sessionForSelectingDateForTask,
+      myTasks: myTasks ?? this.myTasks,
+      tasksForToday: tasksForToday ?? this.tasksForToday,
     );
   }
 }

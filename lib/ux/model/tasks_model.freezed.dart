@@ -25,13 +25,10 @@ mixin _$TaskModel {
   @HiveField(1)
   String get name => throw _privateConstructorUsedError;
   @HiveField(2)
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  @HiveField(3)
   DateTime? get taskTo => throw _privateConstructorUsedError;
+  @HiveField(3)
+  String get notificationsBefore => throw _privateConstructorUsedError;
   @HiveField(4)
-  NotificationsBefore get notificationsBefore =>
-      throw _privateConstructorUsedError;
-  @HiveField(5)
   bool get isDone => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -48,10 +45,9 @@ abstract class $TaskModelCopyWith<$Res> {
   $Res call(
       {@HiveField(0) int id,
       @HiveField(1) String name,
-      @HiveField(2) DateTime createdAt,
-      @HiveField(3) DateTime? taskTo,
-      @HiveField(4) NotificationsBefore notificationsBefore,
-      @HiveField(5) bool isDone});
+      @HiveField(2) DateTime? taskTo,
+      @HiveField(3) String notificationsBefore,
+      @HiveField(4) bool isDone});
 }
 
 /// @nodoc
@@ -69,7 +65,6 @@ class _$TaskModelCopyWithImpl<$Res, $Val extends TaskModel>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? createdAt = null,
     Object? taskTo = freezed,
     Object? notificationsBefore = null,
     Object? isDone = null,
@@ -83,10 +78,6 @@ class _$TaskModelCopyWithImpl<$Res, $Val extends TaskModel>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
       taskTo: freezed == taskTo
           ? _value.taskTo
           : taskTo // ignore: cast_nullable_to_non_nullable
@@ -94,7 +85,7 @@ class _$TaskModelCopyWithImpl<$Res, $Val extends TaskModel>
       notificationsBefore: null == notificationsBefore
           ? _value.notificationsBefore
           : notificationsBefore // ignore: cast_nullable_to_non_nullable
-              as NotificationsBefore,
+              as String,
       isDone: null == isDone
           ? _value.isDone
           : isDone // ignore: cast_nullable_to_non_nullable
@@ -114,10 +105,9 @@ abstract class _$$TaskModelImplCopyWith<$Res>
   $Res call(
       {@HiveField(0) int id,
       @HiveField(1) String name,
-      @HiveField(2) DateTime createdAt,
-      @HiveField(3) DateTime? taskTo,
-      @HiveField(4) NotificationsBefore notificationsBefore,
-      @HiveField(5) bool isDone});
+      @HiveField(2) DateTime? taskTo,
+      @HiveField(3) String notificationsBefore,
+      @HiveField(4) bool isDone});
 }
 
 /// @nodoc
@@ -133,7 +123,6 @@ class __$$TaskModelImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? createdAt = null,
     Object? taskTo = freezed,
     Object? notificationsBefore = null,
     Object? isDone = null,
@@ -147,10 +136,6 @@ class __$$TaskModelImplCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
       taskTo: freezed == taskTo
           ? _value.taskTo
           : taskTo // ignore: cast_nullable_to_non_nullable
@@ -158,7 +143,7 @@ class __$$TaskModelImplCopyWithImpl<$Res>
       notificationsBefore: null == notificationsBefore
           ? _value.notificationsBefore
           : notificationsBefore // ignore: cast_nullable_to_non_nullable
-              as NotificationsBefore,
+              as String,
       isDone: null == isDone
           ? _value.isDone
           : isDone // ignore: cast_nullable_to_non_nullable
@@ -173,10 +158,9 @@ class _$TaskModelImpl implements _TaskModel {
   _$TaskModelImpl(
       {@HiveField(0) required this.id,
       @HiveField(1) this.name = "",
-      @HiveField(2) required this.createdAt,
-      @HiveField(3) this.taskTo = null,
-      @HiveField(4) this.notificationsBefore = NotificationsBefore.no,
-      @HiveField(5) this.isDone = false});
+      @HiveField(2) this.taskTo = null,
+      @HiveField(3) this.notificationsBefore = "no",
+      @HiveField(4) this.isDone = false});
 
   factory _$TaskModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$TaskModelImplFromJson(json);
@@ -189,24 +173,21 @@ class _$TaskModelImpl implements _TaskModel {
   @HiveField(1)
   final String name;
   @override
-  @HiveField(2)
-  final DateTime createdAt;
-  @override
   @JsonKey()
-  @HiveField(3)
+  @HiveField(2)
   final DateTime? taskTo;
   @override
   @JsonKey()
-  @HiveField(4)
-  final NotificationsBefore notificationsBefore;
+  @HiveField(3)
+  final String notificationsBefore;
   @override
   @JsonKey()
-  @HiveField(5)
+  @HiveField(4)
   final bool isDone;
 
   @override
   String toString() {
-    return 'TaskModel(id: $id, name: $name, createdAt: $createdAt, taskTo: $taskTo, notificationsBefore: $notificationsBefore, isDone: $isDone)';
+    return 'TaskModel(id: $id, name: $name, taskTo: $taskTo, notificationsBefore: $notificationsBefore, isDone: $isDone)';
   }
 
   @override
@@ -216,8 +197,6 @@ class _$TaskModelImpl implements _TaskModel {
             other is _$TaskModelImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
             (identical(other.taskTo, taskTo) || other.taskTo == taskTo) &&
             (identical(other.notificationsBefore, notificationsBefore) ||
                 other.notificationsBefore == notificationsBefore) &&
@@ -226,8 +205,8 @@ class _$TaskModelImpl implements _TaskModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, id, name, createdAt, taskTo, notificationsBefore, isDone);
+  int get hashCode =>
+      Object.hash(runtimeType, id, name, taskTo, notificationsBefore, isDone);
 
   @JsonKey(ignore: true)
   @override
@@ -247,10 +226,9 @@ abstract class _TaskModel implements TaskModel {
   factory _TaskModel(
       {@HiveField(0) required final int id,
       @HiveField(1) final String name,
-      @HiveField(2) required final DateTime createdAt,
-      @HiveField(3) final DateTime? taskTo,
-      @HiveField(4) final NotificationsBefore notificationsBefore,
-      @HiveField(5) final bool isDone}) = _$TaskModelImpl;
+      @HiveField(2) final DateTime? taskTo,
+      @HiveField(3) final String notificationsBefore,
+      @HiveField(4) final bool isDone}) = _$TaskModelImpl;
 
   factory _TaskModel.fromJson(Map<String, dynamic> json) =
       _$TaskModelImpl.fromJson;
@@ -263,15 +241,12 @@ abstract class _TaskModel implements TaskModel {
   String get name;
   @override
   @HiveField(2)
-  DateTime get createdAt;
-  @override
-  @HiveField(3)
   DateTime? get taskTo;
   @override
-  @HiveField(4)
-  NotificationsBefore get notificationsBefore;
+  @HiveField(3)
+  String get notificationsBefore;
   @override
-  @HiveField(5)
+  @HiveField(4)
   bool get isDone;
   @override
   @JsonKey(ignore: true)
