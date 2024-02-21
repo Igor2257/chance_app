@@ -35,78 +35,102 @@ class _RemindersPageState extends State<RemindersPage>
     return BlocBuilder<RemindersBloc, RemindersState>(
         builder: (context, state) {
       return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          centerTitle: true,
-          title: Text(
-            "Нагадування",
-            style: TextStyle(fontSize: 22, color: primaryText),
-          ),
-          leading: IconButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil("/", (route) => false);
-              },
-              icon: Icon(Platform.isAndroid
-                  ? Icons.arrow_back
-                  : Icons.arrow_back_ios)),
-          actions: [
-            IconButton(
-                onPressed: () {},
-                icon: SvgPicture.asset("assets/icons/dots_vertical.svg")),
-          ],
-        ),
-        floatingActionButton: Builder(builder: (context) {
-          return InkWell(
-            onTap: () {
-              if (!state.isLoading) {
-                Scaffold.of(context).showBottomSheet((context) => const CustomBottomSheet());
-
-              }
-            },
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              height: 44,
-              decoration: BoxDecoration(
-                  color: primary1000, borderRadius: BorderRadius.circular(16)),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.add,
-                    color: primary50,
-                  ),
-                  Text(
-                    "Додати",
-                    style: TextStyle(
-                        fontSize: 16, letterSpacing: 0.15, color: primary50),
-                  ),
-                ],
-              ),
+          resizeToAvoidBottomInset: true,
+          extendBody: true,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            surfaceTintColor: Colors.transparent,
+            centerTitle: true,
+            title: Text(
+              "Нагадування",
+              style: TextStyle(fontSize: 22, color: primaryText),
             ),
-          );
-        }),
-        backgroundColor: beigeBG,
-        body: state.isLoading
-            ? Center(
-                child: CupertinoActivityIndicator(
-                  color: primary500,
-                  radius: 50,
+            leading: IconButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil("/", (route) => false);
+                },
+                icon: Icon(Platform.isAndroid
+                    ? Icons.arrow_back
+                    : Icons.arrow_back_ios)),
+            actions: [
+              IconButton(
+                  onPressed: () {},
+                  icon: SvgPicture.asset("assets/icons/dots_vertical.svg")),
+            ],
+          ),
+          backgroundColor: beigeBG,
+          body: Stack(
+            children: [
+              state.isLoading
+                  ? Center(
+                      child: CupertinoActivityIndicator(
+                        color: primary500,
+                        radius: 50,
+                      ),
+                    )
+                  : Column(
+                      children: [
+                        CalendarView(),
+                        const Padding(
+                          padding: EdgeInsets.all(16),
+                          child: CustomTabBar(),
+                        ),
+                        const Expanded(child: TaskList()),
+                      ],
+                    ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 40, right: 10),
+                  child: Builder(builder: (context) {
+                    return InkWell(
+                      onTap: () {
+                        if (!state.isLoading) {
+                          showBottomSheet(
+                              backgroundColor: beige100,
+                              enableDrag: true,
+                              context: context,
+                              transitionAnimationController:
+                                  AnimationController(
+                                      vsync: this,
+                                      duration:
+                                          const Duration(milliseconds: 200)),
+                              builder: (context) {
+                                return const CustomBottomSheet();
+                              });
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        height: 44,
+                        decoration: BoxDecoration(
+                            color: primary1000,
+                            borderRadius: BorderRadius.circular(16)),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.add,
+                              color: primary50,
+                            ),
+                            Text(
+                              "Додати",
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  letterSpacing: 0.15,
+                                  color: primary50),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
                 ),
-              )
-            : Column(
-                children: [
-                  CalendarView(),
-                  const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: CustomTabBar(),
-                  ),
-                  const Expanded(child: TaskList()),
-                ],
               ),
-      );
+            ],
+          ));
     });
   }
 }

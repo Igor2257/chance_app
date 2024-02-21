@@ -260,7 +260,6 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
                   onPress: () async {
                     String code =
                         "${firstTextEditingController.text}${secondTextEditingController.text}${thirdTextEditingController.text}${fourthTextEditingController.text}";
-                    print(code);
                     await Repository()
                         .checkIsCodeValid(
                             code, state.email, state.passwordFirst)

@@ -33,7 +33,7 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
     return BlocBuilder<RemindersBloc, RemindersState>(
         builder: (context, state) {
       TaskModel? taskModel = state.taskModel;
-      print(taskModel);
+
       return Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,

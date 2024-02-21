@@ -293,11 +293,11 @@ class Repository {
     return list;
   }
 
-  Future<bool> updateTask(TaskModel taskModel) async {
+  Future<bool> updateTask(
+      {String? name, DateTime? date, bool? isDone, required String id}) async {
     bool isOkay = false;
 
-    var url =
-        Uri.parse('http://139.28.37.11:56565/stage/api/task/${taskModel.id}');
+    var url = Uri.parse('http://139.28.37.11:56565/stage/api/task/$id');
 
     try {
       final cookie = await getCookie();
@@ -307,7 +307,11 @@ class Repository {
                 'Content-Type': 'application/json',
                 'Cookie': cookie.toString(),
               },
-              body: jsonEncode({}))
+              body: jsonEncode({
+                if (name != null) "message": name,
+                if (date != null) "date": date,
+                if (isDone != null) "isDone": isDone
+              }))
           .then((value) {
         if (value.statusCode > 199 && value.statusCode < 300) {
         } else {
@@ -326,9 +330,7 @@ class Repository {
     try {
       final cookie = await getCookie();
       String date = taskModel.date!.toIso8601String().toString();
-      print("date1 ${taskModel.date!.toIso8601String()}");
-      print("date1 ${taskModel.date!.toUtc()}");
-      print("date1 ${taskModel.date!.toLocal()}");
+
       await http
           .post(
         url,
@@ -390,7 +392,6 @@ class Repository {
   Future<bool> removeTask(String taskId) async {
     bool isOkay = false;
     var url = Uri.parse('http://139.28.37.11:56565/stage/api/task/$taskId');
-    print("taskId $taskId");
     try {
       final cookie = await getCookie();
       await http.delete(url, headers: <String, String>{

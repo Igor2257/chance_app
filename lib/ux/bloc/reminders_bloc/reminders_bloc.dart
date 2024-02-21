@@ -227,7 +227,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
   FutureOr<void> _onChangeMonthForTasks(
       ChangeMonthForTasks event, Emitter<RemindersState> emit) {
     List<Map<String, dynamic>> dates = [];
-    DateTime now = state.dateForSwiping ?? DateTime.now();
+    DateTime now = state.dateForSwipingForTasks ?? DateTime.now();
     int plusOrMinus = event.sideSwipe == SideSwipe.left ? -1 : 1;
     int year = now.year;
     int month = now.month;
@@ -262,13 +262,6 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         "hasTasks": checkIfDayHasTask(myTasks, i, month, year)
       });
     }
-    myTasks = myTasks
-        .where((element) =>
-            element.date!.day == now.day &&
-            element.date!.month == now.month &&
-            element.date!.year == now.year)
-        .toList();
-    myTasks.sort((a, b) => a.date!.compareTo(b.date!));
     emit(state.copyWith(
         daysForTasks: dates, dateForSwipingForTasks: DateTime(year, month)));
   }
@@ -417,7 +410,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
                     future: delay(context),
                     builder: (context, snapshot) {
                       return AlertDialog(
-                        backgroundColor: beige100,
+                        backgroundColor: beigeBG,
                         content: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 24, vertical: 16),
@@ -454,7 +447,11 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     List<TaskModel> myTasks = List.from(state.myTasks);
     myTasks[event.position] = myTasks[event.position]
         .copyWith(isDone: !myTasks[event.position].isDone);
-    await Repository().updateTask(myTasks[event.position]).then((value) {
+    await Repository()
+        .updateTask(
+            isDone: myTasks[event.position].isDone,
+            id: myTasks[event.position].id)
+        .then((value) {
       emit(state.copyWith(myTasks: myTasks));
     });
   }
@@ -477,7 +474,9 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     TaskModel myTask =
         Repository().myTasks.firstWhere((element) => element.id == event.id);
     myTask = myTask.copyWith(isDone: !myTask.isDone);
-    await Repository().updateTask(myTask).then((value) {
+    await Repository()
+        .updateTask(isDone: myTask.isDone, id: myTask.id)
+        .then((value) {
       add(LoadTasksForToday(
           datetime: DateTime(
               myTask.date!.year, myTask.date!.month, myTask.date!.day)));

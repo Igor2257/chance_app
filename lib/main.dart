@@ -1,4 +1,5 @@
 import 'package:chance_app/firebase_options.dart';
+import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/main_page/main_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/calendar_task_page.dart';
@@ -22,6 +23,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -48,7 +50,6 @@ void main() async {
   await _initBoxes().then((value) async {
     await Repository().getUser().then((user) {
       String route = "/signinup";
-      print(user);
       if (user != null) {
         route = "/";
       }
@@ -57,11 +58,30 @@ void main() async {
   });
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp(this.route, {super.key});
-final String route;
+
+  final String route;
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Key key = UniqueKey();
+  List<String> toasts = [];
+  RemoteMessage? remoteMessage;
+
+  void restartApp(RemoteMessage? remoteMessage) {
+    setState(() {
+      key = UniqueKey();
+    });
+    this.remoteMessage = remoteMessage;
+  }
+
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return MultiBlocProvider(
         providers: [
           BlocProvider(
@@ -74,27 +94,78 @@ final String route;
             create: (context) => RemindersBloc(),
           ),
         ],
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-          ),
-          initialRoute: route,
-          routes: {
-            "/": (context) => const MainPage(),
-            "/signinup": (context) => const SignInUpPage(),
-            "/registration": (context) => const RegistrationPage(),
-            "/login": (context) => LoginPage(),
-            "/enter_code": (context) => const EnterCodeForRegister(),
-            "/subscription_page": (context) => const SubscriptionPage(),
-            "/reminders": (context) => const RemindersPage(),
-            "/date_picker_for_tasks": (context) => const CalendarTaskPage(),
-            "/reset_password": (context) => const ResetPassword(),
-            "/tasks_for_today": (context) => const TasksForToday(),
-          },
-        ));
+        child: Directionality(
+            textDirection: TextDirection.rtl,
+            child: Stack(
+              children: [
+                IgnorePointer(
+                  ignoring: remoteMessage != null,
+                  child: KeyedSubtree(
+                      key: key,
+                      child: SizedBox(
+                          width: size.width,
+                          height: size.height,
+                          child: MaterialApp(
+                            title: 'Flutter Demo',
+                            debugShowCheckedModeBanner: false,
+                            theme: ThemeData(
+                              colorScheme: ColorScheme.fromSeed(
+                                  seedColor: Colors.deepPurple),
+                              useMaterial3: true,
+                            ),
+                            initialRoute: widget.route,
+                            routes: {
+                              "/": (context) => const MainPage(),
+                              "/signinup": (context) => const SignInUpPage(),
+                              "/registration": (context) =>
+                                  const RegistrationPage(),
+                              "/login": (context) => LoginPage(),
+                              "/enter_code": (context) =>
+                                  const EnterCodeForRegister(),
+                              "/subscription_page": (context) =>
+                                  const SubscriptionPage(),
+                              "/reminders": (context) => const RemindersPage(),
+                              "/date_picker_for_tasks": (context) =>
+                                  const CalendarTaskPage(),
+                              "/reset_password": (context) =>
+                                  const ResetPassword(),
+                              "/tasks_for_today": (context) =>
+                                  const TasksForToday(),
+                            },
+                          ))),
+                ),
+                if (remoteMessage != null)
+                  Center(
+                    child: Container(
+                      width: size.width,
+                      height: size.height / 2,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16)),
+                      padding:
+                          const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                      margin:
+                          const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                      child: Column(
+                        children: [
+                          SvgPicture.asset(
+                            "assets/icons/tasks_big.svg",
+                            color: beige500,
+                          ),
+                          Text(
+                            "Завдання",
+                            style: TextStyle(fontSize: 16, color: primaryText),
+                          ),
+                          Text(
+                            remoteMessage!.data["message"],
+                            style: TextStyle(fontSize: 24, color: primaryText),
+                          ),
+
+                        ],
+                      ),
+                    ),
+                  )
+              ],
+            )));
   }
 }
 
@@ -157,7 +228,11 @@ _loadFCM() async {
 
 _listenFCM() async {
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-print("object");
+    print("message.data");
+    print(message.data.toString());
+    print(message.notification.toString());
+    print(message.category.toString());
+    print(message.sentTime.toString());
     flutterLocalNotificationsPlugin.show(
         DateTime.now().millisecondsSinceEpoch~/1000,
         message.data["type"]=="task"?"Завдання":"",

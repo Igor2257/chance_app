@@ -87,7 +87,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          backgroundColor: beige100,
+                          backgroundColor: beigeBG,
                           title: Center(
                             child: Text(
                               "Лист був відправлений",

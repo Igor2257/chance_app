@@ -32,7 +32,6 @@ class _TasksForTodayState extends State<TasksForToday> {
     return BlocBuilder<RemindersBloc, RemindersState>(
         builder: (context, state) {
       List<TaskModel> tasksForToday = List.from(state.tasksForToday);
-      print(tasksForToday);
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -48,13 +47,14 @@ class _TasksForTodayState extends State<TasksForToday> {
               },
               icon: const Icon(Icons.close)),
         ),
-        backgroundColor: beige100,
+        backgroundColor: beigeBG,
         body: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
               Text(
                 "Не забутьте відмітити завдання як виконане",
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 22,
                   color: primaryText,
@@ -309,7 +309,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                                                       future: delay(context),
                                                                                       builder: (context, snapshot) {
                                                                                         return AlertDialog(
-                                                                                          backgroundColor: beige100,
+                                                                                          backgroundColor: beigeBG,
                                                                                           content: Padding(
                                                                                             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                                                                                             child: Column(

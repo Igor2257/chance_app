@@ -27,6 +27,8 @@ class TasksSheets extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
+                    BlocProvider.of<RemindersBloc>(context).add(
+                        SelectWhatPersonWouldLikeToAdd(reminders: Reminders.empty));
                     Navigator.of(context).pop();
                   },
                   child: const SizedBox(

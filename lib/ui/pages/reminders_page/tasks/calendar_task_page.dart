@@ -5,6 +5,7 @@ import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/calendar_for_tasks.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/custom_bottom_sheet_notification_picker.dart';
+import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,7 +21,7 @@ class CalendarTaskPage extends StatefulWidget {
 class _CalendarTaskPageState extends State<CalendarTaskPage> {
   @override
   void initState() {
-    BlocProvider.of<RemindersBloc>(context).add(LoadData());
+    BlocProvider.of<RemindersBloc>(context).add(LoadDataForSelectDateForTasks());
     super.initState();
   }
   final int session = DateTime.now().millisecondsSinceEpoch;

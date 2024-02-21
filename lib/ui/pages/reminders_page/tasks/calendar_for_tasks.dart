@@ -14,7 +14,6 @@ final DateTime now=DateTime.now();
         builder: (context, state) {
       List<Map<String, dynamic>>
           days = List.from(state.daysForTasks);
-      DateTime dateTime = DateTime.now();
       int count = getCount(days.first["weekDay"].toString());
       for (int i = 0; i < count; i++) {
         days.insert(0, {"number": -1,});
@@ -28,7 +27,6 @@ final DateTime now=DateTime.now();
           children: [
             Row(
               children: [
-
                 Text(
                   "${getMonthName(state.dateForSwiping?.month ?? 0)}, ${state.dateForSwiping?.year ?? ""}",
                   style: TextStyle(fontSize: 22, color: primaryText),
@@ -37,13 +35,13 @@ final DateTime now=DateTime.now();
                 IconButton(
                     onPressed: () {
                       BlocProvider.of<RemindersBloc>(context)
-                          .add(ChangeMonth(sideSwipe: SideSwipe.left));
+                          .add(ChangeMonthForTasks(sideSwipe: SideSwipe.left));
                     },
                     icon: Icon(Icons.arrow_back_ios, color: primaryText)),
                 IconButton(
                     onPressed: () {
                       BlocProvider.of<RemindersBloc>(context)
-                          .add(ChangeMonth(sideSwipe: SideSwipe.right));
+                          .add(ChangeMonthForTasks(sideSwipe: SideSwipe.right));
                     },
                     icon: Icon(Icons.arrow_forward_ios, color: primaryText)),
 
