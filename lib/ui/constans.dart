@@ -1,4 +1,4 @@
-import 'package:chance_app/ui/pages/reminders_page/tasks/custom_bottom_sheet_notificatenion_picker.dart';
+import 'package:chance_app/ui/pages/reminders_page/tasks/custom_bottom_sheet_notification_picker.dart';
 import 'package:flutter/material.dart';
 
 Color beigeTransparent = const Color(0xfffbf6f0),

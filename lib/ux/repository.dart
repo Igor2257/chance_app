@@ -72,16 +72,6 @@ class Repository {
     var saltedPassword = salt + password;
     var bytes = utf8.encode(saltedPassword);
     var hash = sha256.convert(bytes);
-    print(lastName);
-    print(name);
-    print(phone);
-    print(jsonEncode({
-      "password": hash.toString().substring(0, 13),
-      "email": email,
-      "name": name,
-      "lastName": lastName,
-      "phone": phone,
-    }));
     try {
       await http
           .post(url,
@@ -270,7 +260,7 @@ class Repository {
     List<TaskModel> list = [];
 
     var url = Uri.parse('http://139.28.37.11:56565/stage/api/task');
-
+    clearTasks();
     try {
       final cookie = await getCookie();
       await http.get(
@@ -281,7 +271,6 @@ class Repository {
         },
       ).then((value) {
         if (value.statusCode > 199 && value.statusCode < 300) {
-          clearTasks();
           List<dynamic> list = jsonDecode(value.body);
           for (int i = 0; i < list.length; i++) {
             TaskModel taskModel = TaskModel(
@@ -307,7 +296,8 @@ class Repository {
   Future<bool> updateTask(TaskModel taskModel) async {
     bool isOkay = false;
 
-    var url = Uri.parse('http://139.28.37.11:56565/stage/api/task');
+    var url =
+        Uri.parse('http://139.28.37.11:56565/stage/api/task/${taskModel.id}');
 
     try {
       final cookie = await getCookie();
@@ -335,7 +325,10 @@ class Repository {
     var url = Uri.parse('http://139.28.37.11:56565/stage/api/task');
     try {
       final cookie = await getCookie();
-      String date = taskModel.date!.toUtc().toString();
+      String date = taskModel.date!.toIso8601String().toString();
+      print("date1 ${taskModel.date!.toIso8601String()}");
+      print("date1 ${taskModel.date!.toUtc()}");
+      print("date1 ${taskModel.date!.toLocal()}");
       await http
           .post(
         url,
@@ -395,7 +388,25 @@ class Repository {
   }
 
   Future<bool> removeTask(String taskId) async {
-    return false;
+    bool isOkay = false;
+    var url = Uri.parse('http://139.28.37.11:56565/stage/api/task/$taskId');
+    print("taskId $taskId");
+    try {
+      final cookie = await getCookie();
+      await http.delete(url, headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Cookie': cookie.toString(),
+      }).then((value) {
+        if (value.statusCode > 199 && value.statusCode < 300) {
+          isOkay = true;
+        } else {
+          Fluttertoast.showToast(msg: value.body);
+        }
+      });
+    } catch (error) {
+      Fluttertoast.showToast(msg: error.toString());
+    }
+    return isOkay;
   }
 
   Future clearTasks() async {

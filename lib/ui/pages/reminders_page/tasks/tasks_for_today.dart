@@ -74,6 +74,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                             width: size.width,
                             height: size.height,
                             margin: const EdgeInsets.symmetric(horizontal: 10),
+                            padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
                                 color: primary100,
                                 borderRadius: BorderRadius.circular(16)),

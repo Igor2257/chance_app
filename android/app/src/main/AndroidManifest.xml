@@ -12,6 +12,7 @@
         android:label="Chance App"
         android:name="${applicationName}"
         android:exported="true"
+        android:enableOnBackInvokedCallback="true"
         android:icon="@drawable/logo">
         <activity
             android:name=".MainActivity"

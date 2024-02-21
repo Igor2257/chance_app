@@ -6,6 +6,7 @@ import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_shee
 import 'package:chance_app/ui/pages/reminders_page/components/custom_tab_bar.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/task_list.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -31,44 +32,38 @@ class _RemindersPageState extends State<RemindersPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      extendBody: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
-        centerTitle: true,
-        title: Text(
-          "Нагадування",
-          style: TextStyle(fontSize: 22, color: primaryText),
+    return BlocBuilder<RemindersBloc, RemindersState>(
+        builder: (context, state) {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          centerTitle: true,
+          title: Text(
+            "Нагадування",
+            style: TextStyle(fontSize: 22, color: primaryText),
+          ),
+          leading: IconButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil("/", (route) => false);
+              },
+              icon: Icon(Platform.isAndroid
+                  ? Icons.arrow_back
+                  : Icons.arrow_back_ios)),
+          actions: [
+            IconButton(
+                onPressed: () {},
+                icon: SvgPicture.asset("assets/icons/dots_vertical.svg")),
+          ],
         ),
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil("/", (route) => false);
-            },
-            icon: Icon(
-                Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios)),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: SvgPicture.asset("assets/icons/dots_vertical.svg")),
-        ],
-      ),
-      floatingActionButton: Builder(
-        builder: (context) {
+        floatingActionButton: Builder(builder: (context) {
           return InkWell(
             onTap: () {
-              showModalBottomSheet<void>(
-                  useSafeArea: true,
-                  enableDrag: true,
-                  context: context,
+              if (!state.isLoading) {
+                Scaffold.of(context).showBottomSheet((context) => const CustomBottomSheet());
 
-                  isScrollControlled: true,
-                  showDragHandle: true,
-                  builder: (context) {
-                    return const CustomBottomSheet();
-                  });
+              }
             },
             child: Container(
               padding: const EdgeInsets.all(12),
@@ -92,26 +87,26 @@ class _RemindersPageState extends State<RemindersPage>
               ),
             ),
           );
-        }
-      ),
-      backgroundColor: beigeBG,
-      body: Column(
-        children: [
-          CalendarView(),
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: const Column(
-              children: [
-                CustomTabBar(),
-                SizedBox(
-                  height: 24,
+        }),
+        backgroundColor: beigeBG,
+        body: state.isLoading
+            ? Center(
+                child: CupertinoActivityIndicator(
+                  color: primary500,
+                  radius: 50,
                 ),
-                TaskList(),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
+              )
+            : Column(
+                children: [
+                  CalendarView(),
+                  const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: CustomTabBar(),
+                  ),
+                  const Expanded(child: TaskList()),
+                ],
+              ),
+      );
+    });
   }
 }

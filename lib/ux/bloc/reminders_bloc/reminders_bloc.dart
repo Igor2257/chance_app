@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/calendar.dart';
 import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
-import 'package:chance_app/ui/pages/reminders_page/tasks/custom_bottom_sheet_notificatenion_picker.dart';
+import 'package:chance_app/ui/pages/reminders_page/tasks/custom_bottom_sheet_notification_picker.dart';
 import 'package:chance_app/ux/model/tasks_model.dart';
 import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/material.dart';
@@ -44,11 +44,6 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
       List<TaskModel> myTasks, int day, int month, int year) {
     for (int i = 0; i < myTasks.length; i++) {
       DateTime taskDate = myTasks[i].date!;
-      print(taskDate);
-      print(day);
-      print(month);
-      print(year);
-      print("---------");
       if (taskDate.day == day &&
           taskDate.month == month &&
           taskDate.year == year) {
@@ -60,49 +55,51 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
 
   FutureOr<void> _onLoadData(
       LoadData event, Emitter<RemindersState> emit) async {
-    List<Map<String, dynamic>> dates = [], week = [];
-    DateTime now = DateTime.now();
-    int year = now.year;
-    int month = now.month;
-    int day = now.day;
-    int daysInMonth = DateTime(year, month + 1, 0).day;
-    List<TaskModel>? myTasks = List.from(Repository().myTasks);
+    emit(state.clear());
+    await Repository().getTasks().whenComplete(() {
+      List<Map<String, dynamic>> dates = [], week = [];
+      DateTime now = DateTime.now();
+      int year = now.year;
+      int month = now.month;
+      int day = now.day;
+      int daysInMonth = DateTime(year, month + 1, 0).day;
+      List<TaskModel> myTasks = List.from(Repository().myTasks);
+      for (int i = 1; i <= daysInMonth; i++) {
+        DateTime date = DateTime(year, month, i);
+        String weekDay = getWeekdayName(date.weekday);
+        dates.add({
+          "weekDay": weekDay,
+          "number": (i.toString()).padLeft(2, "0"),
+          "month": month,
+          "year": year,
+          "isSelected": day == i ||
+              (state.selectedDate != null &&
+                  (state.selectedDate!.day == i &&
+                      state.selectedDate!.month == month &&
+                      state.selectedDate!.year == year)),
+          "hasTasks": checkIfDayHasTask(myTasks, i, month, year),
+        });
+      }
+      myTasks = myTasks
+          .where((element) =>
+              element.date!.day == now.day &&
+              element.date!.month == now.month &&
+              element.date!.year == now.year)
+          .toList();
+      myTasks.sort((a, b) => a.date!.compareTo(b.date!));
+      int startOfWeek = day - now.weekday;
+      int endOfWeek = startOfWeek + 6;
+      week = dates.getRange(startOfWeek, endOfWeek).toList();
 
-    print(myTasks.map((e) => e.date));
-    for (int i = 1; i <= daysInMonth; i++) {
-      DateTime date = DateTime(year, month, i);
-      String weekDay = getWeekdayName(date.weekday);
-      dates.add({
-        "weekDay": weekDay,
-        "number": (i.toString()).padLeft(2, "0"),
-        "month": month,
-        "year": year,
-        "isSelected": day == i ||
-            (state.selectedDate != null &&
-                (state.selectedDate!.day == i &&
-                    state.selectedDate!.month == month &&
-                    state.selectedDate!.year == year)),
-        "hasTasks": checkIfDayHasTask(myTasks, i, month, year),
-      });
-    }
-    myTasks = myTasks
-        .where((element) =>
-            element.date!.day == now.day &&
-            element.date!.month == now.month &&
-            element.date!.year == now.year)
-        .toList();
-    myTasks.sort((a, b) => a.date!.compareTo(b.date!));
-    int startOfWeek = day - now.weekday;
-    int endOfWeek = startOfWeek + 6;
-    week = dates.getRange(startOfWeek, endOfWeek).toList();
-
-    emit(state.copyWith(
-      days: dates,
-      week: week,
-      selectedDate: DateTime.now(),
-      dateForSwiping: DateTime.now(),
-      myTasks: myTasks,
-    ));
+      emit(state.copyWith(
+        days: dates,
+        week: week,
+        selectedDate: DateTime.now(),
+        dateForSwiping: DateTime.now(),
+        myTasks: myTasks,
+        isLoading: false,
+      ));
+    });
   }
 
   FutureOr<void> _onSelectedDate(
@@ -126,7 +123,8 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     }
     DateTime selectedDate = DateTime(dates[index]["year"],
         dates[index]["month"], int.parse(dates[index]["number"]));
-    List<TaskModel>? myTasks = List.from(Repository().myTasks);
+    List<TaskModel> myTasks = List.from(Repository().myTasks);
+
     myTasks = myTasks
         .where((element) =>
             element.date!.day == selectedDate.day &&
@@ -164,7 +162,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
 
     int daysInMonth = DateTime(year, month + 1, 0).day;
     DateTime? selectedDate = state.selectedDate;
-    List<TaskModel>? myTasks = List.from(Repository().myTasks);
+    List<TaskModel> myTasks = List.from(Repository().myTasks);
 
     for (int i = 1; i <= daysInMonth; i++) {
       DateTime date = DateTime(year, month, i);
@@ -247,7 +245,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
 
     int daysInMonth = DateTime(year, month + 1, 0).day;
     DateTime? selectedDate = state.selectedDate;
-    List<TaskModel>? myTasks = List.from(Repository().myTasks);
+    List<TaskModel> myTasks = List.from(Repository().myTasks);
 
     for (int i = 1; i <= daysInMonth; i++) {
       DateTime date = DateTime(year, month, i);
@@ -332,7 +330,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     int month = now.month;
     int day = now.day;
     int daysInMonth = DateTime(year, month + 1, 0).day;
-    List<TaskModel>? myTasks = List.from(Repository().myTasks);
+    List<TaskModel> myTasks = List.from(Repository().myTasks);
 
     for (int i = 1; i <= daysInMonth; i++) {
       DateTime date = DateTime(year, month, i);
@@ -366,9 +364,11 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
   }
 
   Future delay(BuildContext context) async {
-    await Future.delayed(const Duration(seconds: 3)).then((value) {
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil("/reminders", (route) => false);
+    await Future.delayed(const Duration(seconds: 1)).then((value) async {
+      await Repository().getTasks().whenComplete(() {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil("/reminders", (route) => false);
+      });
     });
   }
 
@@ -376,12 +376,22 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     DateTime now = DateTime.now();
     String name = state.taskTitle;
     if (name.trim().isNotEmpty) {
+      DateTime date = state.newSelectedDateForTasks!;
+      if (state.newDeadlineForTask != null) {
+        date = DateTime(
+            state.newSelectedDateForTasks!.year,
+            state.newSelectedDateForTasks!.month,
+            state.newSelectedDateForTasks!.day,
+            state.newDeadlineForTask!.hour,
+            state.newDeadlineForTask!.minute);
+      }
+
       TaskModel taskModel = TaskModel(
         message: name,
-        date: state.newSelectedDateForTasks,
+        date: date,
         //notificationsBefore: state.oldNotificationsBefore.name,
       );
-      List<TaskModel>? myTasks = List.from(Repository().myTasks);
+      List<TaskModel> myTasks = List.from(Repository().myTasks);
       myTasks = myTasks
           .where((element) =>
               element.date!.day == now.day &&

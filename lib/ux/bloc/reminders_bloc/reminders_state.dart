@@ -16,7 +16,7 @@ class RemindersState {
   NotificationsBefore oldNotificationsBefore, newNotificationsBefore,fromLastSession;
   TaskModel? taskModel;
 
-  int sessionForNotification,sessionForSelectingDateForTask;
+  int sessionForNotification, sessionForSelectingDateForTask;
   final List<String> notifications = [
     "Немає",
     "Вчасно",
@@ -25,12 +25,14 @@ class RemindersState {
     "за 1 год",
     "за 1 день",
   ];
-  List<TaskModel> myTasks,tasksForToday;
+  List<TaskModel> myTasks, tasksForToday;
+  bool isLoading;
 
   RemindersState({
     this.reminders = Reminders.empty,
     this.taskTitle = "",
     this.isCalendarOpened = false,
+    this.isLoading = true,
     this.days = const [],
     this.week = const [],
     this.myTasks = const [],
@@ -67,10 +69,16 @@ class RemindersState {
     daysForTasks,
     bool? isCalendarOpened,
     int? pageForPills,
-    pageForTasks,sessionForNotification,sessionForSelectingDateForTask,
-    NotificationsBefore? oldNotificationsBefore,newNotificationsBefore,fromLastSession,
+    pageForTasks,
+    sessionForNotification,
+    sessionForSelectingDateForTask,
+    NotificationsBefore? oldNotificationsBefore,
+    newNotificationsBefore,
+    fromLastSession,
     TaskModel? taskModel,
-    List<TaskModel>? myTasks,tasksForToday,
+    List<TaskModel>? myTasks,
+    tasksForToday,
+    bool? isLoading,
   }) {
     return RemindersState(
       reminders: reminders ?? this.reminders,
@@ -82,21 +90,56 @@ class RemindersState {
       dateForSwiping: dateForSwiping ?? this.dateForSwiping,
       pageForPills: pageForPills ?? this.pageForPills,
       pageForTasks: pageForTasks ?? this.pageForTasks,
-      oldSelectedDateForTasks: oldSelectedDateForTasks ?? this.oldSelectedDateForTasks,
-      newSelectedDateForTasks: newSelectedDateForTasks ?? this.newSelectedDateForTasks,
+      oldSelectedDateForTasks:
+          oldSelectedDateForTasks ?? this.oldSelectedDateForTasks,
+      newSelectedDateForTasks:
+          newSelectedDateForTasks ?? this.newSelectedDateForTasks,
       dateForSwipingForTasks:
           dateForSwipingForTasks ?? this.dateForSwipingForTasks,
       daysForTasks: daysForTasks ?? this.daysForTasks,
       newDeadlineForTask: newDeadlineForTask ?? this.newDeadlineForTask,
       oldDeadlineForTask: oldDeadlineForTask ?? this.oldDeadlineForTask,
-      oldNotificationsBefore: oldNotificationsBefore ?? this.oldNotificationsBefore,
-      newNotificationsBefore: newNotificationsBefore ?? this.newNotificationsBefore,
-      sessionForNotification: sessionForNotification ?? this.sessionForNotification,
+      oldNotificationsBefore:
+          oldNotificationsBefore ?? this.oldNotificationsBefore,
+      newNotificationsBefore:
+          newNotificationsBefore ?? this.newNotificationsBefore,
+      sessionForNotification:
+          sessionForNotification ?? this.sessionForNotification,
       fromLastSession: fromLastSession ?? this.fromLastSession,
       taskModel: taskModel ?? this.taskModel,
-      sessionForSelectingDateForTask: sessionForSelectingDateForTask ?? this.sessionForSelectingDateForTask,
+      sessionForSelectingDateForTask:
+          sessionForSelectingDateForTask ?? this.sessionForSelectingDateForTask,
       myTasks: myTasks ?? this.myTasks,
       tasksForToday: tasksForToday ?? this.tasksForToday,
+      isLoading: isLoading ?? this.isLoading,
+    );
+  }
+
+  RemindersState clear() {
+    return RemindersState(
+      reminders: Reminders.empty,
+      taskTitle: "",
+      selectedDate: null,
+      days: [],
+      week: [],
+      isCalendarOpened: false,
+      dateForSwiping: null,
+      pageForPills: 0,
+      pageForTasks: 0,
+      oldSelectedDateForTasks: null,
+      newSelectedDateForTasks: null,
+      dateForSwipingForTasks: null,
+      daysForTasks: [],
+      newDeadlineForTask: null,
+      oldDeadlineForTask: null,
+      oldNotificationsBefore: NotificationsBefore.no,
+      newNotificationsBefore: NotificationsBefore.no,
+      sessionForNotification: 0,
+      taskModel: null,
+      sessionForSelectingDateForTask: 0,
+      myTasks: [],
+      tasksForToday: [],
+      isLoading: true,
     );
   }
 }
