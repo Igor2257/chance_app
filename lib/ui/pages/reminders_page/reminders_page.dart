@@ -32,6 +32,8 @@ class _RemindersPageState extends State<RemindersPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
+      extendBody: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
@@ -53,41 +55,44 @@ class _RemindersPageState extends State<RemindersPage>
               icon: SvgPicture.asset("assets/icons/dots_vertical.svg")),
         ],
       ),
-      floatingActionButton: InkWell(
-        onTap: () {
-          showModalBottomSheet<void>(
-              useSafeArea: true,
-              enableDrag: true,
-              context: context,
-              backgroundColor: beige100,
-              builder: (context) {
-                return const CustomBottomSheet();
-              }).whenComplete(() {
-            BlocProvider.of<RemindersBloc>(context).add(
-                SelectWhatPersonWouldLikeToAdd(reminders: Reminders.empty));
-          });
-        },
-        child: Container(
-          padding: const EdgeInsets.all(12),
-          height: 44,
-          decoration: BoxDecoration(
-              color: primary1000, borderRadius: BorderRadius.circular(16)),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.add,
-                color: primary50,
+      floatingActionButton: Builder(
+        builder: (context) {
+          return InkWell(
+            onTap: () {
+              showModalBottomSheet<void>(
+                  useSafeArea: true,
+                  enableDrag: true,
+                  context: context,
+
+                  isScrollControlled: true,
+                  showDragHandle: true,
+                  builder: (context) {
+                    return const CustomBottomSheet();
+                  });
+            },
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              height: 44,
+              decoration: BoxDecoration(
+                  color: primary1000, borderRadius: BorderRadius.circular(16)),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.add,
+                    color: primary50,
+                  ),
+                  Text(
+                    "Додати",
+                    style: TextStyle(
+                        fontSize: 16, letterSpacing: 0.15, color: primary50),
+                  ),
+                ],
               ),
-              Text(
-                "Додати",
-                style: TextStyle(
-                    fontSize: 16, letterSpacing: 0.15, color: primary50),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        }
       ),
       backgroundColor: beigeBG,
       body: Column(

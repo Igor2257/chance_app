@@ -157,10 +157,10 @@ class Repository {
                 'Cookie': cookie.toString(),
               },
               body: jsonEncode({
-                "name": name,
-                "lastName": lastName,
-                "phone": phone,
-                "deviceId": token,
+                if (name != null) "name": name,
+                if (lastName != null) "lastName": lastName,
+                if (phone != null) "phone": phone,
+                if (token != null) "deviceId": token,
               }))
           .then((value) {
         if (value.statusCode > 199 && value.statusCode < 300) {
