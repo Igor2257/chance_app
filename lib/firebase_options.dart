@@ -63,6 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '851944893842',
     projectId: 'chance-app-b381c',
     storageBucket: 'chance-app-b381c.appspot.com',
+    iosClientId: '851944893842-b1vkjktpnl3vv8tvjrui7pq3e13221nb.apps.googleusercontent.com',
     iosBundleId: 'com.chanceapp.chanceApp',
   );
 }

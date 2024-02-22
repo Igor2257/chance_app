@@ -98,11 +98,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           text = state.password;
           if (text.trim().length < 8) {
             errorTextPassword = 'Пароль має бути 8 або більше символів';
+            emit(state.copyWith(errorPassword:errorTextPassword ));
+            return false;
           }
           if (text.trim().length > 14) {
             errorTextPassword = "Пароль має бути менше 14 символів";
+            emit(state.copyWith(errorPassword: errorTextPassword));
+            return false;
           }
-          emit(state.copyWith(errorEmail: errorTextEmail));
+
         }
       }
     }

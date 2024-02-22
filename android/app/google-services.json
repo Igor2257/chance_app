@@ -12,7 +12,12 @@
           "package_name": "com.chance_app.chance_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "851944893842-73l7oug93sd7t4tqphmtgh8ippdkfbui.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBkALiGGYe1N1L8XJEwWq22tWZbPOmVyss"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "851944893842-73l7oug93sd7t4tqphmtgh8ippdkfbui.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "851944893842-b1vkjktpnl3vv8tvjrui7pq3e13221nb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.chanceapp.chanceApp"
+              }
+            }
+          ]
         }
       }
     }

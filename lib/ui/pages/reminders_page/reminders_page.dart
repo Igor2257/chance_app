@@ -45,14 +45,10 @@ class _RemindersPageState extends State<RemindersPage>
               "Нагадування",
               style: TextStyle(fontSize: 22, color: primaryText),
             ),
-            leading: IconButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .pushNamed("/");
-                },
-                icon: Icon(Platform.isAndroid
-                    ? Icons.arrow_back
-                    : Icons.arrow_back_ios)),
+            leading: BackButton(onPressed: (){
+              Navigator.of(context)
+                  .pushNamed("/");
+            },),
             actions: [
               IconButton(
                   onPressed: () {},

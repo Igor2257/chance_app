@@ -67,7 +67,7 @@ void main() async {
     await Repository().getUser().then((user) {
       String route = "/signinup";
       if (user != null) {
-        route = "/signinup";
+        route = "/";
       }
       runApp(MyApp(route));
     });

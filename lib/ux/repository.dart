@@ -153,9 +153,11 @@ class Repository {
           },
           body: jsonEncode({"code": code, "email": email}),
         )
-            .then((value) {
+            .then((value)async {
           if (value.statusCode > 199 && value.statusCode < 300) {
-            sendLoginData(email, passwordFirst);
+            await sendLoginData(email, passwordFirst).then((value) {
+              error=value;
+            });
           } else {
             error = jsonDecode(value.body)["message"]
                 .toString()
@@ -329,13 +331,10 @@ class Repository {
                 .toString()
                 .replaceAll("[", "")
                 .replaceAll("]", "");
-            print("value.body ${value.body}");
             Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
           } else {
             await sendLoginData(email, newPassword).then((value) {
-              if (value != null) {
-                error = value;
-              }
+              error = value;
             });
           }
         });
@@ -576,16 +575,19 @@ class Repository {
   }
 
   //Future<bool> sendAllLocalData() async {
-  //  List<TaskModel> dbTasks = await loadTasks(),localTasks=;
-//
+  //  List<TaskModel> dbTasks = await loadTasks(),
+  //      localTasks =List.from(myTasks);
+  //
   //}
 
 
-  Future<bool> getIdTokenFromAuthCode()async{
-    final GoogleSignInAccount? googleUser = await GoogleSignIn(signInOption: SignInOption.standard).signIn();
+  Future<bool> getIdTokenFromAuthCode() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn(
+        signInOption: SignInOption.standard).signIn();
 
     // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+    final GoogleSignInAuthentication? googleAuth = await googleUser
+        ?.authentication;
 
     // Create a new credential
     final credential = GoogleAuthProvider.credential(
@@ -599,6 +601,34 @@ class Repository {
     });
 
     return true;
+  }
+
+  Future<String?> logout()async{
+    String? error;
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      Fluttertoast.showToast(
+          msg: "Немає підключення до інтернету",
+          toastLength: Toast.LENGTH_LONG);
+      error = "Немає підключення до інтернету";
+
+    } else {
+      var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/logout');
+      try {
+        final cookie = await getCookie();
+        await http.post(url, headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Cookie': cookie.toString(),
+        }).then((value) {
+          if (!(value.statusCode > 199 && value.statusCode < 300)) {
+            deleteCookie();
+          }
+        });
+      } catch (error) {
+        Fluttertoast.showToast(
+            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+      }
+    }
+    return error;
   }
 
   Future clearTasks() async {
