@@ -78,7 +78,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
             .then((value) {
           if(value==null){
             Navigator.of(event.context)
-                .pushNamedAndRemoveUntil("/enter_code", (route) => true);
+                .pushNamed("/enter_code");
           }
         });
       }

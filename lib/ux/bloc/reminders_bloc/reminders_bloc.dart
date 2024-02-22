@@ -56,7 +56,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
   FutureOr<void> _onLoadData(
       LoadData event, Emitter<RemindersState> emit) async {
     emit(state.clear());
-    await Repository().getTasks().whenComplete(() {
+    await Repository().updateLocalTasks().whenComplete(() {
       List<Map<String, dynamic>> dates = [], week = [];
       DateTime now = DateTime.now();
       int year = now.year;
@@ -358,9 +358,8 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
 
   Future delay(BuildContext context) async {
     await Future.delayed(const Duration(seconds: 1)).then((value) async {
-      await Repository().getTasks().whenComplete(() {
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil("/reminders", (route) => false);
+      await Repository().updateLocalTasks().whenComplete(() {
+        Navigator.of(context).pushNamed("/reminders");
       });
     });
   }
@@ -492,14 +491,55 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
 
   FutureOr<void> _onDeleteTask(
       DeleteTask event, Emitter<RemindersState> emit) async {
-    List<TaskModel> tasksForToday = state.tasksForToday
-            .where((element) => element.id != event.id)
-            .toList(),
-        myTasks =
-            state.myTasks.where((element) => element.id != event.id).toList();
     await Repository().removeTask(event.id).then((value) {
-      add(LoadData());
-      emit(state.copyWith(tasksForToday: tasksForToday, myTasks: myTasks));
+      if (value == null) {
+        List<TaskModel> tasksForToday = state.tasksForToday
+                .where((element) => element.id != event.id)
+                .toList(),
+            myTasks = state.myTasks
+                .where((element) => element.id != event.id)
+                .toList();
+        showDialog(
+            barrierDismissible: false,
+            context: event.context,
+            builder: (context) {
+              return SizedBox(
+                height: 160,
+                width: MediaQuery.of(context).size.width,
+                child: FutureBuilder(
+                    future: delay(context),
+                    builder: (context, snapshot) {
+                      return AlertDialog(
+                        backgroundColor: beigeBG,
+                        content: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              const Icon(Icons.done),
+                              const SizedBox(
+                                height: 40,
+                              ),
+                              Text(
+                                "Завдання видалено",
+                                style:
+                                    TextStyle(fontSize: 24, color: primaryText),
+                              ),
+                              Text(
+                                "”${event.name}”",
+                                style:
+                                    TextStyle(fontSize: 16, color: primaryText),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+              );
+            });
+        emit(state.copyWith(tasksForToday: tasksForToday, myTasks: myTasks));
+      }
     });
   }
 }

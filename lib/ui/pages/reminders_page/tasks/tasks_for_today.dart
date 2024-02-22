@@ -21,7 +21,7 @@ class _TasksForTodayState extends State<TasksForToday> {
   }
 
   Future delay(BuildContext context) async {
-    await Future.delayed(const Duration(seconds: 3)).then((value) {
+    await Future.delayed(const Duration(seconds: 1)).then((value) {
       Navigator.of(context).pop();
     });
   }
@@ -32,6 +32,9 @@ class _TasksForTodayState extends State<TasksForToday> {
     return BlocBuilder<RemindersBloc, RemindersState>(
         builder: (context, state) {
       List<TaskModel> tasksForToday = List.from(state.tasksForToday);
+      if (tasksForToday.isEmpty) {
+        Navigator.of(context).pop();
+      }
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -41,11 +44,12 @@ class _TasksForTodayState extends State<TasksForToday> {
             "Завдання на сьогодні",
             style: TextStyle(fontSize: 22, color: primaryText),
           ),
-          leading: IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              icon: const Icon(Icons.close)),
+          leading: CloseButton(
+            onPressed: () {
+              BlocProvider.of<RemindersBloc>(context).add(LoadData());
+              Navigator.of(context).pop();
+            },
+          ),
         ),
         backgroundColor: beigeBG,
         body: Padding(
@@ -296,44 +300,10 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                                             () {
                                                                           Navigator.of(context)
                                                                               .pop();
-                                                                          BlocProvider.of<RemindersBloc>(context)
-                                                                              .add(DeleteTask(id: task.id));
-                                                                          showDialog(
-                                                                            barrierDismissible: false,
+                                                                          BlocProvider.of<RemindersBloc>(context).add(DeleteTask(
+                                                                              id: task.id,
                                                                               context: context,
-                                                                              builder: (context) {
-                                                                                return SizedBox(
-                                                                                  height: 160,
-                                                                                  width: MediaQuery.of(context).size.width,
-                                                                                  child: FutureBuilder(
-                                                                                      future: delay(context),
-                                                                                      builder: (context, snapshot) {
-                                                                                        return AlertDialog(
-                                                                                          backgroundColor: beigeBG,
-                                                                                          content: Padding(
-                                                                                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                                                                                            child: Column(
-                                                                                              mainAxisSize: MainAxisSize.min,
-                                                                                              children: <Widget>[
-                                                                                                const Icon(Icons.done),
-                                                                                                const SizedBox(
-                                                                                                  height: 40,
-                                                                                                ),
-                                                                                                Text(
-                                                                                                  "Завдання видалено",
-                                                                                                  style: TextStyle(fontSize: 24, color: primaryText),
-                                                                                                ),
-                                                                                                Text(
-                                                                                                  "”${task.message}”",
-                                                                                                  style: TextStyle(fontSize: 16, color: primaryText),
-                                                                                                ),
-                                                                                              ],
-                                                                                            ),
-                                                                                          ),
-                                                                                        );
-                                                                                      }),
-                                                                                );
-                                                                              });
+                                                                              name: task.message));
                                                                         },
                                                                         child:
                                                                             Text(

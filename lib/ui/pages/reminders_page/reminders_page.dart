@@ -48,7 +48,7 @@ class _RemindersPageState extends State<RemindersPage>
             leading: IconButton(
                 onPressed: () {
                   Navigator.of(context)
-                      .pushNamedAndRemoveUntil("/", (route) => false);
+                      .pushNamed("/");
                 },
                 icon: Icon(Platform.isAndroid
                     ? Icons.arrow_back

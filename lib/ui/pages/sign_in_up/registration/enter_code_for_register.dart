@@ -64,7 +64,7 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
               const SizedBox(
                 height: 120,
                 child: Text(
-                  "Ми відправили на вашу пошту електронний лист з верифікаційним посиланням — код з 4 символів. Перевірте пошту, і якщо не знайдете листа — теку «спам»",
+                  "Ми відправили на вашу пошту електронний лист з верифікаційним посиланням — код з 4 символів. Перевірте пошту, і якщо не знайдете листа — подивіться у папці «Спам».",
                   style: TextStyle(fontSize: 16, letterSpacing: 0.5),
                   textAlign: TextAlign.center,
                 ),

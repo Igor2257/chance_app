@@ -23,13 +23,14 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
       isDone: fields[3] as bool,
       userId: fields[4] as String,
       isSended: fields[5] as bool,
+      isRemoved: fields[6] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, TaskModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
       ..writeByte(4)
       ..write(obj.userId)
       ..writeByte(5)
-      ..write(obj.isSended);
+      ..write(obj.isSended)
+      ..writeByte(6)
+      ..write(obj.isRemoved);
   }
 
   @override
@@ -68,6 +71,7 @@ _$TaskModelImpl _$$TaskModelImplFromJson(Map<String, dynamic> json) =>
       isDone: json['isDone'] as bool? ?? false,
       userId: json['userId'] as String? ?? "",
       isSended: json['isSended'] as bool? ?? false,
+      isRemoved: json['isRemoved'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$TaskModelImplToJson(_$TaskModelImpl instance) =>
@@ -78,4 +82,5 @@ Map<String, dynamic> _$$TaskModelImplToJson(_$TaskModelImpl instance) =>
       'isDone': instance.isDone,
       'userId': instance.userId,
       'isSended': instance.isSended,
+      'isRemoved': instance.isRemoved,
     };

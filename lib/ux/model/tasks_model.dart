@@ -15,7 +15,9 @@ class TaskModel with _$TaskModel {
     //@HiveField(3) @Default("no") String notificationsBefore,
     @HiveField(3) @Default(false) bool isDone,
     @HiveField(4) @Default("") String userId,
-    @HiveField(5) @Default(false) bool isSended
+    @HiveField(5) @Default(false) bool isSended,
+    @HiveField(6) @Default(false) bool isRemoved,
+
   }) = _TaskModel;
 
   factory TaskModel.fromJson(Map<String, dynamic> json) => _$TaskModelFromJson(json);

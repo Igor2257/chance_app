@@ -35,8 +35,8 @@ class TaskList extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                "/tasks_for_today", (route) => true);
+                            Navigator.of(context).pushNamed(
+                                "/tasks_for_today");
                             BlocProvider.of<RemindersBloc>(context).add(
                                 LoadTasksForToday(
                                     datetime: DateTime(

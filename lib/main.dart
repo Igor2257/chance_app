@@ -16,21 +16,34 @@ import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/model/tasks_model.dart';
 import 'package:chance_app/ux/repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
+enum Postpone {
+  fiveMinute,
+  tenMinute,
+  fifteenMinute,
+  thirtyMinute,
+  oneHour,
+  twoHour
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   PlatformDispatcher.instance.onError = (error, stack) {
     if (!kDebugMode) {
@@ -41,12 +54,20 @@ void main() async {
   };
 
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
-
+  FirebaseAuth.instance
+      .idTokenChanges()
+      .listen((User? user) {
+    if (user == null) {
+      print('User is currently signed out!');
+    } else {
+      print('User is signed in!');
+    }
+  });
   await _initBoxes().then((value) async {
     await Repository().getUser().then((user) {
       String route = "/signinup";
       if (user != null) {
-        route = "/";
+        route = "/signinup";
       }
       runApp(MyApp(route));
     });
@@ -70,13 +91,12 @@ class MyApp extends StatefulWidget {
 class MyAppState extends State<MyApp> {
   Key key = UniqueKey();
   List<String> toasts = [];
-  RemoteMessage? remoteMessage;
+  List<RemoteMessage> remoteMessages = [];
 
   void addMessage(RemoteMessage remoteMessage) {
     setState(() {
-      key = UniqueKey();
+      remoteMessages.add(remoteMessage);
     });
-    this.remoteMessage = remoteMessage;
   }
 
   @override
@@ -107,11 +127,11 @@ class MyAppState extends State<MyApp> {
           ),
         ],
         child: Directionality(
-            textDirection: TextDirection.rtl,
+            textDirection: TextDirection.ltr,
             child: Stack(
               children: [
                 IgnorePointer(
-                  ignoring: remoteMessage != null,
+                  ignoring: remoteMessages.isNotEmpty,
                   child: KeyedSubtree(
                       key: key,
                       child: SizedBox(
@@ -125,6 +145,16 @@ class MyAppState extends State<MyApp> {
                                   seedColor: Colors.deepPurple),
                               useMaterial3: true,
                             ),
+                            supportedLocales: const [
+                              Locale('en'),
+                              Locale('uk'),
+                              Locale('ru'),
+                            ],
+                            localizationsDelegates: const [
+                              GlobalWidgetsLocalizations.delegate,
+                              GlobalCupertinoLocalizations.delegate,
+                              GlobalMaterialLocalizations.delegate,
+                            ],
                             initialRoute: widget.route,
                             routes: {
                               "/": (context) => const MainPage(),
@@ -146,36 +176,151 @@ class MyAppState extends State<MyApp> {
                             },
                           ))),
                 ),
-                if (remoteMessage != null)
-                  Center(
-                    child: Container(
-                      width: size.width,
-                      height: size.height / 2,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16)),
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                      margin:
-                          const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                      child: Column(
-                        children: [
-                          SvgPicture.asset(
-                            "assets/icons/tasks_big.svg",
-                            color: beige500,
+                if (remoteMessages.isNotEmpty)
+                  Container(
+                      color: Colors.black38,
+                      child: Center(
+                        child: Container(
+                          width: size.width,
+                          decoration: BoxDecoration(
+                              color: beige100,
+                              borderRadius: BorderRadius.circular(16)),
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 16, horizontal: 24),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 16, horizontal: 24),
+                                child: Column(
+                                  children: [
+                                    SvgPicture.asset(
+                                      "assets/icons/tasks_big.svg",
+                                      color: beige500,
+                                    ),
+                                    Text(
+                                      "Завдання",
+                                      style: TextStyle(
+                                          fontSize: 16, color: primaryText),
+                                    ),
+                                    Text(
+                                      remoteMessages.first.data["message"],
+                                      style: TextStyle(
+                                          fontSize: 24, color: primaryText),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                height: 120,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    color: darkNeutral800),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          remoteMessages.removeAt(0);
+                                        });
+                                      },
+                                      child: SizedBox(
+                                        width: size.width / 4,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Container(
+                                              height: 56,
+                                              width: 56,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(90),
+                                                  border: Border.all(
+                                                      color: primary300)),
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.close,
+                                                  color: primary50,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              "Пропустити",
+                                              style: TextStyle(
+                                                  color: primary50,
+                                                  fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () async {
+                                        try {
+                                          await Repository()
+                                              .updateTask(
+                                                  id: remoteMessages
+                                                      .first.data["id"]
+                                                      .toString(),
+                                                  isDone: true)
+                                              .then((value) {
+                                            if (value == null) {
+                                              setState(() {
+                                                remoteMessages.removeAt(0);
+                                              });
+                                            }
+                                          });
+                                        } catch (e) {
+                                          print(e);
+                                          Fluttertoast.showToast(
+                                              msg: e.toString());
+                                        }
+                                      },
+                                      child: SizedBox(
+                                        width: size.width / 4,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Container(
+                                              height: 56,
+                                              width: 56,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(90),
+                                                  color: primary300),
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.done,
+                                                  color: primaryText,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              "Виконано",
+                                              style: TextStyle(
+                                                  color: primary50,
+                                                  fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
                           ),
-                          Text(
-                            "Завдання",
-                            style: TextStyle(fontSize: 16, color: primaryText),
-                          ),
-                          Text(
-                            remoteMessage!.data["message"],
-                            style: TextStyle(fontSize: 24, color: primaryText),
-                          ),
-
-                        ],
-                      ),
-                    ),
-                  )
+                        ),
+                      ))
               ],
             )));
   }

@@ -102,6 +102,9 @@ class ChangeIsDoneForTask extends RemindersEvent{
 
 class DeleteTask extends RemindersEvent{
   final String id;
+  final BuildContext context;
+  final String name;
 
-  DeleteTask({required this.id});
+  DeleteTask({required this.id, required this.context, required this.name});
+
 }

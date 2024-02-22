@@ -79,8 +79,8 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
           ),
           InkWell(
             onTap: () {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  "/date_picker_for_tasks", (route) => true);
+              Navigator.of(context).pushNamed(
+                  "/date_picker_for_tasks");
             },
             child: Container(
               height: 40,

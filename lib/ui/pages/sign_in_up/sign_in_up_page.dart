@@ -1,6 +1,7 @@
 import 'package:chance_app/ui/components/logo_name.dart';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -55,6 +56,9 @@ class _SignInUpPageState extends State<SignInUpPage> {
               height: 40,
             ),
             RoundedButton(
+              onPress: ()async {
+                await Repository().getIdTokenFromAuthCode();
+              },
                 color: Colors.transparent,
                 border: Border.all(color: primary1000),
                 child: Row(

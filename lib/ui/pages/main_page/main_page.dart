@@ -123,8 +123,8 @@ class _MainPageState extends State<MainPage> {
                     width: cardWidth,
                     margin: const EdgeInsets.only(bottom: 8, top: 8, right: 8),
                     onPress: ()async {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          "/reminders", (route) => true);
+                      Navigator.of(context).pushNamed(
+                          "/reminders");
 
                     },
                   ),

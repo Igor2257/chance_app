@@ -33,6 +33,8 @@ mixin _$TaskModel {
   String get userId => throw _privateConstructorUsedError;
   @HiveField(5)
   bool get isSended => throw _privateConstructorUsedError;
+  @HiveField(6)
+  bool get isRemoved => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -51,7 +53,8 @@ abstract class $TaskModelCopyWith<$Res> {
       @HiveField(2) DateTime? date,
       @HiveField(3) bool isDone,
       @HiveField(4) String userId,
-      @HiveField(5) bool isSended});
+      @HiveField(5) bool isSended,
+      @HiveField(6) bool isRemoved});
 }
 
 /// @nodoc
@@ -73,6 +76,7 @@ class _$TaskModelCopyWithImpl<$Res, $Val extends TaskModel>
     Object? isDone = null,
     Object? userId = null,
     Object? isSended = null,
+    Object? isRemoved = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -99,6 +103,10 @@ class _$TaskModelCopyWithImpl<$Res, $Val extends TaskModel>
           ? _value.isSended
           : isSended // ignore: cast_nullable_to_non_nullable
               as bool,
+      isRemoved: null == isRemoved
+          ? _value.isRemoved
+          : isRemoved // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -117,7 +125,8 @@ abstract class _$$TaskModelImplCopyWith<$Res>
       @HiveField(2) DateTime? date,
       @HiveField(3) bool isDone,
       @HiveField(4) String userId,
-      @HiveField(5) bool isSended});
+      @HiveField(5) bool isSended,
+      @HiveField(6) bool isRemoved});
 }
 
 /// @nodoc
@@ -137,6 +146,7 @@ class __$$TaskModelImplCopyWithImpl<$Res>
     Object? isDone = null,
     Object? userId = null,
     Object? isSended = null,
+    Object? isRemoved = null,
   }) {
     return _then(_$TaskModelImpl(
       id: null == id
@@ -163,6 +173,10 @@ class __$$TaskModelImplCopyWithImpl<$Res>
           ? _value.isSended
           : isSended // ignore: cast_nullable_to_non_nullable
               as bool,
+      isRemoved: null == isRemoved
+          ? _value.isRemoved
+          : isRemoved // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -176,7 +190,8 @@ class _$TaskModelImpl implements _TaskModel {
       @HiveField(2) this.date = null,
       @HiveField(3) this.isDone = false,
       @HiveField(4) this.userId = "",
-      @HiveField(5) this.isSended = false});
+      @HiveField(5) this.isSended = false,
+      @HiveField(6) this.isRemoved = false});
 
   factory _$TaskModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$TaskModelImplFromJson(json);
@@ -206,10 +221,14 @@ class _$TaskModelImpl implements _TaskModel {
   @JsonKey()
   @HiveField(5)
   final bool isSended;
+  @override
+  @JsonKey()
+  @HiveField(6)
+  final bool isRemoved;
 
   @override
   String toString() {
-    return 'TaskModel(id: $id, message: $message, date: $date, isDone: $isDone, userId: $userId, isSended: $isSended)';
+    return 'TaskModel(id: $id, message: $message, date: $date, isDone: $isDone, userId: $userId, isSended: $isSended, isRemoved: $isRemoved)';
   }
 
   @override
@@ -223,13 +242,15 @@ class _$TaskModelImpl implements _TaskModel {
             (identical(other.isDone, isDone) || other.isDone == isDone) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.isSended, isSended) ||
-                other.isSended == isSended));
+                other.isSended == isSended) &&
+            (identical(other.isRemoved, isRemoved) ||
+                other.isRemoved == isRemoved));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, message, date, isDone, userId, isSended);
+  int get hashCode => Object.hash(
+      runtimeType, id, message, date, isDone, userId, isSended, isRemoved);
 
   @JsonKey(ignore: true)
   @override
@@ -252,7 +273,8 @@ abstract class _TaskModel implements TaskModel {
       @HiveField(2) final DateTime? date,
       @HiveField(3) final bool isDone,
       @HiveField(4) final String userId,
-      @HiveField(5) final bool isSended}) = _$TaskModelImpl;
+      @HiveField(5) final bool isSended,
+      @HiveField(6) final bool isRemoved}) = _$TaskModelImpl;
 
   factory _TaskModel.fromJson(Map<String, dynamic> json) =
       _$TaskModelImpl.fromJson;
@@ -275,6 +297,9 @@ abstract class _TaskModel implements TaskModel {
   @override
   @HiveField(5)
   bool get isSended;
+  @override
+  @HiveField(6)
+  bool get isRemoved;
   @override
   @JsonKey(ignore: true)
   _$$TaskModelImplCopyWith<_$TaskModelImpl> get copyWith =>
