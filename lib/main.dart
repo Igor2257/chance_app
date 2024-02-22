@@ -11,9 +11,14 @@ import 'package:chance_app/ui/pages/sign_in_up/registration/enter_code_for_regis
 import 'package:chance_app/ui/pages/sign_in_up/registration/registration_page.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/subscription_page.dart';
 import 'package:chance_app/ui/pages/sign_in_up/sign_in_up_page.dart';
+import 'package:chance_app/ui/pages/sos_page/add_contact_screen.dart';
+import 'package:chance_app/ui/pages/sos_page/add_group_screen.dart';
+import 'package:chance_app/ui/pages/sos_page/delete_contact_screen.dart';
+import 'package:chance_app/ui/pages/sos_page/main_page_sos.dart';
 import 'package:chance_app/ux/bloc/login_bloc/login_bloc.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
+import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/model/tasks_model.dart';
 import 'package:chance_app/ux/repository.dart';
@@ -55,9 +60,7 @@ void main() async {
   };
 
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
-  FirebaseAuth.instance
-      .idTokenChanges()
-      .listen((User? user) {
+  FirebaseAuth.instance.idTokenChanges().listen((User? user) {
     if (user == null) {
       print('User is currently signed out!');
     } else {
@@ -126,6 +129,9 @@ class MyAppState extends State<MyApp> {
           BlocProvider(
             create: (context) => RemindersBloc(),
           ),
+          BlocProvider(
+            create: (context) => SosContactsBloc(),
+          ),
         ],
         child: Directionality(
             textDirection: TextDirection.ltr,
@@ -174,8 +180,13 @@ class MyAppState extends State<MyApp> {
                                   const ResetPassword(),
                               "/tasks_for_today": (context) =>
                                   const TasksForToday(),
-                              "/menu": (context) =>
-                                  const MenuPage(),
+                              "/menu": (context) => const MenuPage(),
+                              "/sos": (context) => const MainPageSos(),
+                              "/add_contact": (context) =>
+                                  const AddContactScreen(),
+                              "/add_group": (context) => const AddGroupScreen(),
+                              "/delete_contact": (context) =>
+                                  const DeleteContactsPage(),
                             },
                           ))),
                 ),
@@ -344,4 +355,3 @@ Future<bool> _initBoxes() async {
 
   return true;
 }
-
