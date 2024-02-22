@@ -60,9 +60,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       await Repository()
           .sendLoginData(state.email, state.password)
           .then((value) {
-        if (value) {
+        if (value==null) {
           Navigator.of(event.context)
               .pushNamedAndRemoveUntil("/", (route) => false);
+        }else{
+          emit(state.copyWith(errorEmail: value,errorPassword: value));
         }
       });
     }

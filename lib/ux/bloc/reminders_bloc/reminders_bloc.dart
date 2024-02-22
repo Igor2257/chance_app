@@ -334,10 +334,10 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         "month": month,
         "year": year,
         "isSelected": day == i ||
-            (state.selectedDate != null &&
-                (state.selectedDate!.day == i &&
-                    state.selectedDate!.month == month &&
-                    state.selectedDate!.year == year)),
+            (state.newSelectedDateForTasks != null &&
+                (state.newSelectedDateForTasks!.day == i &&
+                    state.newSelectedDateForTasks!.month == month &&
+                    state.newSelectedDateForTasks!.year == year)),
         "hasTasks": checkIfDayHasTask(myTasks, i, month, year)
       });
     }
@@ -350,9 +350,9 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     myTasks.sort((a, b) => a.date!.compareTo(b.date!));
     emit(state.copyWith(
       daysForTasks: dates,
-      selectedDate: DateTime.now(),
+      oldSelectedDateForTasks: DateTime.now(),
       newSelectedDateForTasks: DateTime.now(),
-      dateForSwiping: DateTime.now(),
+      dateForSwipingForTasks: DateTime.now(),
     ));
   }
 
@@ -377,6 +377,13 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
             state.newSelectedDateForTasks!.day,
             state.newDeadlineForTask!.hour,
             state.newDeadlineForTask!.minute);
+      } else {
+        date = DateTime(
+            state.newSelectedDateForTasks!.year,
+            state.newSelectedDateForTasks!.month,
+            state.newSelectedDateForTasks!.day,
+            now.hour,
+            now.minute);
       }
 
       TaskModel taskModel = TaskModel(

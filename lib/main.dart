@@ -22,14 +22,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,8 +40,7 @@ void main() async {
     return false;
   };
 
-  // FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
-  await _requests();
+  FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
 
   await _initBoxes().then((value) async {
     await Repository().getUser().then((user) {
@@ -61,22 +56,39 @@ void main() async {
 class MyApp extends StatefulWidget {
   const MyApp(this.route, {super.key});
 
+  static MyAppState? myAppState;
   final String route;
 
+  static void addMessage(BuildContext context, RemoteMessage remoteMessage) {
+    context.findAncestorStateOfType<MyAppState>()!.addMessage(remoteMessage);
+  }
+
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<MyApp> createState() => MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> {
   Key key = UniqueKey();
   List<String> toasts = [];
   RemoteMessage? remoteMessage;
 
-  void restartApp(RemoteMessage? remoteMessage) {
+  void addMessage(RemoteMessage remoteMessage) {
     setState(() {
       key = UniqueKey();
     });
     this.remoteMessage = remoteMessage;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    MyApp.myAppState = this;
+  }
+
+  @override
+  void dispose() {
+    MyApp.myAppState = null;
+    super.dispose();
   }
 
   @override
@@ -175,7 +187,8 @@ Box? userBox;
 Future<bool> _initBoxes() async {
   final documentsDirectory = await getApplicationDocumentsDirectory();
   Hive.init(documentsDirectory.path);
-  //await Hive.deleteBoxFromDisk('myTasks');
+  //await Repository().deleteCookie();
+  //await Hive.deleteBoxFromDisk('user');
   Hive.registerAdapter(MeUserAdapter());
   Hive.registerAdapter(TaskModelAdapter());
   tasksBox = await Hive.openBox<TaskModel>("myTasks");
@@ -184,63 +197,3 @@ Future<bool> _initBoxes() async {
   return true;
 }
 
-late AndroidNotificationChannel _androidNotificationChannel;
-
-_requests() async {
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  NotificationSettings settings = await messaging.requestPermission(
-    alert: true,
-    announcement: true,
-    badge: true,
-    carPlay: true,
-    criticalAlert: true,
-    provisional: true,
-    sound: true,
-  );
-
-  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-  } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-  } else {
-    _requests();
-  }
-  _loadFCM();
-}
-
-_loadFCM() async {
-  if (!kIsWeb) {
-    _androidNotificationChannel = const AndroidNotificationChannel(
-        "myTasks", 'Завдання',
-        importance: Importance.high, enableVibration: true, playSound: true);
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(_androidNotificationChannel);
-
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-    _listenFCM();
-  }
-}
-
-_listenFCM() async {
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print("message.data");
-    print(message.data.toString());
-    print(message.notification.toString());
-    print(message.category.toString());
-    print(message.sentTime.toString());
-    flutterLocalNotificationsPlugin.show(
-        DateTime.now().millisecondsSinceEpoch~/1000,
-        message.data["type"]=="task"?"Завдання":"",
-        message.data["message"].toString(),
-        NotificationDetails(
-          android: AndroidNotificationDetails(_androidNotificationChannel.id,
-              _androidNotificationChannel.name,
-              icon: '@drawable/logo', autoCancel: false,fullScreenIntent: true),
-        ));
-  });
-}

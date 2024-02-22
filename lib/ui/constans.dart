@@ -99,3 +99,12 @@ const NotificationsBeforeEnumMap = {
   NotificationsBefore.oneHour: 'oneHour',
   NotificationsBefore.oneDay: 'oneDay',
 };
+const errors400 = {
+  "400": "Некоректний запит",
+  "401": "Не авторизовано",
+  "403": "Заборонено",
+  "404": "Не знайдено",
+  "405": "Метод не дозволений",
+  "408": "Таймаут запиту",
+  "429": "Забагато запитів"
+};

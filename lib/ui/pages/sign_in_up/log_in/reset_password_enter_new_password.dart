@@ -155,8 +155,15 @@ class _ResetPasswordEnterNewPasswordState
                         .resetPassword(
                             widget.email, widget.code, firstPassword.text)
                         .then((value) {
-                      Navigator.of(context)
+                          if(value==null) {
+                            Navigator.of(context)
                           .pushNamedAndRemoveUntil('/', (route) => false);
+                          }else{
+                            errorTextFirst = value;
+                            isErrorFirst = true;
+                            errorTextSecond = value;
+                            isErrorSecond = false;
+                          }
                     });
                   }
                 },

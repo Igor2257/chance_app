@@ -5,6 +5,7 @@ import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/sign_in_up/log_in/reset_password_enter_new_password.dart';
 import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/material.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
 class ResetPasswordEnterCode extends StatefulWidget {
   const ResetPasswordEnterCode({super.key, required this.email});
@@ -16,15 +17,9 @@ class ResetPasswordEnterCode extends StatefulWidget {
 }
 
 class _ResetPasswordEnterCodeState extends State<ResetPasswordEnterCode> {
-  TextEditingController firstTextEditingController = TextEditingController(),
-      secondTextEditingController = TextEditingController(),
-      thirdTextEditingController = TextEditingController(),
-      fourthTextEditingController = TextEditingController();
+  TextEditingController textEditingController = TextEditingController();
 
-  FocusNode firstFocusNode = FocusNode(),
-      secondFocusNode = FocusNode(),
-      thirdFocusNode = FocusNode(),
-      fourthFocusNode = FocusNode();
+  FocusNode focusNode = FocusNode();
   int secondsLeft = 60;
   late final Timer timer;
 
@@ -66,177 +61,37 @@ class _ResetPasswordEnterCodeState extends State<ResetPasswordEnterCode> {
             ),
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(firstFocusNode);
-                    },
-                    child: Container(
-                        width: size.width / 6,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 14),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(color: primary800)),
-                        child: Center(
-                          child: SizedBox(
-                            width: size.width / 20,
-                            child: TextField(
-                              textAlign: TextAlign.center,
-                              controller: firstTextEditingController,
-                              focusNode: firstFocusNode,
-                              onChanged: (value) {
-                                firstFocusNode.unfocus();
-                                FocusScope.of(context)
-                                    .requestFocus(secondFocusNode);
-                                if (value.length > 1) {
-                                  secondTextEditingController.text = value[1];
-                                } else if (value.isEmpty) {
-                                  firstFocusNode.unfocus();
-                                }
-                              },
-                              onSubmitted: (v) {
-                                firstFocusNode.unfocus();
-                                FocusScope.of(context)
-                                    .requestFocus(secondFocusNode);
-                              },
-                              decoration: InputDecoration(
-                                  border: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: primary800))),
-                            ),
-                          ),
-                        )),
-                  ),
-                  GestureDetector(
-                      onTap: () {
-                        FocusScope.of(context).requestFocus(secondFocusNode);
-                      },
-                      child: Container(
-                          width: size.width / 6,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 14),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: primary800)),
-                          child: Center(
-                            child: SizedBox(
-                              width: size.width / 20,
-                              child: TextField(
-                                textAlign: TextAlign.center,
-                                controller: secondTextEditingController,
-                                focusNode: secondFocusNode,
-                                onChanged: (value) {
-                                  secondFocusNode.unfocus();
-                                  FocusScope.of(context)
-                                      .requestFocus(thirdFocusNode);
-                                  if (value.length > 1) {
-                                    thirdTextEditingController.text = value[1];
-                                  } else if (value.isEmpty) {
-                                    secondFocusNode.unfocus();
-                                    FocusScope.of(context)
-                                        .requestFocus(firstFocusNode);
-                                  }
-                                },
-                                onSubmitted: (v) {
-                                  secondFocusNode.unfocus();
-                                  FocusScope.of(context)
-                                      .requestFocus(thirdFocusNode);
-                                },
-                                decoration: InputDecoration(
-                                    border: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: primary800))),
-                              ),
-                            ),
-                          ))),
-                  GestureDetector(
-                      onTap: () {
-                        FocusScope.of(context).requestFocus(thirdFocusNode);
-                      },
-                      child: Container(
-                          width: size.width / 6,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 14),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: primary800)),
-                          child: Center(
-                            child: SizedBox(
-                              width: size.width / 20,
-                              child: TextField(
-                                textAlign: TextAlign.center,
-                                controller: thirdTextEditingController,
-                                focusNode: thirdFocusNode,
-                                onChanged: (value) {
-                                  thirdFocusNode.unfocus();
-                                  FocusScope.of(context)
-                                      .requestFocus(fourthFocusNode);
-                                  if (value.length > 1) {
-                                    fourthTextEditingController.text = value[1];
-                                  } else if (value.isEmpty) {
-                                    thirdFocusNode.unfocus();
-                                    FocusScope.of(context)
-                                        .requestFocus(secondFocusNode);
-                                  }
-                                },
-                                onSubmitted: (v) {
-                                  thirdFocusNode.unfocus();
-                                  FocusScope.of(context)
-                                      .requestFocus(fourthFocusNode);
-                                },
-                                decoration: InputDecoration(
-                                    border: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: primary800))),
-                              ),
-                            ),
-                          ))),
-                  GestureDetector(
-                      onTap: () {
-                        FocusScope.of(context).requestFocus(fourthFocusNode);
-                      },
-                      child: Container(
-                          width: size.width / 6,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 14),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: primary800)),
-                          child: Center(
-                            child: SizedBox(
-                              width: size.width / 20,
-                              child: TextField(
-                                textAlign: TextAlign.center,
-                                controller: fourthTextEditingController,
-                                focusNode: fourthFocusNode,
-                                onChanged: (value) {
-                                  fourthFocusNode.unfocus();
-                                  if (value.length > 1) {
-                                    fourthTextEditingController.text = value[0];
-                                  } else if (value.isEmpty) {
-                                    fourthFocusNode.unfocus();
-                                    FocusScope.of(context)
-                                        .requestFocus(thirdFocusNode);
-                                  }
-                                },
-                                onSubmitted: (v) {
-                                  fourthFocusNode.unfocus();
-                                },
-                                decoration: InputDecoration(
-                                    border: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: primary800))),
-                              ),
-                            ),
-                          ))),
-                ],
+              child: PinCodeTextField(
+                focusNode: focusNode,
+                pinTheme: PinTheme(
+                  shape: PinCodeFieldShape.box,
+                  borderRadius: BorderRadius.circular(4),
+                  fieldHeight: size.width / 6,
+                  fieldWidth: size.width / 6,
+                  activeFillColor: primary800,
+                  selectedColor: primary800,
+                  inactiveColor: primary800,
+                  disabledColor: primary800,
+                ),
+                cursorColor: primary800,
+                controller: textEditingController,
+                appContext: context,
+                length: 4,
+                onSaved: (value)async {
+                  String code =
+                      textEditingController.text;
+                  if(code.length==4) {
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => ResetPasswordEnterNewPassword(
+                                email: widget.email, code: code)),
+                            (route) => true);
+                  }
+                },
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 28),
+              padding: const EdgeInsets.symmetric(horizontal: 28),
               child: Text(
                 "Введіть код",
                 style: TextStyle(color: primaryText, fontSize: 14),
@@ -247,9 +102,8 @@ class _ResetPasswordEnterCodeState extends State<ResetPasswordEnterCode> {
             RoundedButton(
                 onPress: () async {
                   String code =
-                      "${firstTextEditingController.text}${secondTextEditingController.text}${thirdTextEditingController.text}${fourthTextEditingController.text}";
-                  print(code);
-                  if(code.length==4) {
+                      textEditingController.text;
+                       if(code.length==4) {
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
                           builder: (context) => ResetPasswordEnterNewPassword(
@@ -303,7 +157,7 @@ class _ResetPasswordEnterCodeState extends State<ResetPasswordEnterCode> {
 
   loadTimer() async {
     secondsLeft = 60;
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       secondsLeft--;
       if (secondsLeft < 1) {
         timer.cancel();

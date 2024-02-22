@@ -28,7 +28,7 @@ final DateTime now=DateTime.now();
             Row(
               children: [
                 Text(
-                  "${getMonthName(state.dateForSwiping?.month ?? 0)}, ${state.dateForSwiping?.year ?? ""}",
+                  "${getMonthName(state.dateForSwipingForTasks?.month ?? 0)}, ${state.dateForSwipingForTasks?.year ?? ""}",
                   style: TextStyle(fontSize: 22, color: primaryText),
                 ),
                 const Spacer(),

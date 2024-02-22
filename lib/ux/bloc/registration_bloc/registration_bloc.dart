@@ -76,7 +76,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         await Repository()
             .sendRegisterData(state.lastName, state.firstName, state.phone, state.email, state.passwordFirst)
             .then((value) {
-          if(value){
+          if(value==null){
             Navigator.of(event.context)
                 .pushNamedAndRemoveUntil("/enter_code", (route) => true);
           }

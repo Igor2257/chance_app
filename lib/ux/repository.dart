@@ -17,8 +17,8 @@ class Repository {
   MeUser? get user =>
       userBox!.get('user') != null ? userBox!.get('user') as MeUser : null;
 
-  Future<bool> sendLoginData(String email, String password) async {
-    bool isOkay = false;
+  Future<String?> sendLoginData(String email, String password) async {
+    String? error;
     var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/login');
     var salt = 'UVocjgjgXg8P7zIsC93kKlRU8sPbTBhsAMFLnLUPDRYFIWAk';
     var saltedPassword = salt + password;
@@ -46,27 +46,36 @@ class Repository {
             },
           ).then((value) async {
             if (value.statusCode > 199 && value.statusCode < 300) {
-              isOkay = true;
               await FirebaseMessaging.instance.getToken().then((token) {
                 patchUserData(token: token);
               });
             } else {
-              //Fluttertoast.showToast(msg: value.body);
+              error = jsonDecode(value.body)["message"]
+                  .toString()
+                  .replaceAll("[", "")
+                  .replaceAll("]", "");
+              Fluttertoast.showToast(
+                  msg: error!, toastLength: Toast.LENGTH_LONG);
             }
           });
         } else {
-          //Fluttertoast.showToast(msg: value.body);
+          error = jsonDecode(value.body)["message"]
+              .toString()
+              .replaceAll("[", "")
+              .replaceAll("]", "");
+          Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
         }
       });
     } catch (error) {
-      //Fluttertoast.showToast(msg: error.toString());
+      Fluttertoast.showToast(
+          msg: error.toString(), toastLength: Toast.LENGTH_LONG);
     }
-    return isOkay;
+    return error;
   }
 
-  Future<bool> sendRegisterData(String name, String lastName, String phone,
+  Future<String?> sendRegisterData(String name, String lastName, String phone,
       String email, String password) async {
-    bool isOkayPost = false;
+    String? error;
     var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/register');
     var salt = 'UVocjgjgXg8P7zIsC93kKlRU8sPbTBhsAMFLnLUPDRYFIWAk';
     var saltedPassword = salt + password;
@@ -89,86 +98,96 @@ class Repository {
         if (value.statusCode > 199 && value.statusCode < 300) {
           String? cookie = value.headers['set-cookie'];
           saveCookie(cookie);
-          isOkayPost = true;
         } else {
-          Fluttertoast.showToast(msg: value.body);
+          error = jsonDecode(value.body)["message"]
+              .toString()
+              .replaceAll("[", "")
+              .replaceAll("]", "");
+          Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
         }
       });
     } catch (error) {
-      Fluttertoast.showToast(msg: error.toString());
+      Fluttertoast.showToast(
+          msg: error.toString(), toastLength: Toast.LENGTH_LONG);
     }
-    return isOkayPost;
+    return error;
   }
 
-  Future<bool> checkIsCodeValid(
+  Future<String?> checkIsCodeValid(
       String code, String email, String passwordFirst) async {
-    if (code.isEmpty) {
-      return false;
+    if (code.length != 4) {
+      return "Код має бути із 4 символів";
     }
-    if (code.length == 4) {
-      bool isOkay = false;
-      var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/confirm');
+    String? error;
+    var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/confirm');
 
-      try {
-        await http
-            .post(
-          url,
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-          },
-          body: jsonEncode({"code": code, "email": email}),
-        )
-            .then((value) {
-          if (value.statusCode > 199 && value.statusCode < 300) {
-            isOkay = true;
-            sendLoginData(email, passwordFirst);
-          } else {
-            Fluttertoast.showToast(msg: value.body);
-          }
-        });
-      } catch (error) {
-        Fluttertoast.showToast(msg: error.toString());
-      }
-      return isOkay;
-    } else {
-      return false;
-    }
-  }
-
-  Future<bool> patchUserData(
-      {String? name, String? lastName, String? phone, String? token}) async {
-    bool isOkay = false;
-    var url = Uri.parse('http://139.28.37.11:56565/stage/api/user');
-    await getCookie().then((cookie) async {
+    try {
       await http
-          .patch(url,
-              headers: <String, String>{
-                'Content-Type': 'application/json',
-                'Cookie': cookie.toString(),
-              },
-              body: jsonEncode({
-                if (name != null) "name": name,
-                if (lastName != null) "lastName": lastName,
-                if (phone != null) "phone": phone,
-                if (token != null) "deviceId": token,
-              }))
-          .then((value) {
+          .post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({"code": code, "email": email}),
+      )
+            .then((value) {
         if (value.statusCode > 199 && value.statusCode < 300) {
-          isOkay = true;
+          sendLoginData(email, passwordFirst);
         } else {
-          Fluttertoast.showToast(msg: value.body);
+          error = jsonDecode(value.body)["message"]
+              .toString()
+              .replaceAll("[", "")
+              .replaceAll("]", "");
+          Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
         }
       });
-    });
-
-    return isOkay;
+    } catch (error) {
+      Fluttertoast.showToast(
+          msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+    }
+    return error;
   }
 
-  Future<bool> resendCode(String email) async {
-    if (email.isEmpty) {
-      return false;
+  Future<String?> patchUserData(
+      {String? name, String? lastName, String? phone, String? token}) async {
+    String? error;
+    var url = Uri.parse('http://139.28.37.11:56565/stage/api/user');
+    try {
+      await getCookie().then((cookie) async {
+        await http
+            .patch(url,
+                headers: <String, String>{
+                  'Content-Type': 'application/json',
+                  'Cookie': cookie.toString(),
+                },
+                body: jsonEncode({
+                  if (name != null) "name": name,
+                  if (lastName != null) "lastName": lastName,
+                  if (phone != null) "phone": phone,
+                  if (token != null) "deviceId": token,
+                }))
+            .then((value) {
+          if (!(value.statusCode > 199 && value.statusCode < 300)) {
+            error = jsonDecode(value.body)["message"]
+                .toString()
+                .replaceAll("[", "")
+                .replaceAll("]", "");
+            Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+          }
+        });
+      });
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString(), toastLength: Toast.LENGTH_LONG);
     }
-    bool isOkay = false;
+
+    return error;
+  }
+
+  Future<String?> resendCode(String email) async {
+    if (email.isEmpty) {
+      return "Електрона пошта пуста";
+    }
+    String? error;
     var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/resend-code');
 
     try {
@@ -182,19 +201,23 @@ class Repository {
       )
           .then((value) {
         if (value.statusCode > 199 && value.statusCode < 300) {
-          isOkay = true;
         } else {
-          Fluttertoast.showToast(msg: value.body);
+          error = jsonDecode(value.body)["message"]
+              .toString()
+              .replaceAll("[", "")
+              .replaceAll("]", "");
+          Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
         }
       });
     } catch (error) {
-      Fluttertoast.showToast(msg: error.toString());
+      Fluttertoast.showToast(
+          msg: error.toString(), toastLength: Toast.LENGTH_LONG);
     }
-    return isOkay;
+    return error;
   }
 
-  Future<bool> forgotPassword(String email) async {
-    bool isOkay = false;
+  Future<String?> forgotPassword(String email) async {
+    String? error;
     var url =
         Uri.parse('http://139.28.37.11:56565/stage/api/auth/forget-password');
 
@@ -209,20 +232,24 @@ class Repository {
       )
           .then((value) {
         if (value.statusCode > 199 && value.statusCode < 300) {
-          isOkay = true;
         } else {
-          Fluttertoast.showToast(msg: value.body);
+          error = jsonDecode(value.body)["message"]
+              .toString()
+              .replaceAll("[", "")
+              .replaceAll("]", "");
+          Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
         }
       });
     } catch (error) {
-      Fluttertoast.showToast(msg: error.toString());
+      Fluttertoast.showToast(
+          msg: error.toString(), toastLength: Toast.LENGTH_LONG);
     }
-    return isOkay;
+    return error;
   }
 
-  Future<bool> resetPassword(
+  Future<String?> resetPassword(
       String email, String code, String newPassword) async {
-    bool isOkay = false;
+    String? error;
     var salt = 'UVocjgjgXg8P7zIsC93kKlRU8sPbTBhsAMFLnLUPDRYFIWAk';
     var saltedPassword = salt + newPassword;
     var bytes = utf8.encode(saltedPassword);
@@ -243,17 +270,27 @@ class Repository {
           "code": code
         }),
       )
-          .then((value) {
-        if (value.statusCode > 199 && value.statusCode < 300) {
-          isOkay = true;
+          .then((value) async {
+        if (!(value.statusCode > 199 && value.statusCode < 300)) {
+          error = jsonDecode(value.body)["message"]
+              .toString()
+              .replaceAll("[", "")
+              .replaceAll("]", "");
+          print("value.body ${value.body}");
+          Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
         } else {
-          Fluttertoast.showToast(msg: value.body);
+          await sendLoginData(email, newPassword).then((value) {
+            if (value != null) {
+              error = value;
+            }
+          });
         }
       });
     } catch (error) {
-      Fluttertoast.showToast(msg: error.toString());
+      Fluttertoast.showToast(
+          msg: error.toString(), toastLength: Toast.LENGTH_LONG);
     }
-    return isOkay;
+    return error;
   }
 
   Future<List<TaskModel>> getTasks() async {
@@ -272,35 +309,42 @@ class Repository {
       ).then((value) {
         if (value.statusCode > 199 && value.statusCode < 300) {
           List<dynamic> list = jsonDecode(value.body);
+
           for (int i = 0; i < list.length; i++) {
             TaskModel taskModel = TaskModel(
               id: list[i]["_id"],
               message: list[i]["message"],
               userId: list[i]["userId"],
-              date: DateTime.parse(list[i]["date"]),
+              date: DateTime.parse(list[i]["date"]).toLocal(),
               isDone: list[i]["isDone"],
               isSended: list[i]["isSended"],
             );
             addTask(taskModel);
           }
         } else {
-          Fluttertoast.showToast(msg: value.body);
+          String error = jsonDecode(value.body)["message"]
+              .toString()
+              .replaceAll("[", "")
+              .replaceAll("]", "");
+          Fluttertoast.showToast(msg: error, toastLength: Toast.LENGTH_LONG);
         }
       });
     } catch (error) {
-      Fluttertoast.showToast(msg: error.toString());
+      Fluttertoast.showToast(
+          msg: error.toString(), toastLength: Toast.LENGTH_LONG);
     }
     return list;
   }
 
-  Future<bool> updateTask(
+  Future<String?> updateTask(
       {String? name, DateTime? date, bool? isDone, required String id}) async {
-    bool isOkay = false;
+    String? error;
 
     var url = Uri.parse('http://139.28.37.11:56565/stage/api/task/$id');
 
     try {
       final cookie = await getCookie();
+      String? newDate = date?.toUtc().toString();
       await http
           .patch(url,
               headers: <String, String>{
@@ -309,27 +353,31 @@ class Repository {
               },
               body: jsonEncode({
                 if (name != null) "message": name,
-                if (date != null) "date": date,
+                if (newDate != null) "date": newDate,
                 if (isDone != null) "isDone": isDone
               }))
           .then((value) {
-        if (value.statusCode > 199 && value.statusCode < 300) {
-        } else {
-          Fluttertoast.showToast(msg: value.body);
+        if (!(value.statusCode > 199 && value.statusCode < 300)) {
+          error = jsonDecode(value.body)["message"]
+              .toString()
+              .replaceAll("[", "")
+              .replaceAll("]", "");
+          Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
         }
       });
     } catch (error) {
-      Fluttertoast.showToast(msg: error.toString());
+      Fluttertoast.showToast(
+          msg: error.toString(), toastLength: Toast.LENGTH_LONG);
     }
-    return isOkay;
+    return error;
   }
 
-  Future<bool> saveTask(TaskModel taskModel) async {
-    bool isOkay = false;
+  Future<String?> saveTask(TaskModel taskModel) async {
+    String? error;
     var url = Uri.parse('http://139.28.37.11:56565/stage/api/task');
     try {
       final cookie = await getCookie();
-      String date = taskModel.date!.toIso8601String().toString();
+      String date = taskModel.date!.toUtc().toString();
 
       await http
           .post(
@@ -341,16 +389,19 @@ class Repository {
         body: jsonEncode({"message": taskModel.message, "date": date}),
       )
           .then((value) {
-        if (value.statusCode > 199 && value.statusCode < 300) {
-          isOkay = true;
-        } else {
-          Fluttertoast.showToast(msg: value.body);
+        if (!(value.statusCode > 199 && value.statusCode < 300)) {
+          error = jsonDecode(value.body)["message"]
+              .toString()
+              .replaceAll("[", "")
+              .replaceAll("]", "");
+          Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
         }
       });
     } catch (error) {
-      Fluttertoast.showToast(msg: error.toString());
+      Fluttertoast.showToast(
+          msg: error.toString(), toastLength: Toast.LENGTH_LONG);
     }
-    return isOkay;
+    return error;
   }
 
   Future<MeUser?> getUser() async {
@@ -358,18 +409,19 @@ class Repository {
     var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/me');
     try {
       final cookie = await getCookie();
-      await http.get(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Cookie': cookie.toString(),
-        },
-      ).then((value) async {
-        if (value.statusCode > 199 && value.statusCode < 300) {
-          Map<String, dynamic> map = jsonDecode(value.body);
-          meUser = MeUser(
-            id: map["_id"],
-            email: map["email"],
+      if (cookie != null) {
+        await http.get(
+          url,
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Cookie': cookie.toString(),
+          },
+        ).then((value) async {
+          if (value.statusCode > 199 && value.statusCode < 300) {
+            Map<String, dynamic> map = jsonDecode(value.body);
+            meUser = MeUser(
+              id: map["_id"],
+              email: map["email"],
             name: map["name"],
             lastName: map["lastName"],
             phone: map["phone"],
@@ -380,17 +432,25 @@ class Repository {
           await addUser(meUser!);
           return user;
         } else {
-          Fluttertoast.showToast(msg: value.body);
-        }
-      });
+            print(value.body);
+            String error = jsonDecode(value.body)["message"]
+                .toString()
+                .replaceAll("[", "")
+                .replaceAll("]", "");
+            Fluttertoast.showToast(msg: error, toastLength: Toast.LENGTH_LONG);
+          }
+        });
+      }
     } catch (error) {
-      Fluttertoast.showToast(msg: error.toString());
+      print(error.toString());
+      Fluttertoast.showToast(
+          msg: error.toString(), toastLength: Toast.LENGTH_LONG);
     }
     return meUser;
   }
 
-  Future<bool> removeTask(String taskId) async {
-    bool isOkay = false;
+  Future<String?> removeTask(String taskId) async {
+    String? error;
     var url = Uri.parse('http://139.28.37.11:56565/stage/api/task/$taskId');
     try {
       final cookie = await getCookie();
@@ -398,16 +458,19 @@ class Repository {
         'Content-Type': 'application/json',
         'Cookie': cookie.toString(),
       }).then((value) {
-        if (value.statusCode > 199 && value.statusCode < 300) {
-          isOkay = true;
-        } else {
-          Fluttertoast.showToast(msg: value.body);
+        if ((value.statusCode > 199 && value.statusCode < 300)) {
+          error = jsonDecode(value.body)["message"]
+              .toString()
+              .replaceAll("[", "")
+              .replaceAll("]", "");
+          Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
         }
       });
     } catch (error) {
-      Fluttertoast.showToast(msg: error.toString());
+      Fluttertoast.showToast(
+          msg: error.toString(), toastLength: Toast.LENGTH_LONG);
     }
-    return isOkay;
+    return error;
   }
 
   Future clearTasks() async {
@@ -439,5 +502,10 @@ class Repository {
   Future<String?> getCookie() async {
     const storage = FlutterSecureStorage();
     return await storage.read(key: "set-cookie");
+  }
+
+  Future<void> deleteCookie() async {
+    const storage = FlutterSecureStorage();
+    await storage.delete(key: "set-cookie");
   }
 }
