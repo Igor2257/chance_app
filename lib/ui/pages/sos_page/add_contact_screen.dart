@@ -92,7 +92,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: primary1000,
+                  backgroundColor: primary1000,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
