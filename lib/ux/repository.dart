@@ -389,6 +389,7 @@ class Repository {
                 isDone: list[i]["isDone"],
                 isSended: list[i]["isSended"],
               );
+              tasks.add(taskModel);
             }
           } else {
             String error = jsonDecode(value.body)["message"]
@@ -471,7 +472,11 @@ class Repository {
             'Content-Type': 'application/json',
             'Cookie': cookie.toString(),
           },
-          body: jsonEncode({"message": taskModel.message, "date": date}),
+          body: jsonEncode({
+            "message": taskModel.message,
+            "date": date,
+            "isDone": taskModel.isDone,
+          }),
         )
             .then((value) {
           if (!(value.statusCode > 199 && value.statusCode < 300)) {
@@ -574,20 +579,40 @@ class Repository {
     return error;
   }
 
-  //Future<bool> sendAllLocalData() async {
-  //  List<TaskModel> dbTasks = await loadTasks(),
-  //      localTasks =List.from(myTasks);
-  //
-  //}
+  Future<bool> sendAllLocalData() async {
+    List<TaskModel> dbTasks = await loadTasks(),
+        localTasks = List.from(myTasks);
+    for (int i = 0; i < localTasks.length; i++) {
+      if (dbTasks.any((element) => element.id == localTasks[i].id)) {
+        if (localTasks[i].isRemoved) {
+          await removeTask(localTasks[i].id);
+          continue;
+        }
+        if (localTasks[i].isDone !=
+            dbTasks
+                .firstWhere((element) => element.id == localTasks[i].id)
+                .isDone) {
+          updateTask(id: localTasks[i].id);
+        }
+      } else {
+        if (localTasks[i].isRemoved) {
+          continue;
+        }
+        saveTask(localTasks[i]);
+      }
+    }
+    await updateLocalTasks();
 
+    return true;
+  }
 
   Future<bool> getIdTokenFromAuthCode() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn(
-        signInOption: SignInOption.standard).signIn();
+    final GoogleSignInAccount? googleUser =
+        await GoogleSignIn(signInOption: SignInOption.standard).signIn();
 
     // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth = await googleUser
-        ?.authentication;
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
 
     // Create a new credential
     final credential = GoogleAuthProvider.credential(
@@ -620,7 +645,6 @@ class Repository {
           'Cookie': cookie.toString(),
         }).then((value) {
           if (value.statusCode > 199 && value.statusCode < 300) {
-            print(value.statusCode);
             deleteCookie();
           }
         });
