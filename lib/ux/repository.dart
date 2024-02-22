@@ -619,7 +619,8 @@ class Repository {
           'Content-Type': 'application/json',
           'Cookie': cookie.toString(),
         }).then((value) {
-          if (!(value.statusCode > 199 && value.statusCode < 300)) {
+          if (value.statusCode > 199 && value.statusCode < 300) {
+            print(value.statusCode);
             deleteCookie();
           }
         });
