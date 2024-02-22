@@ -77,7 +77,7 @@ class _ResetPasswordEnterNewPasswordState
                     },
                     icon: Icon(obscureTextFirst
                         ? Icons.visibility_off_outlined
-                        : Icons.visibility_outlined),
+                        : Icons.visibility_outlined,color: beige500),
                   ),
                 ),
                 focusNode: firstFocusNode,
@@ -129,7 +129,7 @@ class _ResetPasswordEnterNewPasswordState
                     },
                     icon: Icon(obscureTextSecond
                         ? Icons.visibility_off_outlined
-                        : Icons.visibility_outlined),
+                        : Icons.visibility_outlined,color: beige500),
                   ),
                 ),
                 focusNode: secondFocusNode,

@@ -1,6 +1,7 @@
 import 'package:chance_app/firebase_options.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/main_page/main_page.dart';
+import 'package:chance_app/ui/pages/menu/menu_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/calendar_task_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/tasks_for_today.dart';
@@ -173,6 +174,8 @@ class MyAppState extends State<MyApp> {
                                   const ResetPassword(),
                               "/tasks_for_today": (context) =>
                                   const TasksForToday(),
+                              "/menu": (context) =>
+                                  const MenuPage(),
                             },
                           ))),
                 ),

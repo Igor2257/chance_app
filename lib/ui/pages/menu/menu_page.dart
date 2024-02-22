@@ -24,19 +24,26 @@ class MenuPage extends StatelessWidget {
         ),
       ),
       backgroundColor: beigeBG,
-      body: Column(
-        children: [
-          RoundedButton(
-              onPress: () async {
-                await Repository().logout();
-                Navigator.of(context).pushNamedAndRemoveUntil("/signinup", (route) => false);
-              },
-              color: primary1000,
-              child: Text(
-                "Вийти з облікового запису",
-                style: TextStyle(fontSize: 16, color: primary50),
-              )),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            RoundedButton(
+                onPress: () async {
+                  await Repository().logout().then((value) {
+                    if(value==null){
+                      Navigator.of(context).pushNamedAndRemoveUntil("/signinup", (route) => false);
+                    }
+                  });
+
+                },
+                color: primary1000,
+                child: Text(
+                  "Вийти з облікового запису",
+                  style: TextStyle(fontSize: 16, color: primary50),
+                )),
+          ],
+        ),
       ),
     );
   }

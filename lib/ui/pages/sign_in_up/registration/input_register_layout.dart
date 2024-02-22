@@ -211,7 +211,7 @@ class _InputRegisterLayoutState extends State<InputRegisterLayout> {
                                   },
                                   icon: Icon(obscureText
                                       ? Icons.visibility_off_outlined
-                                      : Icons.visibility_outlined),
+                                      : Icons.visibility_outlined,color: beige500),
                                 )
                               : const SizedBox(),
                         ),

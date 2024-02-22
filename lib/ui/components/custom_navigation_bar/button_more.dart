@@ -8,6 +8,9 @@ class ButtonMore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      onTap: (){
+        Navigator.of(context).pushNamed("/menu");
+      },
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
