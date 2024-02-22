@@ -58,6 +58,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   FutureOr<void> _onIncreaseCurrentStep(
       IncreaseCurrentStep event, Emitter<RegistrationState> emit) async {
+    emit(state.copyWith(isLoading: true));
     int currentStep = state.currentStep + 1;
     if (currentStep < 2) {
       state.pageController!.animateToPage(currentStep,
@@ -74,23 +75,24 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     } else {
       if (validate(emit)) {
         await Repository()
-            .sendRegisterData(state.lastName, state.firstName, state.phone, state.email, state.passwordFirst)
+            .sendRegisterData(state.lastName, state.firstName, state.phone,
+                state.email, state.passwordFirst)
             .then((value) {
-          if(value==null){
-            Navigator.of(event.context)
-                .pushNamed("/enter_code");
+          if (value == null) {
+            Navigator.of(event.context).pushNamed("/enter_code");
           }
         });
       }
     }
+    emit(state.copyWith(isLoading: false));
   }
 
   FutureOr<void> _onDecreaseCurrentStep(
       DecreaseCurrentStep event, Emitter<RegistrationState> emit) {
-    int currentStep = state.currentStep-1;
+    emit(state.copyWith(isLoading: true));
+    int currentStep = state.currentStep - 1;
     if (currentStep > -1) {
-
-      state.pageController!.animateToPage(currentStep ,
+      state.pageController!.animateToPage(currentStep,
           duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
       double plusPercentage = 0.33;
       if (currentStep == 1) {
@@ -98,8 +100,9 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       }
       emit(state.copyWith(
           percentage: state.percentage - plusPercentage,
-          currentStep: currentStep ));
+          currentStep: currentStep));
     }
+    emit(state.copyWith(isLoading: false));
   }
 
   FutureOr<void> _onDispose(Dispose event, Emitter<RegistrationState> emit) {
@@ -109,6 +112,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   FutureOr<void> _onValidateForm(
       ValidateForm event, Emitter<RegistrationState> emit) {
+    emit(state.copyWith(isLoading: true));
     String text = event.text;
     String? errorText;
     switch (event.inputLayouts) {
@@ -182,17 +186,17 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         if (text.trim().length > 14) {
           errorText = "Пароль має бути менше 14 символів";
         }
-        if(errorText==null||(errorText.isEmpty)){
-          if(state.passwordFirst!=text){
+        if (errorText == null || (errorText.isEmpty)) {
+          if (state.passwordFirst != text) {
             errorText = "Паролі не співпадають";
           }
         }
         emit(state.copyWith(
             passwordSecond: text, errorSecondPassword: errorText));
 
-
         break;
     }
+    emit(state.copyWith(isLoading: false));
   }
 
   FutureOr<void> _onLoadData(LoadData event, Emitter<RegistrationState> emit) {
@@ -265,18 +269,27 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     if (text.trim().length > 14) {
       errorTextLP = "Пароль має бути менше 14 символів";
     }
-    if(state.passwordFirst!=state.passwordSecond){
+    if (state.passwordFirst != state.passwordSecond) {
       errorTextFP = "Пароль має cпівпадати";
       errorTextLP = "Пароль має cпівпадати";
     }
-
-    emit(state.copyWith(
+    if (state.currentStep == 0) {
+      emit(state.copyWith(
         errorLastName: errorTextLN,
         errorFirstName: errorTextFN,
+      ));
+    } else if (state.currentStep == 0) {
+      emit(state.copyWith(
         errorEmail: errorTextEmail,
         errorPhone: errorTextPhone,
+      ));
+    } else if (state.currentStep == 0) {
+      emit(state.copyWith(
         errorFirstPassword: errorTextFP,
-        errorSecondPassword: errorTextLP));
+        errorSecondPassword: errorTextLP,
+      ));
+    }
+
     if (errorTextLN == null || errorTextLN.trim().isEmpty) {
       if (errorTextFN == null || errorTextFN.trim().isEmpty) {
         if (errorTextEmail == null || errorTextEmail.trim().isEmpty) {

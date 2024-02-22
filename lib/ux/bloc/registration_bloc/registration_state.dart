@@ -7,7 +7,7 @@ class RegistrationState {
   PageController? pageController = PageController(initialPage: 0);
 
   String? errorLastName,errorFirstName,errorPhone,errorEmail,errorFirstPassword,errorSecondPassword;
-  bool isUserGrantPermissionForProcessingPersonalData;
+  bool isUserGrantPermissionForProcessingPersonalData,isLoading;
   RegistrationState({
     this.firstName = "",
     this.lastName = "",
@@ -25,6 +25,7 @@ class RegistrationState {
     this.errorSecondPassword,
     this.pageController,
     this.isUserGrantPermissionForProcessingPersonalData=false,
+    this.isLoading=false,
   });
 
   RegistrationState copyWith({
@@ -38,7 +39,7 @@ class RegistrationState {
     double? percentage,
     String? errorLastName,errorFirstName,errorPhone,errorEmail,errorFirstPassword,errorSecondPassword,
     PageController? pageController,
-    bool? isUserGrantPermissionForProcessingPersonalData,
+    bool? isUserGrantPermissionForProcessingPersonalData,isLoading,
   }) {
     return RegistrationState(
       firstName: firstName ?? this.firstName,
@@ -56,6 +57,7 @@ class RegistrationState {
       errorFirstPassword: errorFirstPassword ?? this.errorFirstPassword,
       errorSecondPassword: errorSecondPassword ?? this.errorSecondPassword,
       pageController: pageController ?? this.pageController,
+      isLoading: isLoading ?? this.isLoading,
       isUserGrantPermissionForProcessingPersonalData: isUserGrantPermissionForProcessingPersonalData ?? this.isUserGrantPermissionForProcessingPersonalData,
     );
   }
@@ -77,6 +79,7 @@ class RegistrationState {
       errorSecondPassword:null,
       pageController:null,
       isUserGrantPermissionForProcessingPersonalData:false,
+        isLoading:false,
     );
   }
 }

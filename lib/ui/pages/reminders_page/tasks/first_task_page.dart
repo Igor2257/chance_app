@@ -54,7 +54,12 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
           if (state.taskTitle.trim().isNotEmpty)
             GestureDetector(
               onTap: () {
-                BlocProvider.of<RemindersBloc>(context).add(SaveTasks(context: context));
+                if (state.taskTitle.trimLeft().length > 1) {
+                  if (state.taskTitle.trimLeft().length <= 300) {
+                    BlocProvider.of<RemindersBloc>(context)
+                        .add(SaveTasks(context: context));
+                  }
+                }
               },
               child: Container(
                 height: 48,

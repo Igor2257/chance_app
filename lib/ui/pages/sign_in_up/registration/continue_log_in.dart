@@ -11,34 +11,43 @@ class ContinueLogIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        RoundedButton(
-            onPress: () {
-              BlocProvider.of<RegistrationBloc>(context)
-                  .add(IncreaseCurrentStep(context));
-            },
-            color: primary1000,
-            child: Text(
-              name,
-              style: TextStyle(
-                  fontWeight: FontWeight.w500, fontSize: 16, color: primary50),
-            )),
-        TextButton(
-            onPressed: () {
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil("/signinup", (route) => false);
-            },
-            child: Text(
-              "Вже маєте аккаунт? Увійти",
-              style: TextStyle(
-                  decoration: TextDecoration.underline,
-                  decorationColor: primary700,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16,
-                  color: primary700),
-            )),
-      ],
-    );
+    return BlocBuilder<RegistrationBloc, RegistrationState>(
+        builder: (context, state) {
+      return Column(
+        children: [
+          RoundedButton(
+              onPress: () {
+                if (!state.isLoading) {
+                  BlocProvider.of<RegistrationBloc>(context)
+                      .add(IncreaseCurrentStep(context));
+                }
+              },
+              color: state.isLoading ? darkNeutral1000 : primary1000,
+              child: Text(
+                name,
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                    color: primary50),
+              )),
+          TextButton(
+              onPressed: () {
+                if (!state.isLoading) {
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil("/signinup", (route) => false);
+                }
+              },
+              child: Text(
+                "Вже маєте аккаунт? Увійти",
+                style: TextStyle(
+                    decoration: TextDecoration.underline,
+                    decorationColor: primary700,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                    color: state.isLoading ? primary1000 : primary700),
+              )),
+        ],
+      );
+    });
   }
 }

@@ -56,7 +56,21 @@ class _InputRemindersLayoutState extends State<InputRemindersLayout> {
                           fontSize: 16, color: isError ? red900 : primaryText),
                       textInputAction: TextInputAction.done,
                       validator: (_) {
-                        widget.saveData(textEditingController.text);
+                        if (textEditingController.text.trimLeft().length > 1) {
+                          if (textEditingController.text.trimLeft().length <=
+                              300) {
+                            widget.saveData(textEditingController.text);
+                          } else {
+                            setState(() {
+                              errorText = "Назва має містити до 300 символів";
+                            });
+                          }
+                        } else {
+                          setState(() {
+                            errorText = "Назва має містити від 2 символів";
+                          });
+                        }
+
                         return null;
                       },
                       onChanged: widget.saveData,
