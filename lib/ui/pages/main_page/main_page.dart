@@ -1,4 +1,4 @@
-
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'package:chance_app/main.dart';
 import 'package:chance_app/ui/components/custom_card.dart';
@@ -6,7 +6,6 @@ import 'package:chance_app/ui/components/custom_navigation_bar/custom_navigation
 import 'package:chance_app/ui/components/logo_name.dart';
 import 'package:chance_app/ui/components/sos_button.dart';
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ux/repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -21,13 +20,14 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
 
   late AndroidNotificationChannel _androidNotificationChannel;
 
   _requests(BuildContext context) async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
-    await messaging.requestPermission(
+    await messaging
+        .requestPermission(
       alert: true,
       announcement: true,
       badge: true,
@@ -35,16 +35,16 @@ class _MainPageState extends State<MainPage> {
       criticalAlert: true,
       provisional: true,
       sound: true,
-    ).then((settings) {
+    )
+        .then((settings) {
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+      } else if (settings.authorizationStatus ==
+          AuthorizationStatus.provisional) {
       } else {
         _requests(context);
       }
       _loadFCM(context);
     });
-
-
   }
 
   _loadFCM(BuildContext context) async {
@@ -54,7 +54,7 @@ class _MainPageState extends State<MainPage> {
           importance: Importance.high, enableVibration: true, playSound: true);
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
+              AndroidFlutterLocalNotificationsPlugin>()
           ?.createNotificationChannel(_androidNotificationChannel);
 
       await FirebaseMessaging.instance
@@ -76,13 +76,15 @@ class _MainPageState extends State<MainPage> {
       print(message.sentTime.toString());
       MyApp.addMessage(context, message);
       flutterLocalNotificationsPlugin.show(
-          DateTime.now().millisecondsSinceEpoch~/1000,
-          message.data["type"]=="task"?"Завдання":"",
+          DateTime.now().millisecondsSinceEpoch ~/ 1000,
+          message.data["type"] == "task" ? "Завдання" : "",
           message.data["message"].toString(),
           NotificationDetails(
             android: AndroidNotificationDetails(_androidNotificationChannel.id,
                 _androidNotificationChannel.name,
-                icon: '@drawable/logo', autoCancel: false,fullScreenIntent: true),
+                icon: '@drawable/logo',
+                autoCancel: false,
+                fullScreenIntent: true),
           ));
     });
   }
@@ -90,7 +92,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    double cardWidth=(size.width/2)-32;
+    double cardWidth = (size.width / 2) - 32;
     _requests(context);
     return Scaffold(
         backgroundColor: beigeBG,
@@ -122,10 +124,8 @@ class _MainPageState extends State<MainPage> {
                     ),
                     width: cardWidth,
                     margin: const EdgeInsets.only(bottom: 8, top: 8, right: 8),
-                    onPress: ()async {
-                      Navigator.of(context).pushNamed(
-                          "/reminders");
-
+                    onPress: () async {
+                      Navigator.of(context).pushNamed("/reminders");
                     },
                   ),
                   CustomCard(
