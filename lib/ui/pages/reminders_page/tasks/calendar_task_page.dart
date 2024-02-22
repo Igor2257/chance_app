@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:chance_app/ui/components/custom_bottom_sheet_time_picker.dart';
+import 'package:chance_app/ui/components/custom_time_picker.dart';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/calendar_for_tasks.dart';
@@ -24,6 +24,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
     BlocProvider.of<RemindersBloc>(context).add(LoadDataForSelectDateForTasks());
     super.initState();
   }
+
   final int session = DateTime.now().millisecondsSinceEpoch;
 
   @override
@@ -53,7 +54,8 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
           actions: [
             IconButton(
                 onPressed: () {
-                  BlocProvider.of<RemindersBloc>(context).add(SaveTasks(context: context));
+                  BlocProvider.of<RemindersBloc>(context)
+                      .add(SaveTasks(context: context));
                   Navigator.of(context).pop();
                 },
                 icon: Icon(
@@ -77,13 +79,15 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
               child: Column(
                 children: [
                   RoundedButton(
-                      onPress: () {
-                        CustomBottomSheetTimePicker(
-                          onPressOK: (dateTime) {
-                            BlocProvider.of<RemindersBloc>(context)
-                                .add(SaveDeadlineForTask(dateTime: dateTime));
-                          },
-                        ).show(context);
+                      onPress: () async {
+                        final dateTime = await CustomTimePicker.show(
+                          context,
+                          title: const Text("Термін виконання"),
+                        );
+                        if (dateTime != null && context.mounted) {
+                          BlocProvider.of<RemindersBloc>(context)
+                              .add(SaveDeadlineForTask(dateTime: dateTime));
+                        }
                       },
                       tapColor: primary100,
                       padding: const EdgeInsets.symmetric(horizontal: 16),
