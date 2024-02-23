@@ -43,7 +43,9 @@ class SavePasswordSecond extends RegistrationEvent{
 
 class IncreaseCurrentStep extends RegistrationEvent{
   final BuildContext context;
-  IncreaseCurrentStep(this.context);
+  final String first,second;
+
+  IncreaseCurrentStep({required this.context, required this.first, required this.second});
 }
 class DecreaseCurrentStep extends RegistrationEvent{
   DecreaseCurrentStep();

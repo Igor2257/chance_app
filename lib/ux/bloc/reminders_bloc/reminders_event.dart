@@ -76,12 +76,6 @@ final int session;
   CancelAllDataNotificationBefore(this.session);
 }
 
-class SaveTasks extends RemindersEvent{
-  final BuildContext context;
-
-  SaveTasks({required this.context});
-}
-
 class SelectTask extends RemindersEvent{
   final int position;
 
@@ -106,5 +100,13 @@ class DeleteTask extends RemindersEvent{
   final String name;
 
   DeleteTask({required this.id, required this.context, required this.name});
+
+}
+
+class SaveTask extends RemindersEvent{
+  final TaskModel taskModel;
+
+  SaveTask({required this.taskModel});
+
 
 }

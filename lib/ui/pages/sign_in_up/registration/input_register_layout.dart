@@ -24,7 +24,7 @@ class InputRegisterLayout extends StatefulWidget {
       required this.inputLayouts,
       this.focusOtherField,
       this.subTitle,
-      required this.textInputType});
+      required this.textInputType, required this.textEditingController});
 
   final String? title, subTitle;
   final FocusNode focusNode;
@@ -33,13 +33,14 @@ class InputRegisterLayout extends StatefulWidget {
   final InputLayouts inputLayouts;
   final Function()? focusOtherField;
   final TextInputType textInputType;
+  final TextEditingController textEditingController;
 
   @override
   State<InputRegisterLayout> createState() => _InputRegisterLayoutState();
 }
 
 class _InputRegisterLayoutState extends State<InputRegisterLayout> {
-  final TextEditingController textEditingController=TextEditingController();
+  late final TextEditingController textEditingController;
   late final FocusNode focusNode;
   late final InputLayouts inputLayouts;
   bool obscureText = false, useObscureText = false,isError=false;
@@ -53,6 +54,7 @@ class _InputRegisterLayoutState extends State<InputRegisterLayout> {
     useObscureText = widget.obscureText;
     obscureText = widget.obscureText;
     errorText = widget.subTitle;
+    textEditingController=widget.textEditingController;
     focusNode.addListener(() {
       if (!focusNode.hasFocus) {
         form.currentState?.validate();
@@ -86,22 +88,35 @@ class _InputRegisterLayoutState extends State<InputRegisterLayout> {
                     border: Border.all(color: isError ? red900 : beige300),
                     borderRadius: BorderRadius.circular(16)),
                 child: InternationalPhoneNumberInput(
-                  initialValue: PhoneNumber(phoneNumber:textEditingController.text,dialCode: "+380",isoCode: "+380"),
+                  initialValue: PhoneNumber(
+                      phoneNumber: textEditingController.text.replaceAll("+380", ""),
+                      dialCode: "+380",
+                      isoCode: "+380"),
                   maxLength: 11,
-                    hintText: "Номер телефону",
-                    errorMessage: "",
-                    locale: "uk",
-                    countries: const ["UA"],
-                    onInputChanged: (number) {
-                      BlocProvider.of<RegistrationBloc>(context).add(
-                          ValidateForm(
-                              inputLayouts: inputLayouts,
-                              text: number.phoneNumber??""));
-                    },
-                    onSaved: (number){
-
-                      widget.focusOtherField!();
-                    },)),
+                  keyboardAction: widget.textInputAction,
+                  focusNode: focusNode,
+                  hintText: "Номер телефону",
+                  errorMessage: "",
+                  locale: "uk",
+                  countries: const ["UA"],
+                  onInputChanged: (number) {
+                    BlocProvider.of<RegistrationBloc>(context).add(ValidateForm(
+                        inputLayouts: inputLayouts,
+                        text: number.phoneNumber ?? ""));
+                  },
+                  onFieldSubmitted: (_) {
+                    print("object0");
+                    widget.focusOtherField!();
+                  },
+                  onSubmit: () {
+                    print("object1");
+                    widget.focusOtherField!();
+                  },
+                  onSaved: (number) {
+                    print("object2");
+                    widget.focusOtherField!();
+                  },
+                )),
             if (errorText != null && errorText!.trim().isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(left: 16),
@@ -143,43 +158,15 @@ class _InputRegisterLayoutState extends State<InputRegisterLayout> {
                             fontSize: 16,
                             color: isError? red900 : primaryText),
                         textInputAction: widget.textInputAction,
-                        validator: (_) {
-                          BlocProvider.of<RegistrationBloc>(context).add(
-                              ValidateForm(
-                                  inputLayouts: inputLayouts,
-                                  text: textEditingController.text));
+                        validator: (value) {
+                          print("object1");
+                          if (value != null && value!.isNotEmpty) {
+                            BlocProvider.of<RegistrationBloc>(context).add(
+                                ValidateForm(
+                                    inputLayouts: inputLayouts, text: value));
+                          }
 
                           return null;
-                        },
-                        onChanged: (value){
-                          switch (inputLayouts) {
-                            case InputLayouts.lastName:
-                              BlocProvider.of<RegistrationBloc>(context).add(
-                                  SaveLastName(lastName: value));
-
-                              break;
-                            case InputLayouts.firstName:
-                              BlocProvider.of<RegistrationBloc>(context).add(
-                                  SaveFirstName(firstName: value));
-                              break;
-                            case InputLayouts.phone:
-                              BlocProvider.of<RegistrationBloc>(context).add(
-                                  SavePhone(phone: value));
-                              break;
-                            case InputLayouts.email:
-                              BlocProvider.of<RegistrationBloc>(context).add(
-                                  SaveEmail(email: value));
-
-                              break;
-                            case InputLayouts.firstPassword:
-                              BlocProvider.of<RegistrationBloc>(context).add(
-                                  SavePasswordFirst(passwordFirst: value));
-                              break;
-                            case InputLayouts.lastPassword:
-                              BlocProvider.of<RegistrationBloc>(context).add(
-                                  SavePasswordSecond(passwordSecond: value));
-                              break;
-                          }
                         },
                         onEditingComplete: () {
                           BlocProvider.of<RegistrationBloc>(context).add(

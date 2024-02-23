@@ -68,12 +68,20 @@ void main() async {
     }
   });
   await _initBoxes().then((value) async {
-    await Repository().getUser().then((user) {
+    Repository repository = Repository();
+    await repository.getUser().then((user) async {
       String route = "/signinup";
       if (user != null) {
         route = "/";
+        runApp(MyApp(route));
+      } else {
+        await repository.getCookie().then((value) {
+          if (value != null) {
+            route = "/";
+          }
+          runApp(MyApp(route));
+        });
       }
-      runApp(MyApp(route));
     });
   });
 }
@@ -81,12 +89,7 @@ void main() async {
 class MyApp extends StatefulWidget {
   const MyApp(this.route, {super.key});
 
-  static MyAppState? myAppState;
   final String route;
-
-  static void addMessage(BuildContext context, RemoteMessage remoteMessage) {
-    context.findAncestorStateOfType<MyAppState>()!.addMessage(remoteMessage);
-  }
 
   @override
   State<MyApp> createState() => MyAppState();
@@ -95,24 +98,10 @@ class MyApp extends StatefulWidget {
 class MyAppState extends State<MyApp> {
   Key key = UniqueKey();
   List<String> toasts = [];
-  List<RemoteMessage> remoteMessages = [];
+  static bool isUserHaveOfflineData = false;
 
-  void addMessage(RemoteMessage remoteMessage) {
-    setState(() {
-      remoteMessages.add(remoteMessage);
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    MyApp.myAppState = this;
-  }
-
-  @override
-  void dispose() {
-    MyApp.myAppState = null;
-    super.dispose();
+  static void addMessageThatUserHaveOfflineData() {
+    isUserHaveOfflineData = true;
   }
 
   @override
@@ -137,9 +126,7 @@ class MyAppState extends State<MyApp> {
             textDirection: TextDirection.ltr,
             child: Stack(
               children: [
-                IgnorePointer(
-                  ignoring: remoteMessages.isNotEmpty,
-                  child: KeyedSubtree(
+                 KeyedSubtree(
                       key: key,
                       child: SizedBox(
                           width: size.width,
@@ -189,8 +176,7 @@ class MyAppState extends State<MyApp> {
                                   const DeleteContactsPage(),
                             },
                           ))),
-                ),
-                if (remoteMessages.isNotEmpty)
+                if (isUserHaveOfflineData)
                   Container(
                       color: Colors.black38,
                       child: Center(
@@ -200,7 +186,7 @@ class MyAppState extends State<MyApp> {
                               color: beige100,
                               borderRadius: BorderRadius.circular(16)),
                           margin: const EdgeInsets.symmetric(
-                              vertical: 16, horizontal: 24),
+                              vertical: 16, horizontal: 16),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -216,17 +202,25 @@ class MyAppState extends State<MyApp> {
                                     Text(
                                       "Завдання",
                                       style: TextStyle(
-                                          fontSize: 16, color: primaryText),
+                                          fontSize: 24, color: primaryText),
+                                    ),
+                                    SizedBox(
+                                      height: 30,
                                     ),
                                     Text(
-                                      remoteMessages.first.data["message"],
+                                      "У вас є не синхронізовані дані з сервером. Бажаєте відправити ваші данні на сервер чи синхронізувати ваші дані із сервером?",
+                                      textAlign: TextAlign.justify,
                                       style: TextStyle(
-                                          fontSize: 24, color: primaryText),
+                                          fontSize: 16, color: primaryText),
                                     ),
                                   ],
                                 ),
                               ),
+                              SizedBox(
+                                height: 10,
+                              ),
                               Container(
+                                padding: EdgeInsets.all(4),
                                 height: 120,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(16),
@@ -236,13 +230,71 @@ class MyAppState extends State<MyApp> {
                                       MainAxisAlignment.spaceAround,
                                   children: [
                                     GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          remoteMessages.removeAt(0);
+                                      onTap: () async {
+                                        await Repository()
+                                            .sendAllLocalData()
+                                            .then((value) {
+                                          if (value) {
+                                            setState(() {
+                                              isUserHaveOfflineData = false;
+                                            });
+                                          }
                                         });
                                       },
                                       child: SizedBox(
-                                        width: size.width / 4,
+                                        width: (size.width / 2.1) - 50,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Container(
+                                              height: 56,
+                                              width: 56,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(90),
+                                                  color: primary300),
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.upload,
+                                                  color: primaryText,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                "Відправити мої дані на сервер",
+                                                maxLines: 2,
+                                                textAlign: TextAlign.center,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    color: primary50,
+                                                    fontSize: 16),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () async {
+                                        Repository repository = Repository();
+                                        await repository
+                                            .clearTasks()
+                                            .whenComplete(() async {
+                                          await repository
+                                              .updateLocalTasks()
+                                              .whenComplete(() {
+                                            setState(() {
+                                              isUserHaveOfflineData = false;
+                                            });
+                                          });
+                                        });
+                                      },
+                                      child: SizedBox(
+                                        width: (size.width / 2.1) - 50,
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
@@ -256,7 +308,7 @@ class MyAppState extends State<MyApp> {
                                                       color: primary300)),
                                               child: Center(
                                                 child: Icon(
-                                                  Icons.close,
+                                                  Icons.download,
                                                   color: primary50,
                                                 ),
                                               ),
@@ -264,66 +316,17 @@ class MyAppState extends State<MyApp> {
                                             const SizedBox(
                                               height: 10,
                                             ),
-                                            Text(
-                                              "Пропустити",
-                                              style: TextStyle(
-                                                  color: primary50,
-                                                  fontSize: 16),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () async {
-                                        try {
-                                          await Repository()
-                                              .updateTask(
-                                                  id: remoteMessages
-                                                      .first.data["id"]
-                                                      .toString(),
-                                                  isDone: true)
-                                              .then((value) {
-                                            if (value == null) {
-                                              setState(() {
-                                                remoteMessages.removeAt(0);
-                                              });
-                                            }
-                                          });
-                                        } catch (e) {
-                                          print(e);
-                                          Fluttertoast.showToast(
-                                              msg: e.toString());
-                                        }
-                                      },
-                                      child: SizedBox(
-                                        width: size.width / 4,
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Container(
-                                              height: 56,
-                                              width: 56,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(90),
-                                                  color: primary300),
-                                              child: Center(
-                                                child: Icon(
-                                                  Icons.done,
-                                                  color: primaryText,
-                                                ),
+                                            Expanded(
+                                              child: Text(
+                                                "Синхронізація із сервером",
+                                                maxLines: 2,
+                                                textAlign: TextAlign.center,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    color: primary50,
+                                                    fontSize: 16),
                                               ),
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(
-                                              "Виконано",
-                                              style: TextStyle(
-                                                  color: primary50,
-                                                  fontSize: 16),
-                                            ),
+                                            )
                                           ],
                                         ),
                                       ),
@@ -334,7 +337,8 @@ class MyAppState extends State<MyApp> {
                             ],
                           ),
                         ),
-                      ))
+                      )),
+
               ],
             )));
   }
@@ -348,6 +352,7 @@ Future<bool> _initBoxes() async {
   Hive.init(documentsDirectory.path);
   //await Repository().deleteCookie();
   //await Hive.deleteBoxFromDisk('user');
+  //await Hive.deleteBoxFromDisk('myTasks');
   Hive.registerAdapter(MeUserAdapter());
   Hive.registerAdapter(TaskModelAdapter());
   tasksBox = await Hive.openBox<TaskModel>("myTasks");

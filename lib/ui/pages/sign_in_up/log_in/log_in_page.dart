@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/sign_in_up/log_in/input_login_layout.dart';
@@ -17,16 +15,15 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
-        centerTitle: true,
-        title: const Text("Вхід"),
-        leading: IconButton(
+          surfaceTintColor: Colors.transparent,
+          centerTitle: true,
+          title: const Text("Вхід"),
+          leading: BackButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil("/signinup", (route) => false);
             },
-            icon: Icon(
-                Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios)),
-      ),
+          )),
       backgroundColor: beigeBG,
       body: Padding(
         padding: const EdgeInsets.all(16.0),

@@ -28,11 +28,11 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     on<CancelNotificationBefore>(_onCancelNotificationBefore);
     on<CancelAllDataNotificationBefore>(_onCancelAllDataNotificationBefore);
     on<LoadDataForSelectDateForTasks>(_onLoadDataForSelectDateForTasks);
-    on<SaveTasks>(_onSaveTasks);
     on<SelectTask>(_onSelectTask);
     on<LoadTasksForToday>(_onLoadTasksForToday);
     on<ChangeIsDoneForTask>(_onChangeIsDoneForTask);
     on<DeleteTask>(_onDeleteTask);
+    on<SaveTask>(_onSaveTask);
   }
 
   FutureOr<void> _onChangeReminders(
@@ -56,14 +56,15 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
   FutureOr<void> _onLoadData(
       LoadData event, Emitter<RemindersState> emit) async {
     emit(state.clear());
-    await Repository().updateLocalTasks().whenComplete(() {
+    await Repository().updateLocalTasks().then((value) {
       List<Map<String, dynamic>> dates = [], week = [];
       DateTime now = DateTime.now();
       int year = now.year;
       int month = now.month;
       int day = now.day;
       int daysInMonth = DateTime(year, month + 1, 0).day;
-      List<TaskModel> myTasks = List.from(Repository().myTasks);
+      List<TaskModel> myTasks =
+          value.where((element) => element.isRemoved == false).toList();
       for (int i = 1; i <= daysInMonth; i++) {
         DateTime date = DateTime(year, month, i);
         String weekDay = getWeekdayName(date.weekday);
@@ -123,7 +124,8 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     }
     DateTime selectedDate = DateTime(dates[index]["year"],
         dates[index]["month"], int.parse(dates[index]["number"]));
-    List<TaskModel> myTasks = List.from(Repository().myTasks);
+    List<TaskModel> myTasks = List.from(
+        Repository().myTasks.where((element) => element.isRemoved == false));
 
     myTasks = myTasks
         .where((element) =>
@@ -162,7 +164,8 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
 
     int daysInMonth = DateTime(year, month + 1, 0).day;
     DateTime? selectedDate = state.selectedDate;
-    List<TaskModel> myTasks = List.from(Repository().myTasks);
+    List<TaskModel> myTasks = List.from(
+        Repository().myTasks.where((element) => element.isRemoved == false));
 
     for (int i = 1; i <= daysInMonth; i++) {
       DateTime date = DateTime(year, month, i);
@@ -245,7 +248,8 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
 
     int daysInMonth = DateTime(year, month + 1, 0).day;
     DateTime? selectedDate = state.selectedDate;
-    List<TaskModel> myTasks = List.from(Repository().myTasks);
+    List<TaskModel> myTasks = List.from(
+        Repository().myTasks.where((element) => element.isRemoved == false));
 
     for (int i = 1; i <= daysInMonth; i++) {
       DateTime date = DateTime(year, month, i);
@@ -323,7 +327,8 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     int month = now.month;
     int day = now.day;
     int daysInMonth = DateTime(year, month + 1, 0).day;
-    List<TaskModel> myTasks = List.from(Repository().myTasks);
+    List<TaskModel> myTasks = List.from(
+        Repository().myTasks.where((element) => element.isRemoved == false));
 
     for (int i = 1; i <= daysInMonth; i++) {
       DateTime date = DateTime(year, month, i);
@@ -345,7 +350,8 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         .where((element) =>
             element.date!.day == now.day &&
             element.date!.month == now.month &&
-            element.date!.year == now.year)
+            element.date!.year == now.year &&
+            element.isRemoved == false)
         .toList();
     myTasks.sort((a, b) => a.date!.compareTo(b.date!));
     emit(state.copyWith(
@@ -356,101 +362,12 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     ));
   }
 
-  Future delay(BuildContext context) async {
-    await Future.delayed(const Duration(seconds: 1)).then((value) async {
-      await Repository().updateLocalTasks().whenComplete(() {
-        Navigator.of(context).pushNamed("/reminders");
-      });
-    });
-  }
 
-  FutureOr<void> _onSaveTasks(SaveTasks event, Emitter<RemindersState> emit)async {
-    DateTime now = DateTime.now();
-    String name = state.taskTitle;
-    if (name.trim().isNotEmpty) {
-      DateTime date = state.newSelectedDateForTasks!;
-      if (state.newDeadlineForTask != null) {
-        date = DateTime(
-            state.newSelectedDateForTasks!.year,
-            state.newSelectedDateForTasks!.month,
-            state.newSelectedDateForTasks!.day,
-            state.newDeadlineForTask!.hour,
-            state.newDeadlineForTask!.minute);
-      } else {
-        date = DateTime(
-            state.newSelectedDateForTasks!.year,
-            state.newSelectedDateForTasks!.month,
-            state.newSelectedDateForTasks!.day,
-            now.hour,
-            now.minute);
-      }
-
-      TaskModel taskModel = TaskModel(
-        message: name,
-        date: date,
-        //notificationsBefore: state.oldNotificationsBefore.name,
-      );
-      List<TaskModel> myTasks = List.from(Repository().myTasks);
-      myTasks = myTasks
-          .where((element) =>
-              element.date!.day == now.day &&
-              element.date!.month == now.month &&
-              element.date!.year == now.year)
-          .toList();
-      myTasks.add(taskModel);
-      myTasks.sort((a, b) => a.date!.compareTo(b.date!));
-
-      emit(state.copyWith(
-        taskModel: taskModel,
-        myTasks: myTasks,
-      ));
-      await Repository().saveTask(taskModel).then((value) {
-        showDialog(
-            barrierDismissible: false,
-            context: event.context,
-            builder: (context) {
-              return SizedBox(
-                height: 160,
-                width: MediaQuery.of(context).size.width,
-                child: FutureBuilder(
-                    future: delay(context),
-                    builder: (context, snapshot) {
-                      return AlertDialog(
-                        backgroundColor: beigeBG,
-                        content: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 16),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              const Icon(Icons.done),
-                              const SizedBox(
-                                height: 40,
-                              ),
-                              Text(
-                                "Завдання додано",
-                                style:
-                                TextStyle(fontSize: 24, color: primaryText),
-                              ),
-                              Text(
-                                "”${state.taskModel!.message}”",
-                                style:
-                                    TextStyle(fontSize: 16, color: primaryText),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }),
-              );
-            });
-      });
-    }
-  }
 
   FutureOr<void> _onSelectTask(
       SelectTask event, Emitter<RemindersState> emit) async {
-    List<TaskModel> myTasks = List.from(state.myTasks);
+    List<TaskModel> myTasks =
+        List.from(state.myTasks.where((element) => element.isRemoved == false));
     myTasks[event.position] = myTasks[event.position]
         .copyWith(isDone: !myTasks[event.position].isDone);
     await Repository()
@@ -470,17 +387,19 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         .where((element) =>
             element.date!.day == now.day &&
             element.date!.month == now.month &&
-            element.date!.year == now.year)
+            element.date!.year == now.year &&
+            element.isRemoved == false)
         .toList());
     emit(state.copyWith(tasksForToday: myTasks));
   }
 
   FutureOr<void> _onChangeIsDoneForTask(
       ChangeIsDoneForTask event, Emitter<RemindersState> emit) async {
-    TaskModel myTask =
-        Repository().myTasks.firstWhere((element) => element.id == event.id);
+    Repository repository = Repository();
+    TaskModel myTask = repository.myTasks.firstWhere(
+        (element) => element.id == event.id && element.isRemoved == false);
     myTask = myTask.copyWith(isDone: !myTask.isDone);
-    await Repository()
+    await repository
         .updateTask(isDone: myTask.isDone, id: myTask.id)
         .then((value) {
       add(LoadTasksForToday(
@@ -489,15 +408,21 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     });
   }
 
+  Future delay(BuildContext context) async {
+    await Future.delayed(const Duration(seconds: 1)).then((value) async {});
+  }
+
   FutureOr<void> _onDeleteTask(
       DeleteTask event, Emitter<RemindersState> emit) async {
     await Repository().removeTask(event.id).then((value) {
+      delay(event.context);
       if (value == null) {
         List<TaskModel> tasksForToday = state.tasksForToday
                 .where((element) => element.id != event.id)
                 .toList(),
             myTasks = state.myTasks
-                .where((element) => element.id != event.id)
+                .where((element) =>
+                    element.id != event.id && element.isRemoved == false)
                 .toList();
         showDialog(
             barrierDismissible: false,
@@ -506,40 +431,40 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
               return SizedBox(
                 height: 160,
                 width: MediaQuery.of(context).size.width,
-                child: FutureBuilder(
-                    future: delay(context),
-                    builder: (context, snapshot) {
-                      return AlertDialog(
-                        backgroundColor: beigeBG,
-                        content: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 16),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              const Icon(Icons.done),
-                              const SizedBox(
-                                height: 40,
-                              ),
-                              Text(
-                                "Завдання видалено",
-                                style:
-                                    TextStyle(fontSize: 24, color: primaryText),
-                              ),
-                              Text(
-                                "”${event.name}”",
-                                style:
-                                    TextStyle(fontSize: 16, color: primaryText),
-                              ),
-                            ],
-                          ),
+                child: AlertDialog(
+                  backgroundColor: beigeBG,
+                  content: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        const Icon(Icons.done),
+                        const SizedBox(
+                          height: 40,
                         ),
-                      );
-                    }),
+                        Text(
+                          "Завдання видалено",
+                          style: TextStyle(fontSize: 24, color: primaryText),
+                        ),
+                        Text(
+                          "”${event.name}”",
+                          style: TextStyle(fontSize: 16, color: primaryText),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               );
             });
         emit(state.copyWith(tasksForToday: tasksForToday, myTasks: myTasks));
       }
     });
+  }
+
+  FutureOr<void> _onSaveTask(SaveTask event, Emitter<RemindersState> emit) {
+    List<TaskModel> tasks = List.from(state.myTasks);
+    tasks.add(event.taskModel);
+    emit(state.copyWith(myTasks: tasks));
   }
 }

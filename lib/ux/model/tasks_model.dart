@@ -15,8 +15,9 @@ class TaskModel with _$TaskModel {
     //@HiveField(3) @Default("no") String notificationsBefore,
     @HiveField(3) @Default(false) bool isDone,
     @HiveField(4) @Default("") String userId,
-    @HiveField(5) @Default(false) bool isSended,
-    @HiveField(6) @Default(false) bool isRemoved,
+    @HiveField(5) @Default(false) bool isNotificationSent,
+    @HiveField(6) @Default(false) bool isSentToDB,
+    @HiveField(7) @Default(false) bool isRemoved,
 
   }) = _TaskModel;
 

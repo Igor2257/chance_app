@@ -4,11 +4,22 @@ import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ContinueLogIn extends StatelessWidget {
-  const ContinueLogIn({super.key, required this.name});
+class ContinueLogIn extends StatefulWidget {
+  const ContinueLogIn(
+      {super.key,
+      required this.name,
+      required this.firstTextEditingController,
+      required this.secondTextEditingController});
 
   final String name;
+  final TextEditingController firstTextEditingController,
+      secondTextEditingController;
 
+  @override
+  State<ContinueLogIn> createState() => _ContinueLogInState();
+}
+
+class _ContinueLogInState extends State<ContinueLogIn> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
@@ -18,36 +29,39 @@ class ContinueLogIn extends StatelessWidget {
           RoundedButton(
               onPress: () {
                 if (!state.isLoading) {
-                  BlocProvider.of<RegistrationBloc>(context)
-                      .add(IncreaseCurrentStep(context));
+                  BlocProvider.of<RegistrationBloc>(context).add(
+                      IncreaseCurrentStep(
+                          context: context,
+                          first: widget.firstTextEditingController.text,
+                          second: widget.secondTextEditingController.text));
                 }
-              },
-              color: state.isLoading ? darkNeutral1000 : primary1000,
-              child: Text(
-                name,
+                  },
+                  color: state.isLoading ? darkNeutral1000 : primary1000,
+                  child: Text(
+                    widget.name,
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 16,
                     color: primary50),
               )),
-          TextButton(
-              onPressed: () {
-                if (!state.isLoading) {
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil("/signinup", (route) => false);
+              TextButton(
+                  onPressed: () {
+                    if (!state.isLoading) {
+                      Navigator.of(context)
+                      .pushNamedAndRemoveUntil("/login", (route) => false);
                 }
-              },
-              child: Text(
-                "Вже маєте аккаунт? Увійти",
-                style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    decorationColor: primary700,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                    color: state.isLoading ? primary1000 : primary700),
-              )),
-        ],
-      );
-    });
+                  },
+                  child: Text(
+                    "Вже маєте аккаунт? Увійти",
+                    style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        decorationColor: primary700,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: state.isLoading ? primary1000 : primary700),
+                  )),
+            ],
+          );
+        });
   }
 }

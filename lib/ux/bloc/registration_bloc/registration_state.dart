@@ -2,7 +2,7 @@ part of 'registration_bloc.dart';
 
 class RegistrationState {
   String firstName, lastName, phone, email, passwordFirst, passwordSecond;
-  int currentStep = 0;
+  RegistrationPages registrationPages;
   double percentage;
   PageController? pageController = PageController(initialPage: 0);
 
@@ -15,7 +15,7 @@ class RegistrationState {
     this.email = "",
     this.passwordFirst = "",
     this.passwordSecond = "",
-    this.currentStep = 0,
+    this.registrationPages = RegistrationPages.first,
     this.percentage = 0.33,
     this.errorLastName,
     this.errorFirstName,
@@ -35,7 +35,7 @@ class RegistrationState {
     email,
     passwordFirst,
     passwordSecond,
-    int? currentStep,
+    RegistrationPages? registrationPages,
     double? percentage,
     String? errorLastName,errorFirstName,errorPhone,errorEmail,errorFirstPassword,errorSecondPassword,
     PageController? pageController,
@@ -48,7 +48,7 @@ class RegistrationState {
       email: email ?? this.email,
       passwordFirst: passwordFirst ?? this.passwordFirst,
       passwordSecond: passwordSecond ?? this.passwordSecond,
-      currentStep: currentStep ?? this.currentStep,
+      registrationPages: registrationPages ?? this.registrationPages,
       percentage: percentage ?? this.percentage,
       errorLastName: errorLastName ?? this.errorLastName,
       errorFirstName: errorFirstName ?? this.errorFirstName,
@@ -69,7 +69,7 @@ class RegistrationState {
       email: "",
       passwordFirst: "",
       passwordSecond:"",
-      currentStep: 0,
+      registrationPages: RegistrationPages.first,
       percentage: 0.33,
       errorLastName: null,
       errorFirstName: null,

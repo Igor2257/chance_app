@@ -346,16 +346,24 @@ class Repository {
     return error;
   }
 
-  Future<List<TaskModel>> updateLocalTasks() async {
+  Future<List<TaskModel>> updateLocalTasks({bool? forcePush}) async {
     List<TaskModel> list = [];
-    await loadTasks().then((value) {
-      clearTasks();
-      list = value;
-      for (var task in list) {
-        addTask(task);
-      }
-    });
 
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      list = List.from(myTasks.where((element) => element.isRemoved == false));
+    } else {
+      if ((forcePush != null && forcePush) || !checkIsAnyTasksNotSent()) {
+        await loadTasks().then((value) async {
+          await clearTasks().whenComplete(() {
+            list = value;
+
+            for (var task in list) {
+              addTask(task);
+            }
+          });
+        });
+      }
+    }
     return list;
   }
 
@@ -382,13 +390,13 @@ class Repository {
 
             for (int i = 0; i < list.length; i++) {
               TaskModel taskModel = TaskModel(
-                id: list[i]["_id"],
-                message: list[i]["message"],
-                userId: list[i]["userId"],
-                date: DateTime.parse(list[i]["date"]).toLocal(),
-                isDone: list[i]["isDone"],
-                isSended: list[i]["isSended"],
-              );
+                  id: list[i]["_id"],
+                  message: list[i]["message"],
+                  userId: list[i]["userId"],
+                  date: DateTime.parse(list[i]["date"]).toLocal(),
+                  isDone: list[i]["isDone"],
+                  isNotificationSent: list[i]["isSended"],
+                  isSentToDB: true);
               tasks.add(taskModel);
             }
           } else {
@@ -416,7 +424,7 @@ class Repository {
       //    toastLength: Toast.LENGTH_LONG);
       //error = "Немає підключення до інтернету";
       if (isDone != null) {
-        setIsDoneInLocalTask(id, isDone);
+        await setIsDoneInLocalTask(id, isDone);
       }
     } else {
       var url = Uri.parse('http://139.28.37.11:56565/stage/api/task/$id');
@@ -435,13 +443,15 @@ class Repository {
                   if (newDate != null) "date": newDate,
                   if (isDone != null) "isDone": isDone
                 }))
-            .then((value) {
+            .then((value) async {
           if (!(value.statusCode > 199 && value.statusCode < 300)) {
             error = jsonDecode(value.body)["message"]
                 .toString()
                 .replaceAll("[", "")
                 .replaceAll("]", "");
             Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+          } else {
+            await setIsSentInLocalTask(id: id, true);
           }
         });
       } catch (error) {
@@ -459,38 +469,39 @@ class Repository {
           msg: "Немає підключення до інтернету",
           toastLength: Toast.LENGTH_LONG);
       error = "Немає підключення до інтернету";
+      print("${taskModel.id}  ${taskModel.isSentToDB}");
+      await addTask(taskModel);
     } else {
       var url = Uri.parse('http://139.28.37.11:56565/stage/api/task');
-      try {
-        final cookie = await getCookie();
-        String date = taskModel.date!.toUtc().toString();
+      final cookie = await getCookie();
+      String date = taskModel.date!.toUtc().toString();
 
-        await http
-            .post(
-          url,
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Cookie': cookie.toString(),
-          },
-          body: jsonEncode({
-            "message": taskModel.message,
-            "date": date,
-            "isDone": taskModel.isDone,
-          }),
-        )
-            .then((value) {
-          if (!(value.statusCode > 199 && value.statusCode < 300)) {
-            error = jsonDecode(value.body)["message"]
-                .toString()
-                .replaceAll("[", "")
-                .replaceAll("]", "");
-            Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
-          }
-        });
-      } catch (error) {
-        Fluttertoast.showToast(
-            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
-      }
+      await http
+          .post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Cookie': cookie.toString(),
+        },
+        body: jsonEncode({
+          "message": taskModel.message,
+          "date": date,
+          "isDone": taskModel.isDone,
+        }),
+      )
+          .then((value) async {
+        if (!(value.statusCode > 199 && value.statusCode < 300)) {
+          error = jsonDecode(value.body)["message"]
+              .toString()
+              .replaceAll("[", "")
+              .replaceAll("]", "");
+          Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+        } else {
+          await addTask(taskModel).whenComplete(() async {
+            await setIsSentInLocalTask(true, taskModel: taskModel);
+          });
+        }
+      });
     }
     return error;
   }
@@ -528,7 +539,6 @@ class Repository {
               await addUser(meUser!);
               return user;
             } else {
-              print(value.body);
               String error = jsonDecode(value.body)["message"]
                   .toString()
                   .replaceAll("[", "")
@@ -539,7 +549,6 @@ class Repository {
           });
         }
       } catch (error) {
-        print(error.toString());
         Fluttertoast.showToast(
             msg: error.toString(), toastLength: Toast.LENGTH_LONG);
       }
@@ -581,27 +590,23 @@ class Repository {
 
   Future<bool> sendAllLocalData() async {
     List<TaskModel> dbTasks = await loadTasks(),
-        localTasks = List.from(myTasks);
+        localTasks =
+            List.from(myTasks.where((element) => element.isSentToDB == false));
     for (int i = 0; i < localTasks.length; i++) {
       if (dbTasks.any((element) => element.id == localTasks[i].id)) {
         if (localTasks[i].isRemoved) {
           await removeTask(localTasks[i].id);
           continue;
         }
-        if (localTasks[i].isDone !=
-            dbTasks
-                .firstWhere((element) => element.id == localTasks[i].id)
-                .isDone) {
-          updateTask(id: localTasks[i].id);
-        }
+        await updateTask(id: localTasks[i].id);
       } else {
         if (localTasks[i].isRemoved) {
           continue;
         }
-        saveTask(localTasks[i]);
+        await saveTask(localTasks[i]);
       }
     }
-    await updateLocalTasks();
+    await updateLocalTasks(forcePush: true);
 
     return true;
   }
@@ -656,6 +661,10 @@ class Repository {
     return error;
   }
 
+  bool checkIsAnyTasksNotSent() {
+    return myTasks.any((element) => element.isSentToDB == false);
+  }
+
   Future clearTasks() async {
     await tasksBox!.clear();
   }
@@ -666,18 +675,69 @@ class Repository {
 
   Future setIsDoneInLocalTask(String id, bool isDone) async {
     TaskModel taskModel = myTasks.firstWhere((element) => element.id == id);
-    taskModel = taskModel.copyWith(isDone: isDone);
+    taskModel = taskModel.copyWith(isDone: isDone, isSentToDB: false);
     await tasksBox!.put(taskModel.id, taskModel);
+  }
+
+  Future setIsSentInLocalTask(bool isSentToDB,
+      {String? id, TaskModel? taskModel}) async {
+    if (id != null) {
+      TaskModel taskModel = myTasks.firstWhere((element) => element.id == id);
+      taskModel = taskModel.copyWith(isSentToDB: isSentToDB);
+      await tasksBox!.put(taskModel.id, taskModel);
+    }
+    if (taskModel != null) {
+      taskModel = taskModel.copyWith(isSentToDB: isSentToDB);
+      await tasksBox!.put(taskModel.id, taskModel);
+    }
   }
 
   Future removeLocalTask(String id) async {
     TaskModel taskModel = myTasks.firstWhere((element) => element.id == id);
-    taskModel = taskModel.copyWith(isRemoved: true);
+    taskModel = taskModel.copyWith(isRemoved: true, isSentToDB: false);
     await tasksBox!.put(taskModel.id, taskModel);
   }
 
   Future addUser(MeUser meUser) async {
     await userBox!.put("user", meUser);
+  }
+
+  Future<String?> deleteAllTasks() async {
+    String? error;
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      //Fluttertoast.showToast(
+      //    msg: "Немає підключення до інтернету",
+      //    toastLength: Toast.LENGTH_LONG);
+      //error = "Немає підключення до інтернету";
+      for (var task in myTasks) {
+        removeLocalTask(task.id);
+      }
+    } else {
+      for (var task in myTasks) {
+        var url =
+            Uri.parse('http://139.28.37.11:56565/stage/api/task/${task.id}');
+        try {
+          final cookie = await getCookie();
+          await http.delete(url, headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Cookie': cookie.toString(),
+          }).then((value) {
+            if (!(value.statusCode > 199 && value.statusCode < 300)) {
+              error = jsonDecode(value.body)["message"]
+                  .toString()
+                  .replaceAll("[", "")
+                  .replaceAll("]", "");
+              Fluttertoast.showToast(
+                  msg: error!, toastLength: Toast.LENGTH_LONG);
+            }
+          });
+        } catch (error) {
+          Fluttertoast.showToast(
+              msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+        }
+      }
+    }
+    return error;
   }
 
   String? _parseCookieFromLogin(http.Response response) {

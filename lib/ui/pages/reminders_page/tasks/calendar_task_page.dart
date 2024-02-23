@@ -7,6 +7,8 @@ import 'package:chance_app/ui/pages/reminders_page/tasks/calendar_for_tasks.dart
 import 'package:chance_app/ui/pages/reminders_page/tasks/custom_bottom_sheet_notification_picker.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
+import 'package:chance_app/ux/model/tasks_model.dart';
+import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -25,7 +27,13 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
     super.initState();
   }
   final int session = DateTime.now().millisecondsSinceEpoch;
-
+  Future delay(BuildContext context) async {
+    await Future.delayed(const Duration(seconds: 1)).then((value) async {
+      await Repository().updateLocalTasks().whenComplete(() {
+        Navigator.of(context).pushNamed("/reminders");
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -52,9 +60,80 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                   : Icons.arrow_back_ios)),
           actions: [
             IconButton(
-                onPressed: () {
-                  BlocProvider.of<RemindersBloc>(context).add(SaveTasks(context: context));
-                  Navigator.of(context).pop();
+                onPressed: ()async {
+                  DateTime now = DateTime.now();
+                  String name = state.taskTitle;
+                  if (name.trim().isNotEmpty) {
+                    DateTime date = state.newSelectedDateForTasks!;
+                    if (state.newDeadlineForTask != null) {
+                      date = DateTime(
+                          state.newSelectedDateForTasks!.year,
+                          state.newSelectedDateForTasks!.month,
+                          state.newSelectedDateForTasks!.day,
+                          state.newDeadlineForTask!.hour,
+                          state.newDeadlineForTask!.minute);
+                    } else {
+                      date = DateTime(
+                          state.newSelectedDateForTasks!.year,
+                          state.newSelectedDateForTasks!.month,
+                          state.newSelectedDateForTasks!.day,
+                          now.hour,
+                          now.minute);
+                    }
+
+                    TaskModel taskModel = TaskModel(
+                      message: name,
+                      date: date,
+                      //notificationsBefore: state.oldNotificationsBefore.name,
+                    );
+                    List<TaskModel> myTasks = List.from(Repository().myTasks);
+                    myTasks = myTasks
+                        .where((element) =>
+                    element.date!.day == now.day &&
+                        element.date!.month == now.month &&
+                        element.date!.year == now.year)
+                        .toList();
+                    myTasks.add(taskModel);
+                    myTasks.sort((a, b) => a.date!.compareTo(b.date!));
+                    await Repository().saveTask(taskModel).then((value) {
+                      delay(context);
+                      showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) {
+                            return SizedBox(
+                              height: 160,
+                              width: MediaQuery.of(context).size.width,
+                              child: AlertDialog(
+                                backgroundColor: beigeBG,
+                                content: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 24, vertical: 16),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      const Icon(Icons.done),
+                                      const SizedBox(
+                                        height: 40,
+                                      ),
+                                      Text(
+                                        "Завдання додано",
+                                        style:
+                                        TextStyle(fontSize: 24, color: primaryText),
+                                      ),
+                                      Text(
+                                        "”${taskModel.message}”",
+                                        style:
+                                        TextStyle(fontSize: 16, color: primaryText),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          });
+                    });
+                  }
                 },
                 icon: Icon(
                   Icons.done,

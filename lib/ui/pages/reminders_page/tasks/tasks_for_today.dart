@@ -1,6 +1,8 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/model/tasks_model.dart';
+import 'package:chance_app/ux/repository.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -32,9 +34,6 @@ class _TasksForTodayState extends State<TasksForToday> {
     return BlocBuilder<RemindersBloc, RemindersState>(
         builder: (context, state) {
       List<TaskModel> tasksForToday = List.from(state.tasksForToday);
-      if (tasksForToday.isEmpty) {
-        Navigator.of(context).pop();
-      }
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -50,6 +49,14 @@ class _TasksForTodayState extends State<TasksForToday> {
               Navigator.of(context).pop();
             },
           ),
+          actions: [
+            if (kDebugMode)
+              IconButton(
+                  onPressed: () async {
+                    await Repository().deleteAllTasks();
+                  },
+                  icon: const Icon(Icons.delete)),
+          ],
         ),
         backgroundColor: beigeBG,
         body: Padding(
@@ -155,6 +162,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                               .add(ChangeIsDoneForTask(
                                                   id: task.id));
                                           if (!task.isDone) {
+                                            delay(context);
                                             showDialog(
                                                 barrierDismissible: false,
                                                 context: context,
@@ -165,53 +173,41 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                         MediaQuery.of(context)
                                                             .size
                                                             .width,
-                                                    child: FutureBuilder(
-                                                        future: delay(context),
-                                                        builder: (context,
-                                                            snapshot) {
-                                                          return AlertDialog(
-                                                            backgroundColor:
-                                                                beige100,
-                                                            content: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .symmetric(
-                                                                      horizontal:
-                                                                          24,
-                                                                      vertical:
-                                                                          16),
-                                                              child: Column(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .min,
-                                                                children: <Widget>[
-                                                                  const Icon(
-                                                                      Icons
-                                                                          .done),
-                                                                  const SizedBox(
-                                                                    height: 40,
-                                                                  ),
-                                                                  Text(
-                                                                    "Завдання виконано",
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            24,
-                                                                        color:
-                                                                            primaryText),
-                                                                  ),
-                                                                  Text(
-                                                                    "”${task.message}”",
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            16,
-                                                                        color:
-                                                                            primaryText),
-                                                                  ),
-                                                                ],
-                                                              ),
+                                                    child: AlertDialog(
+                                                      backgroundColor: beige100,
+                                                      content: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 24,
+                                                                vertical: 16),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: <Widget>[
+                                                            const Icon(
+                                                                Icons.done),
+                                                            const SizedBox(
+                                                              height: 40,
                                                             ),
-                                                          );
-                                                        }),
+                                                            Text(
+                                                              "Завдання виконано",
+                                                              style: TextStyle(
+                                                                  fontSize: 24,
+                                                                  color:
+                                                                      primaryText),
+                                                            ),
+                                                            Text(
+                                                              "”${task.message}”",
+                                                              style: TextStyle(
+                                                                  fontSize: 16,
+                                                                  color:
+                                                                      primaryText),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
                                                   );
                                                 });
                                           }
@@ -298,8 +294,6 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                                     TextButton(
                                                                         onPressed:
                                                                             () {
-                                                                          Navigator.of(context)
-                                                                              .pop();
                                                                           BlocProvider.of<RemindersBloc>(context).add(DeleteTask(
                                                                               id: task.id,
                                                                               context: context,

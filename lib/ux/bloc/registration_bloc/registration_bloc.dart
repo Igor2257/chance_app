@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/input_register_layout.dart';
+import 'package:chance_app/ui/pages/sign_in_up/registration/registration_page.dart';
 import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -27,50 +28,62 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   }
 
   FutureOr<void> _onSaveFirstName(
-      SaveFirstName event, Emitter<RegistrationState> emit) {
-    emit(state.copyWith(firstName: event.firstName));
+      SaveFirstName event, Emitter<RegistrationState> emit) async {
+    print("state.lastName ${state.firstName}");
   }
 
   FutureOr<void> _onSaveLastName(
-      SaveLastName event, Emitter<RegistrationState> emit) {
-    emit(state.copyWith(lastName: event.lastName));
+      SaveLastName event, Emitter<RegistrationState> emit) async* {
+    print("state.lastName ${state.lastName}");
+    yield state.copyWith(lastName: event.lastName);
   }
 
   FutureOr<void> _onSavePhone(
-      SavePhone event, Emitter<RegistrationState> emit) {
-    emit(state.copyWith(phone: event.phone));
+      SavePhone event, Emitter<RegistrationState> emit) async* {
+    yield state.copyWith(phone: event.phone);
   }
 
   FutureOr<void> _onSaveEmail(
-      SaveEmail event, Emitter<RegistrationState> emit) {
-    emit(state.copyWith(email: event.email));
+      SaveEmail event, Emitter<RegistrationState> emit) async* {
+    yield state.copyWith(email: event.email);
   }
 
   FutureOr<void> _onSavePasswordFirst(
-      SavePasswordFirst event, Emitter<RegistrationState> emit) {
-    emit(state.copyWith(passwordFirst: event.passwordFirst));
+      SavePasswordFirst event, Emitter<RegistrationState> emit) async* {
+    yield state.copyWith(passwordFirst: event.passwordFirst);
   }
 
   FutureOr<void> _onSavePasswordSecond(
-      SavePasswordSecond event, Emitter<RegistrationState> emit) {
-    emit(state.copyWith(passwordSecond: event.passwordSecond));
+      SavePasswordSecond event, Emitter<RegistrationState> emit) async* {
+    yield state.copyWith(passwordSecond: event.passwordSecond);
   }
 
   FutureOr<void> _onIncreaseCurrentStep(
       IncreaseCurrentStep event, Emitter<RegistrationState> emit) async {
     emit(state.copyWith(isLoading: true));
-    int currentStep = state.currentStep + 1;
-    if (currentStep < 2) {
-      state.pageController!.animateToPage(currentStep,
+
+    if (state.registrationPages != RegistrationPages.third) {
+      int index = RegistrationPages.values.indexOf(state.registrationPages) + 1;
+      RegistrationPages registrationPages = RegistrationPages.values[index];
+
+      state.pageController!.animateToPage(index,
           duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
       double plusPercentage = 0.33;
-      if (currentStep == 1) {
+      if (index == 1) {
         plusPercentage = 0.34;
+      }
+      if (index - 1 == 0) {
+        emit(state.copyWith(firstName: event.second, lastName: event.first));
+      } else if (index - 1 == 1) {
+        emit(state.copyWith(email: event.second));
+      } else {
+        emit(state.copyWith(
+            passwordSecond: event.second, passwordFirst: event.first));
       }
       if (validate(emit)) {
         emit(state.copyWith(
             percentage: state.percentage + plusPercentage,
-            currentStep: currentStep));
+            registrationPages: registrationPages));
       }
     } else {
       if (validate(emit)) {
@@ -90,24 +103,26 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   FutureOr<void> _onDecreaseCurrentStep(
       DecreaseCurrentStep event, Emitter<RegistrationState> emit) {
     emit(state.copyWith(isLoading: true));
-    int currentStep = state.currentStep - 1;
-    if (currentStep > -1) {
-      state.pageController!.animateToPage(currentStep,
+
+    if (state.registrationPages != RegistrationPages.first) {
+      int index = RegistrationPages.values.indexOf(state.registrationPages) - 1;
+      RegistrationPages registrationPages = RegistrationPages.values[index];
+      state.pageController!.animateToPage(index,
           duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
       double plusPercentage = 0.33;
-      if (currentStep == 1) {
+      if (index == 1) {
         plusPercentage = 0.34;
       }
       emit(state.copyWith(
           percentage: state.percentage - plusPercentage,
-          currentStep: currentStep));
+          registrationPages: registrationPages));
     }
     emit(state.copyWith(isLoading: false));
   }
 
   FutureOr<void> _onDispose(Dispose event, Emitter<RegistrationState> emit) {
     state.pageController!.dispose();
-    emit(state.clear());
+    //emit(state.clear());
   }
 
   FutureOr<void> _onValidateForm(
@@ -171,26 +186,38 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
         break;
       case InputLayouts.firstPassword:
-        if (text.trim().length < 8) {
+        emit(state.copyWith(passwordFirst: text));
+        print('text.trim().length ${text.trim().length}');
+        if (text.trim().length >= 8) {
+          if (text.trim().length <= 14) {
+            errorText = "";
+          } else {
+            errorText = "Пароль має бути менше 14 символів";
+          }
+        } else {
           errorText = 'Пароль має бути 8 або більше символів';
         }
-        if (text.trim().length > 14) {
-          errorText = "Пароль має бути менше 14 символів";
-        }
-        emit(state.copyWith(passwordFirst: text,errorFirstPassword: errorText));
+        emit(
+            state.copyWith(passwordFirst: text, errorFirstPassword: errorText));
         break;
       case InputLayouts.lastPassword:
-        if (text.trim().length < 8) {
+        emit(state.copyWith(passwordSecond: text));
+        print('text.trim().length ${text.trim().length}');
+
+        if (text.trim().length >= 8) {
+          if (text.trim().length <= 14) {
+            if (state.passwordFirst == text) {
+              errorText = "";
+            } else {
+              errorText = "Паролі не співпадають";
+            }
+          } else {
+            errorText = "Пароль має бути менше 14 символів";
+          }
+        } else {
           errorText = 'Пароль має бути 8 або більше символів';
         }
-        if (text.trim().length > 14) {
-          errorText = "Пароль має бути менше 14 символів";
-        }
-        if (errorText == null || (errorText.isEmpty)) {
-          if (state.passwordFirst != text) {
-            errorText = "Паролі не співпадають";
-          }
-        }
+
         emit(state.copyWith(
             passwordSecond: text, errorSecondPassword: errorText));
 
@@ -255,35 +282,46 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     }
 
     text = state.passwordFirst;
-    if (text.trim().length < 8) {
+
+    if (text.trim().length >= 8) {
+      if (text.trim().length <= 14) {
+        errorTextFP = null;
+      } else {
+        errorTextFP = "Пароль має бути менше 14 символів";
+      }
+    } else {
       errorTextFP = 'Пароль має бути 8 або більше символів';
-    }
-    if (text.trim().length > 14) {
-      errorTextFP = "Пароль має бути менше 14 символів";
     }
 
     text = state.passwordSecond;
-    if (text.trim().length < 8) {
+
+    if (text.trim().length >= 8) {
+      if (text.trim().length <= 14) {
+        if (state.passwordFirst == text) {
+          errorTextLP = null;
+        } else {
+          errorTextFP = "Пароль має cпівпадати";
+          errorTextLP = "Паролі не співпадають";
+        }
+      } else {
+        errorTextLP = "Пароль має бути менше 14 символів";
+      }
+    } else {
       errorTextLP = 'Пароль має бути 8 або більше символів';
     }
-    if (text.trim().length > 14) {
-      errorTextLP = "Пароль має бути менше 14 символів";
-    }
-    if (state.passwordFirst != state.passwordSecond) {
-      errorTextFP = "Пароль має cпівпадати";
-      errorTextLP = "Пароль має cпівпадати";
-    }
-    if (state.currentStep == 0) {
+
+    int index = RegistrationPages.values.indexOf(state.registrationPages);
+    if (index == 0) {
       emit(state.copyWith(
         errorLastName: errorTextLN,
         errorFirstName: errorTextFN,
       ));
-    } else if (state.currentStep == 0) {
+    } else if (index == 1) {
       emit(state.copyWith(
         errorEmail: errorTextEmail,
         errorPhone: errorTextPhone,
       ));
-    } else if (state.currentStep == 0) {
+    } else if (index == 2) {
       emit(state.copyWith(
         errorFirstPassword: errorTextFP,
         errorSecondPassword: errorTextLP,
@@ -305,42 +343,54 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
                   state.pageController!.animateToPage(2,
                       duration: const Duration(milliseconds: 500),
                       curve: Curves.easeInOut);
-                  emit(state.copyWith(currentStep: 2, percentage: 1));
+                  emit(state.copyWith(
+                      registrationPages: RegistrationPages.values[2],
+                      percentage: 1));
                 }
               } else {
                 state.pageController!.animateToPage(2,
                     duration: const Duration(milliseconds: 500),
                     curve: Curves.easeInOut);
-                emit(state.copyWith(currentStep: 2, percentage: 1));
+                emit(state.copyWith(
+                    registrationPages: RegistrationPages.values[2],
+                    percentage: 1));
               }
             } else {
               state.pageController!.animateToPage(2,
                   duration: const Duration(milliseconds: 500),
                   curve: Curves.easeInOut);
-              emit(state.copyWith(currentStep: 2, percentage: 1));
+              emit(state.copyWith(
+                  registrationPages: RegistrationPages.values[2],
+                  percentage: 1));
             }
           } else {
             state.pageController!.animateToPage(1,
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.easeInOut);
-            emit(state.copyWith(currentStep: 1, percentage: 0.66));
+            emit(state.copyWith(
+                registrationPages: RegistrationPages.values[1],
+                percentage: 0.66));
           }
         } else {
           state.pageController!.animateToPage(1,
               duration: const Duration(milliseconds: 500),
               curve: Curves.easeInOut);
-          emit(state.copyWith(currentStep: 1, percentage: 0.66));
+          emit(state.copyWith(
+              registrationPages: RegistrationPages.values[1],
+              percentage: 0.66));
         }
       } else {
         state.pageController!.animateToPage(0,
             duration: const Duration(milliseconds: 500),
             curve: Curves.easeInOut);
-        emit(state.copyWith(currentStep: 0, percentage: 0.33));
+        emit(state.copyWith(
+            registrationPages: RegistrationPages.values[0], percentage: 0.33));
       }
     } else {
       state.pageController!.animateToPage(0,
           duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
-      emit(state.copyWith(currentStep: 0, percentage: 0.33));
+      emit(state.copyWith(
+          registrationPages: RegistrationPages.values[0], percentage: 0.33));
     }
     return false;
   }

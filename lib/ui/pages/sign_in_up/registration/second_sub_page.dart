@@ -1,22 +1,27 @@
 import 'package:chance_app/ui/pages/sign_in_up/registration/continue_log_in.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/input_register_layout.dart';
-import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
-class SecondSubPage extends StatelessWidget {
-  SecondSubPage({super.key});
+class SecondSubPage extends StatefulWidget {
+  const SecondSubPage({super.key});
 
+  @override
+  State<SecondSubPage> createState() => _SecondSubPageState();
+}
+
+class _SecondSubPageState extends State<SecondSubPage> {
   final FocusNode phoneFocusNode = FocusNode(), emailFocusNode = FocusNode();
+  final TextEditingController phoneEditingController = TextEditingController(),
+      emailEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        SizedBox(height: 24),
+        const SizedBox(height: 24),
         InputRegisterLayout(
+          textEditingController: phoneEditingController,
           title: "Введіть номер телефону*",
           focusNode: phoneFocusNode,
           useCancelButton: false,
@@ -26,10 +31,12 @@ class SecondSubPage extends StatelessWidget {
           focusOtherField: () {
             phoneFocusNode.unfocus();
             FocusScope.of(context).requestFocus(emailFocusNode);
-          },textInputType: TextInputType.phone,
+          },
+          textInputType: TextInputType.phone,
         ),
-        SizedBox(height: 24),
+        const SizedBox(height: 24),
         InputRegisterLayout(
+          textEditingController: emailEditingController,
           title: "Введіть електрону пошту*",
           focusNode: emailFocusNode,
           useCancelButton: false,
@@ -38,10 +45,15 @@ class SecondSubPage extends StatelessWidget {
           inputLayouts: InputLayouts.email,
           focusOtherField: () {
             emailFocusNode.unfocus();
-          },textInputType: TextInputType.emailAddress,
+          },
+          textInputType: TextInputType.emailAddress,
         ),
         const Spacer(),
-        const ContinueLogIn(name: "Продовжити",),
+        ContinueLogIn(
+          name: "Продовжити",
+          firstTextEditingController: phoneEditingController,
+          secondTextEditingController: emailEditingController,
+        ),
         const Spacer(),
       ],
     );

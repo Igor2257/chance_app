@@ -2,6 +2,7 @@ import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/input_reminders_layout.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/model/tasks_model.dart';
+import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -23,8 +24,6 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
         .add(LoadDataForSelectDateForTasks());
     super.initState();
   }
-
-
 
   final DateTime now = DateTime.now();
 
@@ -53,11 +52,94 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
           ),
           if (state.taskTitle.trim().isNotEmpty)
             GestureDetector(
-              onTap: () {
+              onTap: () async {
                 if (state.taskTitle.trimLeft().length > 1) {
                   if (state.taskTitle.trimLeft().length <= 300) {
-                    BlocProvider.of<RemindersBloc>(context)
-                        .add(SaveTasks(context: context));
+
+                    Navigator.of(context).pop();
+
+                    DateTime now = DateTime.now();
+                    String name = state.taskTitle;
+                    if (name.trim().isNotEmpty) {
+                      DateTime date = state.newSelectedDateForTasks!;
+                      if (state.newDeadlineForTask != null) {
+                        date = DateTime(
+                            state.newSelectedDateForTasks!.year,
+                            state.newSelectedDateForTasks!.month,
+                            state.newSelectedDateForTasks!.day,
+                            state.newDeadlineForTask!.hour,
+                            state.newDeadlineForTask!.minute);
+                      } else {
+                        date = DateTime(
+                            state.newSelectedDateForTasks!.year,
+                            state.newSelectedDateForTasks!.month,
+                            state.newSelectedDateForTasks!.day,
+                            now.hour,
+                            now.minute);
+                      }
+
+                      TaskModel taskModel = TaskModel(
+                        id: DateTime.now().millisecondsSinceEpoch.toString(),
+                        message: name,
+                        date: date,
+                        //notificationsBefore: state.oldNotificationsBefore.name,
+                      );
+                      BlocProvider.of<RemindersBloc>(context).add(SaveTask(taskModel: taskModel));
+                      await Repository().saveTask(taskModel).then((value) {
+                        showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (context) {
+                              return SizedBox(
+                                  height: 160,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: AlertDialog(
+                                    backgroundColor: beigeBG,
+                                    content: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 24, vertical: 16),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          const Icon(Icons.done),
+                                          const SizedBox(
+                                            height: 40,
+                                          ),
+                                          Text(
+                                            "Завдання додано",
+                                            style: TextStyle(
+                                                fontSize: 24,
+                                                color: primaryText),
+                                          ),
+                                          Text(
+                                            "”${taskModel.message}”",
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: primaryText),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    actions: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: SizedBox(
+                                          height: 44,
+                                          child: Text(
+                                            "OK",
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                color: primary500),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ));
+                            });
+                      });
+                    }
                   }
                 }
               },

@@ -50,7 +50,7 @@ class _SignInUpPageState extends State<SignInUpPage> {
                       decorationColor: primary700,
                       color: primary700,
                       fontSize: 16,
-                      fontWeight: FontWeight.w400),
+                      fontWeight: FontWeight.w500),
                 )),
             const SizedBox(
               height: 40,
@@ -67,14 +67,14 @@ class _SignInUpPageState extends State<SignInUpPage> {
                     Text(
                       "Увійти за допомогою",
                       style: TextStyle(
-                          color: primary700,
+                          color: primary1000,
                           fontSize: 16,
-                          fontWeight: FontWeight.w400),
+                          fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(
                       width: 10,
                     ),
-                    SvgPicture.asset("assets/icons/google.svg"),
+                    SvgPicture.asset("assets/icons/google.svg",color: primary1000,),
                   ],
                 )),
             const SizedBox(
@@ -89,14 +89,14 @@ class _SignInUpPageState extends State<SignInUpPage> {
                     Text(
                       "Увійти за допомогою",
                       style: TextStyle(
-                          color: primary700,
+                          color: primary1000,
                           fontSize: 16,
-                          fontWeight: FontWeight.w400),
+                          fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(
                       width: 10,
                     ),
-                    SvgPicture.asset("assets/icons/apple.svg"),
+                    SvgPicture.asset("assets/icons/apple.svg",color: primary1000,),
                   ],
                 )),
             const SizedBox(
@@ -111,14 +111,14 @@ class _SignInUpPageState extends State<SignInUpPage> {
                     Text(
                       "Увійти за допомогою",
                       style: TextStyle(
-                          color: primary700,
+                          color: primary1000,
                           fontSize: 16,
-                          fontWeight: FontWeight.w400),
+                          fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(
                       width: 10,
                     ),
-                    SvgPicture.asset("assets/icons/facebook.svg"),
+                    SvgPicture.asset("assets/icons/facebook.svg",color: primary1000,),
                   ],
                 )),
           ],

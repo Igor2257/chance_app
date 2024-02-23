@@ -1,25 +1,30 @@
+import 'package:chance_app/ui/pages/sign_in_up/registration/continue_log_in.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/give_permission.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/input_register_layout.dart';
-import 'package:chance_app/ui/pages/sign_in_up/registration/continue_log_in.dart';
 import 'package:flutter/material.dart';
 
-class ThirdSubPage extends StatelessWidget {
-  ThirdSubPage({super.key});
+class ThirdSubPage extends StatefulWidget {
+  const ThirdSubPage({super.key});
 
-  final TextEditingController firstPasswordTextEditingController =
-          TextEditingController(),
-      secondPasswordTextEditingController = TextEditingController();
+  @override
+  State<ThirdSubPage> createState() => _ThirdSubPageState();
+}
 
+class _ThirdSubPageState extends State<ThirdSubPage> {
   final FocusNode firstPasswordFocusNode = FocusNode(),
       secondPasswordFocusNode = FocusNode();
+  final TextEditingController firstPasswordEditingController =
+          TextEditingController(),
+      lastPasswordEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        SizedBox(height: 24),
+        const SizedBox(height: 24),
         InputRegisterLayout(
+          textEditingController: firstPasswordEditingController,
           title: "Введіть пароль*",
           focusNode: firstPasswordFocusNode,
           useCancelButton: false,
@@ -29,10 +34,12 @@ class ThirdSubPage extends StatelessWidget {
           focusOtherField: () {
             firstPasswordFocusNode.unfocus();
             FocusScope.of(context).requestFocus(secondPasswordFocusNode);
-          },textInputType: TextInputType.text,
+          },
+          textInputType: TextInputType.text,
         ),
-        SizedBox(height: 24),
+        const SizedBox(height: 24),
         InputRegisterLayout(
+          textEditingController: lastPasswordEditingController,
           title: "Повторіть пароль*",
           focusNode: secondPasswordFocusNode,
           useCancelButton: false,
@@ -46,8 +53,14 @@ class ThirdSubPage extends StatelessWidget {
         ),
         const Spacer(),
         const GivePermission(),
-        SizedBox(height: 20,),
-        const ContinueLogIn(name: "Продовжити",),
+        const SizedBox(
+          height: 20,
+        ),
+        ContinueLogIn(
+          name: "Продовжити",
+          firstTextEditingController: firstPasswordEditingController,
+          secondTextEditingController: lastPasswordEditingController,
+        ),
         const Spacer(),
       ],
     );

@@ -22,15 +22,16 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
       date: fields[2] as DateTime?,
       isDone: fields[3] as bool,
       userId: fields[4] as String,
-      isSended: fields[5] as bool,
-      isRemoved: fields[6] as bool,
+      isNotificationSent: fields[5] as bool,
+      isSentToDB: fields[6] as bool,
+      isRemoved: fields[7] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, TaskModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -42,8 +43,10 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
       ..writeByte(4)
       ..write(obj.userId)
       ..writeByte(5)
-      ..write(obj.isSended)
+      ..write(obj.isNotificationSent)
       ..writeByte(6)
+      ..write(obj.isSentToDB)
+      ..writeByte(7)
       ..write(obj.isRemoved);
   }
 
@@ -70,7 +73,8 @@ _$TaskModelImpl _$$TaskModelImplFromJson(Map<String, dynamic> json) =>
           json['date'] == null ? null : DateTime.parse(json['date'] as String),
       isDone: json['isDone'] as bool? ?? false,
       userId: json['userId'] as String? ?? "",
-      isSended: json['isSended'] as bool? ?? false,
+      isNotificationSent: json['isNotificationSent'] as bool? ?? false,
+      isSentToDB: json['isSentToDB'] as bool? ?? false,
       isRemoved: json['isRemoved'] as bool? ?? false,
     );
 
@@ -81,6 +85,7 @@ Map<String, dynamic> _$$TaskModelImplToJson(_$TaskModelImpl instance) =>
       'date': instance.date?.toIso8601String(),
       'isDone': instance.isDone,
       'userId': instance.userId,
-      'isSended': instance.isSended,
+      'isNotificationSent': instance.isNotificationSent,
+      'isSentToDB': instance.isSentToDB,
       'isRemoved': instance.isRemoved,
     };
