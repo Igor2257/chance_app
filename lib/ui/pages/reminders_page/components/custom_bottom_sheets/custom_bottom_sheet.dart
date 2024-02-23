@@ -10,24 +10,35 @@ class CustomBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RemindersBloc, RemindersState>(
-        builder: (context, state) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            height: state.reminders == Reminders.empty ? 50 : 20,
-          ),
-          state.reminders == Reminders.empty
-              ? const SelectWhatUserWantToAdd()
-              : state.reminders == Reminders.medicine
-                  ? const SizedBox()
-                  : const TasksSheets(),
-          SizedBox(
-            height: state.reminders == Reminders.empty ? 50 : 20,
-          ),
-        ],
-      );
-    });
+    return BlocListener<RemindersBloc, RemindersState>(
+      listener: (context, state) {
+        if (state.reminders == Reminders.medicine) {
+          Navigator.of(context).popAndPushNamed("/medicines");
+        }
+      },
+      listenWhen: (previous, next) => previous.reminders != next.reminders,
+      child: BlocSelector<RemindersBloc, RemindersState, Reminders>(
+        selector: (state) => state.reminders,
+        builder: (context, reminders) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: reminders == Reminders.empty ? 50 : 20,
+              ),
+              if (reminders == Reminders.empty)
+                const SelectWhatUserWantToAdd()
+              else if (reminders == Reminders.medicine)
+                const SizedBox.shrink()
+              else if (reminders == Reminders.tasks)
+                const TasksSheets(),
+              SizedBox(
+                height: reminders == Reminders.empty ? 50 : 20,
+              ),
+            ],
+          );
+        },
+      ),
+    );
   }
 }

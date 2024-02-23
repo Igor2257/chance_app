@@ -38,6 +38,7 @@ Color red1000 = const Color(0xff960000),
     red800 = const Color(0xffFF4F4F),
     green = const Color(0xff2E7A00);
 
+Color background = const Color(0xffFFFDFC);
 
 String getWeekdayName(int weekday) {
   switch (weekday) {
@@ -59,8 +60,8 @@ String getWeekdayName(int weekday) {
       return '';
   }
 }
-String getMonthName(int month) {
 
+String getMonthName(int month) {
   switch (month) {
     case DateTime.january:
       return 'Січень';

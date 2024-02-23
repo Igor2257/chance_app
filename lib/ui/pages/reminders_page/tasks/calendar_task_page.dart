@@ -1,11 +1,10 @@
 import 'dart:io';
 
-import 'package:chance_app/ui/components/custom_bottom_sheet_time_picker.dart';
+import 'package:chance_app/ui/components/custom_time_picker.dart';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/calendar_for_tasks.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/custom_bottom_sheet_notification_picker.dart';
-import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/model/tasks_model.dart';
 import 'package:chance_app/ux/repository.dart';
@@ -26,6 +25,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
     BlocProvider.of<RemindersBloc>(context).add(LoadDataForSelectDateForTasks());
     super.initState();
   }
+
   final int session = DateTime.now().millisecondsSinceEpoch;
   Future delay(BuildContext context) async {
     await Future.delayed(const Duration(seconds: 1)).then((value) async {
@@ -89,9 +89,9 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                     List<TaskModel> myTasks = List.from(Repository().myTasks);
                     myTasks = myTasks
                         .where((element) =>
-                    element.date!.day == now.day &&
-                        element.date!.month == now.month &&
-                        element.date!.year == now.year)
+                            element.date!.day == now.day &&
+                            element.date!.month == now.month &&
+                            element.date!.year == now.year)
                         .toList();
                     myTasks.add(taskModel);
                     myTasks.sort((a, b) => a.date!.compareTo(b.date!));
@@ -118,13 +118,13 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                                       ),
                                       Text(
                                         "Завдання додано",
-                                        style:
-                                        TextStyle(fontSize: 24, color: primaryText),
+                                        style: TextStyle(
+                                            fontSize: 24, color: primaryText),
                                       ),
                                       Text(
                                         "”${taskModel.message}”",
-                                        style:
-                                        TextStyle(fontSize: 16, color: primaryText),
+                                        style: TextStyle(
+                                            fontSize: 16, color: primaryText),
                                       ),
                                     ],
                                   ),
@@ -156,13 +156,15 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
               child: Column(
                 children: [
                   RoundedButton(
-                      onPress: () {
-                        CustomBottomSheetTimePicker(
-                          onPressOK: (dateTime) {
-                            BlocProvider.of<RemindersBloc>(context)
-                                .add(SaveDeadlineForTask(dateTime: dateTime));
-                          },
-                        ).show(context);
+                      onPress: () async {
+                        final dateTime = await CustomTimePicker.show(
+                          context,
+                          title: const Text("Термін виконання"),
+                        );
+                        if (dateTime != null && context.mounted) {
+                          BlocProvider.of<RemindersBloc>(context)
+                              .add(SaveDeadlineForTask(dateTime: dateTime));
+                        }
                       },
                       tapColor: primary100,
                       padding: const EdgeInsets.symmetric(horizontal: 16),

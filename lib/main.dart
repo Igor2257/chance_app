@@ -2,6 +2,7 @@ import 'package:chance_app/firebase_options.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/main_page/main_page.dart';
 import 'package:chance_app/ui/pages/menu/menu_page.dart';
+import 'package:chance_app/ui/pages/medicines_page/medicines_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/calendar_task_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/tasks_for_today.dart';
@@ -16,6 +17,7 @@ import 'package:chance_app/ui/pages/sos_page/add_group_screen.dart';
 import 'package:chance_app/ui/pages/sos_page/delete_contact_screen.dart';
 import 'package:chance_app/ui/pages/sos_page/main_page_sos.dart';
 import 'package:chance_app/ux/bloc/login_bloc/login_bloc.dart';
+import 'package:chance_app/ux/bloc/medicines_bloc/medicines_bloc.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
@@ -32,10 +34,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:timezone/data/latest_all.dart';
+import 'package:timezone/timezone.dart';
 
 enum Postpone {
   fiveMinute,
@@ -50,6 +55,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   PlatformDispatcher.instance.onError = (error, stack) {
     if (!kDebugMode) {
@@ -67,6 +73,12 @@ void main() async {
       print('User is signed in!');
     }
   });
+
+  // Timezone setup, is required by scheduler
+  final currentTimeZone = await FlutterTimezone.getLocalTimezone();
+  initializeTimeZones();
+  setLocalLocation(getLocation(currentTimeZone));
+
   await _initBoxes().then((value) async {
     Repository repository = Repository();
     await repository.getUser().then((user) async {
@@ -163,6 +175,10 @@ class MyAppState extends State<MyApp> {
                               "/reminders": (context) => const RemindersPage(),
                               "/date_picker_for_tasks": (context) =>
                                   const CalendarTaskPage(),
+                              "/medicines": (context) => BlocProvider(
+                                    create: (context) => MedicinesBloc(),
+                                    child: const MedicinesPage(),
+                                  ),
                               "/reset_password": (context) =>
                                   const ResetPassword(),
                               "/tasks_for_today": (context) =>

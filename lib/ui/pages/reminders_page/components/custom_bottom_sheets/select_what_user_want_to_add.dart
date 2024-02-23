@@ -10,20 +10,21 @@ class SelectWhatUserWantToAdd extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery.sizeOf(context);
     return Container(
       decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(28),
-            topRight: Radius.circular(28),
-          )),
+        topLeft: Radius.circular(28),
+        topRight: Radius.circular(28),
+      )),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           InkWell(
             onTap: () {
               BlocProvider.of<RemindersBloc>(context).add(
-                  SelectWhatPersonWouldLikeToAdd(reminders: Reminders.tasks));
+                SelectWhatPersonWouldLikeToAdd(reminders: Reminders.tasks),
+              );
             },
             child: Container(
               width: size.width / 2.5,
@@ -46,6 +47,11 @@ class SelectWhatUserWantToAdd extends StatelessWidget {
             ),
           ),
           InkWell(
+            onTap: () {
+              BlocProvider.of<RemindersBloc>(context).add(
+                SelectWhatPersonWouldLikeToAdd(reminders: Reminders.medicine),
+              );
+            },
             child: Container(
                 width: size.width / 2.5,
                 padding: const EdgeInsets.all(16),
