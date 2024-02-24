@@ -45,7 +45,7 @@ class _TasksForTodayState extends State<TasksForToday> {
           ),
           leading: CloseButton(
             onPressed: () {
-              BlocProvider.of<RemindersBloc>(context).add(LoadData());
+              //BlocProvider.of<RemindersBloc>(context).add(LoadData());
               Navigator.of(context).pop();
             },
           ),

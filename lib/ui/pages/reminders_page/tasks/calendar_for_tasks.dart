@@ -14,10 +14,13 @@ final DateTime now=DateTime.now();
         builder: (context, state) {
       List<Map<String, dynamic>>
           days = List.from(state.daysForTasks);
-      int count = getCount(days.first["weekDay"].toString());
-      for (int i = 0; i < count; i++) {
-        days.insert(0, {"number": -1,});
+      if(days.isNotEmpty) {
+        int count = getCount(days.first["weekDay"].toString());
+        for (int i = 0; i < count; i++) {
+          days.insert(0, {"number": -1,});
+        }
       }
+
       return Container(
         width: size.width,
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),

@@ -29,12 +29,10 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   FutureOr<void> _onSaveFirstName(
       SaveFirstName event, Emitter<RegistrationState> emit) async {
-    print("state.lastName ${state.firstName}");
   }
 
   FutureOr<void> _onSaveLastName(
       SaveLastName event, Emitter<RegistrationState> emit) async* {
-    print("state.lastName ${state.lastName}");
     yield state.copyWith(lastName: event.lastName);
   }
 
@@ -76,9 +74,6 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         emit(state.copyWith(firstName: event.second, lastName: event.first));
       } else if (index - 1 == 1) {
         emit(state.copyWith(email: event.second));
-      } else {
-        emit(state.copyWith(
-            passwordSecond: event.second, passwordFirst: event.first));
       }
       if (validate(emit)) {
         emit(state.copyWith(
@@ -86,13 +81,16 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
             registrationPages: registrationPages));
       }
     } else {
+      emit(state.copyWith(
+          passwordSecond: event.second, passwordFirst: event.first));
       if (validate(emit)) {
         await Repository()
             .sendRegisterData(state.lastName, state.firstName, state.phone,
                 state.email, state.passwordFirst)
             .then((value) {
           if (value == null) {
-            Navigator.of(event.context).pushNamed("/enter_code");
+            Navigator.of(event.context)
+                .pushNamedAndRemoveUntil("/enter_code", (context) => true);
           }
         });
       }
@@ -187,7 +185,6 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         break;
       case InputLayouts.firstPassword:
         emit(state.copyWith(passwordFirst: text));
-        print('text.trim().length ${text.trim().length}');
         if (text.trim().length >= 8) {
           if (text.trim().length <= 14) {
             errorText = "";
@@ -202,7 +199,6 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         break;
       case InputLayouts.lastPassword:
         emit(state.copyWith(passwordSecond: text));
-        print('text.trim().length ${text.trim().length}');
 
         if (text.trim().length >= 8) {
           if (text.trim().length <= 14) {
