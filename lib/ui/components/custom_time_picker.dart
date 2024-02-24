@@ -61,6 +61,7 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
 
   @override
   Widget build(BuildContext context) {
+    const minuteInterval = 5;
     return CustomBottomSheetScaffold(
       title: widget.title,
       body: DatePicker(
@@ -69,9 +70,9 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
           selectedTime.month,
           selectedTime.day,
           selectedTime.hour,
-          (selectedTime.minute / 5).ceil() * 5,
+          (selectedTime.minute / minuteInterval).ceil() * minuteInterval,
         ),
-        minuteInterval: 5,
+        minuteInterval: minuteInterval,
         mode: CupertinoDatePickerMode.time,
         onDateChanged: (DateTime date) {
           selectedTime = date;

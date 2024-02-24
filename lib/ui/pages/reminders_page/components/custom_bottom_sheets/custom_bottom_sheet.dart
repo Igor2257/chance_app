@@ -13,7 +13,7 @@ class CustomBottomSheet extends StatelessWidget {
     return BlocListener<RemindersBloc, RemindersState>(
       listener: (context, state) {
         if (state.reminders == Reminders.medicine) {
-          Navigator.of(context).popAndPushNamed("/medicines");
+          Navigator.of(context).popAndPushNamed("/add_medicine");
         }
       },
       listenWhen: (previous, next) => previous.reminders != next.reminders,

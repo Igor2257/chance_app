@@ -2,8 +2,8 @@ import 'package:bottom_picker/resources/context_extension.dart';
 import 'package:chance_app/ui/components/custom_bottom_sheet_scaffold.dart';
 import 'package:chance_app/ui/components/separated_list.dart';
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/medicines_page/components/dose_text.dart';
-import 'package:chance_app/ux/bloc/medicines_bloc/medicines_bloc.dart';
+import 'package:chance_app/ui/pages/add_medicine_page/components/dose_text.dart';
+import 'package:chance_app/ux/enum/medicine_type.dart';
 import 'package:flutter/material.dart';
 
 const _maxDoses = 5;

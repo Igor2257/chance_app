@@ -4,16 +4,18 @@ import 'package:flutter_svg/flutter_svg.dart';
 class CustomListTile extends StatefulWidget {
   const CustomListTile({
     required this.content,
-    this.trailing,
     this.svgIcon,
+    this.trailing,
+    this.isSelected = false,
     this.padding = const EdgeInsets.all(16),
     this.onTap,
     super.key,
   });
 
   final Widget content;
-  final Widget? trailing;
   final String? svgIcon;
+  final Widget? trailing;
+  final bool isSelected;
   final EdgeInsetsGeometry padding;
   final VoidCallback? onTap;
 
@@ -45,7 +47,7 @@ class _CustomListTileState extends State<CustomListTile> {
           ? () => setState(() => _isActive = false)
           : null,
       child: Material(
-        color: _isActive ? activeBackground : background,
+        color: (widget.isSelected || _isActive) ? activeBackground : background,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
           side: const BorderSide(color: foreground),
@@ -57,7 +59,9 @@ class _CustomListTileState extends State<CustomListTile> {
               if (widget.svgIcon != null) ...[
                 SvgPicture.asset(
                   widget.svgIcon!,
-                  color: _isActive ? activeForeground : foreground,
+                  color: (widget.isSelected || _isActive)
+                      ? activeForeground
+                      : foreground,
                 ),
                 const SizedBox(width: 6),
               ],
@@ -65,7 +69,9 @@ class _CustomListTileState extends State<CustomListTile> {
                 child: DefaultTextStyle(
                   style: TextStyle(
                     fontSize: 16,
-                    color: _isActive ? activeForeground : foreground,
+                    color: (widget.isSelected || _isActive)
+                        ? activeForeground
+                        : foreground,
                   ),
                   child: widget.content,
                 ),
