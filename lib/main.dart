@@ -1,6 +1,7 @@
 import 'package:chance_app/firebase_options.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/main_page/main_page.dart';
+import 'package:chance_app/ui/pages/onboarding/onboarding_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/calendar_task_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/tasks_for_today.dart';
@@ -49,7 +50,7 @@ void main() async {
 
   await _initBoxes().then((value) async {
     await Repository().getUser().then((user) {
-      String route = "/signinup";
+      String route = "/onboarding";
       if (user != null) {
         route = "/";
       }
@@ -115,6 +116,7 @@ class _MyAppState extends State<MyApp> {
                             ),
                             initialRoute: widget.route,
                             routes: {
+                              "/onboarding": (context) => const OnboardingPage(),
                               "/": (context) => const MainPage(),
                               "/signinup": (context) => const SignInUpPage(),
                               "/registration": (context) =>
