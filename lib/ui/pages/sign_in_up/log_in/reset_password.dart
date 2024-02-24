@@ -77,7 +77,10 @@ class _ResetPasswordState extends State<ResetPassword> {
               color: primary1000,
               child: Text(
                 "Підтвердити",
-                style: TextStyle(fontSize: 16, color: primary50),
+                style: TextStyle(
+                    fontSize: 16,
+                    color: primary50,
+                    fontWeight: FontWeight.w500),
               ),
               onPress: () async {
                 validate();
@@ -91,9 +94,10 @@ class _ResetPasswordState extends State<ResetPassword> {
                           title: Center(
                             child: Text(
                               "Лист був відправлений",
-                              style:
-                                  TextStyle(color: primaryText, fontSize: 24),
-                            ),
+                                textAlign: TextAlign.center,
+                                style:
+                                    TextStyle(color: primaryText, fontSize: 24),
+                              ),
                           ),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,

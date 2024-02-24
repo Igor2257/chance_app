@@ -396,20 +396,35 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
   FutureOr<void> _onChangeIsDoneForTask(
       ChangeIsDoneForTask event, Emitter<RemindersState> emit) async {
     Repository repository = Repository();
-    TaskModel myTask = repository.myTasks.firstWhere(
+    List<TaskModel> myTasks = List.from(state.tasksForToday);
+    int index = myTasks.indexWhere(
         (element) => element.id == event.id && element.isRemoved == false);
+    TaskModel myTask = myTasks[index];
     myTask = myTask.copyWith(isDone: !myTask.isDone);
+    print(myTask);
     await repository
         .updateTask(isDone: myTask.isDone, id: myTask.id)
         .then((value) {
-      add(LoadTasksForToday(
-          datetime: DateTime(
-              myTask.date!.year, myTask.date!.month, myTask.date!.day)));
+      if (value == null) {
+        DateTime now =
+            DateTime(myTask.date!.year, myTask.date!.month, myTask.date!.day);
+        myTasks[index] = myTask;
+        emit(state.copyWith(
+            tasksForToday: myTasks
+                .where((element) =>
+                    element.date!.day == now.day &&
+                    element.date!.month == now.month &&
+                    element.date!.year == now.year &&
+                    element.isRemoved == false)
+                .toList()));
+      }
     });
   }
 
   Future delay(BuildContext context) async {
-    await Future.delayed(const Duration(seconds: 1)).then((value) async {});
+    await Future.delayed(const Duration(seconds: 1)).then((value) async {
+      Navigator.of(context).pop();
+    });
   }
 
   FutureOr<void> _onDeleteTask(
@@ -445,10 +460,12 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
                         ),
                         Text(
                           "Завдання видалено",
+                          textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 24, color: primaryText),
                         ),
                         Text(
                           "”${event.name}”",
+                          textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 16, color: primaryText),
                         ),
                       ],
@@ -465,6 +482,13 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
   FutureOr<void> _onSaveTask(SaveTask event, Emitter<RemindersState> emit) {
     List<TaskModel> tasks = List.from(state.myTasks);
     tasks.add(event.taskModel);
-    emit(state.copyWith(myTasks: tasks));
+    emit(state.copyWith(
+      myTasks: tasks,
+      taskTitle: "",
+      oldSelectedDateForTasks: DateTime.now(),
+      newSelectedDateForTasks: DateTime.now(),
+      oldDeadlineForTask: DateTime.now(),
+      newDeadlineForTask: DateTime.now(),
+    ));
   }
 }

@@ -1,7 +1,9 @@
 import 'package:chance_app/ui/components/logo_name.dart';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SubscriptionPage extends StatelessWidget {
   const SubscriptionPage({super.key});
@@ -48,7 +50,10 @@ class SubscriptionPage extends StatelessWidget {
               children: [
                 RoundedButton(
                     onPress: () {
-                      Navigator.of(context).pushNamedAndRemoveUntil("/", (route) => false);
+                      Navigator.of(context)
+                          .pushNamedAndRemoveUntil("/", (route) => false);
+                      BlocProvider.of<RegistrationBloc>(context)
+                          .add(ClearData());
                     },
                     color: primary1000,
                     child: Text(

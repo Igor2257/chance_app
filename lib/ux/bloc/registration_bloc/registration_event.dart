@@ -67,3 +67,6 @@ class ChangeUserGrantPermissionForProcessingPersonalData extends RegistrationEve
 
   ChangeUserGrantPermissionForProcessingPersonalData();
 }
+class ClearData extends RegistrationEvent{
+  ClearData();
+}

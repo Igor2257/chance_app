@@ -67,7 +67,7 @@ class _MedicinesPageState extends State<MedicinesPage> {
                 color: primary1000,
                 child: Text(
                   "Продовжити",
-                  style: TextStyle(color: primary50, fontSize: 16),
+                  style: TextStyle(color: primary50, fontSize: 16,fontWeight: FontWeight.w500),
                 ),
               ),
               const SizedBox(height: 8),

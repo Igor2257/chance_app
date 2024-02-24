@@ -99,7 +99,7 @@ class _RemindersPageState extends State<RemindersPage>
                       },
                       child: Container(
                         padding: const EdgeInsets.all(12),
-                        height: 44,
+                        constraints: const BoxConstraints(minHeight: 44),
                         decoration: BoxDecoration(
                             color: primary1000,
                             borderRadius: BorderRadius.circular(16)),

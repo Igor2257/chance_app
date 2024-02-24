@@ -31,7 +31,7 @@ class _SignInUpPageState extends State<SignInUpPage> {
                 color: primary1000,
                 child: Text(
                   "Створити обліковий запис",
-                  style: TextStyle(color: primary50, fontSize: 16),
+                  style: TextStyle(color: primary50, fontSize: 16,fontWeight: FontWeight.w500),
                 )),
             const SizedBox(
               height: 16,

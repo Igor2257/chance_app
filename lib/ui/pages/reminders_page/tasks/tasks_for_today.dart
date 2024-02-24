@@ -34,6 +34,7 @@ class _TasksForTodayState extends State<TasksForToday> {
     return BlocBuilder<RemindersBloc, RemindersState>(
         builder: (context, state) {
       List<TaskModel> tasksForToday = List.from(state.tasksForToday);
+      print(tasksForToday);
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -191,14 +192,14 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                               height: 40,
                                                             ),
                                                             Text(
-                                                              "Завдання виконано",
+                                                              "Завдання виконано",textAlign: TextAlign.center,
                                                               style: TextStyle(
                                                                   fontSize: 24,
                                                                   color:
                                                                       primaryText),
                                                             ),
                                                             Text(
-                                                              "”${task.message}”",
+                                                              "”${task.message}”",textAlign: TextAlign.center,
                                                               style: TextStyle(
                                                                   fontSize: 16,
                                                                   color:
@@ -264,7 +265,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                                       .min,
                                                               children: [
                                                                 Text(
-                                                                  "Ви впевнені, що хочете видалити завдання?",
+                                                                  "Ви впевнені, що хочете видалити завдання?",textAlign: TextAlign.center,
                                                                   style: TextStyle(
                                                                       color:
                                                                           primaryText,
@@ -284,7 +285,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                                         },
                                                                         child:
                                                                             Text(
-                                                                          "Скасувати",
+                                                                          "Скасувати",textAlign: TextAlign.center,
                                                                           style: TextStyle(
                                                                               fontSize: 16,
                                                                               color: primary700,
@@ -301,7 +302,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                                         },
                                                                         child:
                                                                             Text(
-                                                                          "Видалити",
+                                                                          "Видалити",textAlign: TextAlign.center,
                                                                           style: TextStyle(
                                                                               fontSize: 16,
                                                                               color: primary700,

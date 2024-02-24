@@ -40,7 +40,7 @@ class MenuPage extends StatelessWidget {
                 color: primary1000,
                 child: Text(
                   "Вийти з облікового запису",
-                  style: TextStyle(fontSize: 16, color: primary50),
+                  style: TextStyle(fontSize: 16, color: primary50,fontWeight: FontWeight.w500),
                 )),
           ],
         ),

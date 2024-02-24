@@ -103,12 +103,12 @@ class _MainPageState extends State<MainPage> {
                                 color: beige500,
                               ),
                               Text(
-                                "Завдання",
+                                "Завдання",textAlign: TextAlign.center,
                                 style:
                                     TextStyle(fontSize: 16, color: primaryText),
                               ),
                               Text(
-                                remoteMessage.data["message"],
+                                remoteMessage.data["message"],textAlign: TextAlign.center,
                                 style:
                                     TextStyle(fontSize: 24, color: primaryText),
                               ),
@@ -151,7 +151,7 @@ class _MainPageState extends State<MainPage> {
                                         height: 10,
                                       ),
                                       Text(
-                                        "Пропустити",
+                                        "Пропустити",textAlign: TextAlign.center,
                                         style: TextStyle(
                                             color: primary50, fontSize: 16),
                                       ),
@@ -199,7 +199,7 @@ class _MainPageState extends State<MainPage> {
                                         height: 10,
                                       ),
                                       Text(
-                                        "Виконано",
+                                        "Виконано",textAlign: TextAlign.center,
                                         style: TextStyle(
                                             color: primary50, fontSize: 16),
                                       ),

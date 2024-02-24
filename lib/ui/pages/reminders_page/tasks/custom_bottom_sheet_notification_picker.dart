@@ -93,7 +93,7 @@ class _CustomBottomSheetNotificationPickerState
                           notifications[position],
                           style: TextStyle(
                             fontSize: 16,
-                            color: isSelected ? primary50 : primaryText,
+                            color: isSelected ? primary50 : primaryText,fontWeight: FontWeight.w500
                           ),
                         ),
                         const Spacer(),

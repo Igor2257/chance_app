@@ -14,7 +14,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class CalendarTaskPage extends StatefulWidget {
   const CalendarTaskPage({super.key});
-
   @override
   State<CalendarTaskPage> createState() => _CalendarTaskPageState();
 }
@@ -27,13 +26,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
   }
 
   final int session = DateTime.now().millisecondsSinceEpoch;
-  Future delay(BuildContext context) async {
-    await Future.delayed(const Duration(seconds: 1)).then((value) async {
-      await Repository().updateLocalTasks().whenComplete(() {
-        Navigator.of(context).pushNamed("/reminders");
-      });
-    });
-  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -86,52 +79,67 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                       date: date,
                       //notificationsBefore: state.oldNotificationsBefore.name,
                     );
-                    List<TaskModel> myTasks = List.from(Repository().myTasks);
-                    myTasks = myTasks
-                        .where((element) =>
-                            element.date!.day == now.day &&
-                            element.date!.month == now.month &&
-                            element.date!.year == now.year)
-                        .toList();
-                    myTasks.add(taskModel);
-                    myTasks.sort((a, b) => a.date!.compareTo(b.date!));
+
+                    BlocProvider.of<RemindersBloc>(context)
+                        .add(SaveTask(taskModel: taskModel));
                     await Repository().saveTask(taskModel).then((value) {
-                      delay(context);
+
                       showDialog(
                           barrierDismissible: false,
                           context: context,
                           builder: (context) {
                             return SizedBox(
-                              height: 160,
-                              width: MediaQuery.of(context).size.width,
-                              child: AlertDialog(
-                                backgroundColor: beigeBG,
-                                content: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 24, vertical: 16),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      const Icon(Icons.done),
-                                      const SizedBox(
-                                        height: 40,
-                                      ),
-                                      Text(
-                                        "Завдання додано",
-                                        style: TextStyle(
-                                            fontSize: 24, color: primaryText),
-                                      ),
-                                      Text(
-                                        "”${taskModel.message}”",
-                                        style: TextStyle(
-                                            fontSize: 16, color: primaryText),
-                                      ),
-                                    ],
+                                height: 160,
+                                width: MediaQuery.of(context).size.width,
+                                child: AlertDialog(
+                                  backgroundColor: beigeBG,
+                                  content: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 24, vertical: 16),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        const Icon(Icons.done),
+                                        const SizedBox(
+                                          height: 40,
+                                        ),
+                                        Text(
+                                          "Завдання додано",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 24, color: primaryText),
+                                        ),
+                                        Text(
+                                          "”${taskModel.message}”",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 16, color: primaryText),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                            );
-                          });
+                                  actions: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).pop();
+                                        BlocProvider.of<RemindersBloc>(context)
+                                            .add(LoadData());
+
+                                      },
+                                      child: SizedBox(
+                                        height: 44,
+                                        child: Text(
+                                          "OK",
+                                          style: TextStyle(
+                                              fontSize: 20, color: primary500),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ));
+                          }).whenComplete(() {
+                        Navigator.of(context).pop();
+                      });
                     });
                   }
                 },
@@ -182,7 +190,10 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                           ),
                           Text(
                             "Термін виконання",
-                            style: TextStyle(fontSize: 16, color: primary50),
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: primary50,
+                                fontWeight: FontWeight.w500),
                           ),
                           const Spacer(),
                           Text(
@@ -217,7 +228,10 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                           ),
                           Text(
                             "Нагадування",
-                            style: TextStyle(fontSize: 16, color: primary50),
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: primary50,
+                                fontWeight: FontWeight.w500),
                           ),
                           const Spacer(),
                           Text(

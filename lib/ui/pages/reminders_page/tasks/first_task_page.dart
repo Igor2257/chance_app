@@ -56,8 +56,6 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
                 if (state.taskTitle.trimLeft().length > 1) {
                   if (state.taskTitle.trimLeft().length <= 300) {
 
-                    Navigator.of(context).pop();
-
                     DateTime now = DateTime.now();
                     String name = state.taskTitle;
                     if (name.trim().isNotEmpty) {
@@ -107,12 +105,14 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
                                           ),
                                           Text(
                                             "Завдання додано",
+                                            textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 fontSize: 24,
                                                 color: primaryText),
                                           ),
                                           Text(
                                             "”${taskModel.message}”",
+                                            textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 color: primaryText),
@@ -137,7 +137,9 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
                                       ),
                                     ],
                                   ));
-                            });
+                            }).whenComplete(() {
+                          Navigator.of(context).pop();
+                        });
                       });
                     }
                   }

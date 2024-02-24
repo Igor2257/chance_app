@@ -23,6 +23,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     on<DecreaseCurrentStep>(_onDecreaseCurrentStep);
     on<Dispose>(_onDispose);
     on<ValidateForm>(_onValidateForm);
+    on<ClearData>(_onClearData);
     on<ChangeUserGrantPermissionForProcessingPersonalData>(
         _onChangeUserGrantPermissionForProcessingPersonalData);
   }
@@ -389,5 +390,10 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
           registrationPages: RegistrationPages.values[0], percentage: 0.33));
     }
     return false;
+  }
+
+  FutureOr<void> _onClearData(
+      ClearData event, Emitter<RegistrationState> emit) {
+    emit(state.clear());
   }
 }
