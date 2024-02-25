@@ -1,8 +1,10 @@
 import 'package:chance_app/firebase_options.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/main_page/main_page.dart';
-import 'package:chance_app/ui/pages/menu/menu_page.dart';
 import 'package:chance_app/ui/pages/medicines_page/medicines_page.dart';
+import 'package:chance_app/ui/pages/menu/menu_page.dart';
+import 'package:chance_app/ui/pages/onboarding/onboarding_page.dart';
+import 'package:chance_app/ui/pages/onboarding/onboarding_tutorial.dart';
 import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/calendar_task_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/tasks_for_today.dart';
@@ -27,7 +29,6 @@ import 'package:chance_app/ux/repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,7 +36,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -81,20 +81,24 @@ void main() async {
 
   await _initBoxes().then((value) async {
     Repository repository = Repository();
-    await repository.getUser().then((user) async {
-      String route = "/signinup";
-      if (user != null) {
-        route = "/";
-        runApp(MyApp(route));
-      } else {
-        await repository.getCookie().then((value) {
-          if (value != null) {
-            route = "/";
-          }
+    if (await repository.isUserEnteredEarlier()) {
+      await repository.getUser().then((user) async {
+        String route = "/signinup";
+        if (user != null) {
+          route = "/";
           runApp(MyApp(route));
-        });
-      }
-    });
+        } else {
+          await repository.getCookie().then((value) {
+            if (value != null) {
+              route = "/";
+            }
+            runApp(MyApp(route));
+          });
+        }
+      });
+    } else {
+      runApp(const MyApp("/onboarding_page"));
+    }
   });
 }
 
@@ -168,30 +172,34 @@ class MyAppState extends State<MyApp> {
                               "/registration": (context) =>
                                   const RegistrationPage(),
                               "/login": (context) => LoginPage(),
-                              "/enter_code": (context) =>
-                                  const EnterCodeForRegister(),
-                              "/subscription_page": (context) =>
-                                  const SubscriptionPage(),
-                              "/reminders": (context) => const RemindersPage(),
-                              "/date_picker_for_tasks": (context) =>
-                                  const CalendarTaskPage(),
-                              "/medicines": (context) => BlocProvider(
-                                    create: (context) => MedicinesBloc(),
-                                    child: const MedicinesPage(),
-                                  ),
-                              "/reset_password": (context) =>
-                                  const ResetPassword(),
-                              "/tasks_for_today": (context) =>
-                                  const TasksForToday(),
-                              "/menu": (context) => const MenuPage(),
-                              "/sos": (context) => const MainPageSos(),
-                              "/add_contact": (context) =>
-                                  const AddContactScreen(),
-                              "/add_group": (context) => const AddGroupScreen(),
-                              "/delete_contact": (context) =>
-                                  const DeleteContactsPage(),
-                            },
-                          ))),
+                            "/enter_code": (context) =>
+                                const EnterCodeForRegister(),
+                            "/subscription_page": (context) =>
+                                const SubscriptionPage(),
+                            "/reminders": (context) => const RemindersPage(),
+                            "/date_picker_for_tasks": (context) =>
+                                const CalendarTaskPage(),
+                            "/medicines": (context) => BlocProvider(
+                                  create: (context) => MedicinesBloc(),
+                                  child: const MedicinesPage(),
+                                ),
+                            "/reset_password": (context) =>
+                                const ResetPassword(),
+                            "/tasks_for_today": (context) =>
+                                const TasksForToday(),
+                            "/menu": (context) => const MenuPage(),
+                            "/sos": (context) => const MainPageSos(),
+                            "/add_contact": (context) =>
+                                const AddContactScreen(),
+                            "/add_group": (context) => const AddGroupScreen(),
+                            "/onboarding_page": (context) =>
+                                const OnboardingPage(),
+                            "/onboarding_tutorial": (context) =>
+                                const OnboardingTutorial(),
+                            "/delete_contact": (context) =>
+                                const DeleteContactsPage(),
+                          },
+                        ))),
                 if (isUserHaveOfflineData)
                   Container(
                       color: Colors.black38,
@@ -220,7 +228,7 @@ class MyAppState extends State<MyApp> {
                                       style: TextStyle(
                                           fontSize: 24, color: primaryText),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 30,
                                     ),
                                     Text(
@@ -232,11 +240,11 @@ class MyAppState extends State<MyApp> {
                                   ],
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
                               Container(
-                                padding: EdgeInsets.all(4),
+                                padding: const EdgeInsets.all(4),
                                 height: 120,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(16),

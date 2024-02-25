@@ -469,7 +469,6 @@ class Repository {
           msg: "Немає підключення до інтернету",
           toastLength: Toast.LENGTH_LONG);
       error = "Немає підключення до інтернету";
-      print("${taskModel.id}  ${taskModel.isSentToDB}");
       await addTask(taskModel);
     } else {
       var url = Uri.parse('http://139.28.37.11:56565/stage/api/task');
@@ -750,17 +749,23 @@ class Repository {
   }
 
   void saveCookie(String? header) async {
-    const storage = FlutterSecureStorage();
-    await storage.write(key: "set-cookie", value: header);
+    await const FlutterSecureStorage().write(key: "set-cookie", value: header);
   }
 
   Future<String?> getCookie() async {
-    const storage = FlutterSecureStorage();
-    return await storage.read(key: "set-cookie");
+    return await const FlutterSecureStorage().read(key: "set-cookie");
   }
 
   Future<void> deleteCookie() async {
-    const storage = FlutterSecureStorage();
-    await storage.delete(key: "set-cookie");
+    await const FlutterSecureStorage().delete(key: "set-cookie");
+  }
+
+  Future<void> firstEnter() async {
+    await const FlutterSecureStorage()
+        .write(key: "first-enter", value: DateTime.now().toUtc().toString());
+  }
+
+  Future<bool> isUserEnteredEarlier() async {
+    return await const FlutterSecureStorage().read(key: "first-enter") != null;
   }
 }
