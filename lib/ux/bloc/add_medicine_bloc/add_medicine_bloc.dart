@@ -178,6 +178,15 @@ class AddMedicineBloc extends Bloc<AddMedicineEvent, AddMedicineState> {
         ].join(':');
 
         for (final day in reminderDays) {
+          final notificationId = state.hashCode + idCounter;
+          final scheduledTime = TZDateTime(
+            local,
+            day.year,
+            day.month,
+            day.day,
+            time.hour,
+            time.minute,
+          );
           final count = state.doses[time]!;
           final reminderText = [
             count,
@@ -186,9 +195,11 @@ class AddMedicineBloc extends Bloc<AddMedicineEvent, AddMedicineState> {
             timeText,
           ].join(' ');
 
+          debugPrint("Scheduled $notificationId at $scheduledTime");
+
           // Medicine reminder setup
           await FlutterLocalNotificationsPlugin().zonedSchedule(
-            state.hashCode + idCounter, // Must be a unique value
+            notificationId, // Must be a unique value
             state.name,
             (Platform.isIOS && !shouldShowInstruction)
                 ? null
@@ -197,19 +208,14 @@ class AddMedicineBloc extends Bloc<AddMedicineEvent, AddMedicineState> {
                     if (shouldShowInstruction)
                       instruction.toLocalizedString().toLowerCase(),
                   ].join(' '),
-            TZDateTime(
-              local,
-              day.year,
-              day.month,
-              day.day,
-              time.hour,
-              time.minute,
-            ),
+            scheduledTime,
             NotificationDetails(
               android: AndroidNotificationDetails(
                 androidNotificationsChannel.id,
                 androidNotificationsChannel.name,
                 // icon: state.type!.androidIconAsset,
+                importance: Importance.max,
+                priority: Priority.max,
                 colorized: true,
               ),
               iOS: DarwinNotificationDetails(
