@@ -1,5 +1,7 @@
 import 'package:chance_app/resources/medicine_icons.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+@JsonEnum()
 enum MedicineType {
   pill,
   injection,

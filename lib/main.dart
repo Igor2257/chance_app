@@ -26,7 +26,6 @@ import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
-import 'package:chance_app/ux/model/my_time_of_day.dart';
 import 'package:chance_app/ux/model/tasks_model.dart';
 import 'package:chance_app/ux/repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -136,31 +135,31 @@ class MyAppState extends State<MyApp> {
             textDirection: TextDirection.ltr,
             child: Stack(
               children: [
-                 KeyedSubtree(
-                      key: key,
-                      child: SizedBox(
-                          width: size.width,
-                          height: size.height,
-                          child: MaterialApp(
-                            title: 'Flutter Demo',
-                            debugShowCheckedModeBanner: false,
-                            theme: ThemeData(
-                              colorScheme: ColorScheme.fromSeed(
-                                  seedColor: Colors.deepPurple),
-                              useMaterial3: true,
-                            ),
-                            supportedLocales: const [
-                              Locale('en'),
-                              Locale('uk'),
-                              Locale('ru'),
-                            ],
-                            localizationsDelegates: const [
-                              GlobalWidgetsLocalizations.delegate,
-                              GlobalCupertinoLocalizations.delegate,
-                              GlobalMaterialLocalizations.delegate,
-                            ],
-                            initialRoute: widget.route,
-                            routes: {
+                KeyedSubtree(
+                    key: key,
+                    child: SizedBox(
+                        width: size.width,
+                        height: size.height,
+                        child: MaterialApp(
+                          title: 'Flutter Demo',
+                          debugShowCheckedModeBanner: false,
+                          theme: ThemeData(
+                            colorScheme: ColorScheme.fromSeed(
+                                seedColor: Colors.deepPurple),
+                            useMaterial3: true,
+                          ),
+                          supportedLocales: const [
+                            Locale('en'),
+                            Locale('uk'),
+                            Locale('ru'),
+                          ],
+                          localizationsDelegates: const [
+                            GlobalWidgetsLocalizations.delegate,
+                            GlobalCupertinoLocalizations.delegate,
+                            GlobalMaterialLocalizations.delegate,
+                          ],
+                          initialRoute: widget.route,
+                          routes: {
                             "/": (context) => const MainPage(),
                             "/signinup": (context) => const SignInUpPage(),
                             "/registration": (context) =>
@@ -176,7 +175,7 @@ class MyAppState extends State<MyApp> {
                                 ),
                             "/date_picker_for_tasks": (context) =>
                                 const CalendarTaskPage(),
-                            "/medicines": (context) => BlocProvider(
+                            "/add_medicine": (context) => BlocProvider(
                                   create: (context) => AddMedicineBloc(),
                                   child: const AddMedicinePage(),
                                 ),
@@ -195,7 +194,7 @@ class MyAppState extends State<MyApp> {
                                 const OnboardingTutorial(),
                             "/delete_contact": (context) =>
                                 const DeleteContactsPage(),
-                              "/my_information": (context) =>
+                            "/my_information": (context) =>
                                 const MyInformation(),
                           },
                         ))),
@@ -361,7 +360,6 @@ class MyAppState extends State<MyApp> {
                           ),
                         ),
                       )),
-
               ],
             )));
   }
@@ -379,8 +377,7 @@ Future<bool> _initBoxes() async {
   //await Hive.deleteBoxFromDisk('myTasks');
   Hive.registerAdapter(MeUserAdapter());
   Hive.registerAdapter(TaskModelAdapter());
-  Hive.registerAdapter(MyTimeOfDayAdapter());
-  //Hive.registerAdapter(MedicineModelAdapter());
+  Hive.registerAdapter(MedicineModelAdapter());
   tasksBox = await Hive.openBox<TaskModel>("myTasks");
   userBox = await Hive.openBox<MeUser>("user");
   //medicineBox = await Hive.openBox<MedicineModel>("myMedicines");
