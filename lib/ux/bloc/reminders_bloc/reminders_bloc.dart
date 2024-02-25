@@ -201,28 +201,31 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         "hasTasks": checkIfDayHasTask(myTasks, i, month, year)
       });
     }
-
+    int nowDay = DateTime.now().day;
     int startOfWeek =
         (month == DateTime.now().month && year == DateTime.now().year)
-            ? DateTime.now().day - DateTime.now().weekday + 1
-            : 1;
+            ? nowDay - DateTime.now().weekday
+            : 0;
+    print(startOfWeek);
     int endOfWeek = startOfWeek + 7;
-    for (int i = startOfWeek; i <= endOfWeek; i++) {
-      if (i <= 0 || i > DateTime(year, month + 1, 0).day) {
-        continue;
-      }
-      DateTime date = DateTime(year, month, i);
+    int daysLeftOfMonth = dates.length >= endOfWeek ? endOfWeek : dates.length;
+    week = dates.getRange(startOfWeek, daysLeftOfMonth).toList();
+    int weekLength = week.length;
+    for (int i = 0; i < 7 - weekLength; i++) {
+      DateTime date = DateTime(year, month + 1, i + 1);
       String weekDay = getWeekdayName(date.weekday);
+
       week.add({
         "weekDay": weekDay,
-        "number": (i.toString()).padLeft(2, "0"),
-        "month": month,
+        "number": ((i + 1).toString()).padLeft(2, "0"),
+        "month": month + 1,
         "year": year,
-        "isSelected": (selectedDate != null &&
-            (selectedDate.day == i &&
-                selectedDate.month == month &&
-                selectedDate.year == year)),
-        "hasTasks": checkIfDayHasTask(myTasks, i, month, year)
+        "isSelected": nowDay == i + 1 ||
+            (state.selectedDate != null &&
+                (state.selectedDate!.day == i + 1 &&
+                    state.selectedDate!.month == month + 1 &&
+                    state.selectedDate!.year == year)),
+        "hasTasks": checkIfDayHasTask(myTasks, i + 1, month + 1, year),
       });
     }
     myTasks = myTasks
