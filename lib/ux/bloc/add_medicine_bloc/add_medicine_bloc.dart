@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:chance_app/ux/enum/medicine_instruction.dart';
 import 'package:chance_app/ux/enum/medicine_type.dart';
 import 'package:chance_app/ux/enum/periodicity.dart';
+import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -168,6 +169,7 @@ class AddMedicineBloc extends Bloc<AddMedicineEvent, AddMedicineState> {
 
     final instruction = state.instruction ?? MedicineInstruction.noMatter;
     final shouldShowInstruction = instruction != MedicineInstruction.noMatter;
+    final notificationIds = <int>{};
     var idCounter = 0;
 
     try {
@@ -229,9 +231,27 @@ class AddMedicineBloc extends Bloc<AddMedicineEvent, AddMedicineState> {
             matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
           );
 
+          notificationIds.add(notificationId); // Save current Id
           idCounter++;
         }
       }
+
+      // Create a model to save in local DB
+      final model = MedicineModel(
+        id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        reminderIds: notificationIds.toList(),
+        name: state.name,
+        type: state.type!,
+        periodicity: state.periodicity!,
+        startDate: state.startDate!,
+        weekdays: state.weekdays.toList(),
+        doses: {
+          for (final time in state.doses.keys)
+            Duration.minutesPerHour * time.hour + time.minute:
+                state.doses[time]!,
+        },
+        instruction: state.instruction,
+      );
 
       emit(state.copyWith(isSaving: false, isCreated: true));
     } on Exception catch (e) {
