@@ -24,6 +24,8 @@ import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/model/me_user.dart';
+import 'package:chance_app/ux/model/medicine_model.dart';
+import 'package:chance_app/ux/model/my_time_of_day.dart';
 import 'package:chance_app/ux/model/tasks_model.dart';
 import 'package:chance_app/ux/repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -373,6 +375,7 @@ class MyAppState extends State<MyApp> {
 
 Box? tasksBox;
 Box? userBox;
+Box? medicineBox;
 
 Future<bool> _initBoxes() async {
   final documentsDirectory = await getApplicationDocumentsDirectory();
@@ -382,8 +385,11 @@ Future<bool> _initBoxes() async {
   //await Hive.deleteBoxFromDisk('myTasks');
   Hive.registerAdapter(MeUserAdapter());
   Hive.registerAdapter(TaskModelAdapter());
+  Hive.registerAdapter(MyTimeOfDayAdapter());
+  //Hive.registerAdapter(MedicineModelAdapter());
   tasksBox = await Hive.openBox<TaskModel>("myTasks");
   userBox = await Hive.openBox<MeUser>("user");
+  //medicineBox = await Hive.openBox<MedicineModel>("myMedicines");
 
   return true;
 }

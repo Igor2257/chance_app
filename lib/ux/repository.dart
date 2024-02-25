@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:chance_app/main.dart';
 import 'package:chance_app/ux/model/me_user.dart';
+import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/tasks_model.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart';
@@ -16,6 +17,9 @@ import 'package:http/http.dart' as http;
 class Repository {
   List<TaskModel> get myTasks =>
       tasksBox?.values.cast<TaskModel>().toList() ?? List.empty();
+
+  //List<MedicineModel> get myMedicine =>
+  //    medicineBox?.values.cast<MedicineModel>().toList() ?? List.empty();
 
   MeUser? get user =>
       userBox!.get('user') != null ? userBox!.get('user') as MeUser : null;
@@ -768,4 +772,16 @@ class Repository {
   Future<bool> isUserEnteredEarlier() async {
     return await const FlutterSecureStorage().read(key: "first-enter") != null;
   }
+
+ //Future addMedicine(MedicineModel medicineModel) async {
+ //  await medicineBox!.put(medicineModel.id, medicineModel);
+ //}
+
+ //Future updateMedicine(MedicineModel medicineModel) async {
+ //  await medicineBox!.put(medicineModel.id, medicineModel);
+ //}
+
+ //Future deleteMedicine(String id) async {
+ //  await medicineBox!.delete(id);
+ //}
 }
