@@ -89,18 +89,20 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
       myTasks.sort((a, b) => a.date!.compareTo(b.date!));
       int startOfWeek = day - now.weekday;
       int endOfWeek = startOfWeek + 7;
-      int daysLeftOfMonth=dates.length>=endOfWeek?endOfWeek:dates.length;
+      int daysLeftOfMonth =
+          dates.length >= endOfWeek ? endOfWeek : dates.length;
       week = dates.getRange(startOfWeek, daysLeftOfMonth).toList();
-      print(7-week.length);
-      for(int i=0;i<7-week.length;i++){
-        DateTime date = DateTime(year, month+1, i+1);
+      int weekLength = week.length;
+      for (int i = 0; i < 7 - weekLength; i++) {
+        DateTime date = DateTime(year, month + 1, i + 1);
         String weekDay = getWeekdayName(date.weekday);
+
         week.add({
           "weekDay": weekDay,
-          "number": ((i+1).toString()).padLeft(2, "0"),
-          "month": month+1,
+          "number": ((i + 1).toString()).padLeft(2, "0"),
+          "month": month + 1,
           "year": year,
-          "isSelected": day == i+1 ||
+          "isSelected": day == i + 1 ||
               (state.selectedDate != null &&
                   (state.selectedDate!.day == i+1 &&
                       state.selectedDate!.month == month+1 &&
