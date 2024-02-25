@@ -29,18 +29,46 @@ class MenuPage extends StatelessWidget {
         child: Column(
           children: [
             RoundedButton(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                margin: const EdgeInsets.symmetric(vertical: 4),
+                border: Border.all(color: darkNeutral800),
+                onPress: () async {
+                  Navigator.of(context).pushNamed("/my_information");
+                },
+                color: Colors.transparent,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Особиста інформація",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: primaryText,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: primaryText,
+                    )
+                  ],
+                )),
+            RoundedButton(
+                margin: const EdgeInsets.symmetric(vertical: 4),
                 onPress: () async {
                   await Repository().logout().then((value) {
-                    if(value==null){
-                      Navigator.of(context).pushNamedAndRemoveUntil("/signinup", (route) => false);
+                    if (value == null) {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          "/signinup", (route) => false);
                     }
                   });
-
                 },
                 color: primary1000,
                 child: Text(
                   "Вийти з облікового запису",
-                  style: TextStyle(fontSize: 16, color: primary50,fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: primary50,
+                      fontWeight: FontWeight.w500),
                 )),
           ],
         ),

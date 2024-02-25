@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:chance_app/ui/pages/sign_in_up/log_in/input_login_layout.dart';
 import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -28,27 +27,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   FutureOr<void> _onValidateField(
       ValidateField event, Emitter<LoginState> emit) {
     String text = event.text;
-    String? errorText;
     switch (event.inputLoginLayout) {
       case InputLoginLayouts.email:
-        if (text.trim().isEmpty &&
-            !RegExp(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b')
-                .hasMatch(text)) {
-          errorText = 'Невірний формат електронної пошти';
-          emit(state.copyWith(errorEmail: errorText));
-        } else {
-          emit(state.copyWith(errorEmail: ""));
-        }
+        emit(state.copyWith(errorEmail: validateEmail(text)??"", email: text));
         break;
       case InputLoginLayouts.password:
-        if (text.trim().isEmpty ||
-            (text.trim().isNotEmpty && text.trim().length < 8)) {
-          errorText = 'Пароль має бути 8 або більше символів';
-          emit(state.copyWith(errorPassword: errorText));
-          break;
-        } else {
-          emit(state.copyWith(errorPassword: ""));
-        }
+        emit(state.copyWith(
+            errorPassword: validateFirstPassword(text)??"", password: text));
         break;
     }
   }
@@ -75,61 +60,49 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   bool validate(Emitter<LoginState> emit) {
-    String text = state.email;
-    String errorTextPassword = 'Пароль має бути 8 або більше символів',
-        errorTextEmail = 'Невірний формат електронної пошти';
-    text = state.email;
-    if (text.isEmpty) {
-      emit(state.copyWith(errorEmail: errorTextEmail));
-      Fluttertoast.showToast(msg: errorTextEmail);
-      return false;
-    } else {
-      if (!RegExp(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b',
-              caseSensitive: false)
-          .hasMatch(text)) {
-        emit(state.copyWith(errorEmail: errorTextEmail));
-        Fluttertoast.showToast(msg: errorTextEmail);
-        return false;
-      } else {
-        if (text.contains(".ru", text.length - 4) ||
-            text.contains(".by", text.length - 4) ||
-            text.contains(".рф", text.length - 4)) {
-          emit(state.copyWith(errorEmail: errorTextEmail));
-          Fluttertoast.showToast(msg: errorTextEmail);
-          return false;
-        } else {
-          emit(state.copyWith(errorEmail: ""));
-          text = state.password;
-          if (text.trim().length < 8) {
-            errorTextPassword = 'Пароль має бути 8 або більше символів';
-            emit(state.copyWith(errorPassword:errorTextPassword ));
-            return false;
-          }
-          if (text.trim().length > 14) {
-            errorTextPassword = "Пароль має бути менше 14 символів";
-            emit(state.copyWith(errorPassword: errorTextPassword));
-            return false;
-          }
-
-        }
-      }
+    String? errorTextEmail = validateEmail(state.email),
+        errorTextPassword = validateFirstPassword(state.password);
+    print(errorTextEmail);
+    print(errorTextPassword);
+    if (errorTextEmail == null && errorTextPassword == null) {
+      emit(state.copyWith(
+          errorPassword: "", errorEmail: ""));
+      return true;
     }
-
-    return true;
+    emit(state.copyWith(
+        errorPassword: errorTextPassword??"", errorEmail: errorTextEmail??""));
+    return false;
   }
 
-  bool isEnglish(String input) {
-    for (int i = 0; i < input.length; i++) {
-      int charCode = input.codeUnitAt(i);
-      // Check if the character code falls within the range of English keyboard characters
-      if (!((charCode >= 65 && charCode <= 90) || // Uppercase letters A-Z
-          (charCode >= 97 && charCode <= 122) || // Lowercase letters a-z
-          (charCode >= 48 && charCode <= 57) || // Numbers 0-9
-          (charCode == 32))) {
-        // Space character
-        return false;
-      }
+  String? validateEmail(String text) {
+    if (text.trim().isEmpty) {
+      return 'Невірний формат електронної пошти';
     }
-    return true;
+
+    if (!RegExp(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b',
+            caseSensitive: false)
+        .hasMatch(text)) {
+      return 'Невірний формат електронної пошти';
+    }
+    if (text.trim().isNotEmpty &&
+        text.trim().length > 4 &&
+        (text.contains(".ru", text.length - 4) ||
+            text.contains(".by", text.length - 4) ||
+            text.contains(".рф", text.length - 4))) {
+      return 'Невірний формат електронної пошти';
+    }
+    return null;
+  }
+
+  String? validateFirstPassword(String text) {
+    if (text.trim().length >= 8) {
+      if (text.trim().length <= 14) {
+        return null;
+      } else {
+        return "Пароль має бути менше 14 символів";
+      }
+    } else {
+      return 'Пароль має бути 8 або більше символів';
+    }
   }
 }

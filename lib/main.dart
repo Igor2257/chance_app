@@ -3,6 +3,7 @@ import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/add_medicine_page/add_medicine_page.dart';
 import 'package:chance_app/ui/pages/main_page/main_page.dart';
 import 'package:chance_app/ui/pages/menu/menu_page.dart';
+import 'package:chance_app/ui/pages/menu/pages/my_information.dart';
 import 'package:chance_app/ui/pages/onboarding/onboarding_page.dart';
 import 'package:chance_app/ui/pages/onboarding/onboarding_tutorial.dart';
 import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
@@ -43,15 +44,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:timezone/data/latest_all.dart';
 import 'package:timezone/timezone.dart';
-
-enum Postpone {
-  fiveMinute,
-  tenMinute,
-  fifteenMinute,
-  thirtyMinute,
-  oneHour,
-  twoHour
-}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -203,6 +195,8 @@ class MyAppState extends State<MyApp> {
                                 const OnboardingTutorial(),
                             "/delete_contact": (context) =>
                                 const DeleteContactsPage(),
+                              "/my_information": (context) =>
+                                const MyInformation(),
                           },
                         ))),
                 if (isUserHaveOfflineData)

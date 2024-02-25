@@ -16,8 +16,11 @@ class _SecondSubPageState extends State<SecondSubPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return  SizedBox(
+        height: MediaQuery.of(context).size.height,
+    child:Column(
       mainAxisAlignment: MainAxisAlignment.center,
+
       children: <Widget>[
         const SizedBox(height: 24),
         InputRegisterLayout(
@@ -53,9 +56,11 @@ class _SecondSubPageState extends State<SecondSubPage> {
           name: "Продовжити",
           firstTextEditingController: phoneEditingController,
           secondTextEditingController: emailEditingController,
+          firstFocusNode: phoneFocusNode,
+          lastFocusNode: emailFocusNode,
         ),
         const Spacer(),
       ],
-    );
+    ));
   }
 }

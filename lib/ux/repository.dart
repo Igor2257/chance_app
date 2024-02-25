@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:chance_app/main.dart';
 import 'package:chance_app/ux/model/me_user.dart';
-import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/tasks_model.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart';
@@ -48,7 +47,9 @@ class Repository {
               {"password": hash.toString().substring(0, 13), "email": email}),
         )
             .then((value) async {
+          print("value.statusCode1 ${value.statusCode}");
           final cookie = _parseCookieFromLogin(value);
+
           if (value.statusCode > 199 && value.statusCode < 300) {
             var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/me');
             await http.get(
@@ -58,6 +59,7 @@ class Repository {
                 if (cookie != null) 'Cookie': cookie,
               },
             ).then((value) async {
+              print("value.statusCode2 ${value.statusCode}");
               if (value.statusCode > 199 && value.statusCode < 300) {
                 await FirebaseMessaging.instance.getToken().then((token) {
                   patchUserData(token: token);
@@ -79,9 +81,10 @@ class Repository {
             Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
           }
         });
-      } catch (error) {
+      } catch (errors) {
+        error = errors.toString();
         Fluttertoast.showToast(
-            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+            msg: errors.toString(), toastLength: Toast.LENGTH_LONG);
       }
     }
     return error;

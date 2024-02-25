@@ -15,7 +15,7 @@ class InputLoginLayout extends StatefulWidget {
       required this.inputLoginLayouts,
       this.focusOtherField,
       required this.textInputType,
-      this.subTitle,});
+      this.subTitle, required this.textEditingController,});
 
   final String? title, subTitle;
   final FocusNode focusNode;
@@ -24,13 +24,13 @@ class InputLoginLayout extends StatefulWidget {
   final InputLoginLayouts inputLoginLayouts;
   final Function()? focusOtherField;
   final TextInputType textInputType;
-
+  final TextEditingController textEditingController;
   @override
   State<InputLoginLayout> createState() => _InputLoginLayoutState();
 }
 
 class _InputLoginLayoutState extends State<InputLoginLayout> {
-  final TextEditingController textEditingController = TextEditingController();
+  late final TextEditingController textEditingController;
   late final FocusNode focusNode;
   late final InputLoginLayouts inputLoginLayouts;
   bool obscureText = false, useObscureText = false, isError = false;
@@ -49,6 +49,7 @@ class _InputLoginLayoutState extends State<InputLoginLayout> {
         form.currentState?.validate();
       }
     });
+    textEditingController=widget.textEditingController;
 
     super.initState();
   }
@@ -80,37 +81,34 @@ class _InputLoginLayoutState extends State<InputLoginLayout> {
                   keyboardType: widget.textInputType,
                   style: TextStyle(
                       fontSize: 16,
-                      color: isError ? red900 : primaryText),
+                      color: isError? red900 : primaryText),
                   textInputAction: widget.textInputAction,
-                  validator: (_) {
-                    BlocProvider.of<LoginBloc>(context)
-                        .add(ValidateField(inputLoginLayout: inputLoginLayouts, text: textEditingController.text));
+                  validator: (value) {
+                    if(value!=null){
+                      BlocProvider.of<LoginBloc>(context)
+                          .add(ValidateField(inputLoginLayout: inputLoginLayouts, text: value));
+                      if (widget.focusOtherField != null) {
+                        print("object5");
+                        widget.focusOtherField!();
+                      }
+                    }
+
 
                     return null;
-                  },
-                  onChanged: (value) {
-                    switch (inputLoginLayouts) {
-                      case InputLoginLayouts.email:
-                        BlocProvider.of<LoginBloc>(context)
-                            .add(SaveEmail(email: value));
-                        break;
-                      case InputLoginLayouts.password:
-                        BlocProvider.of<LoginBloc>(context)
-                            .add(SavePassword(password: value));
-                        break;
-                    }
                   },
                   onEditingComplete: () {
                     BlocProvider.of<LoginBloc>(context)
                         .add(ValidateField(inputLoginLayout: inputLoginLayouts, text: textEditingController.text));
                     if (widget.focusOtherField != null) {
+                      print("object6");
                       widget.focusOtherField!();
                     }
                   },
-                  onFieldSubmitted: (_) {
+                  onFieldSubmitted: (value) {
                     BlocProvider.of<LoginBloc>(context)
-                        .add(ValidateField(inputLoginLayout: inputLoginLayouts, text: textEditingController.text));
+                        .add(ValidateField(inputLoginLayout: inputLoginLayouts, text: value));
                     if (widget.focusOtherField != null) {
+                      print("object7");
                       widget.focusOtherField!();
                     }
                   },
@@ -120,13 +118,16 @@ class _InputLoginLayoutState extends State<InputLoginLayout> {
                     suffixIcon: useObscureText
                         ? IconButton(
                       onPressed: () {
+                        BlocProvider.of<LoginBloc>(context)
+                            .add(SavePassword(
+                            password: textEditingController.text));
                         setState(() {
                           obscureText = !obscureText;
                         });
                       },
                       icon: Icon(obscureText
                           ? Icons.visibility_off_outlined
-                          : Icons.visibility_outlined,color: beige500,),
+                          : Icons.visibility_outlined,color: beige500),
                     )
                         : const SizedBox(),
                   ),

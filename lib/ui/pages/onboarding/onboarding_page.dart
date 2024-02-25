@@ -2,7 +2,6 @@ import 'package:chance_app/ui/components/logo_name.dart';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ux/repository.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -55,7 +54,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   child: SizedBox(
                     height: 44,
                     child: Text("Увійти",
-                        style: TextStyle(fontSize: 16.0, color: primary700,decorationColor: primary700,decoration: TextDecoration.underline)),
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: primary700,
+                          decorationColor: primary700,
+                          decoration: TextDecoration.underline,
+                        )),
                   ),
                 ),
               ],

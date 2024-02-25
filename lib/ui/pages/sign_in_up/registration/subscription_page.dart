@@ -68,6 +68,8 @@ class SubscriptionPage extends StatelessWidget {
                     child: Text(
                       "Придбати підписку",
                       style: TextStyle(
+                          decorationColor: primary700,
+                          decoration: TextDecoration.underline,
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
                           color: primary700),

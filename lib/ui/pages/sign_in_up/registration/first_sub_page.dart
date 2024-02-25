@@ -21,7 +21,9 @@ class _FirstSubPageState extends State<FirstSubPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return  SizedBox(
+        height: MediaQuery.of(context).size.height,
+    child:Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         const SizedBox(height: 24),
@@ -58,9 +60,11 @@ class _FirstSubPageState extends State<FirstSubPage> {
           name: "Продовжити",
           firstTextEditingController: lastNameEditingController,
           secondTextEditingController: firstNameEditingController,
+          firstFocusNode: firstNameFocusNode,
+          lastFocusNode: lastNameFocusNode,
         ),
         const Spacer(),
       ],
-    );
+    ));
   }
 }

@@ -105,15 +105,12 @@ class _InputRegisterLayoutState extends State<InputRegisterLayout> {
                         text: number.phoneNumber ?? ""));
                   },
                   onFieldSubmitted: (_) {
-                    print("object0");
                     widget.focusOtherField!();
                   },
                   onSubmit: () {
-                    print("object1");
                     widget.focusOtherField!();
                   },
                   onSaved: (number) {
-                    print("object2");
                     widget.focusOtherField!();
                   },
                 )),
@@ -159,8 +156,7 @@ class _InputRegisterLayoutState extends State<InputRegisterLayout> {
                             color: isError? red900 : primaryText),
                         textInputAction: widget.textInputAction,
                         validator: (value) {
-                          print("object1");
-                          if (value != null && value!.isNotEmpty) {
+                          if (value != null && value.isNotEmpty) {
                             BlocProvider.of<RegistrationBloc>(context).add(
                                 ValidateForm(
                                     inputLayouts: inputLayouts, text: value));
@@ -192,6 +188,20 @@ class _InputRegisterLayoutState extends State<InputRegisterLayout> {
                           suffixIcon: useObscureText
                               ? IconButton(
                                   onPressed: () {
+                                    if (inputLayouts ==
+                                        InputLayouts.firstPassword) {
+                                      BlocProvider.of<RegistrationBloc>(context)
+                                          .add(SavePasswordFirst(
+                                              passwordFirst:
+                                                  textEditingController.text));
+                                    }
+                                    if (inputLayouts ==
+                                        InputLayouts.lastPassword) {
+                                      BlocProvider.of<RegistrationBloc>(context)
+                                          .add(SavePasswordSecond(
+                                              passwordSecond:
+                                                  textEditingController.text));
+                                    }
                                     setState(() {
                                       obscureText = !obscureText;
                                     });

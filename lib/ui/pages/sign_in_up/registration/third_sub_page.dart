@@ -19,18 +19,20 @@ class _ThirdSubPageState extends State<ThirdSubPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        const SizedBox(height: 24),
-        InputRegisterLayout(
-          textEditingController: firstPasswordEditingController,
-          title: "Введіть пароль*",
-          focusNode: firstPasswordFocusNode,
-          useCancelButton: false,
-          obscureText: true,
-          textInputAction: TextInputAction.next,
-          inputLayouts: InputLayouts.firstPassword,
+    return SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const SizedBox(height: 24),
+            InputRegisterLayout(
+              textEditingController: firstPasswordEditingController,
+              title: "Введіть пароль*",
+              focusNode: firstPasswordFocusNode,
+              useCancelButton: false,
+              obscureText: true,
+              textInputAction: TextInputAction.next,
+              inputLayouts: InputLayouts.firstPassword,
           focusOtherField: () {
             firstPasswordFocusNode.unfocus();
             FocusScope.of(context).requestFocus(secondPasswordFocusNode);
@@ -55,14 +57,16 @@ class _ThirdSubPageState extends State<ThirdSubPage> {
         const GivePermission(),
         const SizedBox(
           height: 20,
-        ),
-        ContinueLogIn(
-          name: "Продовжити",
-          firstTextEditingController: firstPasswordEditingController,
-          secondTextEditingController: lastPasswordEditingController,
-        ),
-        const Spacer(),
-      ],
-    );
+            ),
+            ContinueLogIn(
+              name: "Продовжити",
+              firstTextEditingController: firstPasswordEditingController,
+              secondTextEditingController: lastPasswordEditingController,
+              firstFocusNode: firstPasswordFocusNode,
+              lastFocusNode: secondPasswordFocusNode,
+            ),
+            const Spacer(),
+          ],
+        ));
   }
 }

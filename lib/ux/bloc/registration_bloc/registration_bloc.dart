@@ -30,31 +30,32 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   FutureOr<void> _onSaveFirstName(
       SaveFirstName event, Emitter<RegistrationState> emit) async {
+    emit(state.copyWith(firstName: event.firstName));
   }
 
   FutureOr<void> _onSaveLastName(
-      SaveLastName event, Emitter<RegistrationState> emit) async* {
-    yield state.copyWith(lastName: event.lastName);
+      SaveLastName event, Emitter<RegistrationState> emit) {
+    emit(state.copyWith(lastName: event.lastName));
   }
 
   FutureOr<void> _onSavePhone(
-      SavePhone event, Emitter<RegistrationState> emit) async* {
-    yield state.copyWith(phone: event.phone);
+      SavePhone event, Emitter<RegistrationState> emit) {
+    emit(state.copyWith(phone: event.phone));
   }
 
   FutureOr<void> _onSaveEmail(
-      SaveEmail event, Emitter<RegistrationState> emit) async* {
-    yield state.copyWith(email: event.email);
+      SaveEmail event, Emitter<RegistrationState> emit) {
+    emit(state.copyWith(email: event.email));
   }
 
   FutureOr<void> _onSavePasswordFirst(
-      SavePasswordFirst event, Emitter<RegistrationState> emit) async* {
-    yield state.copyWith(passwordFirst: event.passwordFirst);
+      SavePasswordFirst event, Emitter<RegistrationState> emit) {
+    emit(state.copyWith(passwordFirst: event.passwordFirst));
   }
 
   FutureOr<void> _onSavePasswordSecond(
-      SavePasswordSecond event, Emitter<RegistrationState> emit) async* {
-    yield state.copyWith(passwordSecond: event.passwordSecond);
+      SavePasswordSecond event, Emitter<RegistrationState> emit) {
+    emit(state.copyWith(passwordSecond: event.passwordSecond));
   }
 
   FutureOr<void> _onIncreaseCurrentStep(
@@ -131,93 +132,33 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     String? errorText;
     switch (event.inputLayouts) {
       case InputLayouts.lastName:
-        emit(state.copyWith(lastName: text));
-        if (text.trim().isEmpty) {
-          errorText = 'Ім`я порожнє';
-          emit(state.copyWith(errorLastName: errorText));
-          break;
-        } else {
-          emit(state.copyWith(errorLastName: ""));
-        }
-
+        emit(state.copyWith(
+            lastName: text, errorLastName: validateLastName(text) ?? ""));
         break;
       case InputLayouts.firstName:
-        emit(state.copyWith(firstName: text));
-        if (text.trim().isEmpty) {
-          errorText = 'Прізвище порожнє';
-          emit(state.copyWith(errorFirstName: errorText));
-          break;
-        } else {
-          emit(state.copyWith(errorFirstName: ""));
-        }
+        emit(state.copyWith(
+            firstName: text, errorFirstName: validateFirstName(text) ?? ""));
+
         break;
       case InputLayouts.phone:
-        emit(state.copyWith(phone: text));
-        if (text.trim().isEmpty) {
-          errorText = 'Невірний формат номеру телефону';
-          emit(state.copyWith(errorPhone: errorText));
-          break;
-        }
-        if (!RegExp(r'^\+380\d{9}$').hasMatch(text)
-        ) {
-          errorText = 'Невірний формат номеру телефону';
-          emit(state.copyWith(errorPhone: errorText));
-        } else {
-          emit(state.copyWith(errorPhone: ""));
-        }
+        emit(
+            state.copyWith(phone: text, errorPhone: validatePhone(text) ?? ""));
         break;
       case InputLayouts.email:
-        emit(state.copyWith(email: text));
-        if (text.trim().isEmpty) {
-          errorText = 'Невірний формат електронної пошти';
-          emit(state.copyWith(errorEmail: errorText));
-          break;
-        }
-        if (!RegExp(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b',
-                caseSensitive: false)
-            .hasMatch(text)) {
-          errorText = 'Невірний формат електронної пошти';
-          emit(state.copyWith(errorEmail: errorText));
-          break;
-        } else {
-          emit(state.copyWith(errorEmail: ""));
-        }
+        emit(
+            state.copyWith(email: text, errorEmail: validateEmail(text) ?? ""));
 
         break;
       case InputLayouts.firstPassword:
-        emit(state.copyWith(passwordFirst: text));
-        if (text.trim().length >= 8) {
-          if (text.trim().length <= 14) {
-            errorText = "";
-          } else {
-            errorText = "Пароль має бути менше 14 символів";
-          }
-        } else {
-          errorText = 'Пароль має бути 8 або більше символів';
-        }
-        emit(
-            state.copyWith(passwordFirst: text, errorFirstPassword: errorText));
+        emit(state.copyWith(
+            passwordFirst: text,
+            errorFirstPassword: validateFirstPassword(text) ?? ""));
+
         break;
       case InputLayouts.lastPassword:
-        emit(state.copyWith(passwordSecond: text));
-
-        if (text.trim().length >= 8) {
-          if (text.trim().length <= 14) {
-            if (state.passwordFirst == text) {
-              errorText = "";
-            } else {
-              errorText = "Паролі не співпадають";
-            }
-          } else {
-            errorText = "Пароль має бути менше 14 символів";
-          }
-        } else {
-          errorText = 'Пароль має бути 8 або більше символів';
-        }
-
         emit(state.copyWith(
-            passwordSecond: text, errorSecondPassword: errorText));
-
+            passwordSecond: text,
+            errorSecondPassword: validateSecondPassword(text) ?? ""));
         break;
     }
     emit(state.copyWith(isLoading: false));
@@ -242,70 +183,23 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         errorTextPhone,
         errorTextFP,
         errorTextLP;
-    if (text.trim().isEmpty) {
-      errorTextLN = 'Ім`я порожнє';
-    }
-
     text = state.firstName;
-    if (text.trim().isEmpty) {
-      errorTextFN = 'Прізвище порожнє';
-    }
+    errorTextFN = validateFirstName(text);
+    text = state.lastName;
+    errorTextLN = validateLastName(text);
 
     text = state.phone;
-    if (text.trim().isEmpty) {
-      errorTextPhone = 'Невірний формат номеру телефону';
-    }
-    if (!RegExp(r'^\+380\d{9}$').hasMatch(text)
-    ){
-      errorTextPhone = 'Невірний формат номеру телефону';
-    }
+    errorTextPhone = validatePhone(text);
 
     text = state.email;
-    if (text.trim().isEmpty) {
-      errorTextEmail = 'Невірний формат електронної пошти';
-    }
-
-    if (!RegExp(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b',
-            caseSensitive: false)
-        .hasMatch(text)) {
-      errorTextEmail = 'Невірний формат електронної пошти';
-    }
-    if (text.trim().isNotEmpty &&
-        text.trim().length > 4 &&
-        (text.contains(".ru", text.length - 4) ||
-            text.contains(".by", text.length - 4) ||
-            text.contains(".рф", text.length - 4))) {
-      errorTextEmail = 'Невірний формат електронної пошти';
-    }
+    errorTextEmail = validateEmail(text);
 
     text = state.passwordFirst;
 
-    if (text.trim().length >= 8) {
-      if (text.trim().length <= 14) {
-        errorTextFP = null;
-      } else {
-        errorTextFP = "Пароль має бути менше 14 символів";
-      }
-    } else {
-      errorTextFP = 'Пароль має бути 8 або більше символів';
-    }
+    errorTextFP = validateFirstPassword(text);
 
     text = state.passwordSecond;
-
-    if (text.trim().length >= 8) {
-      if (text.trim().length <= 14) {
-        if (state.passwordFirst == text) {
-          errorTextLP = null;
-        } else {
-          errorTextFP = "Пароль має cпівпадати";
-          errorTextLP = "Паролі не співпадають";
-        }
-      } else {
-        errorTextLP = "Пароль має бути менше 14 символів";
-      }
-    } else {
-      errorTextLP = 'Пароль має бути 8 або більше символів';
-    }
+    errorTextLP = validateSecondPassword(text);
 
     int index = RegistrationPages.values.indexOf(state.registrationPages);
     if (index == 0) {
@@ -395,5 +289,101 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   FutureOr<void> _onClearData(
       ClearData event, Emitter<RegistrationState> emit) {
     emit(state.clear());
+  }
+
+  String? validateFirstName(String text) {
+    if (text.trim().isEmpty) {
+      return 'Прізвище порожнє';
+    }
+    if (text.trim().length < 2) {
+      return 'Прізвище повинно мати не менше 2 символів';
+    }
+
+    if (text.trim().length > 50) {
+      return 'Прізвище повинно бути не більше 50 символів';
+    }
+    RegExp regex = RegExp(r"^[a-zA-Zа-яА-ЯІіЇїЄєҐґ\s\'-]+$");
+    if (!regex.hasMatch(text)) {
+      return 'Недопустимі символи. Введіть латиницю, кирилицю, пробіл, апостроф і/або дефіс';
+    }
+    return null;
+  }
+
+  String? validateLastName(String text) {
+    if (text.trim().isEmpty) {
+      return 'Ім`я порожнє';
+    }
+
+    if (text.trim().length < 2) {
+      return 'Ім’я повинно мати не менше 2 символів';
+    }
+
+    if (text.trim().length > 30) {
+      return 'Ім’я повинно бути не більше 30 символів';
+    }
+    RegExp regex = RegExp(r"^[a-zA-Zа-яА-ЯІіЇїЄєҐґ\s\'-]+$");
+    if (!regex.hasMatch(text)) {
+      return 'Недопустимі символи. Введіть латиницю, кирилицю, пробіл, апостроф і/або дефіс';
+    }
+
+    return null;
+  }
+
+  String? validatePhone(String text) {
+    if (text.trim().isEmpty) {
+      return 'Невірний формат номеру телефону';
+    }
+    if (!RegExp(r'^\+380\d{9}$').hasMatch(text)) {
+      return 'Невірний формат номеру телефону';
+    }
+    return null;
+  }
+
+  String? validateEmail(String text) {
+    if (text.trim().isEmpty) {
+      return 'Невірний формат електронної пошти';
+    }
+
+    if (!RegExp(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b',
+            caseSensitive: false)
+        .hasMatch(text)) {
+      return 'Невірний формат електронної пошти';
+    }
+    if (text.trim().isNotEmpty &&
+        text.trim().length > 4 &&
+        (text.contains(".ru", text.length - 4) ||
+            text.contains(".by", text.length - 4) ||
+            text.contains(".рф", text.length - 4))) {
+      return 'Невірний формат електронної пошти';
+    }
+    return null;
+  }
+
+  String? validateFirstPassword(String text) {
+    if (text.trim().length >= 8) {
+      if (text.trim().length <= 14) {
+        return null;
+      } else {
+        return "Пароль має бути менше 14 символів";
+      }
+    } else {
+      return 'Пароль має бути 8 або більше символів';
+    }
+  }
+
+  String? validateSecondPassword(String text) {
+    if (text.trim().length >= 8) {
+      if (text.trim().length <= 14) {
+        if (state.passwordFirst == text) {
+          return null;
+        } else {
+          return "Паролі не співпадають";
+        }
+      } else {
+        return "Пароль має бути менше 14 символів";
+      }
+    } else {
+      return 'Пароль має бути 8 або більше символів';
+    }
   }
 }

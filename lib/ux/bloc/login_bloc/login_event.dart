@@ -21,6 +21,7 @@ ValidateField({required this.inputLoginLayout, required this.text});
 }
 class ValidateForm extends LoginEvent{
 final BuildContext context;
+final String email,password;
 
-  ValidateForm({required this.context});
+  ValidateForm({required this.context, required this.email, required this.password});
 }
