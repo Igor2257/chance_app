@@ -33,6 +33,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     on<ChangeIsDoneForTask>(_onChangeIsDoneForTask);
     on<DeleteTask>(_onDeleteTask);
     on<SaveTask>(_onSaveTask);
+    on<ChangeSideSwipe>(_onChangeSideSwipe);
   }
 
   FutureOr<void> _onChangeReminders(
@@ -89,7 +90,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
           .toList();
       myTasks.sort((a, b) => a.date!.compareTo(b.date!));
       int startOfWeek = day - now.weekday;
-      int endOfWeek = startOfWeek + 6;
+      int endOfWeek = startOfWeek + 7;
       week = dates.getRange(startOfWeek, endOfWeek).toList();
 
       emit(state.copyWith(
@@ -490,5 +491,13 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
       oldDeadlineForTask: DateTime.now(),
       newDeadlineForTask: DateTime.now(),
     ));
+  }
+
+  FutureOr<void> _onChangeSideSwipe(
+      ChangeSideSwipe event, Emitter<RemindersState> emit) {
+    emit(state.copyWith(
+        sideSwipe: state.sideSwipe == SideSwipe.left
+            ? SideSwipe.right
+            : SideSwipe.left));
   }
 }

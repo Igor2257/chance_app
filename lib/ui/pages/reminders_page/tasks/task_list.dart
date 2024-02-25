@@ -1,7 +1,6 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/model/tasks_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,9 +14,13 @@ class TaskList extends StatelessWidget {
         builder: (context, state) {
       List<TaskModel> myTasks = List.from(state.myTasks);
       if(myTasks.isEmpty){
-        return  const Text(
-          "Додайте завдання",
-          style: TextStyle(fontSize: 24),
+        return  const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Text(
+            "Додайте завдання",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 24),
+          ),
         );
       }
       return Column(
@@ -64,7 +67,7 @@ class TaskList extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: myTasks.length,
                         shrinkWrap: true,
-                        physics: BouncingScrollPhysics(),
+                        physics: const BouncingScrollPhysics(),
                         itemBuilder: (context, position) {
                           bool isSelected = myTasks[position].isDone;
                           TaskModel task = myTasks[position];

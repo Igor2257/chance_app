@@ -27,6 +27,7 @@ class RemindersState {
   ];
   List<TaskModel> myTasks, tasksForToday;
   bool isLoading;
+  SideSwipe sideSwipe;
 
   RemindersState({
     this.reminders = Reminders.empty,
@@ -53,6 +54,7 @@ class RemindersState {
     this.oldNotificationsBefore = NotificationsBefore.no,
     this.newNotificationsBefore = NotificationsBefore.no,
     this.taskModel,
+    this.sideSwipe = SideSwipe.left,
   });
 
   RemindersState copyWith({
@@ -79,6 +81,7 @@ class RemindersState {
     List<TaskModel>? myTasks,
     tasksForToday,
     bool? isLoading,
+    SideSwipe? sideSwipe,
   }) {
     return RemindersState(
       reminders: reminders ?? this.reminders,
@@ -112,6 +115,7 @@ class RemindersState {
       myTasks: myTasks ?? this.myTasks,
       tasksForToday: tasksForToday ?? this.tasksForToday,
       isLoading: isLoading ?? this.isLoading,
+      sideSwipe: sideSwipe ?? this.sideSwipe,
     );
   }
 
@@ -140,6 +144,7 @@ class RemindersState {
       myTasks: [],
       tasksForToday: [],
       isLoading: true,
+      sideSwipe: SideSwipe.left,
     );
   }
 }

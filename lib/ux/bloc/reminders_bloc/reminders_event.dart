@@ -110,3 +110,6 @@ class SaveTask extends RemindersEvent{
 
 
 }
+class ChangeSideSwipe extends RemindersEvent{
+  ChangeSideSwipe();
+}
