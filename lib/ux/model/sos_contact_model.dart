@@ -5,7 +5,7 @@ part 'sos_contact_model.freezed.dart';
 part 'sos_contact_model.g.dart';
 
 @freezed
-@HiveType(typeId: 1)
+@HiveType(typeId: 2)
 class SosContactModel with _$SosContactModel {
   factory SosContactModel({
     @HiveField(1) required String name,

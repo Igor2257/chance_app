@@ -1,7 +1,7 @@
 import 'package:chance_app/firebase_options.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/pages/add_medicine_page/add_medicine_page.dart';
 import 'package:chance_app/ui/pages/main_page/main_page.dart';
-import 'package:chance_app/ui/pages/medicines_page/medicines_page.dart';
 import 'package:chance_app/ui/pages/menu/menu_page.dart';
 import 'package:chance_app/ui/pages/onboarding/onboarding_page.dart';
 import 'package:chance_app/ui/pages/onboarding/onboarding_tutorial.dart';
@@ -18,8 +18,8 @@ import 'package:chance_app/ui/pages/sos_page/add_contact_screen.dart';
 import 'package:chance_app/ui/pages/sos_page/add_group_screen.dart';
 import 'package:chance_app/ui/pages/sos_page/delete_contact_screen.dart';
 import 'package:chance_app/ui/pages/sos_page/main_page_sos.dart';
+import 'package:chance_app/ux/bloc/add_medicine_bloc/add_medicine_bloc.dart';
 import 'package:chance_app/ux/bloc/login_bloc/login_bloc.dart';
-import 'package:chance_app/ux/bloc/medicines_bloc/medicines_bloc.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
@@ -167,21 +167,24 @@ class MyAppState extends State<MyApp> {
                             ],
                             initialRoute: widget.route,
                             routes: {
-                              "/": (context) => const MainPage(),
-                              "/signinup": (context) => const SignInUpPage(),
-                              "/registration": (context) =>
-                                  const RegistrationPage(),
-                              "/login": (context) => LoginPage(),
+                            "/": (context) => const MainPage(),
+                            "/signinup": (context) => const SignInUpPage(),
+                            "/registration": (context) =>
+                                const RegistrationPage(),
+                            "/login": (context) => LoginPage(),
                             "/enter_code": (context) =>
                                 const EnterCodeForRegister(),
                             "/subscription_page": (context) =>
                                 const SubscriptionPage(),
-                            "/reminders": (context) => const RemindersPage(),
+                            "/reminders": (context) => BlocProvider(
+                                  create: (context) => RemindersBloc(),
+                                  child: const RemindersPage(),
+                                ),
                             "/date_picker_for_tasks": (context) =>
                                 const CalendarTaskPage(),
                             "/medicines": (context) => BlocProvider(
-                                  create: (context) => MedicinesBloc(),
-                                  child: const MedicinesPage(),
+                                  create: (context) => AddMedicineBloc(),
+                                  child: const AddMedicinePage(),
                                 ),
                             "/reset_password": (context) =>
                                 const ResetPassword(),

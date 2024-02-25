@@ -76,8 +76,8 @@ class _RegistrationPageState extends State<RegistrationPage>
                 child: PageView(
                   controller: state.pageController,
                   physics: const NeverScrollableScrollPhysics(),
-                  children: <Widget>[
-                    const FirstSubPage(),
+                  children: const <Widget>[
+                    FirstSubPage(),
                     SecondSubPage(),
                     ThirdSubPage(),
                   ],
