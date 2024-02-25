@@ -30,7 +30,7 @@ if (flutterRoot == null) {
 
 android {
     namespace "com.chance_app.chance_app"
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 33
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -74,8 +74,8 @@ flutter {
 }
 
 dependencies {
-    implementation 'androidx.window:window:1.2.0'
-    implementation 'androidx.window:window-java:1.2.0'
+    implementation 'androidx.window:window:1.0.0'
+    implementation 'androidx.window:window-java:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.gms:google-services:4.3.13'
     implementation 'com.google.firebase:firebase-bom:24.6.0'
