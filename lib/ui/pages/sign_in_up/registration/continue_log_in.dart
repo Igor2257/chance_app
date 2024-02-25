@@ -15,7 +15,7 @@ class ContinueLogIn extends StatefulWidget {
   });
 
   final String name;
-  final String firstText, secondText;
+  final TextEditingController firstText, secondText;
   final FocusNode firstFocusNode, lastFocusNode;
 
   @override
@@ -33,12 +33,15 @@ class _ContinueLogInState extends State<ContinueLogIn> {
               onPress: () {
                 widget.firstFocusNode.unfocus();
                 widget.lastFocusNode.unfocus();
+                print("widget.firstText");
+                print(widget.firstText.text);
+                print(widget.secondText.text);
                 if (!state.isLoading) {
                   BlocProvider.of<RegistrationBloc>(context).add(
                       IncreaseCurrentStep(
                           context: context,
-                          first: widget.firstText,
-                          second: widget.secondText));
+                          first: widget.firstText.text,
+                          second: widget.secondText.text));
                 }
               },
               color: state.isLoading ? darkNeutral1000 : primary1000,

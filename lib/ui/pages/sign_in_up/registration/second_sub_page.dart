@@ -13,14 +13,14 @@ class _SecondSubPageState extends State<SecondSubPage> {
   final FocusNode phoneFocusNode = FocusNode(), emailFocusNode = FocusNode();
   final TextEditingController phoneEditingController = TextEditingController(),
       emailEditingController = TextEditingController();
-  @override
-  void dispose() {
-    phoneFocusNode.dispose();
-    phoneEditingController.dispose();
-    emailFocusNode.dispose();
-    emailEditingController.dispose();
-    super.dispose();
-  }
+  //@override
+  //void dispose() {
+  //  phoneFocusNode.dispose();
+  //  phoneEditingController.dispose();
+  //  emailFocusNode.dispose();
+  //  emailEditingController.dispose();
+  //  super.dispose();
+  //}
   @override
   Widget build(BuildContext context) {
     return  SizedBox(
@@ -61,8 +61,8 @@ class _SecondSubPageState extends State<SecondSubPage> {
         const Spacer(),
         ContinueLogIn(
           name: "Продовжити",
-          firstText: phoneEditingController.text,
-          secondText: emailEditingController.text,
+          firstText: phoneEditingController,
+          secondText: emailEditingController,
           firstFocusNode: phoneFocusNode,
           lastFocusNode: emailFocusNode,
         ),

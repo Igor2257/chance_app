@@ -206,7 +206,6 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         (month == DateTime.now().month && year == DateTime.now().year)
             ? nowDay - DateTime.now().weekday
             : 0;
-    print(startOfWeek);
     int endOfWeek = startOfWeek + 7;
     int daysLeftOfMonth = dates.length >= endOfWeek ? endOfWeek : dates.length;
     week = dates.getRange(startOfWeek, daysLeftOfMonth).toList();
@@ -423,7 +422,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         (element) => element.id == event.id && element.isRemoved == false);
     TaskModel myTask = myTasks[index];
     myTask = myTask.copyWith(isDone: !myTask.isDone);
-    print(myTask);
+
     await repository
         .updateTask(isDone: myTask.isDone, id: myTask.id)
         .then((value) {

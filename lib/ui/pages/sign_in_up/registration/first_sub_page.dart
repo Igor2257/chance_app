@@ -20,10 +20,10 @@ class _FirstSubPageState extends State<FirstSubPage> {
       lastNameEditingController = TextEditingController();
 @override
   void dispose() {
-  firstNameFocusNode.dispose();
-  lastNameFocusNode.dispose();
-  firstNameEditingController.dispose();
-  lastNameEditingController.dispose();
+  //firstNameFocusNode.dispose();
+  //lastNameFocusNode.dispose();
+  //firstNameEditingController.dispose();
+  //lastNameEditingController.dispose();
     super.dispose();
   }
   @override
@@ -65,8 +65,8 @@ class _FirstSubPageState extends State<FirstSubPage> {
         const Spacer(),
         ContinueLogIn(
           name: "Продовжити",
-          firstText: lastNameEditingController.text,
-          secondText: firstNameEditingController.text,
+          firstText: lastNameEditingController,
+          secondText: firstNameEditingController,
           firstFocusNode: firstNameFocusNode,
           lastFocusNode: lastNameFocusNode,
         ),

@@ -17,14 +17,14 @@ class _ThirdSubPageState extends State<ThirdSubPage> {
           TextEditingController(),
       lastPasswordEditingController = TextEditingController();
 
-  @override
-  void dispose() {
-    lastPasswordEditingController.dispose();
-    firstPasswordEditingController.dispose();
-    firstPasswordFocusNode.dispose();
-    secondPasswordFocusNode.dispose();
-    super.dispose();
-  }
+  //@override
+  //void dispose() {
+  //  lastPasswordEditingController.dispose();
+  //  firstPasswordEditingController.dispose();
+  //  firstPasswordFocusNode.dispose();
+  //  secondPasswordFocusNode.dispose();
+  //  super.dispose();
+  //}
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +69,8 @@ class _ThirdSubPageState extends State<ThirdSubPage> {
             ),
             ContinueLogIn(
               name: "Продовжити",
-              firstText: firstPasswordEditingController.text,
-              secondText: lastPasswordEditingController.text,
+              firstText: firstPasswordEditingController,
+              secondText: lastPasswordEditingController,
               firstFocusNode: firstPasswordFocusNode,
               lastFocusNode: secondPasswordFocusNode,
             ),

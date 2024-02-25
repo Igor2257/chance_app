@@ -63,12 +63,12 @@ class _InputRegisterLayoutState extends State<InputRegisterLayout> {
 
     super.initState();
   }
-  @override
-  void dispose() {
-    textEditingController.dispose();
-    focusNode.dispose();
-    super.dispose();
-  }
+  //@override
+  //void dispose() {
+  //  textEditingController.dispose();
+  //  focusNode.dispose();
+  //  super.dispose();
+  //}
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(

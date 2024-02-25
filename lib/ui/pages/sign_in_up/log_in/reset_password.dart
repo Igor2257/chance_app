@@ -20,8 +20,8 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   @override
   void dispose() {
-    editingController.dispose();
-    focusNode.dispose();
+    //editingController.dispose();
+    //focusNode.dispose();
     super.dispose();
   }
 
