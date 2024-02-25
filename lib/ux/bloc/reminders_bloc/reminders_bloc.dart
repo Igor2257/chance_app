@@ -45,9 +45,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
       List<TaskModel> myTasks, int day, int month, int year) {
     for (int i = 0; i < myTasks.length; i++) {
       DateTime taskDate = myTasks[i].date!;
-      if (taskDate.day == day &&
-          taskDate.month == month &&
-          taskDate.year == year) {
+      if (DateUtils.isSameDay(taskDate, DateTime(year, month, day))) {
         return true;
       }
     }
@@ -91,7 +89,25 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
       myTasks.sort((a, b) => a.date!.compareTo(b.date!));
       int startOfWeek = day - now.weekday;
       int endOfWeek = startOfWeek + 7;
-      week = dates.getRange(startOfWeek, endOfWeek).toList();
+      int daysLeftOfMonth=dates.length>=endOfWeek?endOfWeek:dates.length;
+      week = dates.getRange(startOfWeek, daysLeftOfMonth).toList();
+      print(7-week.length);
+      for(int i=0;i<7-week.length;i++){
+        DateTime date = DateTime(year, month+1, i+1);
+        String weekDay = getWeekdayName(date.weekday);
+        week.add({
+          "weekDay": weekDay,
+          "number": ((i+1).toString()).padLeft(2, "0"),
+          "month": month+1,
+          "year": year,
+          "isSelected": day == i+1 ||
+              (state.selectedDate != null &&
+                  (state.selectedDate!.day == i+1 &&
+                      state.selectedDate!.month == month+1 &&
+                      state.selectedDate!.year == year)),
+          "hasTasks": checkIfDayHasTask(myTasks, i+1, month+1, year),
+        });
+      }
 
       emit(state.copyWith(
         days: dates,
@@ -188,7 +204,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         (month == DateTime.now().month && year == DateTime.now().year)
             ? DateTime.now().day - DateTime.now().weekday + 1
             : 1;
-    int endOfWeek = startOfWeek + 6;
+    int endOfWeek = startOfWeek + 7;
     for (int i = startOfWeek; i <= endOfWeek; i++) {
       if (i <= 0 || i > DateTime(year, month + 1, 0).day) {
         continue;

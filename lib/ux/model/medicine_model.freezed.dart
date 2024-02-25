@@ -39,12 +39,8 @@ mixin _$MedicineModel {
   @HiveField(8)
   MedicineInstruction? get instruction =>
       throw _privateConstructorUsedError; //@HiveField(3) @Default("no") String notificationsBefore,
-  @HiveField(9)
-  bool get isDone => throw _privateConstructorUsedError;
   @HiveField(10)
   String get userId => throw _privateConstructorUsedError;
-  @HiveField(11)
-  bool get isNotificationSent => throw _privateConstructorUsedError;
   @HiveField(12)
   bool get isSentToDB => throw _privateConstructorUsedError;
   @HiveField(13)
@@ -72,9 +68,7 @@ abstract class $MedicineModelCopyWith<$Res> {
       @HiveField(6) List<int> weekdays,
       @HiveField(7) Map<int, int> doses,
       @HiveField(8) MedicineInstruction? instruction,
-      @HiveField(9) bool isDone,
       @HiveField(10) String userId,
-      @HiveField(11) bool isNotificationSent,
       @HiveField(12) bool isSentToDB,
       @HiveField(13) bool isRemoved});
 }
@@ -101,9 +95,7 @@ class _$MedicineModelCopyWithImpl<$Res, $Val extends MedicineModel>
     Object? weekdays = null,
     Object? doses = null,
     Object? instruction = freezed,
-    Object? isDone = null,
     Object? userId = null,
-    Object? isNotificationSent = null,
     Object? isSentToDB = null,
     Object? isRemoved = null,
   }) {
@@ -144,18 +136,10 @@ class _$MedicineModelCopyWithImpl<$Res, $Val extends MedicineModel>
           ? _value.instruction
           : instruction // ignore: cast_nullable_to_non_nullable
               as MedicineInstruction?,
-      isDone: null == isDone
-          ? _value.isDone
-          : isDone // ignore: cast_nullable_to_non_nullable
-              as bool,
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String,
-      isNotificationSent: null == isNotificationSent
-          ? _value.isNotificationSent
-          : isNotificationSent // ignore: cast_nullable_to_non_nullable
-              as bool,
       isSentToDB: null == isSentToDB
           ? _value.isSentToDB
           : isSentToDB // ignore: cast_nullable_to_non_nullable
@@ -186,9 +170,7 @@ abstract class _$$MedicineModelImplCopyWith<$Res>
       @HiveField(6) List<int> weekdays,
       @HiveField(7) Map<int, int> doses,
       @HiveField(8) MedicineInstruction? instruction,
-      @HiveField(9) bool isDone,
       @HiveField(10) String userId,
-      @HiveField(11) bool isNotificationSent,
       @HiveField(12) bool isSentToDB,
       @HiveField(13) bool isRemoved});
 }
@@ -213,9 +195,7 @@ class __$$MedicineModelImplCopyWithImpl<$Res>
     Object? weekdays = null,
     Object? doses = null,
     Object? instruction = freezed,
-    Object? isDone = null,
     Object? userId = null,
-    Object? isNotificationSent = null,
     Object? isSentToDB = null,
     Object? isRemoved = null,
   }) {
@@ -256,18 +236,10 @@ class __$$MedicineModelImplCopyWithImpl<$Res>
           ? _value.instruction
           : instruction // ignore: cast_nullable_to_non_nullable
               as MedicineInstruction?,
-      isDone: null == isDone
-          ? _value.isDone
-          : isDone // ignore: cast_nullable_to_non_nullable
-              as bool,
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String,
-      isNotificationSent: null == isNotificationSent
-          ? _value.isNotificationSent
-          : isNotificationSent // ignore: cast_nullable_to_non_nullable
-              as bool,
       isSentToDB: null == isSentToDB
           ? _value.isSentToDB
           : isSentToDB // ignore: cast_nullable_to_non_nullable
@@ -293,9 +265,7 @@ class _$MedicineModelImpl implements _MedicineModel {
       @HiveField(6) final List<int> weekdays = const [],
       @HiveField(7) final Map<int, int> doses = const {},
       @HiveField(8) this.instruction,
-      @HiveField(9) this.isDone = false,
       @HiveField(10) this.userId = "",
-      @HiveField(11) this.isNotificationSent = false,
       @HiveField(12) this.isSentToDB = false,
       @HiveField(13) this.isRemoved = false})
       : _reminderIds = reminderIds,
@@ -355,16 +325,8 @@ class _$MedicineModelImpl implements _MedicineModel {
 //@HiveField(3) @Default("no") String notificationsBefore,
   @override
   @JsonKey()
-  @HiveField(9)
-  final bool isDone;
-  @override
-  @JsonKey()
   @HiveField(10)
   final String userId;
-  @override
-  @JsonKey()
-  @HiveField(11)
-  final bool isNotificationSent;
   @override
   @JsonKey()
   @HiveField(12)
@@ -376,7 +338,7 @@ class _$MedicineModelImpl implements _MedicineModel {
 
   @override
   String toString() {
-    return 'MedicineModel(id: $id, reminderIds: $reminderIds, name: $name, type: $type, periodicity: $periodicity, startDate: $startDate, weekdays: $weekdays, doses: $doses, instruction: $instruction, isDone: $isDone, userId: $userId, isNotificationSent: $isNotificationSent, isSentToDB: $isSentToDB, isRemoved: $isRemoved)';
+    return 'MedicineModel(id: $id, reminderIds: $reminderIds, name: $name, type: $type, periodicity: $periodicity, startDate: $startDate, weekdays: $weekdays, doses: $doses, instruction: $instruction, userId: $userId, isSentToDB: $isSentToDB, isRemoved: $isRemoved)';
   }
 
   @override
@@ -397,10 +359,7 @@ class _$MedicineModelImpl implements _MedicineModel {
             const DeepCollectionEquality().equals(other._doses, _doses) &&
             (identical(other.instruction, instruction) ||
                 other.instruction == instruction) &&
-            (identical(other.isDone, isDone) || other.isDone == isDone) &&
             (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.isNotificationSent, isNotificationSent) ||
-                other.isNotificationSent == isNotificationSent) &&
             (identical(other.isSentToDB, isSentToDB) ||
                 other.isSentToDB == isSentToDB) &&
             (identical(other.isRemoved, isRemoved) ||
@@ -420,9 +379,7 @@ class _$MedicineModelImpl implements _MedicineModel {
       const DeepCollectionEquality().hash(_weekdays),
       const DeepCollectionEquality().hash(_doses),
       instruction,
-      isDone,
       userId,
-      isNotificationSent,
       isSentToDB,
       isRemoved);
 
@@ -451,9 +408,7 @@ abstract class _MedicineModel implements MedicineModel {
       @HiveField(6) final List<int> weekdays,
       @HiveField(7) final Map<int, int> doses,
       @HiveField(8) final MedicineInstruction? instruction,
-      @HiveField(9) final bool isDone,
       @HiveField(10) final String userId,
-      @HiveField(11) final bool isNotificationSent,
       @HiveField(12) final bool isSentToDB,
       @HiveField(13) final bool isRemoved}) = _$MedicineModelImpl;
 
@@ -488,14 +443,8 @@ abstract class _MedicineModel implements MedicineModel {
   @HiveField(8)
   MedicineInstruction? get instruction;
   @override //@HiveField(3) @Default("no") String notificationsBefore,
-  @HiveField(9)
-  bool get isDone;
-  @override
   @HiveField(10)
   String get userId;
-  @override
-  @HiveField(11)
-  bool get isNotificationSent;
   @override
   @HiveField(12)
   bool get isSentToDB;

@@ -26,9 +26,7 @@ class MedicineModelAdapter extends TypeAdapter<MedicineModel> {
       weekdays: (fields[6] as List).cast<int>(),
       doses: (fields[7] as Map).cast<int, int>(),
       instruction: fields[8] as MedicineInstruction?,
-      isDone: fields[9] as bool,
       userId: fields[10] as String,
-      isNotificationSent: fields[11] as bool,
       isSentToDB: fields[12] as bool,
       isRemoved: fields[13] as bool,
     );
@@ -37,7 +35,7 @@ class MedicineModelAdapter extends TypeAdapter<MedicineModel> {
   @override
   void write(BinaryWriter writer, MedicineModel obj) {
     writer
-      ..writeByte(14)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -56,12 +54,8 @@ class MedicineModelAdapter extends TypeAdapter<MedicineModel> {
       ..write(obj.doses)
       ..writeByte(8)
       ..write(obj.instruction)
-      ..writeByte(9)
-      ..write(obj.isDone)
       ..writeByte(10)
       ..write(obj.userId)
-      ..writeByte(11)
-      ..write(obj.isNotificationSent)
       ..writeByte(12)
       ..write(obj.isSentToDB)
       ..writeByte(13)
@@ -101,9 +95,7 @@ _$MedicineModelImpl _$$MedicineModelImplFromJson(Map<String, dynamic> json) =>
           const {},
       instruction: $enumDecodeNullable(
           _$MedicineInstructionEnumMap, json['instruction']),
-      isDone: json['isDone'] as bool? ?? false,
       userId: json['userId'] as String? ?? "",
-      isNotificationSent: json['isNotificationSent'] as bool? ?? false,
       isSentToDB: json['isSentToDB'] as bool? ?? false,
       isRemoved: json['isRemoved'] as bool? ?? false,
     );
@@ -119,9 +111,7 @@ Map<String, dynamic> _$$MedicineModelImplToJson(_$MedicineModelImpl instance) =>
       'weekdays': instance.weekdays,
       'doses': instance.doses.map((k, e) => MapEntry(k.toString(), e)),
       'instruction': _$MedicineInstructionEnumMap[instance.instruction],
-      'isDone': instance.isDone,
       'userId': instance.userId,
-      'isNotificationSent': instance.isNotificationSent,
       'isSentToDB': instance.isSentToDB,
       'isRemoved': instance.isRemoved,
     };

@@ -21,9 +21,7 @@ class MedicineModel with _$MedicineModel {
     @HiveField(7) @Default({}) Map<int, int> doses,
     @HiveField(8) MedicineInstruction? instruction,
     //@HiveField(3) @Default("no") String notificationsBefore,
-    @HiveField(9) @Default(false) bool isDone,
     @HiveField(10) @Default("") String userId,
-    @HiveField(11) @Default(false) bool isNotificationSent,
     @HiveField(12) @Default(false) bool isSentToDB,
     @HiveField(13) @Default(false) bool isRemoved,
   }) = _MedicineModel;
