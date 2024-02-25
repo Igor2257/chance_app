@@ -52,8 +52,12 @@ class _MainPageState extends State<MainPage> {
   _loadFCM() async {
     if (!kIsWeb) {
       _androidNotificationChannel = const AndroidNotificationChannel(
-          "myTasks", 'Завдання',
-          importance: Importance.high, enableVibration: true, playSound: true);
+        "myTasks",
+        'Завдання',
+        importance: Importance.high,
+        enableVibration: true,
+        playSound: true,
+      );
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
@@ -220,6 +224,7 @@ class _MainPageState extends State<MainPage> {
           remoteMessage.data["type"] == "task" ? "Завдання" : "",
           remoteMessage.data["message"].toString(),
           NotificationDetails(
+            iOS: const DarwinNotificationDetails(),
             android: AndroidNotificationDetails(_androidNotificationChannel.id,
                 _androidNotificationChannel.name,
                 icon: '@drawable/logo',

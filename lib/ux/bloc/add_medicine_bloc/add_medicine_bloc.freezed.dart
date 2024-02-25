@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'medicines_bloc.dart';
+part of 'add_medicine_bloc.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,13 +15,12 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$MedicinesEvent {
+mixin _$AddMedicineEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String name) setName,
     required TResult Function(MedicineType type) setType,
     required TResult Function(Periodicity periodicity) setPeriodicity,
-    required TResult Function(DayPeriodicity periodicity) setDayPeriodicity,
     required TResult Function(DateTime startDate) setStartDate,
     required TResult Function(int weekday) addWeekday,
     required TResult Function(int weekday) removeWeekday,
@@ -37,7 +36,6 @@ mixin _$MedicinesEvent {
     TResult? Function(String name)? setName,
     TResult? Function(MedicineType type)? setType,
     TResult? Function(Periodicity periodicity)? setPeriodicity,
-    TResult? Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult? Function(DateTime startDate)? setStartDate,
     TResult? Function(int weekday)? addWeekday,
     TResult? Function(int weekday)? removeWeekday,
@@ -52,7 +50,6 @@ mixin _$MedicinesEvent {
     TResult Function(String name)? setName,
     TResult Function(MedicineType type)? setType,
     TResult Function(Periodicity periodicity)? setPeriodicity,
-    TResult Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult Function(DateTime startDate)? setStartDate,
     TResult Function(int weekday)? addWeekday,
     TResult Function(int weekday)? removeWeekday,
@@ -68,7 +65,6 @@ mixin _$MedicinesEvent {
     required TResult Function(SetName value) setName,
     required TResult Function(SetType value) setType,
     required TResult Function(SetPeriodicity value) setPeriodicity,
-    required TResult Function(SetDayPeriodicity value) setDayPeriodicity,
     required TResult Function(SetStartDate value) setStartDate,
     required TResult Function(AddWeekday value) addWeekday,
     required TResult Function(RemoveWeekday value) removeWeekday,
@@ -83,7 +79,6 @@ mixin _$MedicinesEvent {
     TResult? Function(SetName value)? setName,
     TResult? Function(SetType value)? setType,
     TResult? Function(SetPeriodicity value)? setPeriodicity,
-    TResult? Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult? Function(SetStartDate value)? setStartDate,
     TResult? Function(AddWeekday value)? addWeekday,
     TResult? Function(RemoveWeekday value)? removeWeekday,
@@ -98,7 +93,6 @@ mixin _$MedicinesEvent {
     TResult Function(SetName value)? setName,
     TResult Function(SetType value)? setType,
     TResult Function(SetPeriodicity value)? setPeriodicity,
-    TResult Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult Function(SetStartDate value)? setStartDate,
     TResult Function(AddWeekday value)? addWeekday,
     TResult Function(RemoveWeekday value)? removeWeekday,
@@ -112,16 +106,16 @@ mixin _$MedicinesEvent {
 }
 
 /// @nodoc
-abstract class $MedicinesEventCopyWith<$Res> {
-  factory $MedicinesEventCopyWith(
-          MedicinesEvent value, $Res Function(MedicinesEvent) then) =
-      _$MedicinesEventCopyWithImpl<$Res, MedicinesEvent>;
+abstract class $AddMedicineEventCopyWith<$Res> {
+  factory $AddMedicineEventCopyWith(
+          AddMedicineEvent value, $Res Function(AddMedicineEvent) then) =
+      _$AddMedicineEventCopyWithImpl<$Res, AddMedicineEvent>;
 }
 
 /// @nodoc
-class _$MedicinesEventCopyWithImpl<$Res, $Val extends MedicinesEvent>
-    implements $MedicinesEventCopyWith<$Res> {
-  _$MedicinesEventCopyWithImpl(this._value, this._then);
+class _$AddMedicineEventCopyWithImpl<$Res, $Val extends AddMedicineEvent>
+    implements $AddMedicineEventCopyWith<$Res> {
+  _$AddMedicineEventCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -140,7 +134,7 @@ abstract class _$$SetNameImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$SetNameImplCopyWithImpl<$Res>
-    extends _$MedicinesEventCopyWithImpl<$Res, _$SetNameImpl>
+    extends _$AddMedicineEventCopyWithImpl<$Res, _$SetNameImpl>
     implements _$$SetNameImplCopyWith<$Res> {
   __$$SetNameImplCopyWithImpl(
       _$SetNameImpl _value, $Res Function(_$SetNameImpl) _then)
@@ -170,7 +164,7 @@ class _$SetNameImpl implements SetName {
 
   @override
   String toString() {
-    return 'MedicinesEvent.setName(name: $name)';
+    return 'AddMedicineEvent.setName(name: $name)';
   }
 
   @override
@@ -196,7 +190,6 @@ class _$SetNameImpl implements SetName {
     required TResult Function(String name) setName,
     required TResult Function(MedicineType type) setType,
     required TResult Function(Periodicity periodicity) setPeriodicity,
-    required TResult Function(DayPeriodicity periodicity) setDayPeriodicity,
     required TResult Function(DateTime startDate) setStartDate,
     required TResult Function(int weekday) addWeekday,
     required TResult Function(int weekday) removeWeekday,
@@ -215,7 +208,6 @@ class _$SetNameImpl implements SetName {
     TResult? Function(String name)? setName,
     TResult? Function(MedicineType type)? setType,
     TResult? Function(Periodicity periodicity)? setPeriodicity,
-    TResult? Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult? Function(DateTime startDate)? setStartDate,
     TResult? Function(int weekday)? addWeekday,
     TResult? Function(int weekday)? removeWeekday,
@@ -233,7 +225,6 @@ class _$SetNameImpl implements SetName {
     TResult Function(String name)? setName,
     TResult Function(MedicineType type)? setType,
     TResult Function(Periodicity periodicity)? setPeriodicity,
-    TResult Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult Function(DateTime startDate)? setStartDate,
     TResult Function(int weekday)? addWeekday,
     TResult Function(int weekday)? removeWeekday,
@@ -255,7 +246,6 @@ class _$SetNameImpl implements SetName {
     required TResult Function(SetName value) setName,
     required TResult Function(SetType value) setType,
     required TResult Function(SetPeriodicity value) setPeriodicity,
-    required TResult Function(SetDayPeriodicity value) setDayPeriodicity,
     required TResult Function(SetStartDate value) setStartDate,
     required TResult Function(AddWeekday value) addWeekday,
     required TResult Function(RemoveWeekday value) removeWeekday,
@@ -273,7 +263,6 @@ class _$SetNameImpl implements SetName {
     TResult? Function(SetName value)? setName,
     TResult? Function(SetType value)? setType,
     TResult? Function(SetPeriodicity value)? setPeriodicity,
-    TResult? Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult? Function(SetStartDate value)? setStartDate,
     TResult? Function(AddWeekday value)? addWeekday,
     TResult? Function(RemoveWeekday value)? removeWeekday,
@@ -291,7 +280,6 @@ class _$SetNameImpl implements SetName {
     TResult Function(SetName value)? setName,
     TResult Function(SetType value)? setType,
     TResult Function(SetPeriodicity value)? setPeriodicity,
-    TResult Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult Function(SetStartDate value)? setStartDate,
     TResult Function(AddWeekday value)? addWeekday,
     TResult Function(RemoveWeekday value)? removeWeekday,
@@ -308,7 +296,7 @@ class _$SetNameImpl implements SetName {
   }
 }
 
-abstract class SetName implements MedicinesEvent {
+abstract class SetName implements AddMedicineEvent {
   const factory SetName(final String name) = _$SetNameImpl;
 
   String get name;
@@ -328,7 +316,7 @@ abstract class _$$SetTypeImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$SetTypeImplCopyWithImpl<$Res>
-    extends _$MedicinesEventCopyWithImpl<$Res, _$SetTypeImpl>
+    extends _$AddMedicineEventCopyWithImpl<$Res, _$SetTypeImpl>
     implements _$$SetTypeImplCopyWith<$Res> {
   __$$SetTypeImplCopyWithImpl(
       _$SetTypeImpl _value, $Res Function(_$SetTypeImpl) _then)
@@ -358,7 +346,7 @@ class _$SetTypeImpl implements SetType {
 
   @override
   String toString() {
-    return 'MedicinesEvent.setType(type: $type)';
+    return 'AddMedicineEvent.setType(type: $type)';
   }
 
   @override
@@ -384,7 +372,6 @@ class _$SetTypeImpl implements SetType {
     required TResult Function(String name) setName,
     required TResult Function(MedicineType type) setType,
     required TResult Function(Periodicity periodicity) setPeriodicity,
-    required TResult Function(DayPeriodicity periodicity) setDayPeriodicity,
     required TResult Function(DateTime startDate) setStartDate,
     required TResult Function(int weekday) addWeekday,
     required TResult Function(int weekday) removeWeekday,
@@ -403,7 +390,6 @@ class _$SetTypeImpl implements SetType {
     TResult? Function(String name)? setName,
     TResult? Function(MedicineType type)? setType,
     TResult? Function(Periodicity periodicity)? setPeriodicity,
-    TResult? Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult? Function(DateTime startDate)? setStartDate,
     TResult? Function(int weekday)? addWeekday,
     TResult? Function(int weekday)? removeWeekday,
@@ -421,7 +407,6 @@ class _$SetTypeImpl implements SetType {
     TResult Function(String name)? setName,
     TResult Function(MedicineType type)? setType,
     TResult Function(Periodicity periodicity)? setPeriodicity,
-    TResult Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult Function(DateTime startDate)? setStartDate,
     TResult Function(int weekday)? addWeekday,
     TResult Function(int weekday)? removeWeekday,
@@ -443,7 +428,6 @@ class _$SetTypeImpl implements SetType {
     required TResult Function(SetName value) setName,
     required TResult Function(SetType value) setType,
     required TResult Function(SetPeriodicity value) setPeriodicity,
-    required TResult Function(SetDayPeriodicity value) setDayPeriodicity,
     required TResult Function(SetStartDate value) setStartDate,
     required TResult Function(AddWeekday value) addWeekday,
     required TResult Function(RemoveWeekday value) removeWeekday,
@@ -461,7 +445,6 @@ class _$SetTypeImpl implements SetType {
     TResult? Function(SetName value)? setName,
     TResult? Function(SetType value)? setType,
     TResult? Function(SetPeriodicity value)? setPeriodicity,
-    TResult? Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult? Function(SetStartDate value)? setStartDate,
     TResult? Function(AddWeekday value)? addWeekday,
     TResult? Function(RemoveWeekday value)? removeWeekday,
@@ -479,7 +462,6 @@ class _$SetTypeImpl implements SetType {
     TResult Function(SetName value)? setName,
     TResult Function(SetType value)? setType,
     TResult Function(SetPeriodicity value)? setPeriodicity,
-    TResult Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult Function(SetStartDate value)? setStartDate,
     TResult Function(AddWeekday value)? addWeekday,
     TResult Function(RemoveWeekday value)? removeWeekday,
@@ -496,7 +478,7 @@ class _$SetTypeImpl implements SetType {
   }
 }
 
-abstract class SetType implements MedicinesEvent {
+abstract class SetType implements AddMedicineEvent {
   const factory SetType(final MedicineType type) = _$SetTypeImpl;
 
   MedicineType get type;
@@ -516,7 +498,7 @@ abstract class _$$SetPeriodicityImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$SetPeriodicityImplCopyWithImpl<$Res>
-    extends _$MedicinesEventCopyWithImpl<$Res, _$SetPeriodicityImpl>
+    extends _$AddMedicineEventCopyWithImpl<$Res, _$SetPeriodicityImpl>
     implements _$$SetPeriodicityImplCopyWith<$Res> {
   __$$SetPeriodicityImplCopyWithImpl(
       _$SetPeriodicityImpl _value, $Res Function(_$SetPeriodicityImpl) _then)
@@ -546,7 +528,7 @@ class _$SetPeriodicityImpl implements SetPeriodicity {
 
   @override
   String toString() {
-    return 'MedicinesEvent.setPeriodicity(periodicity: $periodicity)';
+    return 'AddMedicineEvent.setPeriodicity(periodicity: $periodicity)';
   }
 
   @override
@@ -574,7 +556,6 @@ class _$SetPeriodicityImpl implements SetPeriodicity {
     required TResult Function(String name) setName,
     required TResult Function(MedicineType type) setType,
     required TResult Function(Periodicity periodicity) setPeriodicity,
-    required TResult Function(DayPeriodicity periodicity) setDayPeriodicity,
     required TResult Function(DateTime startDate) setStartDate,
     required TResult Function(int weekday) addWeekday,
     required TResult Function(int weekday) removeWeekday,
@@ -593,7 +574,6 @@ class _$SetPeriodicityImpl implements SetPeriodicity {
     TResult? Function(String name)? setName,
     TResult? Function(MedicineType type)? setType,
     TResult? Function(Periodicity periodicity)? setPeriodicity,
-    TResult? Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult? Function(DateTime startDate)? setStartDate,
     TResult? Function(int weekday)? addWeekday,
     TResult? Function(int weekday)? removeWeekday,
@@ -611,7 +591,6 @@ class _$SetPeriodicityImpl implements SetPeriodicity {
     TResult Function(String name)? setName,
     TResult Function(MedicineType type)? setType,
     TResult Function(Periodicity periodicity)? setPeriodicity,
-    TResult Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult Function(DateTime startDate)? setStartDate,
     TResult Function(int weekday)? addWeekday,
     TResult Function(int weekday)? removeWeekday,
@@ -633,7 +612,6 @@ class _$SetPeriodicityImpl implements SetPeriodicity {
     required TResult Function(SetName value) setName,
     required TResult Function(SetType value) setType,
     required TResult Function(SetPeriodicity value) setPeriodicity,
-    required TResult Function(SetDayPeriodicity value) setDayPeriodicity,
     required TResult Function(SetStartDate value) setStartDate,
     required TResult Function(AddWeekday value) addWeekday,
     required TResult Function(RemoveWeekday value) removeWeekday,
@@ -651,7 +629,6 @@ class _$SetPeriodicityImpl implements SetPeriodicity {
     TResult? Function(SetName value)? setName,
     TResult? Function(SetType value)? setType,
     TResult? Function(SetPeriodicity value)? setPeriodicity,
-    TResult? Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult? Function(SetStartDate value)? setStartDate,
     TResult? Function(AddWeekday value)? addWeekday,
     TResult? Function(RemoveWeekday value)? removeWeekday,
@@ -669,7 +646,6 @@ class _$SetPeriodicityImpl implements SetPeriodicity {
     TResult Function(SetName value)? setName,
     TResult Function(SetType value)? setType,
     TResult Function(SetPeriodicity value)? setPeriodicity,
-    TResult Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult Function(SetStartDate value)? setStartDate,
     TResult Function(AddWeekday value)? addWeekday,
     TResult Function(RemoveWeekday value)? removeWeekday,
@@ -686,204 +662,13 @@ class _$SetPeriodicityImpl implements SetPeriodicity {
   }
 }
 
-abstract class SetPeriodicity implements MedicinesEvent {
+abstract class SetPeriodicity implements AddMedicineEvent {
   const factory SetPeriodicity(final Periodicity periodicity) =
       _$SetPeriodicityImpl;
 
   Periodicity get periodicity;
   @JsonKey(ignore: true)
   _$$SetPeriodicityImplCopyWith<_$SetPeriodicityImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$SetDayPeriodicityImplCopyWith<$Res> {
-  factory _$$SetDayPeriodicityImplCopyWith(_$SetDayPeriodicityImpl value,
-          $Res Function(_$SetDayPeriodicityImpl) then) =
-      __$$SetDayPeriodicityImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({DayPeriodicity periodicity});
-}
-
-/// @nodoc
-class __$$SetDayPeriodicityImplCopyWithImpl<$Res>
-    extends _$MedicinesEventCopyWithImpl<$Res, _$SetDayPeriodicityImpl>
-    implements _$$SetDayPeriodicityImplCopyWith<$Res> {
-  __$$SetDayPeriodicityImplCopyWithImpl(_$SetDayPeriodicityImpl _value,
-      $Res Function(_$SetDayPeriodicityImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? periodicity = null,
-  }) {
-    return _then(_$SetDayPeriodicityImpl(
-      null == periodicity
-          ? _value.periodicity
-          : periodicity // ignore: cast_nullable_to_non_nullable
-              as DayPeriodicity,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$SetDayPeriodicityImpl implements SetDayPeriodicity {
-  const _$SetDayPeriodicityImpl(this.periodicity);
-
-  @override
-  final DayPeriodicity periodicity;
-
-  @override
-  String toString() {
-    return 'MedicinesEvent.setDayPeriodicity(periodicity: $periodicity)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$SetDayPeriodicityImpl &&
-            (identical(other.periodicity, periodicity) ||
-                other.periodicity == periodicity));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, periodicity);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$SetDayPeriodicityImplCopyWith<_$SetDayPeriodicityImpl> get copyWith =>
-      __$$SetDayPeriodicityImplCopyWithImpl<_$SetDayPeriodicityImpl>(
-          this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String name) setName,
-    required TResult Function(MedicineType type) setType,
-    required TResult Function(Periodicity periodicity) setPeriodicity,
-    required TResult Function(DayPeriodicity periodicity) setDayPeriodicity,
-    required TResult Function(DateTime startDate) setStartDate,
-    required TResult Function(int weekday) addWeekday,
-    required TResult Function(int weekday) removeWeekday,
-    required TResult Function(TimeOfDay time, int count) addDose,
-    required TResult Function(int index, TimeOfDay? time, int? count)
-        changeDose,
-    required TResult Function(MedicineInstruction instruction) addInstruction,
-    required TResult Function() save,
-  }) {
-    return setDayPeriodicity(periodicity);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String name)? setName,
-    TResult? Function(MedicineType type)? setType,
-    TResult? Function(Periodicity periodicity)? setPeriodicity,
-    TResult? Function(DayPeriodicity periodicity)? setDayPeriodicity,
-    TResult? Function(DateTime startDate)? setStartDate,
-    TResult? Function(int weekday)? addWeekday,
-    TResult? Function(int weekday)? removeWeekday,
-    TResult? Function(TimeOfDay time, int count)? addDose,
-    TResult? Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult? Function(MedicineInstruction instruction)? addInstruction,
-    TResult? Function()? save,
-  }) {
-    return setDayPeriodicity?.call(periodicity);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String name)? setName,
-    TResult Function(MedicineType type)? setType,
-    TResult Function(Periodicity periodicity)? setPeriodicity,
-    TResult Function(DayPeriodicity periodicity)? setDayPeriodicity,
-    TResult Function(DateTime startDate)? setStartDate,
-    TResult Function(int weekday)? addWeekday,
-    TResult Function(int weekday)? removeWeekday,
-    TResult Function(TimeOfDay time, int count)? addDose,
-    TResult Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult Function(MedicineInstruction instruction)? addInstruction,
-    TResult Function()? save,
-    required TResult orElse(),
-  }) {
-    if (setDayPeriodicity != null) {
-      return setDayPeriodicity(periodicity);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(SetName value) setName,
-    required TResult Function(SetType value) setType,
-    required TResult Function(SetPeriodicity value) setPeriodicity,
-    required TResult Function(SetDayPeriodicity value) setDayPeriodicity,
-    required TResult Function(SetStartDate value) setStartDate,
-    required TResult Function(AddWeekday value) addWeekday,
-    required TResult Function(RemoveWeekday value) removeWeekday,
-    required TResult Function(AddDose value) addDose,
-    required TResult Function(ChangeDose value) changeDose,
-    required TResult Function(AddInstruction value) addInstruction,
-    required TResult Function(SaveMedicine value) save,
-  }) {
-    return setDayPeriodicity(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(SetName value)? setName,
-    TResult? Function(SetType value)? setType,
-    TResult? Function(SetPeriodicity value)? setPeriodicity,
-    TResult? Function(SetDayPeriodicity value)? setDayPeriodicity,
-    TResult? Function(SetStartDate value)? setStartDate,
-    TResult? Function(AddWeekday value)? addWeekday,
-    TResult? Function(RemoveWeekday value)? removeWeekday,
-    TResult? Function(AddDose value)? addDose,
-    TResult? Function(ChangeDose value)? changeDose,
-    TResult? Function(AddInstruction value)? addInstruction,
-    TResult? Function(SaveMedicine value)? save,
-  }) {
-    return setDayPeriodicity?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(SetName value)? setName,
-    TResult Function(SetType value)? setType,
-    TResult Function(SetPeriodicity value)? setPeriodicity,
-    TResult Function(SetDayPeriodicity value)? setDayPeriodicity,
-    TResult Function(SetStartDate value)? setStartDate,
-    TResult Function(AddWeekday value)? addWeekday,
-    TResult Function(RemoveWeekday value)? removeWeekday,
-    TResult Function(AddDose value)? addDose,
-    TResult Function(ChangeDose value)? changeDose,
-    TResult Function(AddInstruction value)? addInstruction,
-    TResult Function(SaveMedicine value)? save,
-    required TResult orElse(),
-  }) {
-    if (setDayPeriodicity != null) {
-      return setDayPeriodicity(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class SetDayPeriodicity implements MedicinesEvent {
-  const factory SetDayPeriodicity(final DayPeriodicity periodicity) =
-      _$SetDayPeriodicityImpl;
-
-  DayPeriodicity get periodicity;
-  @JsonKey(ignore: true)
-  _$$SetDayPeriodicityImplCopyWith<_$SetDayPeriodicityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -898,7 +683,7 @@ abstract class _$$SetStartDateImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$SetStartDateImplCopyWithImpl<$Res>
-    extends _$MedicinesEventCopyWithImpl<$Res, _$SetStartDateImpl>
+    extends _$AddMedicineEventCopyWithImpl<$Res, _$SetStartDateImpl>
     implements _$$SetStartDateImplCopyWith<$Res> {
   __$$SetStartDateImplCopyWithImpl(
       _$SetStartDateImpl _value, $Res Function(_$SetStartDateImpl) _then)
@@ -928,7 +713,7 @@ class _$SetStartDateImpl implements SetStartDate {
 
   @override
   String toString() {
-    return 'MedicinesEvent.setStartDate(startDate: $startDate)';
+    return 'AddMedicineEvent.setStartDate(startDate: $startDate)';
   }
 
   @override
@@ -955,7 +740,6 @@ class _$SetStartDateImpl implements SetStartDate {
     required TResult Function(String name) setName,
     required TResult Function(MedicineType type) setType,
     required TResult Function(Periodicity periodicity) setPeriodicity,
-    required TResult Function(DayPeriodicity periodicity) setDayPeriodicity,
     required TResult Function(DateTime startDate) setStartDate,
     required TResult Function(int weekday) addWeekday,
     required TResult Function(int weekday) removeWeekday,
@@ -974,7 +758,6 @@ class _$SetStartDateImpl implements SetStartDate {
     TResult? Function(String name)? setName,
     TResult? Function(MedicineType type)? setType,
     TResult? Function(Periodicity periodicity)? setPeriodicity,
-    TResult? Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult? Function(DateTime startDate)? setStartDate,
     TResult? Function(int weekday)? addWeekday,
     TResult? Function(int weekday)? removeWeekday,
@@ -992,7 +775,6 @@ class _$SetStartDateImpl implements SetStartDate {
     TResult Function(String name)? setName,
     TResult Function(MedicineType type)? setType,
     TResult Function(Periodicity periodicity)? setPeriodicity,
-    TResult Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult Function(DateTime startDate)? setStartDate,
     TResult Function(int weekday)? addWeekday,
     TResult Function(int weekday)? removeWeekday,
@@ -1014,7 +796,6 @@ class _$SetStartDateImpl implements SetStartDate {
     required TResult Function(SetName value) setName,
     required TResult Function(SetType value) setType,
     required TResult Function(SetPeriodicity value) setPeriodicity,
-    required TResult Function(SetDayPeriodicity value) setDayPeriodicity,
     required TResult Function(SetStartDate value) setStartDate,
     required TResult Function(AddWeekday value) addWeekday,
     required TResult Function(RemoveWeekday value) removeWeekday,
@@ -1032,7 +813,6 @@ class _$SetStartDateImpl implements SetStartDate {
     TResult? Function(SetName value)? setName,
     TResult? Function(SetType value)? setType,
     TResult? Function(SetPeriodicity value)? setPeriodicity,
-    TResult? Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult? Function(SetStartDate value)? setStartDate,
     TResult? Function(AddWeekday value)? addWeekday,
     TResult? Function(RemoveWeekday value)? removeWeekday,
@@ -1050,7 +830,6 @@ class _$SetStartDateImpl implements SetStartDate {
     TResult Function(SetName value)? setName,
     TResult Function(SetType value)? setType,
     TResult Function(SetPeriodicity value)? setPeriodicity,
-    TResult Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult Function(SetStartDate value)? setStartDate,
     TResult Function(AddWeekday value)? addWeekday,
     TResult Function(RemoveWeekday value)? removeWeekday,
@@ -1067,7 +846,7 @@ class _$SetStartDateImpl implements SetStartDate {
   }
 }
 
-abstract class SetStartDate implements MedicinesEvent {
+abstract class SetStartDate implements AddMedicineEvent {
   const factory SetStartDate(final DateTime startDate) = _$SetStartDateImpl;
 
   DateTime get startDate;
@@ -1087,7 +866,7 @@ abstract class _$$AddWeekdayImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$AddWeekdayImplCopyWithImpl<$Res>
-    extends _$MedicinesEventCopyWithImpl<$Res, _$AddWeekdayImpl>
+    extends _$AddMedicineEventCopyWithImpl<$Res, _$AddWeekdayImpl>
     implements _$$AddWeekdayImplCopyWith<$Res> {
   __$$AddWeekdayImplCopyWithImpl(
       _$AddWeekdayImpl _value, $Res Function(_$AddWeekdayImpl) _then)
@@ -1117,7 +896,7 @@ class _$AddWeekdayImpl implements AddWeekday {
 
   @override
   String toString() {
-    return 'MedicinesEvent.addWeekday(weekday: $weekday)';
+    return 'AddMedicineEvent.addWeekday(weekday: $weekday)';
   }
 
   @override
@@ -1143,7 +922,6 @@ class _$AddWeekdayImpl implements AddWeekday {
     required TResult Function(String name) setName,
     required TResult Function(MedicineType type) setType,
     required TResult Function(Periodicity periodicity) setPeriodicity,
-    required TResult Function(DayPeriodicity periodicity) setDayPeriodicity,
     required TResult Function(DateTime startDate) setStartDate,
     required TResult Function(int weekday) addWeekday,
     required TResult Function(int weekday) removeWeekday,
@@ -1162,7 +940,6 @@ class _$AddWeekdayImpl implements AddWeekday {
     TResult? Function(String name)? setName,
     TResult? Function(MedicineType type)? setType,
     TResult? Function(Periodicity periodicity)? setPeriodicity,
-    TResult? Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult? Function(DateTime startDate)? setStartDate,
     TResult? Function(int weekday)? addWeekday,
     TResult? Function(int weekday)? removeWeekday,
@@ -1180,7 +957,6 @@ class _$AddWeekdayImpl implements AddWeekday {
     TResult Function(String name)? setName,
     TResult Function(MedicineType type)? setType,
     TResult Function(Periodicity periodicity)? setPeriodicity,
-    TResult Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult Function(DateTime startDate)? setStartDate,
     TResult Function(int weekday)? addWeekday,
     TResult Function(int weekday)? removeWeekday,
@@ -1202,7 +978,6 @@ class _$AddWeekdayImpl implements AddWeekday {
     required TResult Function(SetName value) setName,
     required TResult Function(SetType value) setType,
     required TResult Function(SetPeriodicity value) setPeriodicity,
-    required TResult Function(SetDayPeriodicity value) setDayPeriodicity,
     required TResult Function(SetStartDate value) setStartDate,
     required TResult Function(AddWeekday value) addWeekday,
     required TResult Function(RemoveWeekday value) removeWeekday,
@@ -1220,7 +995,6 @@ class _$AddWeekdayImpl implements AddWeekday {
     TResult? Function(SetName value)? setName,
     TResult? Function(SetType value)? setType,
     TResult? Function(SetPeriodicity value)? setPeriodicity,
-    TResult? Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult? Function(SetStartDate value)? setStartDate,
     TResult? Function(AddWeekday value)? addWeekday,
     TResult? Function(RemoveWeekday value)? removeWeekday,
@@ -1238,7 +1012,6 @@ class _$AddWeekdayImpl implements AddWeekday {
     TResult Function(SetName value)? setName,
     TResult Function(SetType value)? setType,
     TResult Function(SetPeriodicity value)? setPeriodicity,
-    TResult Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult Function(SetStartDate value)? setStartDate,
     TResult Function(AddWeekday value)? addWeekday,
     TResult Function(RemoveWeekday value)? removeWeekday,
@@ -1255,7 +1028,7 @@ class _$AddWeekdayImpl implements AddWeekday {
   }
 }
 
-abstract class AddWeekday implements MedicinesEvent {
+abstract class AddWeekday implements AddMedicineEvent {
   const factory AddWeekday(final int weekday) = _$AddWeekdayImpl;
 
   int get weekday;
@@ -1275,7 +1048,7 @@ abstract class _$$RemoveWeekdayImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$RemoveWeekdayImplCopyWithImpl<$Res>
-    extends _$MedicinesEventCopyWithImpl<$Res, _$RemoveWeekdayImpl>
+    extends _$AddMedicineEventCopyWithImpl<$Res, _$RemoveWeekdayImpl>
     implements _$$RemoveWeekdayImplCopyWith<$Res> {
   __$$RemoveWeekdayImplCopyWithImpl(
       _$RemoveWeekdayImpl _value, $Res Function(_$RemoveWeekdayImpl) _then)
@@ -1305,7 +1078,7 @@ class _$RemoveWeekdayImpl implements RemoveWeekday {
 
   @override
   String toString() {
-    return 'MedicinesEvent.removeWeekday(weekday: $weekday)';
+    return 'AddMedicineEvent.removeWeekday(weekday: $weekday)';
   }
 
   @override
@@ -1331,7 +1104,6 @@ class _$RemoveWeekdayImpl implements RemoveWeekday {
     required TResult Function(String name) setName,
     required TResult Function(MedicineType type) setType,
     required TResult Function(Periodicity periodicity) setPeriodicity,
-    required TResult Function(DayPeriodicity periodicity) setDayPeriodicity,
     required TResult Function(DateTime startDate) setStartDate,
     required TResult Function(int weekday) addWeekday,
     required TResult Function(int weekday) removeWeekday,
@@ -1350,7 +1122,6 @@ class _$RemoveWeekdayImpl implements RemoveWeekday {
     TResult? Function(String name)? setName,
     TResult? Function(MedicineType type)? setType,
     TResult? Function(Periodicity periodicity)? setPeriodicity,
-    TResult? Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult? Function(DateTime startDate)? setStartDate,
     TResult? Function(int weekday)? addWeekday,
     TResult? Function(int weekday)? removeWeekday,
@@ -1368,7 +1139,6 @@ class _$RemoveWeekdayImpl implements RemoveWeekday {
     TResult Function(String name)? setName,
     TResult Function(MedicineType type)? setType,
     TResult Function(Periodicity periodicity)? setPeriodicity,
-    TResult Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult Function(DateTime startDate)? setStartDate,
     TResult Function(int weekday)? addWeekday,
     TResult Function(int weekday)? removeWeekday,
@@ -1390,7 +1160,6 @@ class _$RemoveWeekdayImpl implements RemoveWeekday {
     required TResult Function(SetName value) setName,
     required TResult Function(SetType value) setType,
     required TResult Function(SetPeriodicity value) setPeriodicity,
-    required TResult Function(SetDayPeriodicity value) setDayPeriodicity,
     required TResult Function(SetStartDate value) setStartDate,
     required TResult Function(AddWeekday value) addWeekday,
     required TResult Function(RemoveWeekday value) removeWeekday,
@@ -1408,7 +1177,6 @@ class _$RemoveWeekdayImpl implements RemoveWeekday {
     TResult? Function(SetName value)? setName,
     TResult? Function(SetType value)? setType,
     TResult? Function(SetPeriodicity value)? setPeriodicity,
-    TResult? Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult? Function(SetStartDate value)? setStartDate,
     TResult? Function(AddWeekday value)? addWeekday,
     TResult? Function(RemoveWeekday value)? removeWeekday,
@@ -1426,7 +1194,6 @@ class _$RemoveWeekdayImpl implements RemoveWeekday {
     TResult Function(SetName value)? setName,
     TResult Function(SetType value)? setType,
     TResult Function(SetPeriodicity value)? setPeriodicity,
-    TResult Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult Function(SetStartDate value)? setStartDate,
     TResult Function(AddWeekday value)? addWeekday,
     TResult Function(RemoveWeekday value)? removeWeekday,
@@ -1443,7 +1210,7 @@ class _$RemoveWeekdayImpl implements RemoveWeekday {
   }
 }
 
-abstract class RemoveWeekday implements MedicinesEvent {
+abstract class RemoveWeekday implements AddMedicineEvent {
   const factory RemoveWeekday(final int weekday) = _$RemoveWeekdayImpl;
 
   int get weekday;
@@ -1463,7 +1230,7 @@ abstract class _$$AddDoseImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$AddDoseImplCopyWithImpl<$Res>
-    extends _$MedicinesEventCopyWithImpl<$Res, _$AddDoseImpl>
+    extends _$AddMedicineEventCopyWithImpl<$Res, _$AddDoseImpl>
     implements _$$AddDoseImplCopyWith<$Res> {
   __$$AddDoseImplCopyWithImpl(
       _$AddDoseImpl _value, $Res Function(_$AddDoseImpl) _then)
@@ -1500,7 +1267,7 @@ class _$AddDoseImpl implements AddDose {
 
   @override
   String toString() {
-    return 'MedicinesEvent.addDose(time: $time, count: $count)';
+    return 'AddMedicineEvent.addDose(time: $time, count: $count)';
   }
 
   @override
@@ -1527,7 +1294,6 @@ class _$AddDoseImpl implements AddDose {
     required TResult Function(String name) setName,
     required TResult Function(MedicineType type) setType,
     required TResult Function(Periodicity periodicity) setPeriodicity,
-    required TResult Function(DayPeriodicity periodicity) setDayPeriodicity,
     required TResult Function(DateTime startDate) setStartDate,
     required TResult Function(int weekday) addWeekday,
     required TResult Function(int weekday) removeWeekday,
@@ -1546,7 +1312,6 @@ class _$AddDoseImpl implements AddDose {
     TResult? Function(String name)? setName,
     TResult? Function(MedicineType type)? setType,
     TResult? Function(Periodicity periodicity)? setPeriodicity,
-    TResult? Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult? Function(DateTime startDate)? setStartDate,
     TResult? Function(int weekday)? addWeekday,
     TResult? Function(int weekday)? removeWeekday,
@@ -1564,7 +1329,6 @@ class _$AddDoseImpl implements AddDose {
     TResult Function(String name)? setName,
     TResult Function(MedicineType type)? setType,
     TResult Function(Periodicity periodicity)? setPeriodicity,
-    TResult Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult Function(DateTime startDate)? setStartDate,
     TResult Function(int weekday)? addWeekday,
     TResult Function(int weekday)? removeWeekday,
@@ -1586,7 +1350,6 @@ class _$AddDoseImpl implements AddDose {
     required TResult Function(SetName value) setName,
     required TResult Function(SetType value) setType,
     required TResult Function(SetPeriodicity value) setPeriodicity,
-    required TResult Function(SetDayPeriodicity value) setDayPeriodicity,
     required TResult Function(SetStartDate value) setStartDate,
     required TResult Function(AddWeekday value) addWeekday,
     required TResult Function(RemoveWeekday value) removeWeekday,
@@ -1604,7 +1367,6 @@ class _$AddDoseImpl implements AddDose {
     TResult? Function(SetName value)? setName,
     TResult? Function(SetType value)? setType,
     TResult? Function(SetPeriodicity value)? setPeriodicity,
-    TResult? Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult? Function(SetStartDate value)? setStartDate,
     TResult? Function(AddWeekday value)? addWeekday,
     TResult? Function(RemoveWeekday value)? removeWeekday,
@@ -1622,7 +1384,6 @@ class _$AddDoseImpl implements AddDose {
     TResult Function(SetName value)? setName,
     TResult Function(SetType value)? setType,
     TResult Function(SetPeriodicity value)? setPeriodicity,
-    TResult Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult Function(SetStartDate value)? setStartDate,
     TResult Function(AddWeekday value)? addWeekday,
     TResult Function(RemoveWeekday value)? removeWeekday,
@@ -1639,7 +1400,7 @@ class _$AddDoseImpl implements AddDose {
   }
 }
 
-abstract class AddDose implements MedicinesEvent {
+abstract class AddDose implements AddMedicineEvent {
   const factory AddDose(final TimeOfDay time, final int count) = _$AddDoseImpl;
 
   TimeOfDay get time;
@@ -1660,7 +1421,7 @@ abstract class _$$ChangeDoseImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$ChangeDoseImplCopyWithImpl<$Res>
-    extends _$MedicinesEventCopyWithImpl<$Res, _$ChangeDoseImpl>
+    extends _$AddMedicineEventCopyWithImpl<$Res, _$ChangeDoseImpl>
     implements _$$ChangeDoseImplCopyWith<$Res> {
   __$$ChangeDoseImplCopyWithImpl(
       _$ChangeDoseImpl _value, $Res Function(_$ChangeDoseImpl) _then)
@@ -1704,7 +1465,7 @@ class _$ChangeDoseImpl implements ChangeDose {
 
   @override
   String toString() {
-    return 'MedicinesEvent.changeDose(index: $index, time: $time, count: $count)';
+    return 'AddMedicineEvent.changeDose(index: $index, time: $time, count: $count)';
   }
 
   @override
@@ -1732,7 +1493,6 @@ class _$ChangeDoseImpl implements ChangeDose {
     required TResult Function(String name) setName,
     required TResult Function(MedicineType type) setType,
     required TResult Function(Periodicity periodicity) setPeriodicity,
-    required TResult Function(DayPeriodicity periodicity) setDayPeriodicity,
     required TResult Function(DateTime startDate) setStartDate,
     required TResult Function(int weekday) addWeekday,
     required TResult Function(int weekday) removeWeekday,
@@ -1751,7 +1511,6 @@ class _$ChangeDoseImpl implements ChangeDose {
     TResult? Function(String name)? setName,
     TResult? Function(MedicineType type)? setType,
     TResult? Function(Periodicity periodicity)? setPeriodicity,
-    TResult? Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult? Function(DateTime startDate)? setStartDate,
     TResult? Function(int weekday)? addWeekday,
     TResult? Function(int weekday)? removeWeekday,
@@ -1769,7 +1528,6 @@ class _$ChangeDoseImpl implements ChangeDose {
     TResult Function(String name)? setName,
     TResult Function(MedicineType type)? setType,
     TResult Function(Periodicity periodicity)? setPeriodicity,
-    TResult Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult Function(DateTime startDate)? setStartDate,
     TResult Function(int weekday)? addWeekday,
     TResult Function(int weekday)? removeWeekday,
@@ -1791,7 +1549,6 @@ class _$ChangeDoseImpl implements ChangeDose {
     required TResult Function(SetName value) setName,
     required TResult Function(SetType value) setType,
     required TResult Function(SetPeriodicity value) setPeriodicity,
-    required TResult Function(SetDayPeriodicity value) setDayPeriodicity,
     required TResult Function(SetStartDate value) setStartDate,
     required TResult Function(AddWeekday value) addWeekday,
     required TResult Function(RemoveWeekday value) removeWeekday,
@@ -1809,7 +1566,6 @@ class _$ChangeDoseImpl implements ChangeDose {
     TResult? Function(SetName value)? setName,
     TResult? Function(SetType value)? setType,
     TResult? Function(SetPeriodicity value)? setPeriodicity,
-    TResult? Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult? Function(SetStartDate value)? setStartDate,
     TResult? Function(AddWeekday value)? addWeekday,
     TResult? Function(RemoveWeekday value)? removeWeekday,
@@ -1827,7 +1583,6 @@ class _$ChangeDoseImpl implements ChangeDose {
     TResult Function(SetName value)? setName,
     TResult Function(SetType value)? setType,
     TResult Function(SetPeriodicity value)? setPeriodicity,
-    TResult Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult Function(SetStartDate value)? setStartDate,
     TResult Function(AddWeekday value)? addWeekday,
     TResult Function(RemoveWeekday value)? removeWeekday,
@@ -1844,7 +1599,7 @@ class _$ChangeDoseImpl implements ChangeDose {
   }
 }
 
-abstract class ChangeDose implements MedicinesEvent {
+abstract class ChangeDose implements AddMedicineEvent {
   const factory ChangeDose(
       {required final int index,
       final TimeOfDay? time,
@@ -1869,7 +1624,7 @@ abstract class _$$AddInstructionImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$AddInstructionImplCopyWithImpl<$Res>
-    extends _$MedicinesEventCopyWithImpl<$Res, _$AddInstructionImpl>
+    extends _$AddMedicineEventCopyWithImpl<$Res, _$AddInstructionImpl>
     implements _$$AddInstructionImplCopyWith<$Res> {
   __$$AddInstructionImplCopyWithImpl(
       _$AddInstructionImpl _value, $Res Function(_$AddInstructionImpl) _then)
@@ -1899,7 +1654,7 @@ class _$AddInstructionImpl implements AddInstruction {
 
   @override
   String toString() {
-    return 'MedicinesEvent.addInstruction(instruction: $instruction)';
+    return 'AddMedicineEvent.addInstruction(instruction: $instruction)';
   }
 
   @override
@@ -1927,7 +1682,6 @@ class _$AddInstructionImpl implements AddInstruction {
     required TResult Function(String name) setName,
     required TResult Function(MedicineType type) setType,
     required TResult Function(Periodicity periodicity) setPeriodicity,
-    required TResult Function(DayPeriodicity periodicity) setDayPeriodicity,
     required TResult Function(DateTime startDate) setStartDate,
     required TResult Function(int weekday) addWeekday,
     required TResult Function(int weekday) removeWeekday,
@@ -1946,7 +1700,6 @@ class _$AddInstructionImpl implements AddInstruction {
     TResult? Function(String name)? setName,
     TResult? Function(MedicineType type)? setType,
     TResult? Function(Periodicity periodicity)? setPeriodicity,
-    TResult? Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult? Function(DateTime startDate)? setStartDate,
     TResult? Function(int weekday)? addWeekday,
     TResult? Function(int weekday)? removeWeekday,
@@ -1964,7 +1717,6 @@ class _$AddInstructionImpl implements AddInstruction {
     TResult Function(String name)? setName,
     TResult Function(MedicineType type)? setType,
     TResult Function(Periodicity periodicity)? setPeriodicity,
-    TResult Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult Function(DateTime startDate)? setStartDate,
     TResult Function(int weekday)? addWeekday,
     TResult Function(int weekday)? removeWeekday,
@@ -1986,7 +1738,6 @@ class _$AddInstructionImpl implements AddInstruction {
     required TResult Function(SetName value) setName,
     required TResult Function(SetType value) setType,
     required TResult Function(SetPeriodicity value) setPeriodicity,
-    required TResult Function(SetDayPeriodicity value) setDayPeriodicity,
     required TResult Function(SetStartDate value) setStartDate,
     required TResult Function(AddWeekday value) addWeekday,
     required TResult Function(RemoveWeekday value) removeWeekday,
@@ -2004,7 +1755,6 @@ class _$AddInstructionImpl implements AddInstruction {
     TResult? Function(SetName value)? setName,
     TResult? Function(SetType value)? setType,
     TResult? Function(SetPeriodicity value)? setPeriodicity,
-    TResult? Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult? Function(SetStartDate value)? setStartDate,
     TResult? Function(AddWeekday value)? addWeekday,
     TResult? Function(RemoveWeekday value)? removeWeekday,
@@ -2022,7 +1772,6 @@ class _$AddInstructionImpl implements AddInstruction {
     TResult Function(SetName value)? setName,
     TResult Function(SetType value)? setType,
     TResult Function(SetPeriodicity value)? setPeriodicity,
-    TResult Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult Function(SetStartDate value)? setStartDate,
     TResult Function(AddWeekday value)? addWeekday,
     TResult Function(RemoveWeekday value)? removeWeekday,
@@ -2039,7 +1788,7 @@ class _$AddInstructionImpl implements AddInstruction {
   }
 }
 
-abstract class AddInstruction implements MedicinesEvent {
+abstract class AddInstruction implements AddMedicineEvent {
   const factory AddInstruction(final MedicineInstruction instruction) =
       _$AddInstructionImpl;
 
@@ -2058,7 +1807,7 @@ abstract class _$$SaveMedicineImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$SaveMedicineImplCopyWithImpl<$Res>
-    extends _$MedicinesEventCopyWithImpl<$Res, _$SaveMedicineImpl>
+    extends _$AddMedicineEventCopyWithImpl<$Res, _$SaveMedicineImpl>
     implements _$$SaveMedicineImplCopyWith<$Res> {
   __$$SaveMedicineImplCopyWithImpl(
       _$SaveMedicineImpl _value, $Res Function(_$SaveMedicineImpl) _then)
@@ -2072,7 +1821,7 @@ class _$SaveMedicineImpl implements SaveMedicine {
 
   @override
   String toString() {
-    return 'MedicinesEvent.save()';
+    return 'AddMedicineEvent.save()';
   }
 
   @override
@@ -2090,7 +1839,6 @@ class _$SaveMedicineImpl implements SaveMedicine {
     required TResult Function(String name) setName,
     required TResult Function(MedicineType type) setType,
     required TResult Function(Periodicity periodicity) setPeriodicity,
-    required TResult Function(DayPeriodicity periodicity) setDayPeriodicity,
     required TResult Function(DateTime startDate) setStartDate,
     required TResult Function(int weekday) addWeekday,
     required TResult Function(int weekday) removeWeekday,
@@ -2109,7 +1857,6 @@ class _$SaveMedicineImpl implements SaveMedicine {
     TResult? Function(String name)? setName,
     TResult? Function(MedicineType type)? setType,
     TResult? Function(Periodicity periodicity)? setPeriodicity,
-    TResult? Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult? Function(DateTime startDate)? setStartDate,
     TResult? Function(int weekday)? addWeekday,
     TResult? Function(int weekday)? removeWeekday,
@@ -2127,7 +1874,6 @@ class _$SaveMedicineImpl implements SaveMedicine {
     TResult Function(String name)? setName,
     TResult Function(MedicineType type)? setType,
     TResult Function(Periodicity periodicity)? setPeriodicity,
-    TResult Function(DayPeriodicity periodicity)? setDayPeriodicity,
     TResult Function(DateTime startDate)? setStartDate,
     TResult Function(int weekday)? addWeekday,
     TResult Function(int weekday)? removeWeekday,
@@ -2149,7 +1895,6 @@ class _$SaveMedicineImpl implements SaveMedicine {
     required TResult Function(SetName value) setName,
     required TResult Function(SetType value) setType,
     required TResult Function(SetPeriodicity value) setPeriodicity,
-    required TResult Function(SetDayPeriodicity value) setDayPeriodicity,
     required TResult Function(SetStartDate value) setStartDate,
     required TResult Function(AddWeekday value) addWeekday,
     required TResult Function(RemoveWeekday value) removeWeekday,
@@ -2167,7 +1912,6 @@ class _$SaveMedicineImpl implements SaveMedicine {
     TResult? Function(SetName value)? setName,
     TResult? Function(SetType value)? setType,
     TResult? Function(SetPeriodicity value)? setPeriodicity,
-    TResult? Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult? Function(SetStartDate value)? setStartDate,
     TResult? Function(AddWeekday value)? addWeekday,
     TResult? Function(RemoveWeekday value)? removeWeekday,
@@ -2185,7 +1929,6 @@ class _$SaveMedicineImpl implements SaveMedicine {
     TResult Function(SetName value)? setName,
     TResult Function(SetType value)? setType,
     TResult Function(SetPeriodicity value)? setPeriodicity,
-    TResult Function(SetDayPeriodicity value)? setDayPeriodicity,
     TResult Function(SetStartDate value)? setStartDate,
     TResult Function(AddWeekday value)? addWeekday,
     TResult Function(RemoveWeekday value)? removeWeekday,
@@ -2202,12 +1945,12 @@ class _$SaveMedicineImpl implements SaveMedicine {
   }
 }
 
-abstract class SaveMedicine implements MedicinesEvent {
+abstract class SaveMedicine implements AddMedicineEvent {
   const factory SaveMedicine() = _$SaveMedicineImpl;
 }
 
 /// @nodoc
-mixin _$MedicinesState {
+mixin _$AddMedicineState {
   String get name => throw _privateConstructorUsedError;
   MedicineType? get type => throw _privateConstructorUsedError;
   Periodicity? get periodicity =>
@@ -2217,18 +1960,19 @@ mixin _$MedicinesState {
   Map<TimeOfDay, int> get doses => throw _privateConstructorUsedError;
   MedicineInstruction? get instruction => throw _privateConstructorUsedError;
   bool get isSaving => throw _privateConstructorUsedError;
-  bool get created => throw _privateConstructorUsedError;
+  bool get isCreated => throw _privateConstructorUsedError;
+  String? get errorMessage => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $MedicinesStateCopyWith<MedicinesState> get copyWith =>
+  $AddMedicineStateCopyWith<AddMedicineState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $MedicinesStateCopyWith<$Res> {
-  factory $MedicinesStateCopyWith(
-          MedicinesState value, $Res Function(MedicinesState) then) =
-      _$MedicinesStateCopyWithImpl<$Res, MedicinesState>;
+abstract class $AddMedicineStateCopyWith<$Res> {
+  factory $AddMedicineStateCopyWith(
+          AddMedicineState value, $Res Function(AddMedicineState) then) =
+      _$AddMedicineStateCopyWithImpl<$Res, AddMedicineState>;
   @useResult
   $Res call(
       {String name,
@@ -2239,13 +1983,14 @@ abstract class $MedicinesStateCopyWith<$Res> {
       Map<TimeOfDay, int> doses,
       MedicineInstruction? instruction,
       bool isSaving,
-      bool created});
+      bool isCreated,
+      String? errorMessage});
 }
 
 /// @nodoc
-class _$MedicinesStateCopyWithImpl<$Res, $Val extends MedicinesState>
-    implements $MedicinesStateCopyWith<$Res> {
-  _$MedicinesStateCopyWithImpl(this._value, this._then);
+class _$AddMedicineStateCopyWithImpl<$Res, $Val extends AddMedicineState>
+    implements $AddMedicineStateCopyWith<$Res> {
+  _$AddMedicineStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -2263,7 +2008,8 @@ class _$MedicinesStateCopyWithImpl<$Res, $Val extends MedicinesState>
     Object? doses = null,
     Object? instruction = freezed,
     Object? isSaving = null,
-    Object? created = null,
+    Object? isCreated = null,
+    Object? errorMessage = freezed,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -2298,17 +2044,21 @@ class _$MedicinesStateCopyWithImpl<$Res, $Val extends MedicinesState>
           ? _value.isSaving
           : isSaving // ignore: cast_nullable_to_non_nullable
               as bool,
-      created: null == created
-          ? _value.created
-          : created // ignore: cast_nullable_to_non_nullable
+      isCreated: null == isCreated
+          ? _value.isCreated
+          : isCreated // ignore: cast_nullable_to_non_nullable
               as bool,
+      errorMessage: freezed == errorMessage
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$StateImplCopyWith<$Res>
-    implements $MedicinesStateCopyWith<$Res> {
+    implements $AddMedicineStateCopyWith<$Res> {
   factory _$$StateImplCopyWith(
           _$StateImpl value, $Res Function(_$StateImpl) then) =
       __$$StateImplCopyWithImpl<$Res>;
@@ -2323,12 +2073,13 @@ abstract class _$$StateImplCopyWith<$Res>
       Map<TimeOfDay, int> doses,
       MedicineInstruction? instruction,
       bool isSaving,
-      bool created});
+      bool isCreated,
+      String? errorMessage});
 }
 
 /// @nodoc
 class __$$StateImplCopyWithImpl<$Res>
-    extends _$MedicinesStateCopyWithImpl<$Res, _$StateImpl>
+    extends _$AddMedicineStateCopyWithImpl<$Res, _$StateImpl>
     implements _$$StateImplCopyWith<$Res> {
   __$$StateImplCopyWithImpl(
       _$StateImpl _value, $Res Function(_$StateImpl) _then)
@@ -2345,7 +2096,8 @@ class __$$StateImplCopyWithImpl<$Res>
     Object? doses = null,
     Object? instruction = freezed,
     Object? isSaving = null,
-    Object? created = null,
+    Object? isCreated = null,
+    Object? errorMessage = freezed,
   }) {
     return _then(_$StateImpl(
       name: null == name
@@ -2380,17 +2132,21 @@ class __$$StateImplCopyWithImpl<$Res>
           ? _value.isSaving
           : isSaving // ignore: cast_nullable_to_non_nullable
               as bool,
-      created: null == created
-          ? _value.created
-          : created // ignore: cast_nullable_to_non_nullable
+      isCreated: null == isCreated
+          ? _value.isCreated
+          : isCreated // ignore: cast_nullable_to_non_nullable
               as bool,
+      errorMessage: freezed == errorMessage
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
 
 /// @nodoc
 
-class _$StateImpl implements _State {
+class _$StateImpl extends _State {
   const _$StateImpl(
       {this.name = '',
       this.type,
@@ -2400,9 +2156,11 @@ class _$StateImpl implements _State {
       final Map<TimeOfDay, int> doses = const {},
       this.instruction,
       this.isSaving = false,
-      this.created = false})
+      this.isCreated = false,
+      this.errorMessage})
       : _weekdays = weekdays,
-        _doses = doses;
+        _doses = doses,
+        super._();
 
   @override
   @JsonKey()
@@ -2439,11 +2197,13 @@ class _$StateImpl implements _State {
   final bool isSaving;
   @override
   @JsonKey()
-  final bool created;
+  final bool isCreated;
+  @override
+  final String? errorMessage;
 
   @override
   String toString() {
-    return 'MedicinesState(name: $name, type: $type, periodicity: $periodicity, startDate: $startDate, weekdays: $weekdays, doses: $doses, instruction: $instruction, isSaving: $isSaving, created: $created)';
+    return 'AddMedicineState(name: $name, type: $type, periodicity: $periodicity, startDate: $startDate, weekdays: $weekdays, doses: $doses, instruction: $instruction, isSaving: $isSaving, isCreated: $isCreated, errorMessage: $errorMessage)';
   }
 
   @override
@@ -2463,7 +2223,10 @@ class _$StateImpl implements _State {
                 other.instruction == instruction) &&
             (identical(other.isSaving, isSaving) ||
                 other.isSaving == isSaving) &&
-            (identical(other.created, created) || other.created == created));
+            (identical(other.isCreated, isCreated) ||
+                other.isCreated == isCreated) &&
+            (identical(other.errorMessage, errorMessage) ||
+                other.errorMessage == errorMessage));
   }
 
   @override
@@ -2477,7 +2240,8 @@ class _$StateImpl implements _State {
       const DeepCollectionEquality().hash(_doses),
       instruction,
       isSaving,
-      created);
+      isCreated,
+      errorMessage);
 
   @JsonKey(ignore: true)
   @override
@@ -2486,7 +2250,7 @@ class _$StateImpl implements _State {
       __$$StateImplCopyWithImpl<_$StateImpl>(this, _$identity);
 }
 
-abstract class _State implements MedicinesState {
+abstract class _State extends AddMedicineState {
   const factory _State(
       {final String name,
       final MedicineType? type,
@@ -2496,7 +2260,9 @@ abstract class _State implements MedicinesState {
       final Map<TimeOfDay, int> doses,
       final MedicineInstruction? instruction,
       final bool isSaving,
-      final bool created}) = _$StateImpl;
+      final bool isCreated,
+      final String? errorMessage}) = _$StateImpl;
+  const _State._() : super._();
 
   @override
   String get name;
@@ -2515,7 +2281,9 @@ abstract class _State implements MedicinesState {
   @override
   bool get isSaving;
   @override
-  bool get created;
+  bool get isCreated;
+  @override
+  String? get errorMessage;
   @override
   @JsonKey(ignore: true)
   _$$StateImplCopyWith<_$StateImpl> get copyWith =>
