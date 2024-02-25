@@ -2,6 +2,7 @@ import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_shee
 import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/tasks_sheets.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
+import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,9 +12,12 @@ class CustomBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<RemindersBloc, RemindersState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state.reminders == Reminders.medicine) {
-          Navigator.of(context).popAndPushNamed("/add_medicine");
+          final result = await Navigator.of(context).popAndPushNamed(
+            "/add_medicine",
+          );
+          if (result is MedicineModel) print("${result.name} додано");
         }
       },
       listenWhen: (previous, next) => previous.reminders != next.reminders,
