@@ -25,6 +25,15 @@ class _MyInformationState extends State<MyInformation> {
   }
 
   @override
+  void dispose() {
+    firstNameTextEditingController.dispose();
+    lastNameTextEditingController.dispose();
+    phoneTextEditingController.dispose();
+    emailTextEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -37,26 +46,23 @@ class _MyInformationState extends State<MyInformation> {
         child: Column(
           children: [
             InputMyInfoLayout(
-                title: "Імʼя*",
-                textEditingController: firstNameTextEditingController),
+                title: "Імʼя*", text: firstNameTextEditingController.text),
             const SizedBox(
               height: 30,
             ),
             InputMyInfoLayout(
-                title: "Прізвище*",
-                textEditingController: lastNameTextEditingController),
+                title: "Прізвище*", text: lastNameTextEditingController.text),
             const SizedBox(
               height: 30,
             ),
             InputMyInfoLayout(
-                title: "Номер телефону",
-                textEditingController: phoneTextEditingController),
+                title: "Номер телефону", text: phoneTextEditingController.text),
             const SizedBox(
               height: 30,
             ),
             InputMyInfoLayout(
                 title: "Електронна пошта",
-                textEditingController: emailTextEditingController),
+                text: emailTextEditingController.text),
             const SizedBox(
               height: 30,
             ),

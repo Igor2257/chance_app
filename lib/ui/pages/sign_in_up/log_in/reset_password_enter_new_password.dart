@@ -26,12 +26,17 @@ class _ResetPasswordEnterNewPasswordState
       isErrorSecond = false;
   bool obscureTextFirst = true,
       obscureTextSecond = true;
+@override
+  void dispose() {
+    firstPassword.dispose();
+    secondPassword.dispose();
+    firstFocusNode.dispose();
+    secondFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,

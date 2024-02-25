@@ -19,6 +19,13 @@ class _ResetPasswordState extends State<ResetPassword> {
   String errorText = "";
 
   @override
+  void dispose() {
+    editingController.dispose();
+    focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(

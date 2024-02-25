@@ -27,7 +27,11 @@ class _TasksForTodayState extends State<TasksForToday> {
       Navigator.of(context).pop();
     });
   }
-
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

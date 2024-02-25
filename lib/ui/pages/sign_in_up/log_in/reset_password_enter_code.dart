@@ -28,9 +28,10 @@ class _ResetPasswordEnterCodeState extends State<ResetPasswordEnterCode> {
     loadTimer();
     super.initState();
   }
-
   @override
   void dispose() {
+    textEditingController.dispose();
+    focusNode.dispose();
     timer.cancel();
     super.dispose();
   }

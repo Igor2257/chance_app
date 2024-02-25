@@ -34,7 +34,7 @@ if (keystorePropertiesFile.exists()) {
 }
 android {
     namespace "com.chance_app.chance_app"
-    compileSdkVersion 33
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {

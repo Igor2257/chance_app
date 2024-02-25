@@ -18,7 +18,14 @@ class _FirstSubPageState extends State<FirstSubPage> {
   final TextEditingController firstNameEditingController =
           TextEditingController(),
       lastNameEditingController = TextEditingController();
-
+@override
+  void dispose() {
+  firstNameFocusNode.dispose();
+  lastNameFocusNode.dispose();
+  firstNameEditingController.dispose();
+  lastNameEditingController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return  SizedBox(
@@ -58,8 +65,8 @@ class _FirstSubPageState extends State<FirstSubPage> {
         const Spacer(),
         ContinueLogIn(
           name: "Продовжити",
-          firstTextEditingController: lastNameEditingController,
-          secondTextEditingController: firstNameEditingController,
+          firstText: lastNameEditingController.text,
+          secondText: firstNameEditingController.text,
           firstFocusNode: firstNameFocusNode,
           lastFocusNode: lastNameFocusNode,
         ),

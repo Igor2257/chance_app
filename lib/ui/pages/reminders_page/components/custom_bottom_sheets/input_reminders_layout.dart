@@ -34,7 +34,12 @@ class _InputRemindersLayoutState extends State<InputRemindersLayout> {
     subTitle = widget.subTitle;
     super.initState();
   }
-
+  @override
+  void dispose() {
+    textEditingController.dispose();
+    focusNode.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Form(

@@ -24,7 +24,11 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
         .add(LoadDataForSelectDateForTasks());
     super.initState();
   }
-
+  @override
+  void dispose() {
+    nameTextEditingController.dispose();
+    super.dispose();
+  }
   final DateTime now = DateTime.now();
 
   @override

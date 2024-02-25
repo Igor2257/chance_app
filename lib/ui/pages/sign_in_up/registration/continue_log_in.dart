@@ -8,15 +8,14 @@ class ContinueLogIn extends StatefulWidget {
   const ContinueLogIn({
     super.key,
     required this.name,
-    required this.firstTextEditingController,
-    required this.secondTextEditingController,
     required this.firstFocusNode,
     required this.lastFocusNode,
+    required this.firstText,
+    required this.secondText,
   });
 
   final String name;
-  final TextEditingController firstTextEditingController,
-      secondTextEditingController;
+  final String firstText, secondText;
   final FocusNode firstFocusNode, lastFocusNode;
 
   @override
@@ -38,8 +37,8 @@ class _ContinueLogInState extends State<ContinueLogIn> {
                   BlocProvider.of<RegistrationBloc>(context).add(
                       IncreaseCurrentStep(
                           context: context,
-                          first: widget.firstTextEditingController.text,
-                          second: widget.secondTextEditingController.text));
+                          first: widget.firstText,
+                          second: widget.secondText));
                 }
               },
               color: state.isLoading ? darkNeutral1000 : primary1000,

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({super.key});
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -19,6 +19,15 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailTextEditingController =
           TextEditingController(),
       passwordTextEditingController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailFocusNode.dispose();
+    passwordFocusNode.dispose();
+    passwordTextEditingController.dispose();
+    emailTextEditingController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -27,7 +27,12 @@ class MenuPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              "Обліковий запис",
+              style: TextStyle(fontSize: 16, color: darkNeutral800),
+            ),
             RoundedButton(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 margin: const EdgeInsets.symmetric(vertical: 4),
@@ -52,7 +57,35 @@ class MenuPage extends StatelessWidget {
                     )
                   ],
                 )),
-
+            SizedBox(
+              height: 30,
+            ),
+            Text(
+              "Про застосунок",
+              style: TextStyle(fontSize: 16, color: darkNeutral800),
+            ),
+            RoundedButton(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                margin: const EdgeInsets.symmetric(vertical: 4),
+                border: Border.all(color: darkNeutral800),
+                onPress: () async {},
+                color: Colors.transparent,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Політика конфіденційності",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: primaryText,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: primaryText,
+                    )
+                  ],
+                )),
             const Spacer(),
             RoundedButton(
                 margin: const EdgeInsets.symmetric(vertical: 4),

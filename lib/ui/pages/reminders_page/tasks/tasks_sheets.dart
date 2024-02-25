@@ -10,7 +10,6 @@ class TasksSheets extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return BlocBuilder<RemindersBloc, RemindersState>(
         builder: (context, state) {
       return Padding(

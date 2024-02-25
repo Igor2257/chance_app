@@ -39,6 +39,11 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> {
     loadData();
     super.initState();
   }
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

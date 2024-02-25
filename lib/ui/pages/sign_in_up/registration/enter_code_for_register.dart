@@ -40,6 +40,8 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
   @override
   void dispose() {
     timer.cancel();
+    textEditingController.dispose();
+    focusNode.dispose();
     super.dispose();
   }
 
