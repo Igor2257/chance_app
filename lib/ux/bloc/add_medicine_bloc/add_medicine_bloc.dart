@@ -253,7 +253,7 @@ class AddMedicineBloc extends Bloc<AddMedicineEvent, AddMedicineState> {
         instruction: state.instruction,
       );
 
-      emit(state.copyWith(isSaving: false, isCreated: true));
+      emit(state.copyWith(isSaving: false, medicine: model));
     } on Exception catch (e) {
       emit(state.copyWith(isSaving: false, errorMessage: e.toString()));
     }

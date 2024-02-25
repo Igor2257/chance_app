@@ -64,8 +64,8 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
   Widget build(BuildContext context) {
     return BlocListener<AddMedicineBloc, AddMedicineState>(
       listener: (context, state) {
-        if (state.isCreated) {
-          Navigator.of(context).pop();
+        if (state.medicine != null) {
+          Navigator.of(context).pop(state.medicine);
         } else if (state.errorMessage != null) {
           Fluttertoast.showToast(msg: "Щось пішло не так");
         }

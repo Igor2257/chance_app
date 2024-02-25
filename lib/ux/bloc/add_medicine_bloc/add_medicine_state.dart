@@ -12,7 +12,7 @@ class AddMedicineState with _$AddMedicineState {
     @Default({}) Map<TimeOfDay, int> doses,
     MedicineInstruction? instruction,
     @Default(false) bool isSaving,
-    @Default(false) bool isCreated,
+    MedicineModel? medicine,
     String? errorMessage,
   }) = _State;
 
