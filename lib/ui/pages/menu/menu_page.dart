@@ -52,6 +52,8 @@ class MenuPage extends StatelessWidget {
                     )
                   ],
                 )),
+
+            const Spacer(),
             RoundedButton(
                 margin: const EdgeInsets.symmetric(vertical: 4),
                 onPress: () async {
@@ -70,6 +72,7 @@ class MenuPage extends StatelessWidget {
                       color: primary50,
                       fontWeight: FontWeight.w500),
                 )),
+            SizedBox(height: 40,),
           ],
         ),
       ),

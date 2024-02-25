@@ -21,7 +21,6 @@ class OnboardingTutorialPageItem extends StatelessWidget {
       children:[
         SizedBox(width: size.width,child: image,),
         Column(children: [
-
           const Spacer(),
           Container(
               padding: const EdgeInsets.only(
@@ -34,12 +33,9 @@ class OnboardingTutorialPageItem extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  SizedBox(
-                    height: 40,
-                    child: Text(
-                      title,
-                      style: TextStyle(fontSize: 32, color: primaryText),
-                    ),
+                  Text(
+                    title,
+                    style: TextStyle(fontSize: 32, color: primaryText),
                   ),
                   const SizedBox(
                     height: 24,

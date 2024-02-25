@@ -32,21 +32,36 @@ class _MyInformationState extends State<MyInformation> {
         title: const Text("Особиста інформація"),
       ),
       backgroundColor: beigeBG,
-      body: Column(
-        children: [
-          InputMyInfoLayout(
-              title: "Імʼя*",
-              textEditingController: firstNameTextEditingController),
-          InputMyInfoLayout(
-              title: "Прізвище*",
-              textEditingController: lastNameTextEditingController),
-          InputMyInfoLayout(
-              title: "Номер телефону",
-              textEditingController: phoneTextEditingController),
-          InputMyInfoLayout(
-              title: "Електронна пошта",
-              textEditingController: emailTextEditingController),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            InputMyInfoLayout(
+                title: "Імʼя*",
+                textEditingController: firstNameTextEditingController),
+            const SizedBox(
+              height: 30,
+            ),
+            InputMyInfoLayout(
+                title: "Прізвище*",
+                textEditingController: lastNameTextEditingController),
+            const SizedBox(
+              height: 30,
+            ),
+            InputMyInfoLayout(
+                title: "Номер телефону",
+                textEditingController: phoneTextEditingController),
+            const SizedBox(
+              height: 30,
+            ),
+            InputMyInfoLayout(
+                title: "Електронна пошта",
+                textEditingController: emailTextEditingController),
+            const SizedBox(
+              height: 30,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -6,10 +6,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final FocusNode emailFocusNode = FocusNode(), passwordFocusNode = FocusNode();
+
   final TextEditingController emailTextEditingController =
           TextEditingController(),
       passwordTextEditingController = TextEditingController();
@@ -107,8 +113,11 @@ class LoginPage extends StatelessWidget {
                   child: SizedBox(
                     height: 44,
                     child: Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                        child: Wrap(
+                      direction: Axis.horizontal,
+                      alignment: WrapAlignment.center,
+                      runAlignment: WrapAlignment.center,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         Text(
                           "Не маєте облікового запису?",
