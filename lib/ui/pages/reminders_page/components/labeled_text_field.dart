@@ -13,6 +13,7 @@ class LabeledTextField extends StatefulWidget {
     required this.hintText,
     required this.isPhone,
     required this.controller,
+    required Null Function(dynamic value) onChanged,
   }) : super(key: key);
 
   @override
@@ -30,7 +31,7 @@ class LabeledTextFieldState extends State<LabeledTextField> {
       final RegExp phoneRegex = RegExp(r'^\+380\d*$');
       return phoneRegex.hasMatch(input);
     } else {
-      final RegExp nameRegex = RegExp(r'^[а-яА-Я\s]{3,}$');
+      final RegExp nameRegex = RegExp(r'^[а-яА-Яa-zA-Z\s]{3,}$');
       return nameRegex.hasMatch(input);
     }
   }

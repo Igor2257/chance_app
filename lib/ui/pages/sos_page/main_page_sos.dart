@@ -72,11 +72,8 @@ class _MainPageSosState extends State<MainPageSos> {
               ];
             },
             onSelected: (String value) {
-              if (value == 'replace') {
-                // Заменить контакт
-              } else if (value == 'delete') {
-                Navigator.pushNamed(context, "/delete_contact");
-              }
+              Navigator.pushNamed(context, "/delete_contact_sos",
+                  arguments: value == 'replace' ? false : true);
             },
           )
         ],
@@ -92,7 +89,12 @@ class _MainPageSosState extends State<MainPageSos> {
             children: [
               ContainerButton(
                 text: 'Служба екстренноЇ допомоги 112',
-                onPressed: () => _callContact('Contact 1'),
+                onPressed: () => _pushToCallScreen(
+                  SosContactModel(
+                    name: 'Служба екстренноЇ допомоги 112',
+                    phone: "112",
+                  ),
+                ),
               ),
               ListView.builder(
                 itemCount: _sosContactsBloc.contacts.length,
@@ -104,7 +106,7 @@ class _MainPageSosState extends State<MainPageSos> {
                       _sosContactsBloc.contacts[index];
                   return ContainerButton(
                     text: contactModel.name,
-                    onPressed: () => _callContact(contactModel.phone),
+                    onPressed: () => _pushToCallScreen(contactModel),
                   );
                 },
               ),
@@ -159,57 +161,60 @@ class _MainPageSosState extends State<MainPageSos> {
               Padding(
                 padding: const EdgeInsets.only(
                   top: 40.0,
-                  left: 10.0,
-                  right: 10.0,
+                  // left: 10.0,
+                  // right: 10.0,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      width: 164,
-                      height: 56,
-                      margin: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: darkNeutral600,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/add_contact');
-                        },
-                        child: Text(
-                          "Контакт",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: primary50,
-                            fontSize: 16,
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        width: 164,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          color: darkNeutral600,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/add_contact');
+                          },
+                          child: Text(
+                            "Контакт",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: primary50,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Container(
-                      width: 164,
-                      height: 56,
-                      margin: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: darkNeutral600,
-                        borderRadius: BorderRadius.circular(15),
+                      const SizedBox(
+                        width: 15,
                       ),
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/add_group');
-                        },
-                        child: Text(
-                          "Групу",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: primary50,
-                            fontSize: 16,
+                      Container(
+                        width: 164,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          color: darkNeutral600,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/add_group');
+                          },
+                          child: Text(
+                            "Групу",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: primary50,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -218,6 +223,10 @@ class _MainPageSosState extends State<MainPageSos> {
       },
     );
   }
+
+  _pushToCallScreen(SosContactModel contactModel) =>
+      Navigator.pushNamed(context, "/call_contact_sos",
+          arguments: contactModel);
 }
 
 class ContainerButton extends StatelessWidget {

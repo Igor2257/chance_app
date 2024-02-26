@@ -29,11 +29,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     String text = event.text;
     switch (event.inputLoginLayout) {
       case InputLoginLayouts.email:
-        emit(state.copyWith(errorEmail: validateEmail(text)??"", email: text));
+        emit(
+            state.copyWith(errorEmail: validateEmail(text) ?? "", email: text));
         break;
       case InputLoginLayouts.password:
         emit(state.copyWith(
-            errorPassword: validateFirstPassword(text)??"", password: text));
+            errorPassword: validateFirstPassword(text) ?? "", password: text));
         break;
     }
   }
@@ -46,15 +47,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       await Repository()
           .sendLoginData(state.email, state.password)
           .then((value) {
-        if (value==null) {
+        if (value == null) {
           Navigator.of(event.context)
               .pushNamedAndRemoveUntil("/", (route) => false);
           emit(state.clear());
-        }else{
-          emit(state.copyWith(errorEmail: value,errorPassword: value,isLoading: false));
+        } else {
+          emit(state.copyWith(
+              errorEmail: value, errorPassword: value, isLoading: false));
         }
       });
-    }else{
+    } else {
       emit(state.copyWith(isLoading: false));
     }
   }
@@ -63,12 +65,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     String? errorTextEmail = validateEmail(state.email),
         errorTextPassword = validateFirstPassword(state.password);
     if (errorTextEmail == null && errorTextPassword == null) {
-      emit(state.copyWith(
-          errorPassword: "", errorEmail: ""));
+      emit(state.copyWith(errorPassword: "", errorEmail: ""));
       return true;
     }
     emit(state.copyWith(
-        errorPassword: errorTextPassword??"", errorEmail: errorTextEmail??""));
+        errorPassword: errorTextPassword ?? "",
+        errorEmail: errorTextEmail ?? ""));
     return false;
   }
 
