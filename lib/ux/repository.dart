@@ -47,7 +47,6 @@ class Repository {
               {"password": hash.toString().substring(0, 13), "email": email}),
         )
             .then((value) async {
-          print("value.statusCode1 ${value.statusCode}");
           final cookie = _parseCookieFromLogin(value);
 
           if (value.statusCode > 199 && value.statusCode < 300) {
@@ -59,7 +58,6 @@ class Repository {
                 if (cookie != null) 'Cookie': cookie,
               },
             ).then((value) async {
-              print("value.statusCode2 ${value.statusCode}");
               if (value.statusCode > 199 && value.statusCode < 300) {
                 await FirebaseMessaging.instance.getToken().then((token) {
                   patchUserData(token: token);

@@ -57,7 +57,6 @@ class _LoginPageState extends State<LoginPage> {
                 textInputAction: TextInputAction.next,
                 inputLoginLayouts: InputLoginLayouts.email,
                 focusOtherField: () {
-                  print("object3");
                   emailFocusNode.unfocus();
                   FocusScope.of(context).requestFocus(passwordFocusNode);
                 },
@@ -76,6 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                 },
                 textInputType: TextInputType.text,
                 textEditingController: passwordTextEditingController,
+                emailTextEditingController: emailTextEditingController,
               ),
               const Spacer(),
               RoundedButton(

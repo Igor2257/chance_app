@@ -25,7 +25,7 @@ class RemindersState {
     "за 1 год",
     "за 1 день",
   ];
-  List<TaskModel> myTasks, tasksForToday;
+  List<TaskModel> myTasks;
   bool isLoading;
   SideSwipe sideSwipe;
 
@@ -37,7 +37,6 @@ class RemindersState {
     this.days = const [],
     this.week = const [],
     this.myTasks = const [],
-    this.tasksForToday = const [],
     this.daysForTasks = const [],
     this.selectedDate,
     this.dateForSwiping,
@@ -79,7 +78,6 @@ class RemindersState {
     fromLastSession,
     TaskModel? taskModel,
     List<TaskModel>? myTasks,
-    tasksForToday,
     bool? isLoading,
     SideSwipe? sideSwipe,
   }) {
@@ -113,7 +111,6 @@ class RemindersState {
       sessionForSelectingDateForTask:
           sessionForSelectingDateForTask ?? this.sessionForSelectingDateForTask,
       myTasks: myTasks ?? this.myTasks,
-      tasksForToday: tasksForToday ?? this.tasksForToday,
       isLoading: isLoading ?? this.isLoading,
       sideSwipe: sideSwipe ?? this.sideSwipe,
     );
@@ -142,7 +139,6 @@ class RemindersState {
       taskModel: null,
       sessionForSelectingDateForTask: 0,
       myTasks: [],
-      tasksForToday: [],
       isLoading: true,
       sideSwipe: SideSwipe.left,
     );

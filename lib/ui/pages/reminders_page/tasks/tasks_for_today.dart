@@ -37,7 +37,7 @@ class _TasksForTodayState extends State<TasksForToday> {
     Size size = MediaQuery.of(context).size;
     return BlocBuilder<RemindersBloc, RemindersState>(
         builder: (context, state) {
-      List<TaskModel> tasksForToday = List.from(state.tasksForToday);
+      List<TaskModel> tasksForToday = List.from(state.myTasks);
       print(tasksForToday);
       return Scaffold(
         appBar: AppBar(
@@ -298,11 +298,48 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                                         )),
                                                                     TextButton(
                                                                         onPressed:
-                                                                            () {
+                                                                            () async{
                                                                           BlocProvider.of<RemindersBloc>(context).add(DeleteTask(
                                                                               id: task.id,
+                                                                             ));
+                                                                          Future.delayed(const Duration(seconds: 1)).then((value) async {
+                                                                            Navigator.of(context).pop();
+                                                                          });
+                                                                          showDialog(
+                                                                              barrierDismissible: false,
                                                                               context: context,
-                                                                              name: task.message));
+                                                                              builder: (context) {
+                                                                                return SizedBox(
+                                                                                  height: 160,
+                                                                                  width: MediaQuery.of(context).size.width,
+                                                                                  child: AlertDialog(
+                                                                                    backgroundColor: beigeBG,
+                                                                                    content: Padding(
+                                                                                      padding: const EdgeInsets.symmetric(
+                                                                                          horizontal: 24, vertical: 16),
+                                                                                      child: Column(
+                                                                                        mainAxisSize: MainAxisSize.min,
+                                                                                        children: <Widget>[
+                                                                                          const Icon(Icons.done),
+                                                                                          const SizedBox(
+                                                                                            height: 40,
+                                                                                          ),
+                                                                                          Text(
+                                                                                            "Завдання видалено",
+                                                                                            textAlign: TextAlign.center,
+                                                                                            style: TextStyle(fontSize: 24, color: primaryText),
+                                                                                          ),
+                                                                                          Text(
+                                                                                            "”${task.message}”",
+                                                                                            textAlign: TextAlign.center,
+                                                                                            style: TextStyle(fontSize: 16, color: primaryText),
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                );
+                                                                              }).whenComplete(() => Navigator.of(context).pop());
                                                                         },
                                                                         child:
                                                                             Text(

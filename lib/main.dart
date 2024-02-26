@@ -164,15 +164,12 @@ class MyAppState extends State<MyApp> {
                             "/signinup": (context) => const SignInUpPage(),
                             "/registration": (context) =>
                                 const RegistrationPage(),
-                            "/login": (context) => LoginPage(),
+                            "/login": (context) => const LoginPage(),
                             "/enter_code": (context) =>
                                 const EnterCodeForRegister(),
                             "/subscription_page": (context) =>
                                 const SubscriptionPage(),
-                            "/reminders": (context) => BlocProvider(
-                                  create: (context) => RemindersBloc(),
-                                  child: const RemindersPage(),
-                                ),
+                            "/reminders": (context) => const RemindersPage(),
                             "/date_picker_for_tasks": (context) =>
                                 const CalendarTaskPage(),
                             "/add_medicine": (context) => BlocProvider(

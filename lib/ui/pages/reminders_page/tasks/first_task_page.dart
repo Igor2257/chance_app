@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/input_reminders_layout.dart';
+import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/model/tasks_model.dart';
 import 'package:chance_app/ux/repository.dart';
@@ -122,6 +123,8 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
                                     actions: [
                                       GestureDetector(
                                         onTap: () {
+                                          BlocProvider.of<RemindersBloc>(context).add(
+                                              SelectWhatPersonWouldLikeToAdd(reminders: Reminders.empty));
                                           Navigator.of(context).pop();
                                         },
                                         child: SizedBox(

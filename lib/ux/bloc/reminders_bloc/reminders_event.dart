@@ -12,11 +12,6 @@ class LoadDataForSelectDateForTasks extends RemindersEvent{
 class ChangeCalendarState extends RemindersEvent{
   ChangeCalendarState();
 }
-class ChangeReminders extends RemindersEvent{
-  final Reminders reminders;
-
-  ChangeReminders({required this.reminders});
-}
 
 class SelectedDate extends RemindersEvent{
   final Map<String,dynamic> selectedDate;
@@ -96,11 +91,8 @@ class ChangeIsDoneForTask extends RemindersEvent{
 
 class DeleteTask extends RemindersEvent{
   final String id;
-  final BuildContext context;
-  final String name;
 
-  DeleteTask({required this.id, required this.context, required this.name});
-
+  DeleteTask({required this.id});
 }
 
 class SaveTask extends RemindersEvent{

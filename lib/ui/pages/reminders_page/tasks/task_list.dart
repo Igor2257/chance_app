@@ -40,12 +40,6 @@ class TaskList extends StatelessWidget {
                           onPressed: () {
                             Navigator.of(context).pushNamed(
                                 "/tasks_for_today");
-                            BlocProvider.of<RemindersBloc>(context).add(
-                                LoadTasksForToday(
-                                    datetime: DateTime(
-                                        myTasks.first.date!.year,
-                                        myTasks.first.date!.month,
-                                        myTasks.first.date!.day)));
                           },
                           child: Text(
                             "Всі завдання",

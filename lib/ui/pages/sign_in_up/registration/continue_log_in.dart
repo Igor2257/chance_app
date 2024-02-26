@@ -33,9 +33,7 @@ class _ContinueLogInState extends State<ContinueLogIn> {
               onPress: () {
                 widget.firstFocusNode.unfocus();
                 widget.lastFocusNode.unfocus();
-                print("widget.firstText");
-                print(widget.firstText.text);
-                print(widget.secondText.text);
+
                 if (!state.isLoading) {
                   BlocProvider.of<RegistrationBloc>(context).add(
                       IncreaseCurrentStep(

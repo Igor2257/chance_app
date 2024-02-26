@@ -15,7 +15,7 @@ class InputLoginLayout extends StatefulWidget {
       required this.inputLoginLayouts,
       this.focusOtherField,
       required this.textInputType,
-      this.subTitle, required this.textEditingController,});
+      this.subTitle, required this.textEditingController, this.emailTextEditingController,});
 
   final String? title, subTitle;
   final FocusNode focusNode;
@@ -25,6 +25,7 @@ class InputLoginLayout extends StatefulWidget {
   final Function()? focusOtherField;
   final TextInputType textInputType;
   final TextEditingController textEditingController;
+  final TextEditingController? emailTextEditingController;
   @override
   State<InputLoginLayout> createState() => _InputLoginLayoutState();
 }
@@ -88,7 +89,6 @@ class _InputLoginLayoutState extends State<InputLoginLayout> {
                       BlocProvider.of<LoginBloc>(context)
                           .add(ValidateField(inputLoginLayout: inputLoginLayouts, text: value));
                       if (widget.focusOtherField != null) {
-                        print("object5");
                         widget.focusOtherField!();
                       }
                     }
@@ -100,7 +100,6 @@ class _InputLoginLayoutState extends State<InputLoginLayout> {
                     BlocProvider.of<LoginBloc>(context)
                         .add(ValidateField(inputLoginLayout: inputLoginLayouts, text: textEditingController.text));
                     if (widget.focusOtherField != null) {
-                      print("object6");
                       widget.focusOtherField!();
                     }
                   },
@@ -108,7 +107,7 @@ class _InputLoginLayoutState extends State<InputLoginLayout> {
                     BlocProvider.of<LoginBloc>(context)
                         .add(ValidateField(inputLoginLayout: inputLoginLayouts, text: value));
                     if (widget.focusOtherField != null) {
-                      print("object7");
+
                       widget.focusOtherField!();
                     }
                   },
@@ -121,6 +120,8 @@ class _InputLoginLayoutState extends State<InputLoginLayout> {
                         BlocProvider.of<LoginBloc>(context)
                             .add(SavePassword(
                             password: textEditingController.text));
+                        BlocProvider.of<LoginBloc>(context)
+                            .add(SaveEmail(email: widget.emailTextEditingController!.text));
                         setState(() {
                           obscureText = !obscureText;
                         });

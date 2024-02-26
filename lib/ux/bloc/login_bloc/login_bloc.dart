@@ -40,7 +40,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   FutureOr<void> _onValidateForm(
       ValidateForm event, Emitter<LoginState> emit) async {
-    emit(state.copyWith(isLoading: true));
+    emit(state.copyWith(isLoading: true,email: event.email,password: event.password));
     bool isValid = validate(emit);
     if (isValid) {
       await Repository()
@@ -62,8 +62,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   bool validate(Emitter<LoginState> emit) {
     String? errorTextEmail = validateEmail(state.email),
         errorTextPassword = validateFirstPassword(state.password);
-    print(errorTextEmail);
-    print(errorTextPassword);
     if (errorTextEmail == null && errorTextPassword == null) {
       emit(state.copyWith(
           errorPassword: "", errorEmail: ""));
