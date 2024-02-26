@@ -240,19 +240,6 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     _requests();
-    _connectivity = Connectivity();
-    _checkInternetConnectivity();
-    _connectivity.onConnectivityChanged.listen((result) {
-      _checkInternetConnectivity();
-    });
-  }
-
-  Future<void> _checkInternetConnectivity() async {
-    var result = await _connectivity.checkConnectivity();
-    bool value = Repository().checkIsAnyTasksNotSent();
-    if (result != ConnectivityResult.none && value) {
-      MyAppState.addMessageThatUserHaveOfflineData();
-    }
   }
 
   @override

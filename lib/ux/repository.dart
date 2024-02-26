@@ -666,7 +666,7 @@ class Repository {
   }
 
   bool checkIsAnyTasksNotSent() {
-    return myTasks.any((element) => element.isSentToDB == false);
+    return myTasks.isNotEmpty?myTasks.any((element) => element.isSentToDB == false):false;
   }
 
   Future clearTasks() async {

@@ -20,12 +20,13 @@ import 'package:chance_app/ui/pages/sos_page/add_group_screen.dart';
 import 'package:chance_app/ui/pages/sos_page/call_contacn_sos_screen.dart';
 import 'package:chance_app/ui/pages/sos_page/delete_contact_screen.dart';
 import 'package:chance_app/ui/pages/sos_page/main_page_sos.dart';
-import 'package:chance_app/ux/bloc/add_medicine_bloc/add_medicine_bloc.dart';
 import 'package:chance_app/ui/pages/sos_page/replace_contact_sos.dart';
+import 'package:chance_app/ux/bloc/add_medicine_bloc/add_medicine_bloc.dart';
 import 'package:chance_app/ux/bloc/login_bloc/login_bloc.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
+import 'package:chance_app/ux/internet_connection_stream.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/tasks_model.dart';
@@ -109,10 +110,13 @@ class MyApp extends StatefulWidget {
 class MyAppState extends State<MyApp> {
   Key key = UniqueKey();
   List<String> toasts = [];
-  static bool isUserHaveOfflineData = false;
 
-  static void addMessageThatUserHaveOfflineData() {
-    isUserHaveOfflineData = true;
+  late InternetConnectionStream internetConnectionStream;
+
+  @override
+  void initState() {
+    super.initState();
+    internetConnectionStream = InternetConnectionStream(setState);
   }
 
   @override
@@ -137,71 +141,111 @@ class MyAppState extends State<MyApp> {
             textDirection: TextDirection.ltr,
             child: Stack(
               children: [
-                KeyedSubtree(
-                    key: key,
-                    child: SizedBox(
-                        width: size.width,
-                        height: size.height,
-                        child: MaterialApp(
-                          title: 'Flutter Demo',
-                          debugShowCheckedModeBanner: false,
-                          theme: ThemeData(
-                            colorScheme: ColorScheme.fromSeed(
-                                seedColor: Colors.deepPurple),
-                            useMaterial3: true,
-                          ),
-                          supportedLocales: const [
-                            Locale('en'),
-                            Locale('uk'),
-                            Locale('ru'),
-                          ],
-                          localizationsDelegates: const [
-                            GlobalWidgetsLocalizations.delegate,
-                            GlobalCupertinoLocalizations.delegate,
-                            GlobalMaterialLocalizations.delegate,
-                          ],
-                          initialRoute: widget.route,
-                          routes: {
-                            "/": (context) => const MainPage(),
-                            "/signinup": (context) => const SignInUpPage(),
-                            "/registration": (context) =>
-                                const RegistrationPage(),
-                            "/login": (context) => const LoginPage(),
-                            "/enter_code": (context) =>
-                                const EnterCodeForRegister(),
-                            "/subscription_page": (context) =>
-                                const SubscriptionPage(),
-                            "/reminders": (context) => const RemindersPage(),
-                            "/date_picker_for_tasks": (context) =>
-                                const CalendarTaskPage(),
-                            "/add_medicine": (context) => BlocProvider(
-                                  create: (context) => AddMedicineBloc(),
-                                  child: const AddMedicinePage(),
+                Column(
+                  children: [
+                    Expanded(
+                      child: KeyedSubtree(
+                          key: key,
+                          child: SizedBox(
+                              width: size.width,
+                              height: size.height,
+                              child: MaterialApp(
+                                title: 'Flutter Demo',
+                                debugShowCheckedModeBanner: false,
+                                theme: ThemeData(
+                                  colorScheme: ColorScheme.fromSeed(
+                                      seedColor: Colors.deepPurple),
+                                  useMaterial3: true,
                                 ),
-                            "/reset_password": (context) =>
-                                const ResetPassword(),
-                            "/tasks_for_today": (context) =>
-                                const TasksForToday(),
-                            "/menu": (context) => const MenuPage(),
-                            "/sos": (context) => const MainPageSos(),
-                            "/add_contact": (context) =>
-                                const AddContactScreen(),
-                            "/add_group": (context) => const AddGroupScreen(),
-                            "/onboarding_page": (context) =>
-                                const OnboardingPage(),
-                            "/onboarding_tutorial": (context) =>
-                                const OnboardingTutorial(),
-                            "/delete_contact_sos": (context) =>
-                                const DeleteContactsPage(),
-                            "/my_information": (context) =>
-                                const MyInformation(),
-                            "/call_contact_sos": (context) =>
-                                const CallContactSosScreen(),
-                            "/replace_contact_sos": (context) =>
-                                const ReplaceContactSosScreen(),
-                          },
-                        ))),
-                if (isUserHaveOfflineData)
+                                supportedLocales: const [
+                                  Locale('en'),
+                                  Locale('uk'),
+                                  Locale('ru'),
+                                ],
+                                localizationsDelegates: const [
+                                  GlobalWidgetsLocalizations.delegate,
+                                  GlobalCupertinoLocalizations.delegate,
+                                  GlobalMaterialLocalizations.delegate,
+                                ],
+                                initialRoute: widget.route,
+                                routes: {
+                                  "/": (context) => const MainPage(),
+                                  "/signinup": (context) =>
+                                      const SignInUpPage(),
+                                  "/registration": (context) =>
+                                      const RegistrationPage(),
+                                  "/login": (context) => const LoginPage(),
+                                  "/enter_code": (context) =>
+                                      const EnterCodeForRegister(),
+                                  "/subscription_page": (context) =>
+                                      const SubscriptionPage(),
+                                  "/reminders": (context) =>
+                                      const RemindersPage(),
+                                  "/date_picker_for_tasks": (context) =>
+                                      const CalendarTaskPage(),
+                                  "/add_medicine": (context) => BlocProvider(
+                                        create: (context) => AddMedicineBloc(),
+                                        child: const AddMedicinePage(),
+                                      ),
+                                  "/reset_password": (context) =>
+                                      const ResetPassword(),
+                                  "/tasks_for_today": (context) =>
+                                      const TasksForToday(),
+                                  "/menu": (context) => const MenuPage(),
+                                  "/sos": (context) => const MainPageSos(),
+                                  "/add_contact": (context) =>
+                                      const AddContactScreen(),
+                                  "/add_group": (context) =>
+                                      const AddGroupScreen(),
+                                  "/onboarding_page": (context) =>
+                                      const OnboardingPage(),
+                                  "/onboarding_tutorial": (context) =>
+                                      const OnboardingTutorial(),
+                                  "/delete_contact_sos": (context) =>
+                                      const DeleteContactsPage(),
+                                  "/my_information": (context) =>
+                                      const MyInformation(),
+                                  "/call_contact_sos": (context) =>
+                                      const CallContactSosScreen(),
+                                  "/replace_contact_sos": (context) =>
+                                      const ReplaceContactSosScreen(),
+                                },
+                              ))),
+                    ),
+                    if (InternetConnectionStream.showInternetConnection)
+                      Container(
+                        decoration: BoxDecoration(
+                            color: InternetConnectionStream
+                                    .isUserHaveInternetConnection
+                                ? green
+                                : darkNeutral1000),
+                        height: 24,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              InternetConnectionStream
+                                      .isUserHaveInternetConnection
+                                  ? Icons.wifi
+                                  : Icons.wifi_off,
+                              color: primary50,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              InternetConnectionStream
+                                      .isUserHaveInternetConnection
+                                  ? "З'єднання відновлено"
+                                  : "Немає з'єднання",
+                              style: TextStyle(fontSize: 16, color: primary50),
+                            ),
+                          ],
+                        ),
+                      )
+                  ],
+                ),
+                if (InternetConnectionStream.isUserHaveOfflineData)
                   Container(
                       color: Colors.black38,
                       child: Center(
@@ -260,9 +304,8 @@ class MyAppState extends State<MyApp> {
                                             .sendAllLocalData()
                                             .then((value) {
                                           if (value) {
-                                            setState(() {
-                                              isUserHaveOfflineData = false;
-                                            });
+                                            internetConnectionStream
+                                                .changeUserOfflineData(false);
                                           }
                                         });
                                       },
@@ -312,9 +355,8 @@ class MyAppState extends State<MyApp> {
                                           await repository
                                               .updateLocalTasks()
                                               .whenComplete(() {
-                                            setState(() {
-                                              isUserHaveOfflineData = false;
-                                            });
+                                            internetConnectionStream
+                                                .changeUserOfflineData(false);
                                           });
                                         });
                                       },
