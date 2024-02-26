@@ -52,12 +52,14 @@ class _AddContactScreenState extends State<AddContactScreen> {
               label: "Введіть ім'я",
               hintText: "ім'я",
               isPhone: false,
+              onChanged: (value) {},
             ),
             LabeledTextField(
               controller: phoneController,
               label: "Введіть номер телефону",
               hintText: '+380',
               isPhone: true,
+              onChanged: (value) {},
             ),
             const SizedBox(height: 22),
             SizedBox(

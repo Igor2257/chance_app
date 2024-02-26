@@ -14,3 +14,10 @@ class DeleteContact extends SosContactsEvent {
 
   DeleteContact({required this.contacts});
 }
+
+class EditContact extends SosContactsEvent {
+  final SosContactModel oldContact;
+  final SosContactModel newContact;
+
+  EditContact({required this.oldContact, required this.newContact});
+}
