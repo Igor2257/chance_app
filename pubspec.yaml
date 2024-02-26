@@ -60,6 +60,7 @@ dependencies:
   
   permission_handler: ^11.3.0
   flutter_widget_from_html_core: ^0.14.11
+  flutter_fgbg: ^0.3.0
 
 
   # The following adds the Cupertino Icons font to your application.

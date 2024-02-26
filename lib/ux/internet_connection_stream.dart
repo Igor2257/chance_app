@@ -17,7 +17,7 @@ class InternetConnectionStream {
     onConnectivityChangedStream =
         _connectivity.onConnectivityChanged.listen((result) {
       _checkInternetConnectivity(result: result);
-    });
+    })..resume();
   }
 
   Future<void> _checkInternetConnectivity({ConnectivityResult? result}) async {

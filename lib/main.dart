@@ -38,6 +38,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -107,7 +108,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => MyAppState();
 }
 
-class MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Key key = UniqueKey();
   List<String> toasts = [];
 
@@ -139,95 +140,109 @@ class MyAppState extends State<MyApp> {
         ],
         child: Directionality(
             textDirection: TextDirection.ltr,
-            child: Stack(
-              children: [
-                Column(
+            child: FGBGNotifier(
+                onEvent: (event) {
+                  if (FGBGType.background == event ||
+                      AppLifecycleState.inactive.name == event.name ||
+                      AppLifecycleState.paused.name == event.name) {
+                    internetConnectionStream.pause();
+                  } else if (FGBGType.foreground == event ||
+                      AppLifecycleState.resumed.name == event.name) {
+                    internetConnectionStream.resume();
+                  }
+                  setState(() {});
+                },
+                child: Stack(
                   children: [
-                    Expanded(
-                      child: KeyedSubtree(
-                          key: key,
-                          child: SizedBox(
-                              width: size.width,
-                              height: size.height,
-                              child: MaterialApp(
-                                title: 'Flutter Demo',
-                                debugShowCheckedModeBanner: false,
-                                theme: ThemeData(
-                                  colorScheme: ColorScheme.fromSeed(
-                                      seedColor: Colors.deepPurple),
-                                  useMaterial3: true,
-                                ),
-                                supportedLocales: const [
-                                  Locale('en'),
-                                  Locale('uk'),
-                                  Locale('ru'),
-                                ],
-                                localizationsDelegates: const [
-                                  GlobalWidgetsLocalizations.delegate,
-                                  GlobalCupertinoLocalizations.delegate,
-                                  GlobalMaterialLocalizations.delegate,
-                                ],
-                                initialRoute: widget.route,
-                                routes: {
-                                  "/": (context) => const MainPage(),
-                                  "/signinup": (context) =>
-                                      const SignInUpPage(),
-                                  "/registration": (context) =>
-                                      const RegistrationPage(),
-                                  "/login": (context) => const LoginPage(),
-                                  "/enter_code": (context) =>
-                                      const EnterCodeForRegister(),
-                                  "/subscription_page": (context) =>
-                                      const SubscriptionPage(),
-                                  "/reminders": (context) =>
-                                      const RemindersPage(),
-                                  "/date_picker_for_tasks": (context) =>
-                                      const CalendarTaskPage(),
-                                  "/add_medicine": (context) => BlocProvider(
-                                        create: (context) => AddMedicineBloc(),
-                                        child: const AddMedicinePage(),
-                                      ),
-                                  "/reset_password": (context) =>
-                                      const ResetPassword(),
-                                  "/tasks_for_today": (context) =>
-                                      const TasksForToday(),
-                                  "/menu": (context) => const MenuPage(),
-                                  "/sos": (context) => const MainPageSos(),
-                                  "/add_contact": (context) =>
-                                      const AddContactScreen(),
-                                  "/add_group": (context) =>
-                                      const AddGroupScreen(),
-                                  "/onboarding_page": (context) =>
-                                      const OnboardingPage(),
-                                  "/onboarding_tutorial": (context) =>
-                                      const OnboardingTutorial(),
-                                  "/delete_contact_sos": (context) =>
-                                      const DeleteContactsPage(),
-                                  "/my_information": (context) =>
-                                      const MyInformation(),
-                                  "/call_contact_sos": (context) =>
-                                      const CallContactSosScreen(),
-                                  "/replace_contact_sos": (context) =>
-                                      const ReplaceContactSosScreen(),
-                                },
-                              ))),
+                    Column(
+                      children: [
+                        Expanded(
+                          child: KeyedSubtree(
+                              key: key,
+                              child: SizedBox(
+                                  width: size.width,
+                                  height: size.height,
+                                  child: MaterialApp(
+                                    title: 'Flutter Demo',
+                                    debugShowCheckedModeBanner: false,
+                                    theme: ThemeData(
+                                      colorScheme: ColorScheme.fromSeed(
+                                          seedColor: Colors.deepPurple),
+                                      useMaterial3: true,
+                                    ),
+                                    supportedLocales: const [
+                                      Locale('en'),
+                                      Locale('uk'),
+                                      Locale('ru'),
+                                    ],
+                                    localizationsDelegates: const [
+                                      GlobalWidgetsLocalizations.delegate,
+                                      GlobalCupertinoLocalizations.delegate,
+                                      GlobalMaterialLocalizations.delegate,
+                                    ],
+                                    initialRoute: widget.route,
+                                    routes: {
+                                      "/": (context) => const MainPage(),
+                                      "/signinup": (context) =>
+                                          const SignInUpPage(),
+                                      "/registration": (context) =>
+                                          const RegistrationPage(),
+                                      "/login": (context) => const LoginPage(),
+                                      "/enter_code": (context) =>
+                                          const EnterCodeForRegister(),
+                                      "/subscription_page": (context) =>
+                                          const SubscriptionPage(),
+                                      "/reminders": (context) =>
+                                          const RemindersPage(),
+                                      "/date_picker_for_tasks": (context) =>
+                                          const CalendarTaskPage(),
+                                      "/add_medicine": (context) =>
+                                          BlocProvider(
+                                            create: (context) =>
+                                                AddMedicineBloc(),
+                                            child: const AddMedicinePage(),
+                                          ),
+                                      "/reset_password": (context) =>
+                                          const ResetPassword(),
+                                      "/tasks_for_today": (context) =>
+                                          const TasksForToday(),
+                                      "/menu": (context) => const MenuPage(),
+                                      "/sos": (context) => const MainPageSos(),
+                                      "/add_contact": (context) =>
+                                          const AddContactScreen(),
+                                      "/add_group": (context) =>
+                                          const AddGroupScreen(),
+                                      "/onboarding_page": (context) =>
+                                          const OnboardingPage(),
+                                      "/onboarding_tutorial": (context) =>
+                                          const OnboardingTutorial(),
+                                      "/delete_contact_sos": (context) =>
+                                          const DeleteContactsPage(),
+                                      "/my_information": (context) =>
+                                          const MyInformation(),
+                                      "/call_contact_sos": (context) =>
+                                          const CallContactSosScreen(),
+                                      "/replace_contact_sos": (context) =>
+                                          const ReplaceContactSosScreen(),
+                                    },
+                                  ))),
                     ),
                     if (InternetConnectionStream.showInternetConnection)
                       Container(
                         decoration: BoxDecoration(
                             color: InternetConnectionStream
-                                    .isUserHaveInternetConnection
-                                ? green
-                                : darkNeutral1000),
+                                        .isUserHaveInternetConnection
+                                    ? green
+                                    : darkNeutral1000),
                         height: 24,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
                               InternetConnectionStream
-                                      .isUserHaveInternetConnection
-                                  ? Icons.wifi
-                                  : Icons.wifi_off,
+                                          .isUserHaveInternetConnection
+                                      ? Icons.wifi
+                                      : Icons.wifi_off,
                               color: primary50,
                             ),
                             const SizedBox(
@@ -235,9 +250,9 @@ class MyAppState extends State<MyApp> {
                             ),
                             Text(
                               InternetConnectionStream
-                                      .isUserHaveInternetConnection
-                                  ? "З'єднання відновлено"
-                                  : "Немає з'єднання",
+                                          .isUserHaveInternetConnection
+                                      ? "З'єднання відновлено"
+                                      : "Немає з'єднання",
                               style: TextStyle(fontSize: 16, color: primary50),
                             ),
                           ],
@@ -296,38 +311,40 @@ class MyAppState extends State<MyApp> {
                                     color: darkNeutral800),
                                 child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () async {
-                                        await Repository()
-                                            .sendAllLocalData()
-                                            .then((value) {
-                                          if (value) {
-                                            internetConnectionStream
-                                                .changeUserOfflineData(false);
-                                          }
-                                        });
-                                      },
-                                      child: SizedBox(
-                                        width: (size.width / 2.1) - 50,
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Container(
-                                              height: 56,
-                                              width: 56,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(90),
-                                                  color: primary300),
-                                              child: Center(
-                                                child: Icon(
-                                                  Icons.upload,
-                                                  color: primaryText,
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () async {
+                                            await Repository()
+                                                .sendAllLocalData()
+                                                .then((value) {
+                                              if (value) {
+                                                internetConnectionStream
+                                                    .changeUserOfflineData(
+                                                        false);
+                                              }
+                                            });
+                                          },
+                                          child: SizedBox(
+                                            width: (size.width / 2.1) - 50,
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Container(
+                                                  height: 56,
+                                                  width: 56,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              90),
+                                                      color: primary300),
+                                                  child: Center(
+                                                    child: Icon(
+                                                      Icons.upload,
+                                                      color: primaryText,
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
                                             const SizedBox(
                                               height: 10,
                                             ),
@@ -367,46 +384,48 @@ class MyAppState extends State<MyApp> {
                                           children: [
                                             Container(
                                               height: 56,
-                                              width: 56,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(90),
-                                                  border: Border.all(
-                                                      color: primary300)),
-                                              child: Center(
-                                                child: Icon(
-                                                  Icons.download,
-                                                  color: primary50,
+                                                  width: 56,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              90),
+                                                      border: Border.all(
+                                                          color: primary300)),
+                                                  child: Center(
+                                                    child: Icon(
+                                                      Icons.download,
+                                                      color: primary50,
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
                                             const SizedBox(
                                               height: 10,
                                             ),
                                             Expanded(
                                               child: Text(
                                                 "Синхронізація із сервером",
-                                                maxLines: 2,
-                                                textAlign: TextAlign.center,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    color: primary50,
-                                                    fontSize: 16),
-                                              ),
-                                            )
-                                          ],
+                                                    maxLines: 2,
+                                                    textAlign: TextAlign.center,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        color: primary50,
+                                                        fontSize: 16),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      )),
-              ],
-            )));
+                                  )
+                                ],
+                              ),
+                            ),
+                          )),
+                  ],
+                ))));
   }
 }
 

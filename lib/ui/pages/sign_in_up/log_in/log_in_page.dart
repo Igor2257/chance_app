@@ -80,6 +80,8 @@ class _LoginPageState extends State<LoginPage> {
               const Spacer(),
               RoundedButton(
                   onPress: () {
+                    passwordFocusNode.unfocus();
+                    emailFocusNode.unfocus();
                     if (!state.isLoading) {
                       BlocProvider.of<LoginBloc>(context).add(ValidateForm(
                           context: context,
@@ -114,44 +116,48 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   )),
               const SizedBox(height: 24),
-              GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        "/registration", (route) => false);
-                  },
-                  child: SizedBox(
-                    height: 44,
-                    child: Center(
-                        child: Wrap(
-                      direction: Axis.horizontal,
-                      alignment: WrapAlignment.center,
-                      runAlignment: WrapAlignment.center,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        Text(
-                          "Не маєте облікового запису?",
+              SizedBox(
+                height: 44,
+                child: Center(
+                    child: Wrap(
+                  direction: Axis.horizontal,
+                  alignment: WrapAlignment.center,
+                  runAlignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Text(
+                      "Не маєте облікового запису?",
+                      style: TextStyle(
+                          letterSpacing: 0.5,
+                          color: primary700,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    GestureDetector(
+                        onTap: () {
+                          passwordFocusNode.unfocus();
+                          emailFocusNode.unfocus();
+                          if (!state.isLoading) {
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                "/registration", (route) => false);
+                          }
+                        },
+                        child: Text(
+                          "Створити",
                           style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              decorationColor: primary700,
                               letterSpacing: 0.5,
                               color: primary700,
                               fontSize: 16,
                               fontWeight: FontWeight.w500),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            "Створити",
-                            style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                decorationColor: primary700,
-                                letterSpacing: 0.5,
-                                color: primary700,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                      ],
-                    )),
-                  )),
+                        )),
+                  ],
+                )),
+              ),
               const SizedBox(height: 24),
               GestureDetector(
                   onTap: () {
