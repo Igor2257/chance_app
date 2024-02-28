@@ -38,52 +38,103 @@ class _RegistrationPageState extends State<RegistrationPage>
 
     super.dispose();
   }
-
+  void onBack(RegistrationState state){
+    if (state.registrationPages == RegistrationPages.first) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              backgroundColor: beigeBG,
+              title: Text(
+                "Бажаєте залишити реєстрацію?",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 24, color: primaryText),
+              ),
+              content: Text(
+                "При виході з реєстрації ваші данні не будуть збережені",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: primaryText, fontSize: 16),
+              ),
+              actions: [
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        "Продовжити",
+                        style: TextStyle(fontSize: 16, color: primary500),
+                      ),
+                    ),
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            "/signinup", (route) => false);
+                        BlocProvider.of<RegistrationBloc>(context)
+                            .add(Dispose());
+                      },
+                      child: Text(
+                        "Завершити",
+                        style: TextStyle(fontSize: 16, color: primary500),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          });
+    } else {
+      BlocProvider.of<RegistrationBloc>(context)
+          .add(DecreaseCurrentStep());
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
         builder: (context, state) {
       controller.value = state.percentage;
-      return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-            surfaceTintColor: Colors.transparent,
-            centerTitle: true,
-            title: const Text("Реєстрація"),
-            leading: BackButton(
-              onPressed: () {
-                if (state.registrationPages ==RegistrationPages.first) {
-                  Navigator.of(context).pushNamedAndRemoveUntil("/signinup", (route) => false);
-                  BlocProvider.of<RegistrationBloc>(context).add(Dispose());
-                } else {
-                  BlocProvider.of<RegistrationBloc>(context)
-                      .add(DecreaseCurrentStep());
-                }
-              },
-            )),
-        backgroundColor: beigeBG,
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              LinearProgressIndicator(
-                backgroundColor: darkNeutral300,
-                color: darkNeutral600,
-                borderRadius: BorderRadius.circular(100),
-                value: controller.value,
-              ),
-              Expanded(
-                child: PageView(
-                  controller: state.pageController,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: const <Widget>[
-                    FirstSubPage(),
-                    SecondSubPage(),
-                    ThirdSubPage(),
-                  ],
+      return PopScope(
+        canPop: false,
+        onPopInvoked: (value){
+          onBack(state);
+        },
+        child: Scaffold(
+          appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              surfaceTintColor: Colors.transparent,
+              centerTitle: true,
+              title: const Text("Реєстрація"),
+              leading: BackButton(
+                onPressed: () {
+                  onBack(state);
+                },
+              )),
+          backgroundColor: beigeBG,
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                LinearProgressIndicator(
+                  backgroundColor: darkNeutral300,
+                  color: darkNeutral600,
+                  borderRadius: BorderRadius.circular(100),
+                  value: controller.value,
                 ),
-              ),
-            ],
+                Expanded(
+                  child: PageView(
+                    controller: state.pageController,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: const <Widget>[
+                      FirstSubPage(),
+                      SecondSubPage(),
+                      ThirdSubPage(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );

@@ -1,17 +1,18 @@
-import 'package:chance_app/main.dart';
 import 'package:chance_app/ui/components/custom_card.dart';
 import 'package:chance_app/ui/components/custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:chance_app/ui/components/logo_name.dart';
+import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/components/sos_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ux/repository.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -23,7 +24,6 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-
   late AndroidNotificationChannel _androidNotificationChannel;
 
   _requests() async {
@@ -233,9 +233,6 @@ class _MainPageState extends State<MainPage> {
           ));
     });
   }
-
-  late Connectivity _connectivity;
-
   @override
   void initState() {
     super.initState();
@@ -278,7 +275,7 @@ class _MainPageState extends State<MainPage> {
                     width: cardWidth,
                     margin: const EdgeInsets.only(bottom: 8, top: 8, right: 8),
                     onPress: () async {
-                      Navigator.of(context).pushNamed("/reminders");
+                      Navigator.of(context).pushNamedAndRemoveUntil("/reminders", (route) => true);
                     },
                   ),
                   CustomCard(
@@ -293,7 +290,13 @@ class _MainPageState extends State<MainPage> {
                     ),
                     width: cardWidth,
                     margin: const EdgeInsets.only(bottom: 8, top: 8, left: 8),
-                    onPress: () {},
+                    onPress: () async {
+                      await checkLocationPermission(context).then((value) {
+                        if (value) {
+                          Navigator.of(context).pushNamed("/navigation_page");
+                        }
+                      });
+                    },
                   ),
                 ],
               ),
@@ -348,5 +351,57 @@ class _MainPageState extends State<MainPage> {
             ],
           ),
         ));
+  }
+
+  Future<bool> checkLocationPermission(BuildContext context) async {
+    bool isOkay = false;
+    await Permission.location.request().then((status) async {
+      if (status != PermissionStatus.denied &&
+          status != PermissionStatus.permanentlyDenied) {
+        isOkay = true;
+      }
+      if (!isOkay) {
+        if (mounted) {
+          await showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) {
+                return PopScope(
+                    canPop: false,
+                    onPopInvoked: (value) {},
+                    child: AlertDialog(
+                      title: Text(
+                        "Дозвольте застосунку використовувати розташування",
+                        style: TextStyle(fontSize: 24, color: primaryText),
+                      ),
+                      content: Text(
+                        "Щоб програма працювала корректно, вам потрібно дозволити використовувати цей дозвіл",
+                        style: TextStyle(fontSize: 16, color: primaryText),
+                      ),
+                      actions: [
+                        RoundedButton(
+                          onPress: () async {
+                            await Geolocator.openAppSettings().whenComplete(() {
+                              if (mounted) {
+                                Navigator.of(context).pop();
+                              }
+                            });
+
+                            return true;
+                          },
+                          color: primary1000,
+                          child: Text(
+                            "Перейти",
+                            style: TextStyle(color: primary50),
+                          ),
+                        ),
+                      ],
+                    ));
+              });
+        }
+      }
+    });
+
+    return isOkay;
   }
 }

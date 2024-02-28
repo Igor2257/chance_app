@@ -50,20 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBkALiGGYe1N1L8XJEwWq22tWZbPOmVyss',
-    appId: '1:851944893842:android:bc3e5cd8dcaca47aa6254b',
-    messagingSenderId: '851944893842',
-    projectId: 'chance-app-b381c',
-    storageBucket: 'chance-app-b381c.appspot.com',
+    apiKey: 'AIzaSyCCMWNdJ7o2-4XXLe6fCWWRMlyR3iIBQqU',
+    appId: '1:587357455921:android:7c649ed9b6dd5cda107710',
+    messagingSenderId: '587357455921',
+    projectId: 'chance-bab22',
+    storageBucket: 'chance-bab22.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBvwxScoXQmNhv6eczptmmpm85sqQfVmao',
-    appId: '1:851944893842:ios:ed9b9ab7688c4e8ca6254b',
-    messagingSenderId: '851944893842',
-    projectId: 'chance-app-b381c',
-    storageBucket: 'chance-app-b381c.appspot.com',
-    iosClientId: '851944893842-b1vkjktpnl3vv8tvjrui7pq3e13221nb.apps.googleusercontent.com',
+    apiKey: 'AIzaSyDxsvs4Lj8D2Xa7qzBnME7rAAkCM48XUQc',
+    appId: '1:587357455921:ios:bb6c7f958f187aa5107710',
+    messagingSenderId: '587357455921',
+    projectId: 'chance-bab22',
+    storageBucket: 'chance-bab22.appspot.com',
+    iosClientId: '587357455921-fdue5dh2afv4b337qdn3jaemosl2th1a.apps.googleusercontent.com',
     iosBundleId: 'com.chanceapp.chanceApp',
   );
 }

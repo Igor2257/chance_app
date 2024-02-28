@@ -1,37 +1,37 @@
 {
   "project_info": {
-    "project_number": "851944893842",
-    "project_id": "chance-app-b381c",
-    "storage_bucket": "chance-app-b381c.appspot.com"
+    "project_number": "587357455921",
+    "project_id": "chance-bab22",
+    "storage_bucket": "chance-bab22.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:851944893842:android:bc3e5cd8dcaca47aa6254b",
+        "mobilesdk_app_id": "1:587357455921:android:7c649ed9b6dd5cda107710",
         "android_client_info": {
           "package_name": "com.chance_app.chance_app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "851944893842-73l7oug93sd7t4tqphmtgh8ippdkfbui.apps.googleusercontent.com",
+          "client_id": "587357455921-55s1sjrp3qk7lggf508c26k59r2e6n4c.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBkALiGGYe1N1L8XJEwWq22tWZbPOmVyss"
+          "current_key": "AIzaSyCCMWNdJ7o2-4XXLe6fCWWRMlyR3iIBQqU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "851944893842-73l7oug93sd7t4tqphmtgh8ippdkfbui.apps.googleusercontent.com",
+              "client_id": "587357455921-55s1sjrp3qk7lggf508c26k59r2e6n4c.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "851944893842-b1vkjktpnl3vv8tvjrui7pq3e13221nb.apps.googleusercontent.com",
+              "client_id": "587357455921-fdue5dh2afv4b337qdn3jaemosl2th1a.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.chanceapp.chanceApp"

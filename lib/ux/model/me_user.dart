@@ -16,6 +16,7 @@ class MeUser with _$MeUser {
     @HiveField(5) @Default(false) bool isGoogle,
     @HiveField(6) @Default(false) bool isConfirmed,
     @HiveField(7) @Default("") String deviceId,
+    @HiveField(8) @Default(0) int mapType,
   }) = _MeUser;
 
   factory MeUser.fromJson(Map<String, dynamic> json) => _$MeUserFromJson(json);

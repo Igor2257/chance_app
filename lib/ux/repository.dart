@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:chance_app/main.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/model/tasks_model.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -16,6 +17,9 @@ import 'package:http/http.dart' as http;
 class Repository {
   List<TaskModel> get myTasks =>
       tasksBox?.values.cast<TaskModel>().toList() ?? List.empty();
+
+  List<PickResult> get savedAddresses =>
+      savedAddressesBox?.values.cast<PickResult>().toList() ?? List.empty();
 
   //List<MedicineModel> get myMedicine =>
   //    medicineBox?.values.cast<MedicineModel>().toList() ?? List.empty();
@@ -59,6 +63,18 @@ class Repository {
               },
             ).then((value) async {
               if (value.statusCode > 199 && value.statusCode < 300) {
+                Map<String, dynamic> map = jsonDecode(value.body);
+                MeUser meUser = MeUser(
+                  id: map["_id"],
+                  email: map["email"],
+                  name: map["name"],
+                  lastName: map["lastName"],
+                  phone: map["phone"],
+                  isGoogle: map["isGoogle"],
+                  isConfirmed: map["isConfirmed"],
+                  deviceId: map["deviceId"],
+                );
+                await addUser(meUser);
                 await FirebaseMessaging.instance.getToken().then((token) {
                   patchUserData(token: token);
                 });
@@ -652,9 +668,10 @@ class Repository {
         await http.post(url, headers: <String, String>{
           'Content-Type': 'application/json',
           'Cookie': cookie.toString(),
-        }).then((value) {
+        }).then((value) async {
           if (value.statusCode > 199 && value.statusCode < 300) {
-            deleteCookie();
+            await deleteCookie();
+            await removeUser();
           }
         });
       } catch (error) {
@@ -704,6 +721,26 @@ class Repository {
 
   Future addUser(MeUser meUser) async {
     await userBox!.put("user", meUser);
+  }
+
+  Future updateUser(MeUser meUser) async {
+    await userBox!.put("user", meUser);
+  }
+
+  Future removeUser() async {
+    await userBox!.delete("user");
+  }
+
+  Future addSavedAddresses(PickResult savedAddresses) async {
+    await savedAddressesBox!.put(savedAddresses.id, savedAddresses);
+  }
+
+  Future updateSavedAddresses(PickResult savedAddresses) async {
+    await savedAddressesBox!.put(savedAddresses.id, savedAddresses);
+  }
+
+  Future removeSavedAddresses(int id) async {
+    await savedAddressesBox!.delete(id);
   }
 
   Future<String?> deleteAllTasks() async {

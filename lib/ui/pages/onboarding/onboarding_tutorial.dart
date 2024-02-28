@@ -47,18 +47,32 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: beigeBG,
-      body: Stack(
-        children: [
-          Column(
+    return PopScope(
+        canPop: false,
+        onPopInvoked: (value) {
+          if (page == 0) {
+            Navigator.of(context).pop();
+          } else {
+            pageController.jumpToPage(
+              page - 1,
+            );
+            setState(() {
+              page - 1;
+            });
+          }
+        },
+        child: Scaffold(
+          backgroundColor: beigeBG,
+          body: Stack(
             children: [
-              Expanded(
-                child: PageView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  controller: pageController,
-                  onPageChanged: (value) {
-                    setState(() {
+              Column(
+                children: [
+                  Expanded(
+                    child: PageView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      controller: pageController,
+                      onPageChanged: (value) {
+                        setState(() {
                       page = value;
                     });
                   },
@@ -173,17 +187,17 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> {
                     child: Center(
                       child: Text(
                         'Пропустити',
-                        style: TextStyle(fontSize: 16, color: primaryText),
+                            style: TextStyle(fontSize: 16, color: primaryText),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 
   void loadData() {

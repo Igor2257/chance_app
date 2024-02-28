@@ -50,12 +50,12 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   FutureOr<void> _onSavePasswordFirst(
       SavePasswordFirst event, Emitter<RegistrationState> emit) {
-    emit(state.copyWith(passwordFirst: event.passwordFirst));
+    emit(state.copyWith(passwordFirst: event.passwordFirst.replaceAll(" ", "")));
   }
 
   FutureOr<void> _onSavePasswordSecond(
       SavePasswordSecond event, Emitter<RegistrationState> emit) {
-    emit(state.copyWith(passwordSecond: event.passwordSecond));
+    emit(state.copyWith(passwordSecond: event.passwordSecond.replaceAll(" ", "")));
   }
 
   FutureOr<void> _onIncreaseCurrentStep(
@@ -75,7 +75,9 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       if (index - 1 == 0) {
         emit(state.copyWith(firstName: event.second, lastName: event.first));
       } else if (index - 1 == 1) {
-        emit(state.copyWith(email: event.second));
+        emit(state.copyWith(
+            email: event.second,
+            phone: "+380${event.first}".trim().replaceAll(" ", "")));
       }
       if (validate(emit)) {
         emit(state.copyWith(
@@ -84,7 +86,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       }
     } else {
       emit(state.copyWith(
-          passwordSecond: event.second, passwordFirst: event.first));
+          passwordSecond: event.second.replaceAll(" ", ""), passwordFirst: event.first.replaceAll(" ", "")));
       if (validate(emit)) {
         await Repository()
             .sendRegisterData(state.lastName, state.firstName, state.phone,
@@ -122,14 +124,13 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   FutureOr<void> _onDispose(Dispose event, Emitter<RegistrationState> emit) {
     state.pageController!.dispose();
-    //emit(state.clear());
+    emit(state.clear());
   }
 
   FutureOr<void> _onValidateForm(
       ValidateForm event, Emitter<RegistrationState> emit) {
     emit(state.copyWith(isLoading: true));
     String text = event.text;
-    String? errorText;
     switch (event.inputLayouts) {
       case InputLayouts.lastName:
         emit(state.copyWith(
@@ -150,13 +151,16 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
         break;
       case InputLayouts.firstPassword:
+        text=text.replaceAll(" ", "");
         emit(state.copyWith(
             passwordFirst: text,
             errorFirstPassword: validateFirstPassword(text) ?? ""));
 
         break;
       case InputLayouts.lastPassword:
+        text=text.replaceAll(" ", "");
         emit(state.copyWith(
+
             passwordSecond: text,
             errorSecondPassword: validateSecondPassword(text) ?? ""));
         break;
@@ -194,28 +198,28 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     text = state.email;
     errorTextEmail = validateEmail(text);
 
-    text = state.passwordFirst;
+    text = state.passwordFirst.replaceAll(" ", "");
 
     errorTextFP = validateFirstPassword(text);
 
-    text = state.passwordSecond;
+    text = state.passwordSecond.replaceAll(" ", "");
     errorTextLP = validateSecondPassword(text);
 
     int index = RegistrationPages.values.indexOf(state.registrationPages);
     if (index == 0) {
       emit(state.copyWith(
-        errorLastName: errorTextLN,
-        errorFirstName: errorTextFN,
+        errorLastName: errorTextLN??"",
+        errorFirstName: errorTextFN??"",
       ));
     } else if (index == 1) {
       emit(state.copyWith(
-        errorEmail: errorTextEmail,
-        errorPhone: errorTextPhone,
+        errorEmail: errorTextEmail??"",
+        errorPhone: errorTextPhone??"",
       ));
     } else if (index == 2) {
       emit(state.copyWith(
-        errorFirstPassword: errorTextFP,
-        errorSecondPassword: errorTextLP,
+        errorFirstPassword: errorTextFP??"",
+        errorSecondPassword: errorTextLP??"",
       ));
     }
 
@@ -330,9 +334,10 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   }
 
   String? validatePhone(String text) {
-    if (text.trim().isEmpty) {
+    if (text.isEmpty) {
       return 'Невірний формат номеру телефону';
     }
+    print("text $text");
     if (!RegExp(r'^\+380\d{9}$').hasMatch(text)) {
       return 'Невірний формат номеру телефону';
     }

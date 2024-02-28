@@ -4,6 +4,8 @@ import 'package:chance_app/ui/pages/add_medicine_page/add_medicine_page.dart';
 import 'package:chance_app/ui/pages/main_page/main_page.dart';
 import 'package:chance_app/ui/pages/menu/menu_page.dart';
 import 'package:chance_app/ui/pages/menu/pages/my_information.dart';
+import 'package:chance_app/ui/pages/navigation/navigation_page.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ui/pages/onboarding/onboarding_page.dart';
 import 'package:chance_app/ui/pages/onboarding/onboarding_tutorial.dart';
 import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
@@ -224,6 +226,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                           const CallContactSosScreen(),
                                       "/replace_contact_sos": (context) =>
                                           const ReplaceContactSosScreen(),
+                                      "/navigation_page": (context) =>
+                                          const NavigationPage(),
                                     },
                                   ))),
                     ),
@@ -432,18 +436,21 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
 Box? tasksBox;
 Box? userBox;
 Box? medicineBox;
+Box? savedAddressesBox;
 
 Future<bool> _initBoxes() async {
   final documentsDirectory = await getApplicationDocumentsDirectory();
   Hive.init(documentsDirectory.path);
   //await Repository().deleteCookie();
-  //await Hive.deleteBoxFromDisk('user');
+  await Hive.deleteBoxFromDisk('user');
   //await Hive.deleteBoxFromDisk('myTasks');
   Hive.registerAdapter(MeUserAdapter());
   Hive.registerAdapter(TaskModelAdapter());
   Hive.registerAdapter(MedicineModelAdapter());
+  Hive.registerAdapter(PickResultAdapter());
   tasksBox = await Hive.openBox<TaskModel>("myTasks");
   userBox = await Hive.openBox<MeUser>("user");
+  savedAddressesBox = await Hive.openBox<PickResult>("savedAddresses");
   //medicineBox = await Hive.openBox<MedicineModel>("myMedicines");
 
   return true;

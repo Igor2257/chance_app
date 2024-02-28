@@ -36,6 +36,8 @@ mixin _$MeUser {
   bool get isConfirmed => throw _privateConstructorUsedError;
   @HiveField(7)
   String get deviceId => throw _privateConstructorUsedError;
+  @HiveField(8)
+  int get mapType => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -55,7 +57,8 @@ abstract class $MeUserCopyWith<$Res> {
       @HiveField(4) String email,
       @HiveField(5) bool isGoogle,
       @HiveField(6) bool isConfirmed,
-      @HiveField(7) String deviceId});
+      @HiveField(7) String deviceId,
+      @HiveField(8) int mapType});
 }
 
 /// @nodoc
@@ -79,6 +82,7 @@ class _$MeUserCopyWithImpl<$Res, $Val extends MeUser>
     Object? isGoogle = null,
     Object? isConfirmed = null,
     Object? deviceId = null,
+    Object? mapType = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -113,6 +117,10 @@ class _$MeUserCopyWithImpl<$Res, $Val extends MeUser>
           ? _value.deviceId
           : deviceId // ignore: cast_nullable_to_non_nullable
               as String,
+      mapType: null == mapType
+          ? _value.mapType
+          : mapType // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -132,7 +140,8 @@ abstract class _$$MeUserImplCopyWith<$Res> implements $MeUserCopyWith<$Res> {
       @HiveField(4) String email,
       @HiveField(5) bool isGoogle,
       @HiveField(6) bool isConfirmed,
-      @HiveField(7) String deviceId});
+      @HiveField(7) String deviceId,
+      @HiveField(8) int mapType});
 }
 
 /// @nodoc
@@ -154,6 +163,7 @@ class __$$MeUserImplCopyWithImpl<$Res>
     Object? isGoogle = null,
     Object? isConfirmed = null,
     Object? deviceId = null,
+    Object? mapType = null,
   }) {
     return _then(_$MeUserImpl(
       id: null == id
@@ -188,6 +198,10 @@ class __$$MeUserImplCopyWithImpl<$Res>
           ? _value.deviceId
           : deviceId // ignore: cast_nullable_to_non_nullable
               as String,
+      mapType: null == mapType
+          ? _value.mapType
+          : mapType // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -203,7 +217,8 @@ class _$MeUserImpl implements _MeUser {
       @HiveField(4) this.email = "",
       @HiveField(5) this.isGoogle = false,
       @HiveField(6) this.isConfirmed = false,
-      @HiveField(7) this.deviceId = ""});
+      @HiveField(7) this.deviceId = "",
+      @HiveField(8) this.mapType = 0});
 
   factory _$MeUserImpl.fromJson(Map<String, dynamic> json) =>
       _$$MeUserImplFromJson(json);
@@ -239,10 +254,14 @@ class _$MeUserImpl implements _MeUser {
   @JsonKey()
   @HiveField(7)
   final String deviceId;
+  @override
+  @JsonKey()
+  @HiveField(8)
+  final int mapType;
 
   @override
   String toString() {
-    return 'MeUser(id: $id, name: $name, lastName: $lastName, phone: $phone, email: $email, isGoogle: $isGoogle, isConfirmed: $isConfirmed, deviceId: $deviceId)';
+    return 'MeUser(id: $id, name: $name, lastName: $lastName, phone: $phone, email: $email, isGoogle: $isGoogle, isConfirmed: $isConfirmed, deviceId: $deviceId, mapType: $mapType)';
   }
 
   @override
@@ -261,13 +280,14 @@ class _$MeUserImpl implements _MeUser {
             (identical(other.isConfirmed, isConfirmed) ||
                 other.isConfirmed == isConfirmed) &&
             (identical(other.deviceId, deviceId) ||
-                other.deviceId == deviceId));
+                other.deviceId == deviceId) &&
+            (identical(other.mapType, mapType) || other.mapType == mapType));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, name, lastName, phone, email,
-      isGoogle, isConfirmed, deviceId);
+      isGoogle, isConfirmed, deviceId, mapType);
 
   @JsonKey(ignore: true)
   @override
@@ -292,7 +312,8 @@ abstract class _MeUser implements MeUser {
       @HiveField(4) final String email,
       @HiveField(5) final bool isGoogle,
       @HiveField(6) final bool isConfirmed,
-      @HiveField(7) final String deviceId}) = _$MeUserImpl;
+      @HiveField(7) final String deviceId,
+      @HiveField(8) final int mapType}) = _$MeUserImpl;
 
   factory _MeUser.fromJson(Map<String, dynamic> json) = _$MeUserImpl.fromJson;
 
@@ -320,6 +341,9 @@ abstract class _MeUser implements MeUser {
   @override
   @HiveField(7)
   String get deviceId;
+  @override
+  @HiveField(8)
+  int get mapType;
   @override
   @JsonKey(ignore: true)
   _$$MeUserImplCopyWith<_$MeUserImpl> get copyWith =>

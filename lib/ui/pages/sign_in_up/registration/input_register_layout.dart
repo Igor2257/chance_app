@@ -93,10 +93,13 @@ class _InputRegisterLayoutState extends State<InputRegisterLayout> {
                     border: Border.all(color: isError ? red900 : beige300),
                     borderRadius: BorderRadius.circular(16)),
                 child: InternationalPhoneNumberInput(
+                  inputBorder: InputBorder.none,
+                  textFieldController: textEditingController,
                   initialValue: PhoneNumber(
-                      phoneNumber: textEditingController.text.replaceAll("+380", ""),
+                      phoneNumber:
+                          textEditingController.text.replaceAll("+380", ""),
                       dialCode: "+380",
-                      isoCode: "+380"),
+                      isoCode: "UA"),
                   maxLength: 11,
                   keyboardAction: widget.textInputAction,
                   focusNode: focusNode,
@@ -104,18 +107,23 @@ class _InputRegisterLayoutState extends State<InputRegisterLayout> {
                   errorMessage: "",
                   locale: "uk",
                   countries: const ["UA"],
-                  onInputChanged: (number) {
+                  onInputChanged: (number) {},
+                  onFieldSubmitted: (_) {
                     BlocProvider.of<RegistrationBloc>(context).add(ValidateForm(
                         inputLayouts: inputLayouts,
-                        text: number.phoneNumber ?? ""));
-                  },
-                  onFieldSubmitted: (_) {
+                        text: textEditingController.text));
                     widget.focusOtherField!();
                   },
                   onSubmit: () {
+                    BlocProvider.of<RegistrationBloc>(context).add(ValidateForm(
+                        inputLayouts: inputLayouts,
+                        text: textEditingController.text));
                     widget.focusOtherField!();
                   },
                   onSaved: (number) {
+                    BlocProvider.of<RegistrationBloc>(context).add(ValidateForm(
+                        inputLayouts: inputLayouts,
+                        text: number.phoneNumber ?? ""));
                     widget.focusOtherField!();
                   },
                 )),
@@ -258,6 +266,9 @@ class _InputRegisterLayoutState extends State<InputRegisterLayout> {
       case InputLayouts.phone:
         errorText = state.errorPhone;
         textEditingController.text = state.phone;
+        print("state.phone ${textEditingController.text}");
+        textEditingController.text =
+            textEditingController.text.replaceAll("+380", "");
         break;
       case InputLayouts.email:
         errorText = state.errorEmail;

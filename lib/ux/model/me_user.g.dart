@@ -25,13 +25,14 @@ class MeUserAdapter extends TypeAdapter<MeUser> {
       isGoogle: fields[5] as bool,
       isConfirmed: fields[6] as bool,
       deviceId: fields[7] as String,
+      mapType: fields[8] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, MeUser obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class MeUserAdapter extends TypeAdapter<MeUser> {
       ..writeByte(6)
       ..write(obj.isConfirmed)
       ..writeByte(7)
-      ..write(obj.deviceId);
+      ..write(obj.deviceId)
+      ..writeByte(8)
+      ..write(obj.mapType);
   }
 
   @override
@@ -74,6 +77,7 @@ _$MeUserImpl _$$MeUserImplFromJson(Map<String, dynamic> json) => _$MeUserImpl(
       isGoogle: json['isGoogle'] as bool? ?? false,
       isConfirmed: json['isConfirmed'] as bool? ?? false,
       deviceId: json['deviceId'] as String? ?? "",
+      mapType: json['mapType'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$$MeUserImplToJson(_$MeUserImpl instance) =>
@@ -86,4 +90,5 @@ Map<String, dynamic> _$$MeUserImplToJson(_$MeUserImpl instance) =>
       'isGoogle': instance.isGoogle,
       'isConfirmed': instance.isConfirmed,
       'deviceId': instance.deviceId,
+      'mapType': instance.mapType,
     };
