@@ -59,7 +59,6 @@ class _RemindersPageState extends State<RemindersPage> {
         return Scaffold(
           key: _scaffoldKey,
           backgroundColor: beigeBG,
-          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             centerTitle: true,
             titleTextStyle: TextStyle(fontSize: 22, color: primaryText),
