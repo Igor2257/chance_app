@@ -1,7 +1,6 @@
 part of 'reminders_bloc.dart';
 
 class RemindersState {
-  Reminders reminders;
   String taskTitle;
   DateTime? selectedDate = DateTime.now(),
       dateForSwiping = DateTime.now(),
@@ -27,10 +26,8 @@ class RemindersState {
   ];
   List<TaskModel> myTasks;
   bool isLoading;
-  SideSwipe sideSwipe;
 
   RemindersState({
-    this.reminders = Reminders.empty,
     this.taskTitle = "",
     this.isCalendarOpened = false,
     this.isLoading = true,
@@ -53,11 +50,9 @@ class RemindersState {
     this.oldNotificationsBefore = NotificationsBefore.no,
     this.newNotificationsBefore = NotificationsBefore.no,
     this.taskModel,
-    this.sideSwipe = SideSwipe.left,
   });
 
   RemindersState copyWith({
-    Reminders? reminders,
     String? taskTitle,
     DateTime? selectedDate,
     dateForSwiping,
@@ -79,10 +74,8 @@ class RemindersState {
     TaskModel? taskModel,
     List<TaskModel>? myTasks,
     bool? isLoading,
-    SideSwipe? sideSwipe,
   }) {
     return RemindersState(
-      reminders: reminders ?? this.reminders,
       taskTitle: taskTitle ?? this.taskTitle,
       selectedDate: selectedDate ?? this.selectedDate,
       days: days ?? this.days,
@@ -112,13 +105,11 @@ class RemindersState {
           sessionForSelectingDateForTask ?? this.sessionForSelectingDateForTask,
       myTasks: myTasks ?? this.myTasks,
       isLoading: isLoading ?? this.isLoading,
-      sideSwipe: sideSwipe ?? this.sideSwipe,
     );
   }
 
   RemindersState clear() {
     return RemindersState(
-      reminders: Reminders.empty,
       taskTitle: "",
       selectedDate: null,
       days: [],
@@ -140,7 +131,6 @@ class RemindersState {
       sessionForSelectingDateForTask: 0,
       myTasks: [],
       isLoading: true,
-      sideSwipe: SideSwipe.left,
     );
   }
 }
