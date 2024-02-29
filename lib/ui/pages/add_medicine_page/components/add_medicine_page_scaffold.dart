@@ -21,8 +21,9 @@ class AddMedicinePageScaffold extends StatelessWidget {
       context: context,
       showDragHandle: true,
       builder: (context) => SafeArea(
+        top: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

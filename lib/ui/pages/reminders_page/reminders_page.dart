@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/pages/add_medicine_page/components/medicine_added_bottom_sheet.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/calendar.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/custom_bottom_sheet.dart';
 import 'package:chance_app/ui/pages/reminders_page/medicine/medicine_list.dart';
@@ -22,23 +23,35 @@ class _RemindersPageState extends State<RemindersPage> {
   var _selectedTab = SideSwipe.left;
 
   Future<void> _onAddButtonPressed() async {
-    final selected = await showModalBottomSheet<Reminders>(
+    final selectedReminders = await showModalBottomSheet<Reminders>(
       context: context,
       backgroundColor: beige100,
       enableDrag: true,
       builder: (_) => const CustomBottomSheet(),
     );
 
-    if (selected != null && mounted) {
-      switch (selected) {
+    if (selectedReminders != null) {
+      switch (selectedReminders) {
         case Reminders.medicine:
-          final result = await Navigator.of(context).pushNamed("/add_medicine");
-          if (result is MedicineModel) print("${result.name} додано");
+          var addMedicine = true;
+          do {
+            if (!mounted) break;
+            final result =
+                await Navigator.of(context).pushNamed("/add_medicine");
+            if (result is MedicineModel && mounted) {
+              final addMore = await showModalBottomSheet<bool>(
+                context: context,
+                showDragHandle: true,
+                builder: (_) => MedicineAddedBottomSheet(result),
+              );
+              if (addMore ?? false) continue;
+            }
+            addMedicine = false;
+          } while (addMedicine);
 
         case Reminders.tasks:
           _scaffoldKey.currentState?.showBottomSheet(
             backgroundColor: beige100,
-            enableDrag: true,
             (_) => const TasksSheets(),
           );
       }
@@ -128,26 +141,23 @@ class _RemindersPageState extends State<RemindersPage> {
               Positioned(
                 right: 10,
                 bottom: 40,
-                child: IgnorePointer(
-                  ignoring: isLoading,
-                  child: ElevatedButton.icon(
-                    onPressed: _onAddButtonPressed,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primary1000,
-                      foregroundColor: primary50,
-                      padding: const EdgeInsets.all(12),
-                      minimumSize: const Size.square(44),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      textStyle: const TextStyle(
-                        fontSize: 16,
-                        letterSpacing: 0.15,
-                      ),
+                child: ElevatedButton.icon(
+                  onPressed: _onAddButtonPressed,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primary1000,
+                    foregroundColor: primary50,
+                    padding: const EdgeInsets.all(12),
+                    minimumSize: const Size.square(44),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                    icon: const Icon(Icons.add),
-                    label: const Text("Додати"),
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      letterSpacing: 0.15,
+                    ),
                   ),
+                  icon: const Icon(Icons.add),
+                  label: const Text("Додати"),
                 ),
               ),
             ],
