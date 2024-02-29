@@ -1,13 +1,12 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/calendar.dart';
-import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/custom_bottom_sheet_notification_picker.dart';
 import 'package:chance_app/ux/model/tasks_model.dart';
 import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'reminders_event.dart';
 part 'reminders_state.dart';
@@ -18,7 +17,6 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     on<SelectedDate>(_onSelectedDate);
     on<ChangeCalendarState>(_onChangeCalendarState);
     on<ChangeMonth>(_onChangeMonth);
-    on<SelectWhatPersonWouldLikeToAdd>(_onSelectWhatPersonWouldLikeToAdd);
     on<SaveTaskName>(_onSaveTaskName);
     on<ChangeMonthForTasks>(_onChangeMonthForTasks);
     on<SelectedDateForTasks>(_onSelectedDateForTasks);
@@ -32,7 +30,6 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     on<ChangeIsDoneForTask>(_onChangeIsDoneForTask);
     on<DeleteTask>(_onDeleteTask);
     on<SaveTask>(_onSaveTask);
-    on<ChangeSideSwipe>(_onChangeSideSwipe);
   }
 
   bool checkIfDayHasTask(
@@ -230,11 +227,6 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     myTasks.sort((a, b) => a.date!.compareTo(b.date!));
     emit(state.copyWith(
         days: dates, week: week, dateForSwiping: DateTime(year, month)));
-  }
-
-  FutureOr<void> _onSelectWhatPersonWouldLikeToAdd(
-      SelectWhatPersonWouldLikeToAdd event, Emitter<RemindersState> emit) {
-    emit(state.copyWith(reminders: event.reminders));
   }
 
   FutureOr<void> _onSaveTaskName(
@@ -464,13 +456,5 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
       oldDeadlineForTask: DateTime.now(),
       newDeadlineForTask: DateTime.now(),
     ));
-  }
-
-  FutureOr<void> _onChangeSideSwipe(
-      ChangeSideSwipe event, Emitter<RemindersState> emit) {
-    emit(state.copyWith(
-        sideSwipe: state.sideSwipe == SideSwipe.left
-            ? SideSwipe.right
-            : SideSwipe.left));
   }
 }

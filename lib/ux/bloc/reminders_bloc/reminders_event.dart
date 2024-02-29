@@ -26,12 +26,6 @@ class ChangeMonth extends RemindersEvent{
   ChangeMonth({required this.sideSwipe});
 }
 
-class SelectWhatPersonWouldLikeToAdd extends RemindersEvent{
-  final Reminders reminders;
-
-  SelectWhatPersonWouldLikeToAdd({required this.reminders});
-}
-
 class SaveTaskName extends RemindersEvent{
 final String name;
 
@@ -101,7 +95,4 @@ class SaveTask extends RemindersEvent{
   SaveTask({required this.taskModel});
 
 
-}
-class ChangeSideSwipe extends RemindersEvent{
-  ChangeSideSwipe();
 }

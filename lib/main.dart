@@ -235,91 +235,92 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                           const NavigationPage(),
                                     },
                                   ))),
-                    ),
-                    if (InternetConnectionStream.showInternetConnection)
-                      Container(
-                        decoration: BoxDecoration(
-                            color: InternetConnectionStream
+                        ),
+                        if (InternetConnectionStream.showInternetConnection)
+                          Container(
+                            decoration: BoxDecoration(
+                                color: InternetConnectionStream
                                         .isUserHaveInternetConnection
                                     ? green
                                     : darkNeutral1000),
-                        height: 24,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              InternetConnectionStream
+                            height: 24,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  InternetConnectionStream
                                           .isUserHaveInternetConnection
                                       ? Icons.wifi
                                       : Icons.wifi_off,
-                              color: primary50,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              InternetConnectionStream
+                                  color: primary50,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  InternetConnectionStream
                                           .isUserHaveInternetConnection
                                       ? "З'єднання відновлено"
                                       : "Немає з'єднання",
-                              style: TextStyle(fontSize: 16, color: primary50),
-                            ),
-                          ],
-                        ),
-                      )
-                  ],
-                ),
-                if (InternetConnectionStream.isUserHaveOfflineData)
-                  Container(
-                      color: Colors.black38,
-                      child: Center(
-                        child: Container(
-                          width: size.width,
-                          decoration: BoxDecoration(
-                              color: beige100,
-                              borderRadius: BorderRadius.circular(16)),
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 16, horizontal: 16),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 16, horizontal: 24),
-                                child: Column(
-                                  children: [
-                                    SvgPicture.asset(
-                                      "assets/icons/tasks_big.svg",
-                                      color: beige500,
-                                    ),
-                                    Text(
-                                      "Завдання",
-                                      style: TextStyle(
-                                          fontSize: 24, color: primaryText),
-                                    ),
-                                    const SizedBox(
-                                      height: 30,
-                                    ),
-                                    Text(
-                                      "У вас є не синхронізовані дані з сервером. Бажаєте відправити ваші данні на сервер чи синхронізувати ваші дані із сервером?",
-                                      textAlign: TextAlign.justify,
-                                      style: TextStyle(
-                                          fontSize: 16, color: primaryText),
-                                    ),
-                                  ],
+                                  style:
+                                      TextStyle(fontSize: 16, color: primary50),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Container(
-                                padding: const EdgeInsets.all(4),
-                                height: 120,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16),
-                                    color: darkNeutral800),
-                                child: Row(
-                                  mainAxisAlignment:
+                              ],
+                            ),
+                          )
+                      ],
+                    ),
+                    if (InternetConnectionStream.isUserHaveOfflineData)
+                      Container(
+                          color: Colors.black38,
+                          child: Center(
+                            child: Container(
+                              width: size.width,
+                              decoration: BoxDecoration(
+                                  color: beige100,
+                                  borderRadius: BorderRadius.circular(16)),
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 16, horizontal: 16),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16, horizontal: 24),
+                                    child: Column(
+                                      children: [
+                                        SvgPicture.asset(
+                                          "assets/icons/tasks_big.svg",
+                                          color: beige500,
+                                        ),
+                                        Text(
+                                          "Завдання",
+                                          style: TextStyle(
+                                              fontSize: 24, color: primaryText),
+                                        ),
+                                        const SizedBox(
+                                          height: 30,
+                                        ),
+                                        Text(
+                                          "У вас є не синхронізовані дані з сервером. Бажаєте відправити ваші данні на сервер чи синхронізувати ваші дані із сервером?",
+                                          textAlign: TextAlign.justify,
+                                          style: TextStyle(
+                                              fontSize: 16, color: primaryText),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.all(4),
+                                    height: 120,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(16),
+                                        color: darkNeutral800),
+                                    child: Row(
+                                      mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         GestureDetector(
@@ -354,45 +355,48 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                                     ),
                                                   ),
                                                 ),
-                                            const SizedBox(
-                                              height: 10,
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    "Відправити мої дані на сервер",
+                                                    maxLines: 2,
+                                                    textAlign: TextAlign.center,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        color: primary50,
+                                                        fontSize: 16),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            Expanded(
-                                              child: Text(
-                                                "Відправити мої дані на сервер",
-                                                maxLines: 2,
-                                                textAlign: TextAlign.center,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    color: primary50,
-                                                    fontSize: 16),
-                                              ),
-                                            )
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () async {
-                                        Repository repository = Repository();
-                                        await repository
-                                            .clearTasks()
-                                            .whenComplete(() async {
-                                          await repository
-                                              .updateLocalTasks()
-                                              .whenComplete(() {
-                                            internetConnectionStream
-                                                .changeUserOfflineData(false);
-                                          });
-                                        });
-                                      },
-                                      child: SizedBox(
-                                        width: (size.width / 2.1) - 50,
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Container(
-                                              height: 56,
+                                        GestureDetector(
+                                          onTap: () async {
+                                            Repository repository =
+                                                Repository();
+                                            await repository
+                                                .clearTasks()
+                                                .whenComplete(() async {
+                                              await repository
+                                                  .updateLocalTasks()
+                                                  .whenComplete(() {
+                                                internetConnectionStream
+                                                    .changeUserOfflineData(
+                                                        false);
+                                              });
+                                            });
+                                          },
+                                          child: SizedBox(
+                                            width: (size.width / 2.1) - 50,
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Container(
+                                                  height: 56,
                                                   width: 56,
                                                   decoration: BoxDecoration(
                                                       borderRadius:
@@ -407,12 +411,12 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                                     ),
                                                   ),
                                                 ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            Expanded(
-                                              child: Text(
-                                                "Синхронізація із сервером",
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    "Синхронізація із сервером",
                                                     maxLines: 2,
                                                     textAlign: TextAlign.center,
                                                     overflow:
@@ -438,8 +442,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 }
 
-Box? tasksBox;
 Box? userBox;
+Box? tasksBox;
 Box? medicineBox;
 Box? savedAddressesBox;
 
@@ -448,15 +452,14 @@ Future<bool> _initBoxes() async {
   Hive.init(documentsDirectory.path);
   //await Repository().deleteCookie();
   await Hive.deleteBoxFromDisk('user');
-  //await Hive.deleteBoxFromDisk('myTasks');
+  await Hive.deleteBoxFromDisk('myTasks');
   Hive.registerAdapter(MeUserAdapter());
   Hive.registerAdapter(TaskModelAdapter());
   Hive.registerAdapter(MedicineModelAdapter());
   Hive.registerAdapter(PickResultAdapter());
-  tasksBox = await Hive.openBox<TaskModel>("myTasks");
   userBox = await Hive.openBox<MeUser>("user");
+  tasksBox = await Hive.openBox<TaskModel>("myTasks");
+  medicineBox = await Hive.openBox<MedicineModel>("myMedicines");
   savedAddressesBox = await Hive.openBox<PickResult>("savedAddresses");
-  //medicineBox = await Hive.openBox<MedicineModel>("myMedicines");
-
   return true;
 }
