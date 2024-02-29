@@ -176,10 +176,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
       provider.selectedPlace =
           PickResult.fromJson(detailResponse.result.toJson());
     } else {
-      Map<String, dynamic> map = response.results[0].toJson(),testMap=response.results[0].toJson();
-      testMap["types"]="";
-      testMap["AddressComponent"]="";
-      print("map ${testMap}");
+      Map<String, dynamic> map = response.results[0].toJson();
       map["geometry"] = myGeometry.Geometry(
               location: myLocation.Location(
                   lat: response.results[0].geometry.location.lat,

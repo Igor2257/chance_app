@@ -111,11 +111,11 @@ _$PickResultImpl _$$PickResultImplFromJson(Map<String, dynamic> json) =>
       types:
           (json['types'] as List<dynamic>?)?.map((e) => e as String).toList(),
       addressComponents: (json['address_components'] as List<dynamic>?)
-              ?.map((e) => AddressComponent.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => e as AddressComponent)
               .toList(),
       adrAddress: json['adrAddress'] as String?,
       formattedPhoneNumber: json['formatted_phone_number'] as String?,
-      id: json['id'] as String,
+      id: (json['id']??DateTime.now().millisecondsSinceEpoch.toString()) as String,
       reference: json['reference'] as String?,
       icon: json['icon'] as String?,
       name: json['name'] as String?,

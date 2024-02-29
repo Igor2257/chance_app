@@ -44,14 +44,14 @@ class _RegistrationPageState extends State<RegistrationPage>
           context: context,
           builder: (context) {
             return AlertDialog(
-              backgroundColor: beigeBG,
+
               title: Text(
                 "Бажаєте залишити реєстрацію?",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 24, color: primaryText),
               ),
               content: Text(
-                "При виході з реєстрації ваші данні не будуть збережені",
+                "При виході з реєстрації ваші дані не будуть збережені",
                 textAlign: TextAlign.center,
                 style: TextStyle(color: primaryText, fontSize: 16),
               ),

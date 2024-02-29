@@ -37,7 +37,6 @@ class PlacePicker extends StatefulWidget {
     this.searchingText,
     this.selectText,
     this.outsideOfPickAreaText,
-    this.onAutoCompleteFailed,
     this.onGeocodingSearchFailed,
     this.proxyBaseUrl,
     this.httpClient,
@@ -86,7 +85,7 @@ class PlacePicker extends StatefulWidget {
   final String? selectText;
   final String? outsideOfPickAreaText;
 
-  final ValueChanged<String>? onAutoCompleteFailed;
+
   final ValueChanged<String>? onGeocodingSearchFailed;
   final int autoCompleteDebounceInMilliseconds;
   final int cameraMoveDebounceInMilliseconds;
@@ -360,53 +359,7 @@ class _PlacePickerState extends State<PlacePicker> {
         : Container();
   }
 
-  _pickPrediction(Prediction prediction) async {
-    provider!.placeSearchingState = SearchingState.Searching;
 
-    final PlacesDetailsResponse response =
-        await provider!.places.getDetailsByPlaceId(
-      prediction.placeId!,
-      sessionToken: provider!.sessionToken,
-      language: widget.autocompleteLanguage,
-    );
-
-    if (response.errorMessage?.isNotEmpty == true ||
-        response.status == "REQUEST_DENIED") {
-      if (widget.onAutoCompleteFailed != null) {
-        widget.onAutoCompleteFailed!(response.status);
-      }
-      return;
-    }
-
-    provider!.selectedPlace = PickResult.fromJson(response.result.toJson());
-
-    provider!.isAutoCompleteSearching = true;
-
-    await _moveTo(provider!.selectedPlace!.geometry!.location.lat,
-        provider!.selectedPlace!.geometry!.location.lng);
-
-    if (provider == null) return;
-    provider!.placeSearchingState = SearchingState.Idle;
-  }
-
-  _moveTo(double latitude, double longitude) async {
-    if (provider?.mapController == null) return;
-    GoogleMapController? controller = provider!.mapController;
-    await controller!.animateCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: LatLng(latitude, longitude),
-          zoom: 16,
-        ),
-      ),
-    );
-  }
-
-  _moveToCurrentPosition() async {
-    if (provider?.currentPosition == null) return;
-    await _moveTo(provider!.currentPosition!.latitude,
-        provider!.currentPosition!.longitude);
-  }
 
   Widget _buildMapWithLocation() {
     if (provider!.currentPosition == null) {
@@ -440,19 +393,6 @@ class _PlacePickerState extends State<PlacePicker> {
         provider!.switchMapType();
         if (widget.onMapTypeChanged != null) {
           widget.onMapTypeChanged!(provider!.mapType);
-        }
-      },
-      onMyLocation: () async {
-        // Prevent to click many times in short period.
-        if (provider == null) return;
-        if (provider!.isOnUpdateLocationCooldown == false) {
-          provider!.isOnUpdateLocationCooldown = true;
-          Timer(Duration(seconds: widget.myLocationButtonCooldown), () {
-            provider!.isOnUpdateLocationCooldown = false;
-          });
-          await provider!.updateCurrentLocation(
-              gracefully: widget.ignoreLocationPermissionErrors);
-          await _moveToCurrentPosition();
         }
       },
       onMoveStart: () {

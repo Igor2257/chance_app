@@ -1,12 +1,29 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/navigation/components/map_data.dart';
-import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/controllers/autocomplete_search_controller.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/providers/place_provider.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/autocomplete_search.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/address_component.dart'
+    as myaddress;
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/bounds.dart'
+    as myBounds;
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geometry.dart'
+    as myGeometry;
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/location.dart'
+    as myLocation;
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart'
+    as myPick;
 import 'package:chance_app/ui/pages/navigation/place_picker/src/place_picker.dart';
+import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/position_controller.dart';
 import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_google_maps_webservices/places.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 enum PickResultFor { first, second }
 
@@ -22,221 +39,413 @@ class SelectPlace extends StatefulWidget {
 class _SelectPlaceState extends State<SelectPlace> {
   final TextEditingController textEditingController = TextEditingController();
   final FocusNode focusNode = FocusNode();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  List<PickResult> savedAddresses = Repository()
+  GlobalKey appBarKey = GlobalKey();
+  late final Future<PlaceProvider> _futureProvider;
+  PlaceProvider? provider;
+  SearchBarController searchBarController = SearchBarController();
+  bool showIntroModal = true;
+  List<Map<String, dynamic>> predictionForList = [];
+  List<Prediction> predictionForTap = [];
+  List<myPick.PickResult> savedAddresses = Repository()
       .savedAddresses
       .where((element) => element.isRecentlySearched == true)
       .toList();
+  MeUser meUser = Repository().user!;
+
+  @override
+  void initState() {
+    _futureProvider = _initPlaceProvider();
+    super.initState();
+  }
+
+  Future<PlaceProvider> _initPlaceProvider() async {
+    final headers = await const GoogleApiHeaders().getHeaders();
+    final provider = PlaceProvider(
+      googleAPIKey,
+      null,
+      null,
+      headers,
+    );
+    provider.sessionToken = const Uuid().v4();
+    provider.setMapType(
+      meUser.mapType == 0
+          ? MapType.normal
+          : meUser.mapType == 1
+              ? MapType.terrain
+              : MapType.hybrid,
+    );
+    return provider;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          const SizedBox(
-            height: kToolbarHeight,
-          ),
-          Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                    color: beigeBG,
-                    border: Border(
-                        bottom: BorderSide(color: darkNeutral600, width: 0.1))),
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: darkNeutral600)),
-                      child: Row(children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: SizedBox(
-                            height: 44,
-                            width: 44,
-                            child: Center(
-                              child: Icon(
-                                Icons.arrow_back,
-                                color: primaryText,
-                              ),
-                            ),
-                          ),
-                        ),
+    return FutureBuilder<PlaceProvider>(
+        future: _futureProvider,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasData) {
+            provider = snapshot.data;
+            return MultiProvider(
+                providers: [
+                  ChangeNotifierProvider<PlaceProvider>.value(value: provider!),
+                ],
+                child: Scaffold(
+                  key: appBarKey,
+                  body: SingleChildScrollView(
+                    child: Column(
+                      children: [
                         const SizedBox(
-                          width: 10,
+                          height: kToolbarHeight,
                         ),
-                        Expanded(
-                            child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
-                                child: TextField(
-                                  controller: textEditingController,
-                                  focusNode: focusNode,
-                                  textInputAction: TextInputAction.search,
-                                  decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: "Пошук"),
-                                )))
-                      ]),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Position? position = PositionController.myPosition;
-
-                        //if (position != null) {
-                        //  switch (widget.pickResultFor) {
-                        //    case PickResultFor.first:
-                        //      firstPickResult = position;
-                        //      break;
-                        //    case PickResultFor.second:
-                        //      secondPickResult = result;
-                        //      break;
-                        //  }
-                        //}
-                      },
-                      child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: darkNeutral600)),
-                      child:  Row(
+                        Column(
                           children: [
-                            const Icon(Icons.my_location),
-                            const SizedBox(
-                              width: 10,
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                  color: beigeBG,
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          color: darkNeutral600, width: 0.1))),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(16),
+                                        border:
+                                            Border.all(color: darkNeutral600)),
+                                    child: Row(children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: SizedBox(
+                                          height: 44,
+                                          width: 44,
+                                          child: Center(
+                                            child: Icon(
+                                              Icons.arrow_back,
+                                              color: primaryText,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                          child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16),
+                                        child: AutoCompleteSearch(
+                                          appBarKey: appBarKey,
+                                          searchBarController:
+                                              searchBarController,
+                                          sessionToken: provider!.sessionToken,
+                                          hintText: "Пошук",
+                                          searchingText: "Пошук...",
+                                          onPicked: (prediction) {
+                                            //if (mounted) {
+                                            //  _pickPrediction(prediction);
+                                            //}
+                                          },
+                                          prediction: (predictions) {
+                                            predictionForList = predictions
+                                                .map((e) => {
+                                                      "id": e.id,
+                                                      "description":
+                                                          e.description,
+                                                      "distanceMeters":
+                                                          e.distanceMeters,
+                                                    })
+                                                .toList();
+                                            predictionForTap = predictions;
+                                            print(predictionForList);
+                                            setState(() {});
+                                          },
+                                        ),
+                                      ))
+                                    ]),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Position? position =
+                                          PositionController.myPosition;
+
+                                      //if (position != null) {
+                                      //  switch (widget.pickResultFor) {
+                                      //    case PickResultFor.first:
+                                      //      firstPickResult = position;
+                                      //      break;
+                                      //    case PickResultFor.second:
+                                      //      secondPickResult = result;
+                                      //      break;
+                                      //  }
+                                      //}
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          border: Border.all(
+                                              color: darkNeutral600)),
+                                      child: Row(
+                                        children: [
+                                          const Icon(Icons.my_location),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            "Використовувати моє місцезнаходження",
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: primaryText),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Position? position =
+                                          PositionController.myPosition;
+
+                                      if (position != null) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => PlacePicker(
+                                              apiKey: googleAPIKey,
+                                              onPlacePicked: (result) async {
+                                                switch (widget.pickResultFor) {
+                                                  case PickResultFor.first:
+                                                    firstPickResult = result;
+                                                    break;
+                                                  case PickResultFor.second:
+                                                    secondPickResult = result;
+
+                                                    break;
+                                                }
+                                                await Repository()
+                                                    .addSavedAddresses(result)
+                                                    .whenComplete(() =>
+                                                        Navigator.of(context)
+                                                            .pop());
+                                              },
+                                              initialPosition: LatLng(
+                                                  position.latitude,
+                                                  position.longitude),
+                                              useCurrentLocation: true,
+                                              resizeToAvoidBottomInset:
+                                                  false, // only works in page mode, less flickery, remove if wrong offsets
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          border: Border.all(
+                                              color: darkNeutral600)),
+                                      child: Row(
+                                        children: [
+                                          const Icon(
+                                              Icons.location_on_outlined),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            "Обрати на мапі",
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: primaryText),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                            Text(
-                              "Використовувати моє місцезнаходження",
-                              style:
-                                  TextStyle(fontSize: 14, color: primaryText),
+                            Container(
+                              color: beigeTransparent,
+                              height: 10,
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                  color: beigeBG,
+                                  border: Border(
+                                      top: BorderSide(
+                                          color: darkNeutral600, width: 0.1))),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    predictionForTap.isNotEmpty &&
+                                            predictionForList.isNotEmpty
+                                        ? "Схожі на ваш запит"
+                                        : "Недавні",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        color: primaryText,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: predictionForTap.isNotEmpty
+                                          ? predictionForTap.length
+                                          : savedAddresses.length,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context, position) {
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            if (predictionForTap.isNotEmpty) {
+                                              _pickPrediction(predictionForTap[
+                                                      position])
+                                                  .then((value) {
+                                                if (value) {
+                                                  Navigator.of(context).pop();
+                                                }
+                                              });
+                                            }
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 4),
+                                            decoration: BoxDecoration(
+                                                border: Border(
+                                                    bottom: BorderSide(
+                                                        color:
+                                                            darkNeutral600))),
+                                            child: Row(
+                                              children: [
+                                                Icon(predictionForList
+                                                        .isNotEmpty
+                                                    ? Icons.location_on_outlined
+                                                    : Icons.access_time),
+                                                const SizedBox(
+                                                  width: 20,
+                                                ),
+                                                Expanded(
+                                                    child: Text(
+                                                  predictionForList.isNotEmpty
+                                                      ? predictionForList[
+                                                                  position]
+                                                              ["description"]
+                                                          .toString()
+                                                      : savedAddresses[position]
+                                                          .addressComponents!
+                                                          .first
+                                                          .longName,
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: primaryText),
+                                                  maxLines: 5,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                )),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      })
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                      ),
+                      ],
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Position? position = PositionController.myPosition;
+                  ),
+                ));
+          }
+          return const SizedBox();
+        });
+  }
 
-                        if (position != null) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PlacePicker(
-                                apiKey: googleAPIKey,
-                                onPlacePicked: (result) async {
-                                  switch (widget.pickResultFor) {
-                                    case PickResultFor.first:
-                                      firstPickResult = result;
-                                      break;
-                                    case PickResultFor.second:
-                                      secondPickResult = result;
+  Future<bool> _pickPrediction(Prediction prediction) async {
+    provider!.placeSearchingState = SearchingState.Searching;
 
-                                      break;
-                                  }
-                                  print("${result.geometry?.bounds};${result.geometry?.location}; ${result.geometry?.locationType}; ${result.geometry?.viewport}");
-                                  for(var addr in result.addressComponents!){
-                                    print("${addr.types}; ${addr.longName}; ${addr.shortName}");
-                                  }
-                                  await Repository()
-                                      .addSavedAddresses(result)
-                                      .whenComplete(
-                                          () => Navigator.of(context).pop());
-                                },
-                                initialPosition: LatLng(
-                                    position.latitude, position.longitude),
-                                useCurrentLocation: true,
-                                resizeToAvoidBottomInset:
-                                false, // only works in page mode, less flickery, remove if wrong offsets
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                      child:Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: darkNeutral600)),
-                      child:  Row(
-                          children: [
-                            const Icon(Icons.location_on_outlined),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              "Обрати на мапі",
-                              style:
-                                  TextStyle(fontSize: 14, color: primaryText),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                color: beigeTransparent,
-                height: 10,
-              ),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                    color: beigeBG,
-                    border: Border(
-                        top: BorderSide(color: darkNeutral600, width: 0.1))),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Недавні",
-                      style: TextStyle(fontSize: 16, color: primaryText),
-                    ),
-                    ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: savedAddresses.length,
-                        physics: const BouncingScrollPhysics(),
-                        itemBuilder: (context, position) {
-                          return Row(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(90),
-                                    color: darkNeutral600),
-                                child: const Icon(Icons.access_time),
-                              ),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              const Column(
-                                children: [],
-                              ),
-                            ],
-                          );
-                        })
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+    final PlacesDetailsResponse response =
+        await provider!.places.getDetailsByPlaceId(
+      prediction.placeId!,
+      sessionToken: provider!.sessionToken,
     );
+
+    if (response.errorMessage?.isNotEmpty == true ||
+        response.status == "REQUEST_DENIED") {
+      return false;
+    }
+
+    provider!.selectedPlace = getPickResult(response.result);
+
+    provider!.isAutoCompleteSearching = true;
+
+    await saveCoordinates(provider!.selectedPlace);
+
+    if (provider == null) return false;
+    provider!.placeSearchingState = SearchingState.Idle;
+    return true;
+  }
+
+  saveCoordinates(myPick.PickResult? selectedPlace) async {
+    if (selectedPlace != null) {
+      switch (widget.pickResultFor) {
+        case PickResultFor.first:
+          firstPickResult = selectedPlace;
+          break;
+        case PickResultFor.second:
+          secondPickResult = selectedPlace;
+          break;
+      }
+    }
+    setState(() {
+
+    });
+  }
+
+  myPick.PickResult getPickResult(PlaceDetails result) {
+    Map<String, dynamic> map = result.toJson();
+    map["geometry"] = myGeometry.Geometry(
+            location: myLocation.Location(
+                lat: result.geometry!.location.lat,
+                lng: result.geometry!.location.lng),
+            locationType: result.geometry!.locationType,
+            viewport: result.geometry!.viewport != null
+                ? myBounds.Bounds(
+                    northeast: myLocation.Location(
+                        lat: result.geometry!.viewport!.northeast.lat,
+                        lng: result.geometry!.viewport!.northeast.lng),
+                    southwest: myLocation.Location(
+                        lat: result.geometry!.viewport!.southwest.lat,
+                        lng: result.geometry!.viewport!.southwest.lng))
+                : null,
+            bounds: result.geometry!.bounds != null
+                ? myBounds.Bounds(
+                    northeast: myLocation.Location(
+                        lat: result.geometry!.bounds!.northeast.lat,
+                        lng: result.geometry!.bounds!.northeast.lng),
+                    southwest: myLocation.Location(
+                        lat: result.geometry!.bounds!.southwest.lat,
+                        lng: result.geometry!.bounds!.southwest.lng))
+                : null)
+        .toJson();
+    map["address_components"] = result.addressComponents
+        .map((e) => myaddress.AddressComponent(
+            types: e.types, longName: e.longName, shortName: e.shortName))
+        .toList();
+    return myPick.PickResult.fromJson(map);
   }
 }

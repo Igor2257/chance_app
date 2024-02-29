@@ -168,8 +168,13 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                     title: 'Flutter Demo',
                                     debugShowCheckedModeBanner: false,
                                     theme: ThemeData(
+                                      scaffoldBackgroundColor: beigeBG,
+                                      dialogBackgroundColor: beigeBG,
+                                      dialogTheme: DialogTheme(
+                                          backgroundColor: beigeBG,
+                                          surfaceTintColor: beigeBG),
                                       colorScheme: ColorScheme.fromSeed(
-                                          seedColor: Colors.deepPurple),
+                                          seedColor: primary400),
                                       useMaterial3: true,
                                     ),
                                     supportedLocales: const [

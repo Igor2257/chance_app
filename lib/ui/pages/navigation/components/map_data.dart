@@ -20,6 +20,10 @@ String getUrl(LatLng position, LatLng position1) {
       "https://maps.googleapis.com/maps/api/directions/$output?$parameters";
   return url;
 }
+
+String autoCompleteUrl(String text) {
+  return "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$text&radius=1000000&key=$googleAPIKey";
+}
 List<LatLng> polylineCoordinates = [];
 String googleAPIKey = "AIzaSyDmTTd3yiTiyosQb_CYX2Ync20v-xiynYg";
 late PositionController positionController;

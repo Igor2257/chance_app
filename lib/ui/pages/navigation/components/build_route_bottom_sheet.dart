@@ -2,7 +2,6 @@ import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/navigation/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/select_place.dart';
-
 import 'package:flutter/material.dart';
 
 class BuildRouteBottomSheet extends StatefulWidget {
@@ -28,15 +27,19 @@ class _BuildRouteBottomSheetState extends State<BuildRouteBottomSheet> {
         children: [
           RoundedButton(
               onPress: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const SelectPlace(
-                          pickResultFor: PickResultFor.first,
-                        ))).whenComplete(() => setState(() {}));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(
+                        builder: (context) => const SelectPlace(
+                              pickResultFor: PickResultFor.first,
+                            )))
+                    .whenComplete(() => setState(() {}));
               },
               border: Border.all(
                 color: darkNeutral800,
               ),
+              height: 0,
               color: Colors.transparent,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -47,16 +50,21 @@ class _BuildRouteBottomSheetState extends State<BuildRouteBottomSheet> {
                   const SizedBox(
                     width: 10,
                   ),
-                  Text(
-                    firstPickResult?.name??"Додати пункт відправлення",
+                  Expanded(
+                      child: Text(
+                    firstPickResult?.formattedAddress ??
+                        "Додати пункт відправлення",
                     style: TextStyle(color: primaryText, fontSize: 16),
-                  ),
+                    maxLines: 5,
+                  )),
                 ],
               )),
           const SizedBox(
             height: 24,
           ),
           RoundedButton(
+              height: 0,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               onPress: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(
@@ -80,7 +88,7 @@ class _BuildRouteBottomSheetState extends State<BuildRouteBottomSheet> {
                     width: 10,
                   ),
                   Text(
-                    secondPickResult?.name??"Додати пункт відправлення",
+                    secondPickResult?.formattedAddress??"Додати пункт відправлення",
                     style: TextStyle(color: primaryText, fontSize: 16),
                   ),
                 ],
