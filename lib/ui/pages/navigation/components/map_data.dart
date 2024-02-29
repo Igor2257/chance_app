@@ -8,7 +8,11 @@ bool isNotTapedOnMyLocationButton = false;
 GoogleMapController? mapController;
 
 Set<Marker> setMarkers = {};
-
+Set<Polyline> polylines={};
+List<LatLng> polylineCoordinates = [];
+String googleAPIKey = "AIzaSyDmTTd3yiTiyosQb_CYX2Ync20v-xiynYg";
+late PositionController positionController;
+PickResult? firstPickResult, secondPickResult;
 String getUrl(LatLng position, LatLng position1) {
   String origin = "origin=${position.latitude},${position.longitude}";
   String destination =
@@ -24,7 +28,3 @@ String getUrl(LatLng position, LatLng position1) {
 String autoCompleteUrl(String text) {
   return "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$text&radius=1000000&key=$googleAPIKey";
 }
-List<LatLng> polylineCoordinates = [];
-String googleAPIKey = "AIzaSyDmTTd3yiTiyosQb_CYX2Ync20v-xiynYg";
-late PositionController positionController;
-PickResult? firstPickResult, secondPickResult;

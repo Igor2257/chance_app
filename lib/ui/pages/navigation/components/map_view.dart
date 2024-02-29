@@ -5,7 +5,6 @@ import 'package:chance_app/ui/pages/navigation/components/build_route_bottom_she
 import 'package:chance_app/ui/pages/navigation/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/components/saved_addresses_component.dart';
 import 'package:chance_app/ux/model/me_user.dart';
-
 import 'package:chance_app/ux/position_controller.dart';
 import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/cupertino.dart';
@@ -120,6 +119,7 @@ class _MapViewState extends State<MapView>
       }
     });
 
+
     super.initState();
   }
 
@@ -205,6 +205,7 @@ class _MapViewState extends State<MapView>
                   Align(
                     alignment: Alignment.center,
                     child: GoogleMap(
+                        polylines: polylines,
                         mapType: meUser.mapType == 0
                             ? MapType.normal
                             : meUser.mapType == 1
@@ -222,11 +223,11 @@ class _MapViewState extends State<MapView>
                         onCameraMoveStarted: () {
                           isNotTapedOnMyLocationButton = true;
                         },
-                        //markers: setMarkers,
+                        markers: setMarkers,
                         initialCameraPosition: CameraPosition(
                             zoom: 18,
                             target:
-                                LatLng(position.latitude, position.longitude))),
+                            LatLng(position.latitude, position.longitude))),
                   ),
                   Align(
                       alignment: Alignment.bottomRight,
@@ -283,7 +284,7 @@ class _MapViewState extends State<MapView>
                                   context: context,
                                   builder: (context) {
                                     return const BuildRouteBottomSheet();
-                                  });
+                                  }).whenComplete(() => setState(() {}));
                             },
                             onTapDown: (TapDownDetails details) {
                               _controllerBuildPath.forward();

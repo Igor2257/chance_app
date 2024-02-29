@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:chance_app/main.dart';
+import 'package:chance_app/ui/pages/navigation/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/model/tasks_model.dart';
@@ -11,6 +12,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
@@ -35,12 +37,12 @@ class Repository {
           toastLength: Toast.LENGTH_LONG);
       error = "Немає підключення до інтернету";
     } else {
-      var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/login');
-      var salt = 'UVocjgjgXg8P7zIsC93kKlRU8sPbTBhsAMFLnLUPDRYFIWAk';
-      var saltedPassword = salt + password;
-      var bytes = utf8.encode(saltedPassword);
-      var hash = sha256.convert(bytes);
       try {
+        var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/login');
+        var salt = 'UVocjgjgXg8P7zIsC93kKlRU8sPbTBhsAMFLnLUPDRYFIWAk';
+        var saltedPassword = salt + password;
+        var bytes = utf8.encode(saltedPassword);
+        var hash = sha256.convert(bytes);
         await http
             .post(
           url,
@@ -113,12 +115,13 @@ class Repository {
           toastLength: Toast.LENGTH_LONG);
       error = "Немає підключення до інтернету";
     } else {
-      var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/register');
-      var salt = 'UVocjgjgXg8P7zIsC93kKlRU8sPbTBhsAMFLnLUPDRYFIWAk';
-      var saltedPassword = salt + password;
-      var bytes = utf8.encode(saltedPassword);
-      var hash = sha256.convert(bytes);
       try {
+        var url =
+            Uri.parse('http://139.28.37.11:56565/stage/api/auth/register');
+        var salt = 'UVocjgjgXg8P7zIsC93kKlRU8sPbTBhsAMFLnLUPDRYFIWAk';
+        var saltedPassword = salt + password;
+        var bytes = utf8.encode(saltedPassword);
+        var hash = sha256.convert(bytes);
         await http
             .post(url,
                 headers: <String, String>{
@@ -163,9 +166,8 @@ class Repository {
           toastLength: Toast.LENGTH_LONG);
       error = "Немає підключення до інтернету";
     } else {
-      var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/confirm');
-
       try {
+        var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/confirm');
         await http
             .post(
           url,
@@ -174,10 +176,10 @@ class Repository {
           },
           body: jsonEncode({"code": code, "email": email}),
         )
-            .then((value)async {
+            .then((value) async {
           if (value.statusCode > 199 && value.statusCode < 300) {
             await sendLoginData(email, passwordFirst).then((value) {
-              error=value;
+              error = value;
             });
           } else {
             error = jsonDecode(value.body)["message"]
@@ -204,8 +206,8 @@ class Repository {
           toastLength: Toast.LENGTH_LONG);
       error = "Немає підключення до інтернету";
     } else {
-      var url = Uri.parse('http://139.28.37.11:56565/stage/api/user');
       try {
+        var url = Uri.parse('http://139.28.37.11:56565/stage/api/user');
         await getCookie().then((cookie) async {
           await http
               .patch(url,
@@ -249,10 +251,9 @@ class Repository {
           toastLength: Toast.LENGTH_LONG);
       error = "Немає підключення до інтернету";
     } else {
-      var url =
-          Uri.parse('http://139.28.37.11:56565/stage/api/auth/resend-code');
-
       try {
+        var url =
+            Uri.parse('http://139.28.37.11:56565/stage/api/auth/resend-code');
         await http
             .post(
           url,
@@ -287,10 +288,9 @@ class Repository {
           toastLength: Toast.LENGTH_LONG);
       error = "Немає підключення до інтернету";
     } else {
-      var url =
-          Uri.parse('http://139.28.37.11:56565/stage/api/auth/forget-password');
-
       try {
+        var url = Uri.parse(
+            'http://139.28.37.11:56565/stage/api/auth/forget-password');
         await http
             .post(
           url,
@@ -326,14 +326,13 @@ class Repository {
           toastLength: Toast.LENGTH_LONG);
       error = "Немає підключення до інтернету";
     } else {
-      var salt = 'UVocjgjgXg8P7zIsC93kKlRU8sPbTBhsAMFLnLUPDRYFIWAk';
-      var saltedPassword = salt + newPassword;
-      var bytes = utf8.encode(saltedPassword);
-      var hash = sha256.convert(bytes);
-      var url =
-          Uri.parse('http://139.28.37.11:56565/stage/api/auth/reset-password');
-
       try {
+        var salt = 'UVocjgjgXg8P7zIsC93kKlRU8sPbTBhsAMFLnLUPDRYFIWAk';
+        var saltedPassword = salt + newPassword;
+        var bytes = utf8.encode(saltedPassword);
+        var hash = sha256.convert(bytes);
+        var url = Uri.parse(
+            'http://139.28.37.11:56565/stage/api/auth/reset-password');
         await http
             .post(
           url,
@@ -395,9 +394,8 @@ class Repository {
           msg: "Немає підключення до інтернету",
           toastLength: Toast.LENGTH_LONG);
     } else {
-      var url = Uri.parse('http://139.28.37.11:56565/stage/api/task');
-
       try {
+        var url = Uri.parse('http://139.28.37.11:56565/stage/api/task');
         final cookie = await getCookie();
         await http.get(
           url,
@@ -448,9 +446,8 @@ class Repository {
         await setIsDoneInLocalTask(id, isDone);
       }
     } else {
-      var url = Uri.parse('http://139.28.37.11:56565/stage/api/task/$id');
-
       try {
+        var url = Uri.parse('http://139.28.37.11:56565/stage/api/task/$id');
         final cookie = await getCookie();
         String? newDate = date?.toUtc().toString();
         await http
@@ -486,43 +483,44 @@ class Repository {
   Future<String?> saveTask(TaskModel taskModel) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
-          toastLength: Toast.LENGTH_LONG);
       error = "Немає підключення до інтернету";
       await addTask(taskModel);
     } else {
-      var url = Uri.parse('http://139.28.37.11:56565/stage/api/task');
-      final cookie = await getCookie();
-      String date = taskModel.date!.toUtc().toString();
+      try {
+        var url = Uri.parse('http://139.28.37.11:56565/stage/api/task');
+        final cookie = await getCookie();
+        String date = taskModel.date!.toUtc().toString();
 
-      await http
-          .post(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Cookie': cookie.toString(),
-        },
-        body: jsonEncode({
-          "message": taskModel.message,
-          "date": date,
-          "isDone": taskModel.isDone,
-        }),
-      )
-          .then((value) async {
-        if (!(value.statusCode > 199 && value.statusCode < 300)) {
-          error = jsonDecode(value.body)["message"]
-              .toString()
-              .replaceAll("[", "")
-              .replaceAll("]", "");
-          Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
-        } else {
-          await addTask(taskModel).whenComplete(() async {
-            await setIsSentInLocalTask(true, taskModel: taskModel);
-          });
-        }
-      });
+        await http
+            .post(
+          url,
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Cookie': cookie.toString(),
+          },
+          body: jsonEncode({
+            "message": taskModel.message,
+            "date": date,
+            "isDone": taskModel.isDone,
+          }),
+        )
+            .then((value) async {
+          if (!(value.statusCode > 199 && value.statusCode < 300)) {
+            error = jsonDecode(value.body)["message"]
+                .toString()
+                .replaceAll("[", "")
+                .replaceAll("]", "");
+          } else {
+            await addTask(taskModel).whenComplete(() async {
+              await setIsSentInLocalTask(true, taskModel: taskModel);
+            });
+          }
+        });
+      } catch (e) {
+        error = error.toString();
+      }
     }
+    Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
     return error;
   }
 
@@ -533,8 +531,8 @@ class Repository {
           msg: "Немає підключення до інтернету",
           toastLength: Toast.LENGTH_LONG);
     } else {
-      var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/me');
       try {
+        var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/me');
         final cookie = await getCookie();
         if (cookie != null) {
           await http.get(
@@ -585,8 +583,8 @@ class Repository {
       //error = "Немає підключення до інтернету";
       removeLocalTask(taskId);
     } else {
-      var url = Uri.parse('http://139.28.37.11:56565/stage/api/task/$taskId');
       try {
+        var url = Uri.parse('http://139.28.37.11:56565/stage/api/task/$taskId');
         final cookie = await getCookie();
         await http.delete(url, headers: <String, String>{
           'Content-Type': 'application/json',
@@ -653,17 +651,16 @@ class Repository {
     return true;
   }
 
-  Future<String?> logout()async{
+  Future<String?> logout() async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
           msg: "Немає підключення до інтернету",
           toastLength: Toast.LENGTH_LONG);
       error = "Немає підключення до інтернету";
-
     } else {
-      var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/logout');
       try {
+        var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/logout');
         final cookie = await getCookie();
         await http.post(url, headers: <String, String>{
           'Content-Type': 'application/json',
@@ -683,7 +680,9 @@ class Repository {
   }
 
   bool checkIsAnyTasksNotSent() {
-    return myTasks.isNotEmpty?myTasks.any((element) => element.isSentToDB == false):false;
+    return myTasks.isNotEmpty
+        ? myTasks.any((element) => element.isSentToDB == false)
+        : false;
   }
 
   Future clearTasks() async {
@@ -755,9 +754,9 @@ class Repository {
       }
     } else {
       for (var task in myTasks) {
-        var url =
-            Uri.parse('http://139.28.37.11:56565/stage/api/task/${task.id}');
         try {
+          var url =
+              Uri.parse('http://139.28.37.11:56565/stage/api/task/${task.id}');
           final cookie = await getCookie();
           await http.delete(url, headers: <String, String>{
             'Content-Type': 'application/json',
@@ -811,15 +810,38 @@ class Repository {
     return await const FlutterSecureStorage().read(key: "first-enter") != null;
   }
 
- //Future addMedicine(MedicineModel medicineModel) async {
- //  await medicineBox!.put(medicineModel.id, medicineModel);
- //}
+  Future<LatLng?> getLocationFromPlaceId(PickResult pickResult) async {
+    LatLng? latLng;
+    try {
+      Uri uri = Uri.parse(
+          "https://maps.googleapis.com/maps/api/place/details/json?fields=geometry&place_id=${pickResult.placeId}&key=$googleAPIKey");
+      await http.post(uri, headers: <String, String>{
+        'Content-Type': 'application/json',
+      }).then((value) async {
+        print("value.body ${value.body}");
+        if (value.statusCode > 199 && value.statusCode < 300) {
+          print("value.body");
+          Map<String,dynamic> map=jsonDecode(value.body);
+          latLng=LatLng(map["result"]["geometry"]["location"]["lat"], map["result"]["geometry"]["location"]["lng"]);
+        }
+      });
+    } catch (error) {
+      Fluttertoast.showToast(
+          msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+    }
+    print(latLng);
+    return latLng;
+  }
 
- //Future updateMedicine(MedicineModel medicineModel) async {
- //  await medicineBox!.put(medicineModel.id, medicineModel);
- //}
+//Future addMedicine(MedicineModel medicineModel) async {
+//  await medicineBox!.put(medicineModel.id, medicineModel);
+//}
 
- //Future deleteMedicine(String id) async {
- //  await medicineBox!.delete(id);
- //}
+//Future updateMedicine(MedicineModel medicineModel) async {
+//  await medicineBox!.put(medicineModel.id, medicineModel);
+//}
+
+//Future deleteMedicine(String id) async {
+//  await medicineBox!.delete(id);
+//}
 }
