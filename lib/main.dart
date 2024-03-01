@@ -47,12 +47,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest_all.dart';
 import 'package:timezone/timezone.dart';
 
@@ -78,6 +80,15 @@ void main() async {
       print('User is signed in!');
     }
   });
+
+  // Local notifications plugin setup
+  await FlutterLocalNotificationsPlugin().initialize(
+    const InitializationSettings(
+      android: AndroidInitializationSettings(kDefaultAndroidIcon),
+      iOS: DarwinInitializationSettings(),
+    ),
+  );
+  await Permission.notification.request();
 
   // Timezone setup, is required by scheduler
   final currentTimeZone = await FlutterTimezone.getLocalTimezone();

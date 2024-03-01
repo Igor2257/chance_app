@@ -41,6 +41,8 @@ Color red1000 = const Color(0xff960000),
 
 Color background = const Color(0xffFFFDFC);
 
+const kDefaultAndroidIcon = "mipmap/ic_launcher";
+
 String getWeekdayName(int weekday) {
   switch (weekday) {
     case DateTime.monday:
