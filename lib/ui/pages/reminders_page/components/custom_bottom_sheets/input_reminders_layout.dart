@@ -22,7 +22,6 @@ class _InputRemindersLayoutState extends State<InputRemindersLayout> {
   late final TextEditingController textEditingController;
   late final String title, subTitle;
   String errorText = "";
-  final FocusNode focusNode = FocusNode();
 
   GlobalKey<FormState> form = GlobalKey<FormState>();
   bool isError = false;
@@ -37,7 +36,6 @@ class _InputRemindersLayoutState extends State<InputRemindersLayout> {
   @override
   void dispose() {
     textEditingController.dispose();
-    focusNode.dispose();
     super.dispose();
   }
   @override
@@ -86,7 +84,7 @@ class _InputRemindersLayoutState extends State<InputRemindersLayout> {
                             color: isError ? red900 : primaryText),
                         labelText: title
                       ),
-                      focusNode: focusNode,
+                      autofocus: true,
                       controller: textEditingController,
                     ),
                   ),
@@ -94,7 +92,6 @@ class _InputRemindersLayoutState extends State<InputRemindersLayout> {
                       onPressed: () {
                         textEditingController.text = "";
                         widget.clearData();
-                        focusNode.unfocus();
                       },
                       icon: Icon(
                         Icons.cancel,

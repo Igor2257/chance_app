@@ -11,7 +11,7 @@ class TasksSheets extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<RemindersBloc, RemindersState>(
       builder: (context, state) {
-        return Padding(
+        return SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -38,7 +38,7 @@ class TasksSheets extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               pages(state),
-              const SizedBox(height: 50),
+              const SizedBox(height: 20),
             ],
           ),
         );
