@@ -1,11 +1,11 @@
 part of 'login_bloc.dart';
-
+@immutable
 class LoginState {
-  String email, password;
-  String errorEmail, errorPassword;
-  bool isLoading;
+  final String email, password;
+  final String errorEmail, errorPassword;
+  final bool isLoading;
 
-  LoginState({
+  const LoginState({
     this.email = "",
     this.password = "",
     this.errorEmail = "",
@@ -28,7 +28,7 @@ class LoginState {
   }
 
   LoginState clear(){
-    return LoginState(
+    return const LoginState(
       email: "",
       password: "",
       errorEmail: "",

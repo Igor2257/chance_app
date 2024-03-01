@@ -65,43 +65,43 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
           "year": year,
           "isSelected": day == i ||
               (state.selectedDate != null &&
-                  (state.selectedDate!.day == i &&
-                      state.selectedDate!.month == month &&
-                      state.selectedDate!.year == year)),
+                  DateUtils.isSameDay(date,state.selectedDate)),
           "hasTasks": checkIfDayHasTask(myTasks, i, month, year),
         });
       }
       myTasks = myTasks
-          .where((element) =>
-              element.date!.day == now.day &&
-              element.date!.month == now.month &&
-              element.date!.year == now.year)
+          .where((element) => DateUtils.isSameDay(element.date, now))
           .toList();
       myTasks.sort((a, b) => a.date!.compareTo(b.date!));
       int startOfWeek = day - now.weekday;
       int endOfWeek = startOfWeek + 7;
       if (dates.length >= endOfWeek) {
         int daysLeftOfMonth = endOfWeek;
-        week = dates.getRange(startOfWeek<0?0:startOfWeek, daysLeftOfMonth).toList();
+        week = dates
+            .getRange(startOfWeek < 0 ? 0 : startOfWeek, daysLeftOfMonth)
+            .toList();
         int weekLength = week.length;
-        int start=int.parse(week[week.length - 1]["number"]);
-        for (int i = start;
-            i < (start + 7) - weekLength;
-            i++) {
-          DateTime date = DateTime(year, month + 1, i + 1);
+        int dayInPreviousMonth;
+        if(month - 1>0) {
+          dayInPreviousMonth = DateUtils.getDaysInMonth(year, month - 1);
+        }
+        else{
+          dayInPreviousMonth = DateUtils.getDaysInMonth(year-1, 1);
+        }
+        for (int i = 0; i < (7) - weekLength; i++) {
+          DateTime date = DateTime(year, month - 1, dayInPreviousMonth - i);
           String weekDay = getWeekdayName(date.weekday);
 
-          week.add({
+          week.insert(0, {
             "weekDay": weekDay,
-            "number": ((i + 1).toString()).padLeft(2, "0"),
-            "month": month + 1,
+            "number": ((dayInPreviousMonth - i).toString()).padLeft(2, "0"),
+            "month": month - 1,
             "year": year,
-            "isSelected": day == i + 1 ||
+            "isSelected": day == dayInPreviousMonth - i ||
                 (state.selectedDate != null &&
-                    (state.selectedDate!.day == i + 1 &&
-                        state.selectedDate!.month == month + 1 &&
-                        state.selectedDate!.year == year)),
-            "hasTasks": checkIfDayHasTask(myTasks, i + 1, month + 1, year),
+                    DateUtils.isSameDay(date,state.selectedDate)),
+            "hasTasks": checkIfDayHasTask(
+                myTasks, dayInPreviousMonth - i, month - 1, year),
           });
         }
       } else {
@@ -119,9 +119,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
             "year": year,
             "isSelected": day == i + 1 ||
                 (state.selectedDate != null &&
-                    (state.selectedDate!.day == i + 1 &&
-                        state.selectedDate!.month == month + 1 &&
-                        state.selectedDate!.year == year)),
+                    DateUtils.isSameDay(date,state.selectedDate)),
             "hasTasks": checkIfDayHasTask(myTasks, i + 1, month + 1, year),
           });
         }
@@ -163,10 +161,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         Repository().myTasks.where((element) => element.isRemoved == false));
 
     myTasks = myTasks
-        .where((element) =>
-            element.date!.day == selectedDate.day &&
-            element.date!.month == selectedDate.month &&
-            element.date!.year == selectedDate.year)
+        .where((element) => DateUtils.isSameDay(element.date, selectedDate))
         .toList();
     myTasks.sort((a, b) => a.date!.compareTo(b.date!));
     emit(state.copyWith(
@@ -211,9 +206,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         "month": month,
         "year": year,
         "isSelected": (selectedDate != null &&
-            (selectedDate.day == i &&
-                selectedDate.month == month &&
-                selectedDate.year == year)),
+            DateUtils.isSameDay(date,selectedDate)),
         "hasTasks": checkIfDayHasTask(myTasks, i, month, year)
       });
     }
@@ -225,26 +218,31 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     int endOfWeek = startOfWeek + 7;
     if (dates.length >= endOfWeek) {
       int daysLeftOfMonth = endOfWeek;
-      week = dates.getRange(startOfWeek<0?0:startOfWeek, daysLeftOfMonth).toList();
+      week = dates
+          .getRange(startOfWeek < 0 ? 0 : startOfWeek, daysLeftOfMonth)
+          .toList();
       int weekLength = week.length;
-      int start=int.parse(week[week.length - 1]["number"]);
-      for (int i = start;
-      i < (start + 7) - weekLength;
-      i++) {
-        DateTime date = DateTime(year, month + 1, i + 1);
+      int dayInPreviousMonth;
+      if(month - 1>0) {
+        dayInPreviousMonth = DateUtils.getDaysInMonth(year, month - 1);
+      }
+      else{
+        dayInPreviousMonth = DateUtils.getDaysInMonth(year-1, 1);
+      }
+      for (int i = 0; i < (7) - weekLength; i++) {
+        DateTime date = DateTime(year, month - 1, dayInPreviousMonth - i);
         String weekDay = getWeekdayName(date.weekday);
 
-        week.add({
+        week.insert(0, {
           "weekDay": weekDay,
-          "number": ((i + 1).toString()).padLeft(2, "0"),
-          "month": month + 1,
+          "number": ((dayInPreviousMonth - i).toString()).padLeft(2, "0"),
+          "month": month - 1,
           "year": year,
-          "isSelected": day == i + 1 ||
-              (state.selectedDate != null &&
-                  (state.selectedDate!.day == i + 1 &&
-                      state.selectedDate!.month == month + 1 &&
-                      state.selectedDate!.year == year)),
-          "hasTasks": checkIfDayHasTask(myTasks, i + 1, month + 1, year),
+          "isSelected": day == dayInPreviousMonth - i ||
+              (selectedDate != null &&
+                  DateUtils.isSameDay(date,selectedDate)),
+          "hasTasks": checkIfDayHasTask(
+              myTasks, dayInPreviousMonth - i, month - 1, year),
         });
       }
     } else {
@@ -261,19 +259,14 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
           "month": month + 1,
           "year": year,
           "isSelected": day == i + 1 ||
-              (state.selectedDate != null &&
-                  (state.selectedDate!.day == i + 1 &&
-                      state.selectedDate!.month == month + 1 &&
-                      state.selectedDate!.year == year)),
+              (selectedDate != null &&
+                  DateUtils.isSameDay(date, selectedDate)),
           "hasTasks": checkIfDayHasTask(myTasks, i + 1, month + 1, year),
         });
       }
     }
     myTasks = myTasks
-        .where((element) =>
-            element.date!.day == now.day &&
-            element.date!.month == now.month &&
-            element.date!.year == now.year)
+        .where((element) => DateUtils.isSameDay(element.date, now))
         .toList();
     myTasks.sort((a, b) => a.date!.compareTo(b.date!));
     emit(state.copyWith(
@@ -317,10 +310,9 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         "number": (i.toString()).padLeft(2, "0"),
         "month": month,
         "year": year,
-        "isSelected": (selectedDate != null &&
-            (selectedDate.day == i &&
-                selectedDate.month == month &&
-                selectedDate.year == year)),
+        "isSelected":
+            (state.selectedDate != null &&
+                DateUtils.isSameDay(date, selectedDate)),
         "hasTasks": checkIfDayHasTask(myTasks, i, month, year)
       });
     }
@@ -372,7 +364,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     if (event.session == state.sessionForSelectingDateForTask) {
       emit(state.copyWith(
           newNotificationsBefore: state.fromLastSession,
-          newDeadlineForTask: 0,
+          newDeadlineForTask: state.oldDeadlineForTask,
           newSelectedDateForTasks: state.oldSelectedDateForTasks));
     }
   }
@@ -397,18 +389,14 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         "month": month,
         "year": year,
         "isSelected": day == i ||
-            (state.newSelectedDateForTasks != null &&
-                (state.newSelectedDateForTasks!.day == i &&
-                    state.newSelectedDateForTasks!.month == month &&
-                    state.newSelectedDateForTasks!.year == year)),
+            (state.selectedDate != null &&
+                DateUtils.isSameDay(date, state.selectedDate)),
         "hasTasks": checkIfDayHasTask(myTasks, i, month, year)
       });
     }
     myTasks = myTasks
         .where((element) =>
-            element.date!.day == now.day &&
-            element.date!.month == now.month &&
-            element.date!.year == now.year &&
+    DateUtils.isSameDay(element.date, now) &&
             element.isRemoved == false)
         .toList();
     myTasks.sort((a, b) => a.date!.compareTo(b.date!));

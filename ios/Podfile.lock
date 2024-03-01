@@ -19,18 +19,18 @@ PODS:
   - Firebase/Messaging (10.20.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 10.20.0)
-  - firebase_auth (4.17.5):
+  - firebase_auth (4.17.6):
     - Firebase/Auth (= 10.20.0)
     - firebase_core
     - Flutter
-  - firebase_core (2.25.4):
+  - firebase_core (2.25.5):
     - Firebase/CoreOnly (= 10.20.0)
     - Flutter
-  - firebase_crashlytics (3.4.15):
+  - firebase_crashlytics (3.4.16):
     - Firebase/Crashlytics (= 10.20.0)
     - firebase_core
     - Flutter
-  - firebase_messaging (14.7.16):
+  - firebase_messaging (14.7.17):
     - Firebase/Messaging (= 10.20.0)
     - firebase_core
     - Flutter
@@ -81,8 +81,6 @@ PODS:
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesSwift (~> 2.1)
   - Flutter (1.0.0)
-  - flutter_audio_manager_plus (0.0.1):
-    - Flutter
   - flutter_fgbg (0.0.1):
     - Flutter
   - flutter_local_notifications (0.0.1):
@@ -180,7 +178,6 @@ DEPENDENCIES:
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
-  - flutter_audio_manager_plus (from `.symlinks/plugins/flutter_audio_manager_plus/ios`)
   - flutter_fgbg (from `.symlinks/plugins/flutter_fgbg/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
@@ -238,8 +235,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: Flutter
-  flutter_audio_manager_plus:
-    :path: ".symlinks/plugins/flutter_audio_manager_plus/ios"
   flutter_fgbg:
     :path: ".symlinks/plugins/flutter_fgbg/ios"
   flutter_local_notifications:
@@ -277,10 +272,10 @@ SPEC CHECKSUMS:
   AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
   connectivity_plus: bf0076dd84a130856aa636df1c71ccaff908fa1d
   Firebase: 10c8cb12fb7ad2ae0c09ffc86cd9c1ab392a0031
-  firebase_auth: 7351d07504173efaf1fb31fe3ffb73b2c521eae0
-  firebase_core: a46c312d8bae4defa3d009b2aa7b5b413aeb394e
-  firebase_crashlytics: 3054fbdd2b4a4a91f25a15e57c9f1bd2a9ed81ae
-  firebase_messaging: e7062cef946e12f93b42abea96937004f8d914d6
+  firebase_auth: b237f065b2afc6bd7962124e1cbacdbef31036e6
+  firebase_core: c8628c7ce80f79439149549052bff22f6784fbf5
+  firebase_crashlytics: 012078b4eec6fc9716f97ba3da0f0e44a04e95b1
+  firebase_messaging: 6ea1e266713728834610c2bc380084a01b1b555d
   FirebaseAppCheckInterop: 69fc7d8f6a1cbfa973efb8d1723651de30d12525
   FirebaseAuth: 9c5c400d2c3055d8ae3a0284944c86fa95d48dac
   FirebaseCore: 28045c1560a2600d284b9c45a904fe322dc890b6
@@ -291,7 +286,6 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 06c414a21b122396a26847c523d5c370f8325df5
   FirebaseSessions: 80c2bbdd28166267b3d132debe5f7531efdb00bc
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_audio_manager_plus: eac3830433eeb3a90b75da8393cea5f044ba75ca
   flutter_fgbg: 31c0d1140a131daea2d342121808f6aa0dcd879d
   flutter_local_notifications: 4cde75091f6327eb8517fa068a0a5950212d2086
   flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
@@ -320,7 +314,7 @@ SPEC CHECKSUMS:
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   Toast: ec33c32b8688982cecc6348adeae667c1b9938da
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
-  url_launcher_ios: bbd758c6e7f9fd7b5b1d4cde34d2b95fcce5e812
+  url_launcher_ios: 6116280ddcfe98ab8820085d8d76ae7449447586
 
 PODFILE CHECKSUM: 3e8adae39eea1498296f6b815c9d161479d77125
 

@@ -1,21 +1,24 @@
 part of 'reminders_bloc.dart';
-
+@immutable
 class RemindersState {
-  String taskTitle;
-  DateTime? selectedDate = DateTime.now(),
-      dateForSwiping = DateTime.now(),
-      oldSelectedDateForTasks = DateTime.now(),
-      newSelectedDateForTasks = DateTime.now(),
-      dateForSwipingForTasks = DateTime.now(),
-      oldDeadlineForTask = DateTime.now(),newDeadlineForTask=DateTime.now();
-  bool isCalendarOpened;
-  List<Map<String, dynamic>> week;
-  List<Map<String, dynamic>> days, daysForTasks;
-  int pageForPills, pageForTasks;
-  NotificationsBefore oldNotificationsBefore, newNotificationsBefore,fromLastSession;
-  TaskModel? taskModel;
+  final String taskTitle;
+  final DateTime? selectedDate,
+      dateForSwiping,
+      oldSelectedDateForTasks,
+      newSelectedDateForTasks,
+      dateForSwipingForTasks,
+      oldDeadlineForTask,
+      newDeadlineForTask;
+  final bool isCalendarOpened;
+  final List<Map<String, dynamic>> week;
+  final List<Map<String, dynamic>> days, daysForTasks;
+  final int pageForPills, pageForTasks;
+  final NotificationsBefore oldNotificationsBefore,
+      newNotificationsBefore,
+      fromLastSession;
+  final TaskModel? taskModel;
 
-  int sessionForNotification, sessionForSelectingDateForTask;
+  final int sessionForNotification, sessionForSelectingDateForTask;
   final List<String> notifications = [
     "Немає",
     "Вчасно",
@@ -24,8 +27,8 @@ class RemindersState {
     "за 1 год",
     "за 1 день",
   ];
-  List<TaskModel> myTasks;
-  bool isLoading;
+  final List<TaskModel> myTasks;
+  final bool isLoading;
 
   RemindersState({
     this.taskTitle = "",
@@ -55,22 +58,23 @@ class RemindersState {
   RemindersState copyWith({
     String? taskTitle,
     DateTime? selectedDate,
-    dateForSwiping,
-    oldSelectedDateForTasks,newSelectedDateForTasks,
-    dateForSwipingForTasks,
-    oldDeadlineForTask,
-    newDeadlineForTask,
+    DateTime? dateForSwiping,
+    DateTime? oldSelectedDateForTasks,
+    DateTime? newSelectedDateForTasks,
+    DateTime? dateForSwipingForTasks,
+    DateTime? oldDeadlineForTask,
+    DateTime? newDeadlineForTask,
     List<Map<String, dynamic>>? days,
-    week,
-    daysForTasks,
+    List<Map<String, dynamic>>? week,
+    List<Map<String, dynamic>>? daysForTasks,
     bool? isCalendarOpened,
     int? pageForPills,
-    pageForTasks,
-    sessionForNotification,
-    sessionForSelectingDateForTask,
+    int? pageForTasks,
+    int? sessionForNotification,
+    int? sessionForSelectingDateForTask,
     NotificationsBefore? oldNotificationsBefore,
-    newNotificationsBefore,
-    fromLastSession,
+    NotificationsBefore? newNotificationsBefore,
+    NotificationsBefore? fromLastSession,
     TaskModel? taskModel,
     List<TaskModel>? myTasks,
     bool? isLoading,
@@ -111,25 +115,25 @@ class RemindersState {
   RemindersState clear() {
     return RemindersState(
       taskTitle: "",
-      selectedDate: null,
-      days: [],
-      week: [],
+      selectedDate: DateTime.now(),
+      days: const [],
+      week: const [],
       isCalendarOpened: false,
-      dateForSwiping: null,
+      dateForSwiping: DateTime.now(),
       pageForPills: 0,
       pageForTasks: 0,
-      oldSelectedDateForTasks: null,
-      newSelectedDateForTasks: null,
-      dateForSwipingForTasks: null,
-      daysForTasks: [],
-      newDeadlineForTask: null,
-      oldDeadlineForTask: null,
+      oldSelectedDateForTasks: DateTime.now(),
+      newSelectedDateForTasks: DateTime.now(),
+      dateForSwipingForTasks: DateTime.now(),
+      daysForTasks: const [],
+      newDeadlineForTask: DateTime.now(),
+      oldDeadlineForTask: DateTime.now(),
       oldNotificationsBefore: NotificationsBefore.no,
       newNotificationsBefore: NotificationsBefore.no,
       sessionForNotification: 0,
       taskModel: null,
       sessionForSelectingDateForTask: 0,
-      myTasks: [],
+      myTasks: const [],
       isLoading: true,
     );
   }

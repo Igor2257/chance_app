@@ -1,11 +1,11 @@
 part of 'navigation_bloc.dart';
-
+@immutable
 class NavigationState {
-  Set<Marker> setMarkers;
-  Set<Polyline> polylines;
-  PickResult? firstPickResult, secondPickResult;
+  final Set<Marker> setMarkers;
+  final Set<Polyline> polylines;
+  final PickResult? firstPickResult, secondPickResult;
 
-  NavigationState({
+  const NavigationState({
     this.setMarkers = const {},
     this.polylines = const {},
     this.firstPickResult,

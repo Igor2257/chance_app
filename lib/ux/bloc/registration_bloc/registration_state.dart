@@ -1,14 +1,14 @@
 part of 'registration_bloc.dart';
-
+@immutable
 class RegistrationState {
-  String firstName, lastName, phone, email, passwordFirst, passwordSecond;
-  RegistrationPages registrationPages;
-  double percentage;
-  PageController? pageController = PageController(initialPage: 0);
+  final String firstName, lastName, phone, email, passwordFirst, passwordSecond;
+  final RegistrationPages registrationPages;
+  final double percentage;
+  final PageController? pageController;
 
-  String? errorLastName,errorFirstName,errorPhone,errorEmail,errorFirstPassword,errorSecondPassword;
-  bool isUserGrantPermissionForProcessingPersonalData,isLoading;
-  RegistrationState({
+  final String? errorLastName,errorFirstName,errorPhone,errorEmail,errorFirstPassword,errorSecondPassword;
+  final bool isUserGrantPermissionForProcessingPersonalData,isLoading;
+  const RegistrationState({
     this.firstName = "",
     this.lastName = "",
     this.phone = "",
@@ -62,7 +62,7 @@ class RegistrationState {
     );
   }
   RegistrationState clear(){
-    return RegistrationState(
+    return const RegistrationState(
       firstName: "",
       lastName:"",
       phone: "",
