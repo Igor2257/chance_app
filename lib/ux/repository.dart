@@ -730,12 +730,16 @@ class Repository {
     await userBox!.delete("user");
   }
 
-  Future addSavedAddresses(PickResult savedAddresses) async {
-    await savedAddressesBox!.put(savedAddresses.id, savedAddresses);
+  Future addSavedAddresses(PickResult savedAddress) async {
+    if (savedAddresses.any((element) => element.placeId == savedAddress.placeId)) {
+      return;
+    }
+
+    await savedAddressesBox!.put(savedAddress.placeId, savedAddress);
   }
 
   Future updateSavedAddresses(PickResult savedAddresses) async {
-    await savedAddressesBox!.put(savedAddresses.id, savedAddresses);
+    await savedAddressesBox!.put(savedAddresses.placeId, savedAddresses);
   }
 
   Future removeSavedAddresses(int id) async {
@@ -818,9 +822,7 @@ class Repository {
       await http.post(uri, headers: <String, String>{
         'Content-Type': 'application/json',
       }).then((value) async {
-        print("value.body ${value.body}");
         if (value.statusCode > 199 && value.statusCode < 300) {
-          print("value.body");
           Map<String,dynamic> map=jsonDecode(value.body);
           latLng=LatLng(map["result"]["geometry"]["location"]["lat"], map["result"]["geometry"]["location"]["lng"]);
         }
@@ -829,7 +831,6 @@ class Repository {
       Fluttertoast.showToast(
           msg: error.toString(), toastLength: Toast.LENGTH_LONG);
     }
-    print(latLng);
     return latLng;
   }
 

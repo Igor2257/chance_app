@@ -43,7 +43,6 @@ class _SelectPlaceState extends State<SelectPlace> {
   late final Future<PlaceProvider> _futureProvider;
   PlaceProvider? provider;
   SearchBarController searchBarController = SearchBarController();
-  bool showIntroModal = true;
   List<Map<String, dynamic>> predictionForList = [];
   List<Prediction> predictionForTap = [];
   List<myPick.PickResult> savedAddresses = Repository()
@@ -160,7 +159,6 @@ class _SelectPlaceState extends State<SelectPlace> {
                                                     })
                                                 .toList();
                                             predictionForTap = predictions;
-                                            print(predictionForList);
                                             setState(() {});
                                           },
                                         ),
@@ -175,16 +173,36 @@ class _SelectPlaceState extends State<SelectPlace> {
                                       Position? position =
                                           PositionController.myPosition;
 
-                                      //if (position != null) {
-                                      //  switch (widget.pickResultFor) {
-                                      //    case PickResultFor.first:
-                                      //      firstPickResult = position;
-                                      //      break;
-                                      //    case PickResultFor.second:
-                                      //      secondPickResult = result;
-                                      //      break;
-                                      //  }
-                                      //}
+                                      if (position != null) {
+                                        switch (widget.pickResultFor) {
+                                          case PickResultFor.first:
+                                            firstPickResult = myPick.PickResult(
+                                                id: "me",
+                                                formattedAddress: "Я",
+                                                geometry: myGeometry.Geometry(
+                                                    location:
+                                                        myLocation.Location(
+                                                            lat: position
+                                                                .latitude,
+                                                            lng: position
+                                                                .longitude)));
+                                            break;
+                                          case PickResultFor.second:
+                                            secondPickResult = myPick.PickResult(
+                                                id: "me",
+                                                formattedAddress: "Я",
+                                                geometry: myGeometry.Geometry(
+                                                    location:
+                                                        myLocation.Location(
+                                                            lat: position
+                                                                .latitude,
+                                                            lng: position
+                                                                .longitude)));
+                                            break;
+                                        }
+
+                                        Navigator.of(context).pop();
+                                      }
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.all(16),
@@ -247,7 +265,8 @@ class _SelectPlaceState extends State<SelectPlace> {
                                                   false, // only works in page mode, less flickery, remove if wrong offsets
                                             ),
                                           ),
-                                        );
+                                        ).whenComplete(
+                                            () => Navigator.of(context).pop());
                                       }
                                     },
                                     child: Container(
@@ -319,6 +338,18 @@ class _SelectPlaceState extends State<SelectPlace> {
                                                   Navigator.of(context).pop();
                                                 }
                                               });
+                                            } else {
+                                              switch (widget.pickResultFor) {
+                                                case PickResultFor.first:
+                                                  firstPickResult =
+                                                      savedAddresses[position];
+                                                  break;
+                                                case PickResultFor.second:
+                                                  secondPickResult =
+                                                      savedAddresses[position];
+                                                  break;
+                                              }
+                                              Navigator.of(context).pop();
                                             }
                                           },
                                           child: Container(
@@ -340,15 +371,14 @@ class _SelectPlaceState extends State<SelectPlace> {
                                                 ),
                                                 Expanded(
                                                     child: Text(
-                                                  predictionForList.isNotEmpty
+                                                      predictionForList.isNotEmpty
                                                       ? predictionForList[
                                                                   position]
                                                               ["description"]
                                                           .toString()
                                                       : savedAddresses[position]
-                                                          .addressComponents!
-                                                          .first
-                                                          .longName,
+                                                              .formattedAddress ??
+                                                          "",
                                                   style: TextStyle(
                                                       fontSize: 16,
                                                       color: primaryText),
@@ -410,42 +440,13 @@ class _SelectPlaceState extends State<SelectPlace> {
           secondPickResult = selectedPlace;
           break;
       }
+      selectedPlace = selectedPlace.copyWith(isRecentlySearched: true);
+      await Repository().addSavedAddresses(selectedPlace);
     }
     setState(() {
 
     });
   }
 
-  myPick.PickResult getPickResult(PlaceDetails result) {
-    Map<String, dynamic> map = result.toJson();
-    map["geometry"] = myGeometry.Geometry(
-            location: myLocation.Location(
-                lat: result.geometry!.location.lat,
-                lng: result.geometry!.location.lng),
-            locationType: result.geometry!.locationType,
-            viewport: result.geometry!.viewport != null
-                ? myBounds.Bounds(
-                    northeast: myLocation.Location(
-                        lat: result.geometry!.viewport!.northeast.lat,
-                        lng: result.geometry!.viewport!.northeast.lng),
-                    southwest: myLocation.Location(
-                        lat: result.geometry!.viewport!.southwest.lat,
-                        lng: result.geometry!.viewport!.southwest.lng))
-                : null,
-            bounds: result.geometry!.bounds != null
-                ? myBounds.Bounds(
-                    northeast: myLocation.Location(
-                        lat: result.geometry!.bounds!.northeast.lat,
-                        lng: result.geometry!.bounds!.northeast.lng),
-                    southwest: myLocation.Location(
-                        lat: result.geometry!.bounds!.southwest.lat,
-                        lng: result.geometry!.bounds!.southwest.lng))
-                : null)
-        .toJson();
-    map["address_components"] = result.addressComponents
-        .map((e) => myaddress.AddressComponent(
-            types: e.types, longName: e.longName, shortName: e.shortName))
-        .toList();
-    return myPick.PickResult.fromJson(map);
-  }
+
 }

@@ -60,7 +60,7 @@ mixin _$PickResult {
   @HiveField(22)
   bool get star => throw _privateConstructorUsedError;
   @HiveField(23)
-  bool? get isRecentlySearched => throw _privateConstructorUsedError;
+  bool get isRecentlySearched => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -94,7 +94,7 @@ abstract class $PickResultCopyWith<$Res> {
       @HiveField(19) num? utcOffset,
       @HiveField(20) String? website,
       @HiveField(22) bool star,
-      @HiveField(23) bool? isRecentlySearched});
+      @HiveField(23) bool isRecentlySearched});
 
   $GeometryCopyWith<$Res>? get geometry;
 }
@@ -131,7 +131,7 @@ class _$PickResultCopyWithImpl<$Res, $Val extends PickResult>
     Object? utcOffset = freezed,
     Object? website = freezed,
     Object? star = null,
-    Object? isRecentlySearched = freezed,
+    Object? isRecentlySearched = null,
   }) {
     return _then(_value.copyWith(
       placeId: freezed == placeId
@@ -210,10 +210,10 @@ class _$PickResultCopyWithImpl<$Res, $Val extends PickResult>
           ? _value.star
           : star // ignore: cast_nullable_to_non_nullable
               as bool,
-      isRecentlySearched: freezed == isRecentlySearched
+      isRecentlySearched: null == isRecentlySearched
           ? _value.isRecentlySearched
           : isRecentlySearched // ignore: cast_nullable_to_non_nullable
-              as bool?,
+              as bool,
     ) as $Val);
   }
 
@@ -258,7 +258,7 @@ abstract class _$$PickResultImplCopyWith<$Res>
       @HiveField(19) num? utcOffset,
       @HiveField(20) String? website,
       @HiveField(22) bool star,
-      @HiveField(23) bool? isRecentlySearched});
+      @HiveField(23) bool isRecentlySearched});
 
   @override
   $GeometryCopyWith<$Res>? get geometry;
@@ -376,7 +376,7 @@ class __$$PickResultImplCopyWithImpl<$Res>
       isRecentlySearched: freezed == isRecentlySearched
           ? _value.isRecentlySearched
           : isRecentlySearched // ignore: cast_nullable_to_non_nullable
-              as bool?,
+              as bool,
     ));
   }
 }
@@ -404,7 +404,7 @@ class _$PickResultImpl implements _PickResult {
       @HiveField(19) this.utcOffset = null,
       @HiveField(20) this.website = null,
       @HiveField(22) this.star = false,
-      @HiveField(23) this.isRecentlySearched = null})
+      @HiveField(23) this.isRecentlySearched = true})
       : _types = types,
         _addressComponents = addressComponents;
 
@@ -506,7 +506,7 @@ class _$PickResultImpl implements _PickResult {
   @override
   @JsonKey()
   @HiveField(23)
-  final bool? isRecentlySearched;
+  final bool isRecentlySearched;
 
   @override
   String toString() {
@@ -612,7 +612,7 @@ abstract class _PickResult implements PickResult {
       @HiveField(19) final num? utcOffset,
       @HiveField(20) final String? website,
       @HiveField(22) final bool star,
-      @HiveField(23) final bool? isRecentlySearched}) = _$PickResultImpl;
+      @HiveField(23) final bool isRecentlySearched}) = _$PickResultImpl;
 
   factory _PickResult.fromJson(Map<String, dynamic> json) =
       _$PickResultImpl.fromJson;
@@ -676,7 +676,7 @@ abstract class _PickResult implements PickResult {
   bool get star;
   @override
   @HiveField(23)
-  bool? get isRecentlySearched;
+  bool get isRecentlySearched;
   @override
   @JsonKey(ignore: true)
   _$$PickResultImplCopyWith<_$PickResultImpl> get copyWith =>

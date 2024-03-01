@@ -266,7 +266,6 @@ class _InputRegisterLayoutState extends State<InputRegisterLayout> {
       case InputLayouts.phone:
         errorText = state.errorPhone;
         textEditingController.text = state.phone;
-        print("state.phone ${textEditingController.text}");
         textEditingController.text =
             textEditingController.text.replaceAll("+380", "");
         break;

@@ -5,6 +5,11 @@ import 'package:chance_app/ui/pages/main_page/main_page.dart';
 import 'package:chance_app/ui/pages/menu/menu_page.dart';
 import 'package:chance_app/ui/pages/menu/pages/my_information.dart';
 import 'package:chance_app/ui/pages/navigation/navigation_page.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/address_component.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/bounds.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geocoding_result.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geometry.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/location.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ui/pages/onboarding/onboarding_page.dart';
 import 'package:chance_app/ui/pages/onboarding/onboarding_tutorial.dart';
@@ -451,15 +456,22 @@ Future<bool> _initBoxes() async {
   final documentsDirectory = await getApplicationDocumentsDirectory();
   Hive.init(documentsDirectory.path);
   //await Repository().deleteCookie();
-  await Hive.deleteBoxFromDisk('user');
-  await Hive.deleteBoxFromDisk('myTasks');
+  //await Hive.deleteBoxFromDisk('user');
+  //await Hive.deleteBoxFromDisk('myTasks');
+  //await Hive.deleteBoxFromDisk('savedAddresses');
   Hive.registerAdapter(MeUserAdapter());
   Hive.registerAdapter(TaskModelAdapter());
   Hive.registerAdapter(MedicineModelAdapter());
+  Hive.registerAdapter(LocationAdapter());
+  Hive.registerAdapter(GeocodingResultAdapter());
+  Hive.registerAdapter(GeometryAdapter());
+  Hive.registerAdapter(AddressComponentAdapter());
+  Hive.registerAdapter(BoundsAdapter());
   Hive.registerAdapter(PickResultAdapter());
   userBox = await Hive.openBox<MeUser>("user");
   tasksBox = await Hive.openBox<TaskModel>("myTasks");
   medicineBox = await Hive.openBox<MedicineModel>("myMedicines");
   savedAddressesBox = await Hive.openBox<PickResult>("savedAddresses");
+
   return true;
 }

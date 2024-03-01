@@ -31,7 +31,7 @@ class PickResult with _$PickResult {
     @HiveField(19)  @Default(null) num? utcOffset,
     @HiveField(20)  @Default(null) String? website,
     @HiveField(22)  @Default(false) bool star,
-    @HiveField(23)  @Default(null) bool? isRecentlySearched,
+    @HiveField(23)  @Default(true) bool isRecentlySearched,
   }) = _PickResult;
 
   factory PickResult.fromJson(Map<String, dynamic> json) => _$PickResultFromJson(json);

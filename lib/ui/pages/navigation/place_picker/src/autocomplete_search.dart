@@ -9,30 +9,34 @@ import 'package:flutter_google_maps_webservices/places.dart';
 import 'package:provider/provider.dart';
 
 class AutoCompleteSearch extends StatefulWidget {
-  const AutoCompleteSearch(
-      {Key? key,
-        required this.sessionToken,
-        required this.onPicked,
-        required this.appBarKey,
-        this.hintText = "Search here",
-        this.searchingText = "Searching...",
-        this.hidden = false,
-        this.height = 40,
-        this.contentPadding = EdgeInsets.zero,
-        this.debounceMilliseconds,
-        this.onSearchFailed,
-        required this.searchBarController,
-        this.autocompleteOffset,
-        this.autocompleteRadius,
-        this.autocompleteLanguage,
-        this.autocompleteComponents,
-        this.autocompleteTypes,
-        this.strictbounds,
-        this.region,
-        this.initialSearchString,
-        this.searchForInitialValue,
-        this.autocompleteOnTrailingWhitespace, required this.prediction})
-      : super(key: key);
+  const AutoCompleteSearch({
+    Key? key,
+    required this.sessionToken,
+    required this.onPicked,
+    required this.appBarKey,
+    this.hintText = "Search here",
+    this.searchingText = "Searching...",
+    this.hidden = false,
+    this.height = 40,
+    this.contentPadding = EdgeInsets.zero,
+    this.debounceMilliseconds,
+    this.onSearchFailed,
+    required this.searchBarController,
+    this.autocompleteOffset,
+    this.autocompleteRadius,
+    this.autocompleteLanguage,
+    this.autocompleteComponents,
+    this.autocompleteTypes,
+    this.strictbounds,
+    this.region,
+    this.initialSearchString,
+    this.searchForInitialValue,
+    this.autocompleteOnTrailingWhitespace,
+    required this.prediction,
+    this.onTapCancel,
+    this.textEditingController,
+    this.onTap, this.focusNode,
+  }) : super(key: key);
 
   final String? sessionToken;
   final String? hintText;
@@ -55,7 +59,10 @@ class AutoCompleteSearch extends StatefulWidget {
   final String? initialSearchString;
   final bool? searchForInitialValue;
   final bool? autocompleteOnTrailingWhitespace;
-  final Function(List<Prediction> ) prediction;
+  final Function(List<Prediction>) prediction;
+  final Function()? onTapCancel, onTap;
+  final TextEditingController? textEditingController;
+  final FocusNode? focusNode;
 
   @override
   AutoCompleteSearchState createState() => AutoCompleteSearchState();
@@ -66,10 +73,15 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
   FocusNode focus = FocusNode();
   OverlayEntry? overlayEntry;
   SearchProvider provider = SearchProvider();
-
   @override
   void initState() {
     super.initState();
+    if (widget.textEditingController != null) {
+      controller = widget.textEditingController!;
+    }
+    if (widget.focusNode != null) {
+      focus = widget.focusNode!;
+    }
     if (widget.initialSearchString != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         controller.text = widget.initialSearchString!;
@@ -78,6 +90,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
         }
       });
     }
+
     controller.addListener(_onSearchInputChange);
     focus.addListener(_onFocusChanged);
 
@@ -100,14 +113,21 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
   Widget build(BuildContext context) {
     return !widget.hidden
         ? ChangeNotifierProvider.value(
-      value: provider,
-      child: Row(
-        children: <Widget>[
-          Expanded(child: _buildSearchTextField()),
-          _buildTextClearIcon(),
-        ],
-      ),
-    )
+            value: provider,
+            child: GestureDetector(
+              onTap: () {
+                if (widget.onTap != null) {
+                  widget.onTap!();
+                }
+                FocusScope.of(context).requestFocus(focus);
+              },
+              child:Row(
+              children: <Widget>[
+                 Expanded(child: _buildSearchTextField()),
+                _buildTextClearIcon(),
+              ],
+            ),
+          ))
         : Container();
   }
 
@@ -126,6 +146,11 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
         isDense: true,
         contentPadding: widget.contentPadding,
       ),
+      onTap:() {
+        if (widget.onTap != null) {
+          widget.onTap!();
+        }
+      },
     );
   }
 
@@ -145,6 +170,10 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
                 ),
                 onTap: () {
                   clearText();
+                  focus.unfocus();
+                  if (widget.onTapCancel != null) {
+                    widget.onTapCancel!();
+                  }
                 },
               ),
             );
@@ -171,7 +200,8 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
       return;
     }
 
-    if (!(widget.autocompleteOnTrailingWhitespace!=null&&widget.autocompleteOnTrailingWhitespace!) &&
+    if (!(widget.autocompleteOnTrailingWhitespace != null &&
+            widget.autocompleteOnTrailingWhitespace!) &&
         controller.text.substring(controller.text.length - 1) == " ") {
       provider.debounceTimer?.cancel();
       return;
@@ -181,10 +211,9 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
       provider.debounceTimer!.cancel();
     }
 
-    provider.debounceTimer =
-        Timer(const Duration(milliseconds: 1000), () {
-          _searchPlace(controller.text.trim());
-        });
+    provider.debounceTimer = Timer(const Duration(milliseconds: 500), () {
+      _searchPlace(controller.text.trim());
+    });
   }
 
   _onFocusChanged() {

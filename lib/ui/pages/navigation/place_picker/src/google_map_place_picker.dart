@@ -147,7 +147,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
 
     if (response.errorMessage?.isNotEmpty == true ||
         response.status == "REQUEST_DENIED") {
-      print("Camera Location Search Error: ${response.errorMessage!}");
+      FlutterError("Camera Location Search Error: ${response.errorMessage!}");
       if (widget.onSearchFailed != null) {
         widget.onSearchFailed!(response.status);
       }
@@ -164,8 +164,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
 
       if (detailResponse.errorMessage?.isNotEmpty == true ||
           detailResponse.status == "REQUEST_DENIED") {
-        print(
-            "Fetching details by placeId Error: ${detailResponse.errorMessage!}");
+        FlutterError("Fetching details by placeId Error: ${detailResponse.errorMessage!}");
         if (widget.onSearchFailed != null) {
           widget.onSearchFailed!(detailResponse.status);
         }

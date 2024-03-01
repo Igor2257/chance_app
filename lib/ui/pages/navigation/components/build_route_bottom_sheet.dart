@@ -10,6 +10,7 @@ import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class BuildRouteBottomSheet extends StatefulWidget {
@@ -111,18 +112,26 @@ class _BuildRouteBottomSheetState extends State<BuildRouteBottomSheet> {
           ),
           RoundedButton(
               onPress: () async {
-                await getPolyline().then((value) {
-                  if (value != null) {
-                    mapController!.animateCamera(CameraUpdate.newLatLngZoom(
-                        LatLng(value.latitude, value.longitude), 18));
-                  }
-                  
-                  Navigator.of(context).pop();
-                });
+                if (firstPickResult == null || secondPickResult == null) {
+                  return null;
+                }
+                if (firstPickResult!.id != secondPickResult!.id) {
+                  await getPolyline().then((value) {
+                    if (value != null) {
+                      mapController!.animateCamera(CameraUpdate.newLatLngZoom(
+                          LatLng(value.latitude, value.longitude), 18));
+                      Navigator.of(context).pop();
+                    }
+                  });
+                } else {
+                  Fluttertoast.showToast(
+                      msg: "Оберіть іншу кінцеву точку",
+                      toastLength: Toast.LENGTH_LONG);
+                }
               },
               color: firstPickResult != null && secondPickResult != null
                   ? primary1000
-                  : darkNeutral600,
+                  : darkNeutral400,
               child: Text(
                 "Побудувати маршрут",
                 style: TextStyle(color: primary50, fontSize: 16),
@@ -133,21 +142,41 @@ class _BuildRouteBottomSheetState extends State<BuildRouteBottomSheet> {
   }
 
   Future<PointLatLng?> getPolyline() async {
-    if (firstPickResult == null || secondPickResult == null) {
-      return null;
-    }
     PolylinePoints polylinePoints = PolylinePoints();
-    PointLatLng? firstPointLatLng = await getPositionOfPoint(firstPickResult!);
-    PointLatLng? secondPointLatLng =
-        await getPositionOfPoint(secondPickResult!);
+    PointLatLng? firstPointLatLng;
+    if (firstPickResult!.id != "me") {
+      try {
+        firstPointLatLng = PointLatLng(firstPickResult!.geometry!.location.lat,
+            firstPickResult!.geometry!.location.lng);
+      } catch (e) {
+        firstPointLatLng = await getPositionOfPoint(firstPickResult!);
+      }
+    } else {
+      firstPointLatLng = PointLatLng(firstPickResult!.geometry!.location.lat,
+          firstPickResult!.geometry!.location.lng);
+    }
+    PointLatLng? secondPointLatLng;
+    if (secondPickResult!.id != "me") {
+      try {
+        secondPointLatLng = PointLatLng(
+            secondPickResult!.geometry!.location.lat,
+            secondPickResult!.geometry!.location.lng);
+      } catch (e) {
+        secondPointLatLng = await getPositionOfPoint(secondPickResult!);
+      }
+    } else {
+      secondPointLatLng = PointLatLng(secondPickResult!.geometry!.location.lat,
+          secondPickResult!.geometry!.location.lng);
+    }
     if (firstPointLatLng == null || secondPointLatLng == null) {
       return null;
     }
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       googleAPIKey,
-      firstPointLatLng, // Начальная точка
-      secondPointLatLng, // Конечная точка
+      firstPointLatLng,
+      secondPointLatLng,
     );
+    List<LatLng> polylineCoordinates = [];
     if (result.points.isNotEmpty) {
       for (var point in result.points) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
@@ -155,9 +184,9 @@ class _BuildRouteBottomSheetState extends State<BuildRouteBottomSheet> {
     }
     Polyline polyline = Polyline(
       polylineId: const PolylineId("route"),
-      color: Colors.red, // Цвет маршрута
-      points: polylineCoordinates, // Координаты маршрута
-      width: 3, // Ширина маршрута
+      color: Colors.red,
+      points: polylineCoordinates,
+      width: 3,
     );
     polylines.removeWhere((element) => element.polylineId==const PolylineId("route"));
     polylines.add(polyline);
@@ -175,7 +204,8 @@ class _BuildRouteBottomSheetState extends State<BuildRouteBottomSheet> {
             snippet: firstPickResult!.formattedAddress,
             onTap: () {
               mapController!.animateCamera(CameraUpdate.newLatLngZoom(
-                  LatLng(firstPointLatLng.latitude, firstPointLatLng.longitude),
+                  LatLng(
+                      firstPointLatLng!.latitude, firstPointLatLng.longitude),
                   18));
             }));
     setMarkers.clear();
@@ -196,7 +226,7 @@ class _BuildRouteBottomSheetState extends State<BuildRouteBottomSheet> {
             onTap: () {
               mapController!.animateCamera(CameraUpdate.newLatLngZoom(
                   LatLng(
-                      secondPointLatLng.latitude, secondPointLatLng.longitude),
+                      secondPointLatLng!.latitude, secondPointLatLng.longitude),
                   18));
             }));
     setMarkers.add(pointB);
@@ -205,99 +235,5 @@ class _BuildRouteBottomSheetState extends State<BuildRouteBottomSheet> {
     return firstPointLatLng;
   }
 
-  Future<PointLatLng?> getPositionOfPoint(PickResult pickResult) async {
-    final result = await Repository().getLocationFromPlaceId(pickResult);
-    if (result == null) {
-      return null;
-    }
-    return PointLatLng(result.latitude, result.longitude);
-  }
 
-  Future<BitmapDescriptor?> getMarkerIcon(PickResultFor pickResultFor) async {
-    Size size = const Size(170, 170);
-    final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
-    final Canvas canvas = Canvas(pictureRecorder);
-
-    final Radius radius = Radius.circular(size.width / 2);
-
-    final Paint shadowPaint = Paint()..color = Colors.blue.withAlpha(100);
-    const double shadowWidth = 15.0;
-
-    final Paint borderPaint = Paint()..color = Colors.white;
-    const double borderWidth = 3.0;
-
-    const double imageOffset = shadowWidth + borderWidth;
-
-    // Add shadow circle
-    canvas.drawRRect(
-        RRect.fromRectAndCorners(
-          Rect.fromLTWH(0.0, 0.0, size.width, size.height),
-          topLeft: radius,
-          topRight: radius,
-          bottomLeft: radius,
-          bottomRight: radius,
-        ),
-        shadowPaint);
-
-    // Add border circle
-    canvas.drawRRect(
-        RRect.fromRectAndCorners(
-          Rect.fromLTWH(shadowWidth, shadowWidth,
-              size.width - (shadowWidth * 2), size.height - (shadowWidth * 2)),
-          topLeft: radius,
-          topRight: radius,
-          bottomLeft: radius,
-          bottomRight: radius,
-        ),
-        borderPaint);
-
-    // Oval for the image
-    Rect oval = Rect.fromLTWH(imageOffset, imageOffset,
-        size.width - (imageOffset * 2), size.height - (imageOffset * 2));
-
-    // Add path for oval image
-    canvas.clipPath(Path()..addOval(oval));
-
-    // Add image
-    String path = "";
-    switch (pickResultFor) {
-      case PickResultFor.first:
-        path = "assets/icons/point_a.png";
-        break;
-      case PickResultFor.second:
-        path = "assets/icons/point_b.png";
-        break;
-    }
-    ui.Image image = await getImageFromPath(
-        path: path); // Alternatively use your own method to get the image
-    paintImage(canvas: canvas, image: image, rect: oval, fit: BoxFit.contain);
-
-    // Convert canvas to image
-    final ui.Image markerAsImage = await pictureRecorder
-        .endRecording()
-        .toImage(size.width.toInt(), size.height.toInt());
-
-    // Convert image to bytes
-    final ByteData? byteData =
-        await markerAsImage.toByteData(format: ui.ImageByteFormat.png);
-    if (byteData != null) {
-      final Uint8List uint8List = byteData.buffer.asUint8List();
-      return BitmapDescriptor.fromBytes(uint8List);
-    }
-    return null;
-  }
-
-  Future<ui.Image> getImageFromPath({required String path}) async {
-    Uint8List imageBytes = Uint8List(0);
-    final ByteData bytes = await rootBundle.load(path);
-    imageBytes = bytes.buffer.asUint8List();
-
-    final Completer<ui.Image> completer = Completer();
-
-    ui.decodeImageFromList(imageBytes, (ui.Image img) {
-      return completer.complete(img);
-    });
-
-    return completer.future;
-  }
 }

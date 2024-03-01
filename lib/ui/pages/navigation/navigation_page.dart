@@ -1,7 +1,9 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/pages/navigation/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/components/map_view.dart';
-import 'package:chance_app/ui/pages/navigation/components/navigation_app_bar.dart';
+import 'package:chance_app/ui/pages/navigation/components/search_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_fgbg/flutter_fgbg.dart';
 
 class NavigationPage extends StatefulWidget {
   const NavigationPage({super.key});
@@ -10,20 +12,66 @@ class NavigationPage extends StatefulWidget {
   State<NavigationPage> createState() => _NavigationPageState();
 }
 
-class _NavigationPageState extends State<NavigationPage> {
-  final TextEditingController textEditingController = TextEditingController();
-  final FocusNode focusNode = FocusNode();
+class _NavigationPageState extends State<NavigationPage>
+    with WidgetsBindingObserver {
+  GlobalKey appBarKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: beigeBG,
-      appBar: NavigationAppBar(
-        textEditingController: textEditingController,
-        focusNode: focusNode,
-      ),
-      body: const MapView(),
-    );
+    return  Scaffold(
+          key: appBarKey,
+          extendBodyBehindAppBar: true,
+          backgroundColor: beigeBG,
+          body: Stack(children: [
+            const MapView(),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: SafeArea(
+                minimum: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: SizedBox(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          height: 44,
+                          width: 44,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(90),
+                              color: beigeTransparent,
+                              boxShadow: const [
+                                BoxShadow(
+                                    blurRadius: 6,
+                                    color: Colors.black26,
+                                    offset: Offset(0, 0),
+                                    spreadRadius: 2,
+                                    blurStyle: BlurStyle.normal)
+                              ]),
+                          child: Center(
+                            child: Icon(
+                              Icons.arrow_back,
+                              color: primaryText,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: CustomSearchBar(
+                          appBarKey: appBarKey,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ]),
+        );
   }
 }

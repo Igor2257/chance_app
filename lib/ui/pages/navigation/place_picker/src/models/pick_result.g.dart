@@ -36,7 +36,7 @@ class PickResultAdapter extends TypeAdapter<PickResult> {
       utcOffset: fields[19] as num?,
       website: fields[20] as String?,
       star: fields[22] as bool,
-      isRecentlySearched: fields[23] as bool?,
+      isRecentlySearched: fields[23] as bool,
     );
   }
 
@@ -128,7 +128,7 @@ _$PickResultImpl _$$PickResultImplFromJson(Map<String, dynamic> json) =>
       utcOffset: json['utcOffset'] as num?,
       website: json['website'] as String?,
       star: json['star'] as bool? ?? false,
-      isRecentlySearched: json['is_recently_searched'] as bool?,
+      isRecentlySearched: json['is_recently_searched'] as bool? ??true,
     );
 
 Map<String, dynamic> _$$PickResultImplToJson(_$PickResultImpl instance) =>

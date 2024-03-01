@@ -36,6 +36,58 @@ class _MapViewState extends State<MapView>
       scaleTerrainMap = 0,
       scaleHybridMap = 0;
 
+  Future<bool> checkLocationPermission(BuildContext context) async {
+    bool isOkay = false;
+    await Permission.location.request().then((status) async {
+      if (status != PermissionStatus.denied &&
+          status != PermissionStatus.permanentlyDenied) {
+        isOkay = true;
+      }
+      if (!isOkay) {
+        if (mounted) {
+          await showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) {
+                return PopScope(
+                    canPop: false,
+                    onPopInvoked: (value) {},
+                    child: AlertDialog(
+                      title: Text(
+                        "Дозвольте застосунку використовувати розташування",
+                        style: TextStyle(fontSize: 24, color: primaryText),
+                      ),
+                      content: Text(
+                        "Щоб програма працювала корректно, вам потрібно дозволити використовувати цей дозвіл",
+                        style: TextStyle(fontSize: 16, color: primaryText),
+                      ),
+                      actions: [
+                        RoundedButton(
+                          onPress: () async {
+                            await Geolocator.openAppSettings().whenComplete(() {
+                              if (mounted) {
+                                Navigator.of(context).pop();
+                              }
+                            });
+
+                            return true;
+                          },
+                          color: primary1000,
+                          child: Text(
+                            "Перейти",
+                            style: TextStyle(color: primary50),
+                          ),
+                        ),
+                      ],
+                    ));
+              });
+        }
+      }
+    });
+
+    return isOkay;
+  }
+
   @override
   void dispose() {
     _controllerMyLocation.dispose();
@@ -115,7 +167,7 @@ class _MapViewState extends State<MapView>
 
     checkLocationPermission(context).then((value) {
       if (value) {
-        positionController=PositionController(setState);
+        positionController = PositionController(setState);
       }
     });
 
@@ -123,57 +175,7 @@ class _MapViewState extends State<MapView>
     super.initState();
   }
 
-  Future<bool> checkLocationPermission(BuildContext context) async {
-    bool isOkay = false;
-    await Permission.location.request().then((status) async {
-      if (status != PermissionStatus.denied &&
-          status != PermissionStatus.permanentlyDenied) {
-        isOkay = true;
-      }
-      if (!isOkay) {
-        if (mounted) {
-          await showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (context) {
-                return PopScope(
-                    canPop: false,
-                    onPopInvoked: (value) {},
-                    child: AlertDialog(
-                      title: Text(
-                        "Дозвольте застосунку використовувати розташування",
-                        style: TextStyle(fontSize: 24, color: primaryText),
-                      ),
-                      content: Text(
-                        "Щоб програма працювала корректно, вам потрібно дозволити використовувати цей дозвіл",
-                        style: TextStyle(fontSize: 16, color: primaryText),
-                      ),
-                      actions: [
-                        RoundedButton(
-                          onPress: () async {
-                            await Geolocator.openAppSettings().whenComplete(() {
-                              if (mounted) {
-                                Navigator.of(context).pop();
-                              }
-                            });
 
-                            return true;
-                          },
-                          color: primary1000,
-                          child: Text(
-                            "Перейти",
-                            style: TextStyle(color: primary50),
-                          ),
-                        ),
-                      ],
-                    ));
-              });
-        }
-      }
-    });
-
-    return isOkay;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -313,17 +315,23 @@ class _MapViewState extends State<MapView>
                           ),
                         ],
                       )),
-                  const Align(
-                    alignment: Alignment.topCenter,
-                    child: SavedAddressesComponent()
-                  ),
                   Align(
                       alignment: Alignment.topRight,
                       child: Padding(
                         padding:
-                            const EdgeInsets.only(top: kToolbarHeight + 80),
+                            const EdgeInsets.only(top: kToolbarHeight + 40),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: SavedAddressesComponent(
+                                onPress: (pickResult) {},
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 30,
+                            ),
                             GestureDetector(
                               onTap: () async {
                                 meUser = meUser.copyWith(mapType: 0);

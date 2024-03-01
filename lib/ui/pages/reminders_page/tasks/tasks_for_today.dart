@@ -38,7 +38,6 @@ class _TasksForTodayState extends State<TasksForToday> {
     return BlocBuilder<RemindersBloc, RemindersState>(
         builder: (context, state) {
       List<TaskModel> tasksForToday = List.from(state.myTasks);
-      print(tasksForToday);
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,

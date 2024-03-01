@@ -24,7 +24,6 @@ class PositionController {
   ];
 
   PositionController(void Function(VoidCallback fn) this.setState) {
-  print("position");
     positionStream = Geolocator.getPositionStream(
             locationSettings: LocationSettings(
                 accuracy: Platform.isAndroid
@@ -32,7 +31,7 @@ class PositionController {
                     : LocationAccuracy.best,
                 distanceFilter: 5))
         .listen((Position? position) async {
-          print(position);
+          print("position: ${position}");
       try {
         if (position != null) {
           if (_myPreviousPosition != null) {
@@ -82,8 +81,6 @@ class PositionController {
   }
 
   void paused() {
-    myPosition = null;
-    _myPreviousPosition = null;
     positionStream!.pause();
   }
 
