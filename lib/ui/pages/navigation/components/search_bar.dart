@@ -17,7 +17,8 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class CustomSearchBar extends StatefulWidget {
-  const CustomSearchBar({super.key, required this.appBarKey});
+  const CustomSearchBar(
+      {super.key, required this.appBarKey});
 
   final GlobalKey appBarKey;
 
@@ -32,7 +33,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
   MeUser meUser = Repository().user!;
   List<Map<String, dynamic>> predictionsForMapView = [];
   List<Prediction> predictionsForTapMapView = [];
-  bool isPredictionsShow = true;
+  bool isPredictionsShow = false;
   TextEditingController textEditingController = TextEditingController();
   FocusNode focusNode = FocusNode();
   List<PickResult> savedAddresses = Repository()
@@ -43,6 +44,9 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
   @override
   void initState() {
     _futureProvider = _initPlaceProvider();
+    focusNode.addListener(() {
+      setState(() {});
+    });
     super.initState();
   }
 
@@ -135,7 +139,8 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                     ),
                     if ((predictionsForMapView.isNotEmpty ||
                             savedAddresses.isNotEmpty) &&
-                        isPredictionsShow)
+                        isPredictionsShow &&
+                        focusNode.hasFocus)
                       Container(
                         margin: const EdgeInsets.only(top: 20),
                         padding: const EdgeInsets.symmetric(
