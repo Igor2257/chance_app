@@ -24,14 +24,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 bool isNotTapedOnMyLocationButton = false;
 GoogleMapController? mapController;
 
-Set<Marker> setMarkers = {};
-Set<Polyline> polylines = {};
-
 String googleAPIKey = "AIzaSyDmTTd3yiTiyosQb_CYX2Ync20v-xiynYg";
 
 late PositionController positionController;
 
-PickResult? firstPickResult, secondPickResult;
 
 String getUrl(LatLng position, LatLng position1) {
   String origin = "origin=${position.latitude},${position.longitude}";

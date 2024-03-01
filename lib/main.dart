@@ -30,6 +30,7 @@ import 'package:chance_app/ui/pages/sos_page/main_page_sos.dart';
 import 'package:chance_app/ui/pages/sos_page/replace_contact_sos.dart';
 import 'package:chance_app/ux/bloc/add_medicine_bloc/add_medicine_bloc.dart';
 import 'package:chance_app/ux/bloc/login_bloc/login_bloc.dart';
+import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
@@ -143,6 +144,9 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
           ),
           BlocProvider(
             create: (context) => SosContactsBloc(),
+          ),
+          BlocProvider(
+            create: (context) => NavigationBloc(),
           ),
         ],
         child: Directionality(

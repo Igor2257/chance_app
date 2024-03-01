@@ -6,9 +6,11 @@ import 'package:chance_app/ui/pages/navigation/place_picker/src/autocomplete_sea
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/place_picker.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/select_place.dart';
+import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_google_maps_webservices/places.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_api_headers/google_api_headers.dart';
@@ -224,8 +226,10 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                           isPredictionsShow = false;
                                           textEditingController.text =
                                               value.formattedAddress!;
-                                          setMarkers.clear();
-                                          setMarkers.add(point);
+                                          BlocProvider.of<NavigationBloc>(
+                                                  context)
+                                              .add(UpdateMarkers(
+                                                  markers: {point}));
                                           focusNode.unfocus();
                                         });
                                       }
@@ -291,8 +295,8 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                     textEditingController.text =
                                         savedAddresses[position]
                                             .formattedAddress!;
-                                    setMarkers.clear();
-                                    setMarkers.add(point);
+                                    BlocProvider.of<NavigationBloc>(context)
+                                        .add(UpdateMarkers(markers: {point}));
                                     focusNode.unfocus();
                                   }
                                   setState(() {});

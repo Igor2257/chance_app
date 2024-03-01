@@ -3,10 +3,6 @@ import 'package:chance_app/ui/pages/navigation/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/controllers/autocomplete_search_controller.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/providers/place_provider.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/autocomplete_search.dart';
-import 'package:chance_app/ui/pages/navigation/place_picker/src/models/address_component.dart'
-    as myaddress;
-import 'package:chance_app/ui/pages/navigation/place_picker/src/models/bounds.dart'
-    as myBounds;
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geometry.dart'
     as myGeometry;
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/location.dart'
@@ -14,10 +10,12 @@ import 'package:chance_app/ui/pages/navigation/place_picker/src/models/location.
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart'
     as myPick;
 import 'package:chance_app/ui/pages/navigation/place_picker/src/place_picker.dart';
+import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/position_controller.dart';
 import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_google_maps_webservices/places.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_api_headers/google_api_headers.dart';
@@ -176,29 +174,34 @@ class _SelectPlaceState extends State<SelectPlace> {
                                       if (position != null) {
                                         switch (widget.pickResultFor) {
                                           case PickResultFor.first:
-                                            firstPickResult = myPick.PickResult(
-                                                id: "me",
-                                                formattedAddress: "Я",
-                                                geometry: myGeometry.Geometry(
-                                                    location:
-                                                        myLocation.Location(
-                                                            lat: position
-                                                                .latitude,
-                                                            lng: position
-                                                                .longitude)));
+                                            BlocProvider.of<NavigationBloc>(
+                                                    context)
+                                                .add(UpdateFirstPickResult(
+                                                    firstPickResult: myPick.PickResult(
+                                                        id: "me",
+                                                        formattedAddress: "Я",
+                                                        geometry: myGeometry.Geometry(
+                                                            location: myLocation
+                                                                .Location(
+                                                                    lat: position
+                                                                        .latitude,
+                                                                    lng: position
+                                                                        .longitude)))));
                                             break;
                                           case PickResultFor.second:
-                                            secondPickResult = myPick.PickResult(
-                                                id: "me",
-                                                formattedAddress: "Я",
-                                                geometry: myGeometry.Geometry(
-                                                    location:
-                                                        myLocation.Location(
-                                                            lat: position
-                                                                .latitude,
-                                                            lng: position
-                                                                .longitude)));
-                                            break;
+                                            BlocProvider.of<NavigationBloc>(
+                                                    context)
+                                                .add(UpdateSecondPickResult(
+                                                    secondPickResult: myPick.PickResult(
+                                                        id: "me",
+                                                        formattedAddress: "Я",
+                                                        geometry: myGeometry.Geometry(
+                                                            location: myLocation
+                                                                .Location(
+                                                                    lat: position
+                                                                        .latitude,
+                                                                    lng: position
+                                                                        .longitude)))));
                                         }
 
                                         Navigator.of(context).pop();
@@ -244,11 +247,21 @@ class _SelectPlaceState extends State<SelectPlace> {
                                               onPlacePicked: (result) async {
                                                 switch (widget.pickResultFor) {
                                                   case PickResultFor.first:
-                                                    firstPickResult = result;
+                                                    BlocProvider.of<
+                                                                NavigationBloc>(
+                                                            context)
+                                                        .add(
+                                                            UpdateFirstPickResult(
+                                                                firstPickResult:
+                                                                    result));
                                                     break;
                                                   case PickResultFor.second:
-                                                    secondPickResult = result;
-
+                                                    BlocProvider.of<
+                                                                NavigationBloc>(
+                                                            context)
+                                                        .add(UpdateSecondPickResult(
+                                                            secondPickResult:
+                                                                result));
                                                     break;
                                                 }
                                                 await Repository()
@@ -341,12 +354,22 @@ class _SelectPlaceState extends State<SelectPlace> {
                                             } else {
                                               switch (widget.pickResultFor) {
                                                 case PickResultFor.first:
-                                                  firstPickResult =
-                                                      savedAddresses[position];
+                                                  BlocProvider.of<
+                                                              NavigationBloc>(
+                                                          context)
+                                                      .add(UpdateFirstPickResult(
+                                                          firstPickResult:
+                                                              savedAddresses[
+                                                                  position]));
                                                   break;
                                                 case PickResultFor.second:
-                                                  secondPickResult =
-                                                      savedAddresses[position];
+                                                  BlocProvider.of<
+                                                              NavigationBloc>(
+                                                          context)
+                                                      .add(UpdateSecondPickResult(
+                                                          secondPickResult:
+                                                              savedAddresses[
+                                                                  position]));
                                                   break;
                                               }
                                               Navigator.of(context).pop();
@@ -434,10 +457,12 @@ class _SelectPlaceState extends State<SelectPlace> {
     if (selectedPlace != null) {
       switch (widget.pickResultFor) {
         case PickResultFor.first:
-          firstPickResult = selectedPlace;
+          BlocProvider.of<NavigationBloc>(context)
+              .add(UpdateFirstPickResult(firstPickResult: selectedPlace));
           break;
         case PickResultFor.second:
-          secondPickResult = selectedPlace;
+          BlocProvider.of<NavigationBloc>(context)
+              .add(UpdateSecondPickResult(secondPickResult: selectedPlace));
           break;
       }
       selectedPlace = selectedPlace.copyWith(isRecentlySearched: true);

@@ -2,8 +2,10 @@ import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/navigation/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/select_place.dart';
+import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class SavedAddressesComponent extends StatefulWidget {
@@ -64,8 +66,8 @@ class _SavedAddressesComponentState extends State<SavedAddressesComponent> {
                                           .lng),
                                   18));
                         }));
-                setMarkers.clear();
-                setMarkers.add(point);
+                BlocProvider.of<NavigationBloc>(context)
+                    .add(UpdateMarkers(markers: {point}));
                 mapController!.animateCamera(CameraUpdate.newLatLngZoom(
                     LatLng(savedAddresses[position].geometry!.location.lat,
                         savedAddresses[position].geometry!.location.lng),

@@ -4,11 +4,13 @@ import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/navigation/components/build_route_bottom_sheet.dart';
 import 'package:chance_app/ui/pages/navigation/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/components/saved_addresses_component.dart';
+import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/position_controller.dart';
 import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -206,30 +208,33 @@ class _MapViewState extends State<MapView>
               ? Stack(children: [
                   Align(
                     alignment: Alignment.center,
-                    child: GoogleMap(
-                        polylines: polylines,
-                        mapType: meUser.mapType == 0
-                            ? MapType.normal
-                            : meUser.mapType == 1
-                                ? MapType.terrain
-                                : MapType.hybrid,
-                        mapToolbarEnabled: false,
-                        myLocationButtonEnabled: false,
-                        compassEnabled: false,
-                        myLocationEnabled: true,
-                        zoomControlsEnabled: false,
-                        indoorViewEnabled: true,
-                        onMapCreated: (GoogleMapController controller) {
-                          mapController = controller;
-                        },
-                        onCameraMoveStarted: () {
-                          isNotTapedOnMyLocationButton = true;
-                        },
-                        markers: setMarkers,
-                        initialCameraPosition: CameraPosition(
-                            zoom: 18,
-                            target:
-                            LatLng(position.latitude, position.longitude))),
+                    child: BlocBuilder<NavigationBloc, NavigationState>(
+                        builder: (context, state) {
+                      return GoogleMap(
+                          polylines: state.polylines,
+                          mapType: meUser.mapType == 0
+                              ? MapType.normal
+                              : meUser.mapType == 1
+                                  ? MapType.terrain
+                                  : MapType.hybrid,
+                          mapToolbarEnabled: false,
+                          myLocationButtonEnabled: false,
+                          compassEnabled: false,
+                          myLocationEnabled: true,
+                          zoomControlsEnabled: false,
+                          indoorViewEnabled: true,
+                          onMapCreated: (GoogleMapController controller) {
+                            mapController = controller;
+                          },
+                          onCameraMoveStarted: () {
+                            isNotTapedOnMyLocationButton = true;
+                          },
+                          markers: state.setMarkers,
+                          initialCameraPosition: CameraPosition(
+                              zoom: 18,
+                              target: LatLng(
+                                  position.latitude, position.longitude)));
+                    }),
                   ),
                   Align(
                       alignment: Alignment.bottomRight,
