@@ -31,7 +31,7 @@ class PositionController {
                     : LocationAccuracy.best,
                 distanceFilter: 5))
         .listen((Position? position) async {
-          print("position: ${position}");
+          print("position: $position");
       try {
         if (position != null) {
           if (_myPreviousPosition != null) {

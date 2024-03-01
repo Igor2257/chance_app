@@ -17,7 +17,7 @@ class _SosButtonState extends State<SosButton> {
     return Ink(
       decoration: ShapeDecoration(
         color: red900,
-        shape: CircleBorder(),
+        shape: const CircleBorder(),
       ),
       child: InkWell(
         canRequestFocus: true,

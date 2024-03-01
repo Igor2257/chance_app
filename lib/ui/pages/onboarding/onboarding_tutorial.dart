@@ -69,7 +69,7 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> {
                 children: [
                   Expanded(
                     child: PageView.builder(
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       controller: pageController,
                       onPageChanged: (value) {
                         setState(() {
@@ -92,7 +92,7 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> {
                 height: 24,
               ),
               RoundedButton(
-                margin: EdgeInsets.symmetric(horizontal: 16),
+                margin: const EdgeInsets.symmetric(horizontal: 16),
                 onPress: () {
                   if (page < 5) {
                     pageController.jumpToPage(

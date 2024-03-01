@@ -5,14 +5,14 @@ import 'package:chance_app/ui/pages/navigation/place_picker/providers/place_prov
 import 'package:chance_app/ui/pages/navigation/place_picker/src/components/animated_pin.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/components/floating_card.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/bounds.dart'
-    as myBounds;
+    as mybounds;
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/circle_area.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geocoding_result.dart'
     as my;
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geometry.dart'
-    as myGeometry;
+    as mygeometry;
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/location.dart'
-    as myLocation;
+    as mylocation;
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/place_picker.dart';
 import 'package:chance_app/ux/model/me_user.dart';
@@ -51,7 +51,7 @@ class GoogleMapPlacePicker extends StatefulWidget {
     this.onMapCreated,
     this.debounceMilliseconds,
     this.onToggleMapType,
-    this.onMyLocation,
+    this.onmylocation,
     this.onPlacePicked,
     this.usePinPointingSearch,
     this.usePlaceDetailSearch,
@@ -79,7 +79,7 @@ class GoogleMapPlacePicker extends StatefulWidget {
   final VoidCallback? onMoveStart;
   final MapCreatedCallback? onMapCreated;
   final VoidCallback? onToggleMapType;
-  final VoidCallback? onMyLocation;
+  final VoidCallback? onmylocation;
   final ValueChanged<PickResult>? onPlacePicked;
 
   final int? debounceMilliseconds;
@@ -176,26 +176,26 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
           PickResult.fromJson(detailResponse.result.toJson());
     } else {
       Map<String, dynamic> map = response.results[0].toJson();
-      map["geometry"] = myGeometry.Geometry(
-              location: myLocation.Location(
+      map["geometry"] = mygeometry.Geometry(
+              location: mylocation.Location(
                   lat: response.results[0].geometry.location.lat,
                   lng: response.results[0].geometry.location.lng),
               locationType: response.results[0].geometry.locationType,
               viewport: response.results[0].geometry.viewport != null
-                  ? myBounds.Bounds(
-                      northeast: myLocation.Location(
+                  ? mybounds.Bounds(
+                      northeast: mylocation.Location(
                           lat: response
                               .results[0].geometry.viewport!.northeast.lat,
                           lng: response
                               .results[0].geometry.viewport!.northeast.lng),
-                      southwest: myLocation.Location(
+                      southwest: mylocation.Location(
                           lat: response
                               .results[0].geometry.viewport!.southwest.lat,
                           lng: response
                               .results[0].geometry.viewport!.southwest.lng))
                   : null,
               bounds: response.results[0].geometry.bounds != null
-                  ? myBounds.Bounds(northeast: myLocation.Location(lat: response.results[0].geometry.bounds!.northeast.lat, lng: response.results[0].geometry.bounds!.northeast.lng), southwest: myLocation.Location(lat: response.results[0].geometry.bounds!.southwest.lat, lng: response.results[0].geometry.bounds!.southwest.lng))
+                  ? mybounds.Bounds(northeast: mylocation.Location(lat: response.results[0].geometry.bounds!.northeast.lat, lng: response.results[0].geometry.bounds!.northeast.lng), southwest: mylocation.Location(lat: response.results[0].geometry.bounds!.southwest.lat, lng: response.results[0].geometry.bounds!.southwest.lng))
                   : null)
           .toJson();
 
@@ -365,14 +365,14 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
     } else {
       return Stack(
         children: <Widget>[
-          Center(
+          const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 AnimatedPin(
                     child:
-                        const Icon(Icons.place, size: 36, color: Colors.red)),
-                const SizedBox(height: 42),
+                        Icon(Icons.place, size: 36, color: Colors.red)),
+                SizedBox(height: 42),
               ],
             ),
           ),
@@ -511,7 +511,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                                       ? Icons.check_sharp
                                       : Icons.app_blocking_sharp,
                                   color: buttonColor),
-                              SizedBox.fromSize(size: Size(10, 0)),
+                              SizedBox.fromSize(size: const Size(10, 0)),
                               Text(
                                   canBePicked
                                       ? widget.selectText!
@@ -606,7 +606,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
             ),
             const Spacer(),
             GestureDetector(
-              onTap: widget.onMyLocation,
+              onTap: widget.onmylocation,
               child: Container(
                 margin: const EdgeInsets.all(10),
                 width: 70,

@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/address_component.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geometry.dart';

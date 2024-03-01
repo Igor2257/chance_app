@@ -50,7 +50,7 @@ class DateElement extends StatelessWidget {
               ),
               if (date["hasTasks"])
                 Container(
-                  margin: EdgeInsets.only(bottom: 2),
+                  margin: const EdgeInsets.only(bottom: 2),
                   height: 6,width: 6,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(90), color: primary400),

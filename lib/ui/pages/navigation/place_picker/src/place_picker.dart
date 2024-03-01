@@ -25,7 +25,7 @@ enum PinState { Preparing, Idle, Dragging }
 enum SearchingState { Idle, Searching }
 
 class PlacePicker extends StatefulWidget {
-  PlacePicker({
+  const PlacePicker({
     Key? key,
     required this.apiKey,
     this.onPlacePicked,

@@ -23,7 +23,7 @@ class GivePermission extends StatelessWidget {
             child: SvgPicture.asset(
                 "assets/icons/checkbox_${state.isUserGrantPermissionForProcessingPersonalData ? "checked" : "empty"}.svg"),
           ),
-          SizedBox(
+          const SizedBox(
             width: 20,
           ),
           Flex(

@@ -19,11 +19,11 @@ class CustomNavigationBarPaint extends CustomPainter {
 
     // Закругляем углы
     RRect rRect = RRect.fromRectAndCorners(
-      Rect.fromPoints(Offset(0, 0), Offset(size.width, size.height)),
-      topLeft: Radius.circular(20.0),
-      topRight: Radius.circular(20.0),
-      bottomLeft: Radius.circular(20.0),
-      bottomRight: Radius.circular(20.0),
+      Rect.fromPoints(const Offset(0, 0), Offset(size.width, size.height)),
+      topLeft: const Radius.circular(20.0),
+      topRight: const Radius.circular(20.0),
+      bottomLeft: const Radius.circular(20.0),
+      bottomRight: const Radius.circular(20.0),
     );
 
 

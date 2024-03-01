@@ -1,9 +1,8 @@
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/navigation/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/components/map_view.dart';
 import 'package:chance_app/ui/pages/navigation/components/search_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_fgbg/flutter_fgbg.dart';
 
 class NavigationPage extends StatefulWidget {
   const NavigationPage({super.key});
@@ -61,11 +60,13 @@ class _NavigationPageState extends State<NavigationPage>
                       const SizedBox(
                         width: 10,
                       ),
-                      Expanded(
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width-86,
                         child: CustomSearchBar(
-                          appBarKey: appBarKey,
+                          appBarKey: appBarKey, width: MediaQuery.of(context).size.width-86,
                         ),
-                      )
+                      ),
+
                     ],
                   ),
                 ),

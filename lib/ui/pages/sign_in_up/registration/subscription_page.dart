@@ -21,7 +21,7 @@ class SubscriptionPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Spacer(),
-            LogoName(),
+            const LogoName(),
             const SizedBox(
               height: 40,
             ),

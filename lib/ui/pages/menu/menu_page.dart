@@ -57,7 +57,7 @@ class MenuPage extends StatelessWidget {
                     )
                   ],
                 )),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Text(
@@ -105,7 +105,7 @@ class MenuPage extends StatelessWidget {
                       color: primary50,
                       fontWeight: FontWeight.w500),
                 )),
-            SizedBox(height: 40,),
+            const SizedBox(height: 40,),
           ],
         ),
       ),

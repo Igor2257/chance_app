@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AnimatedPin extends StatefulWidget {
-  AnimatedPin({
-    Key? key,
+  const AnimatedPin({super.key,
     this.child,
   });
 
