@@ -46,13 +46,12 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
   FutureOr<void> _onLoadData(
       LoadData event, Emitter<RemindersState> emit) async {
     emit(state.clear());
-    return;
     await Repository().updateLocalTasks().then((value) {
       List<Map<String, dynamic>> dates = [], week = [];
       DateTime now = DateTime.now();
-      int year = now.year;
-      int month = now.month;
-      int day = now.day;
+      final int year = now.year;
+      final int month = now.month;
+      final int day = now.day;
       int daysInMonth = DateTime(year, month + 1, 0).day;
       List<TaskModel> myTasks =
           value.where((element) => element.isRemoved == false).toList();
@@ -81,26 +80,51 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
       myTasks.sort((a, b) => a.date!.compareTo(b.date!));
       int startOfWeek = day - now.weekday;
       int endOfWeek = startOfWeek + 7;
-      int daysLeftOfMonth =
-          dates.length >= endOfWeek ? endOfWeek : dates.length;
-      week = dates.getRange(startOfWeek, daysLeftOfMonth).toList();
-      int weekLength = week.length;
-      for (int i = 0; i < 7 - weekLength; i++) {
-        DateTime date = DateTime(year, month + 1, i + 1);
-        String weekDay = getWeekdayName(date.weekday);
+      if (dates.length >= endOfWeek) {
+        int daysLeftOfMonth = endOfWeek;
+        week = dates.getRange(startOfWeek<0?0:startOfWeek, daysLeftOfMonth).toList();
+        int weekLength = week.length;
+        int start=int.parse(week[week.length - 1]["number"]);
+        for (int i = start;
+            i < (start + 7) - weekLength;
+            i++) {
+          DateTime date = DateTime(year, month + 1, i + 1);
+          String weekDay = getWeekdayName(date.weekday);
 
-        week.add({
-          "weekDay": weekDay,
-          "number": ((i + 1).toString()).padLeft(2, "0"),
-          "month": month + 1,
-          "year": year,
-          "isSelected": day == i + 1 ||
-              (state.selectedDate != null &&
-                  (state.selectedDate!.day == i+1 &&
-                      state.selectedDate!.month == month+1 &&
-                      state.selectedDate!.year == year)),
-          "hasTasks": checkIfDayHasTask(myTasks, i+1, month+1, year),
-        });
+          week.add({
+            "weekDay": weekDay,
+            "number": ((i + 1).toString()).padLeft(2, "0"),
+            "month": month + 1,
+            "year": year,
+            "isSelected": day == i + 1 ||
+                (state.selectedDate != null &&
+                    (state.selectedDate!.day == i + 1 &&
+                        state.selectedDate!.month == month + 1 &&
+                        state.selectedDate!.year == year)),
+            "hasTasks": checkIfDayHasTask(myTasks, i + 1, month + 1, year),
+          });
+        }
+      } else {
+        int daysLeftOfMonth = dates.length;
+        week = dates.getRange(startOfWeek, daysLeftOfMonth).toList();
+        int weekLength = week.length;
+        for (int i = 0; i < 7 - weekLength; i++) {
+          DateTime date = DateTime(year, month + 1, i + 1);
+          String weekDay = getWeekdayName(date.weekday);
+
+          week.add({
+            "weekDay": weekDay,
+            "number": ((i + 1).toString()).padLeft(2, "0"),
+            "month": month + 1,
+            "year": year,
+            "isSelected": day == i + 1 ||
+                (state.selectedDate != null &&
+                    (state.selectedDate!.day == i + 1 &&
+                        state.selectedDate!.month == month + 1 &&
+                        state.selectedDate!.year == year)),
+            "hasTasks": checkIfDayHasTask(myTasks, i + 1, month + 1, year),
+          });
+        }
       }
 
       emit(state.copyWith(
@@ -193,31 +217,57 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         "hasTasks": checkIfDayHasTask(myTasks, i, month, year)
       });
     }
-    int nowDay = DateTime.now().day;
+    int day = DateTime.now().day;
     int startOfWeek =
         (month == DateTime.now().month && year == DateTime.now().year)
-            ? nowDay - DateTime.now().weekday
+            ? day - DateTime.now().weekday
             : 0;
     int endOfWeek = startOfWeek + 7;
-    int daysLeftOfMonth = dates.length >= endOfWeek ? endOfWeek : dates.length;
-    week = dates.getRange(startOfWeek, daysLeftOfMonth).toList();
-    int weekLength = week.length;
-    for (int i = 0; i < 7 - weekLength; i++) {
-      DateTime date = DateTime(year, month + 1, i + 1);
-      String weekDay = getWeekdayName(date.weekday);
+    if (dates.length >= endOfWeek) {
+      int daysLeftOfMonth = endOfWeek;
+      week = dates.getRange(startOfWeek<0?0:startOfWeek, daysLeftOfMonth).toList();
+      int weekLength = week.length;
+      int start=int.parse(week[week.length - 1]["number"]);
+      for (int i = start;
+      i < (start + 7) - weekLength;
+      i++) {
+        DateTime date = DateTime(year, month + 1, i + 1);
+        String weekDay = getWeekdayName(date.weekday);
 
-      week.add({
-        "weekDay": weekDay,
-        "number": ((i + 1).toString()).padLeft(2, "0"),
-        "month": month + 1,
-        "year": year,
-        "isSelected": nowDay == i + 1 ||
-            (state.selectedDate != null &&
-                (state.selectedDate!.day == i + 1 &&
-                    state.selectedDate!.month == month + 1 &&
-                    state.selectedDate!.year == year)),
-        "hasTasks": checkIfDayHasTask(myTasks, i + 1, month + 1, year),
-      });
+        week.add({
+          "weekDay": weekDay,
+          "number": ((i + 1).toString()).padLeft(2, "0"),
+          "month": month + 1,
+          "year": year,
+          "isSelected": day == i + 1 ||
+              (state.selectedDate != null &&
+                  (state.selectedDate!.day == i + 1 &&
+                      state.selectedDate!.month == month + 1 &&
+                      state.selectedDate!.year == year)),
+          "hasTasks": checkIfDayHasTask(myTasks, i + 1, month + 1, year),
+        });
+      }
+    } else {
+      int daysLeftOfMonth = dates.length;
+      week = dates.getRange(startOfWeek, daysLeftOfMonth).toList();
+      int weekLength = week.length;
+      for (int i = 0; i < 7 - weekLength; i++) {
+        DateTime date = DateTime(year, month + 1, i + 1);
+        String weekDay = getWeekdayName(date.weekday);
+
+        week.add({
+          "weekDay": weekDay,
+          "number": ((i + 1).toString()).padLeft(2, "0"),
+          "month": month + 1,
+          "year": year,
+          "isSelected": day == i + 1 ||
+              (state.selectedDate != null &&
+                  (state.selectedDate!.day == i + 1 &&
+                      state.selectedDate!.month == month + 1 &&
+                      state.selectedDate!.year == year)),
+          "hasTasks": checkIfDayHasTask(myTasks, i + 1, month + 1, year),
+        });
+      }
     }
     myTasks = myTasks
         .where((element) =>
