@@ -157,21 +157,23 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
       child: BlocSelector<AddMedicineBloc, AddMedicineState, MedicineType?>(
         selector: (state) => state.type,
         builder: (context, selectedType) {
-          return SeparatedList(
-            separator: const SizedBox(height: 12),
-            children: [
-              for (final medicine in items)
-                CustomListTile(
-                  onTap: () {
-                    context.read<AddMedicineBloc>().add(SetType(medicine));
-                    _navigator.pushNamed(AddMedicineStep.addPeriodicity);
-                  },
-                  svgIcon: medicine.svgIcon,
-                  content: Text(medicine.toLocalizedString()),
-                  trailing: const CupertinoListTileChevron(),
-                  isSelected: medicine == selectedType,
-                ),
-            ],
+          return SingleChildScrollView(
+            child: SeparatedList(
+              separator: const SizedBox(height: 12),
+              children: [
+                for (final medicine in items)
+                  CustomListTile(
+                    onTap: () {
+                      context.read<AddMedicineBloc>().add(SetType(medicine));
+                      _navigator.pushNamed(AddMedicineStep.addPeriodicity);
+                    },
+                    svgIcon: medicine.svgIcon,
+                    content: Text(medicine.toLocalizedString()),
+                    trailing: const CupertinoListTileChevron(),
+                    isSelected: medicine == selectedType,
+                  ),
+              ],
+            ),
           );
         },
       ),
@@ -184,27 +186,29 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
       child: BlocSelector<AddMedicineBloc, AddMedicineState, Periodicity?>(
         selector: (state) => state.periodicity,
         builder: (context, selectedPeriodicity) {
-          return SeparatedList(
-            separator: const SizedBox(height: 12),
-            children: [
-              for (final periodicity in Periodicity.values)
-                CustomListTile(
-                  onTap: () {
-                    context
-                        .read<AddMedicineBloc>()
-                        .add(SetPeriodicity(periodicity));
-                    // _navigator.pushNamed(AddMedicineStepA.addDayPeriodicity);
-                    if (periodicity == Periodicity.certainDays) {
-                      _navigator.pushNamed(AddMedicineStep.addWeekdays);
-                    } else {
-                      _navigator.pushNamed(AddMedicineStep.addStartDay);
-                    }
-                  },
-                  content: Text(periodicity.toLocalizedString()),
-                  trailing: const CupertinoListTileChevron(),
-                  isSelected: periodicity == selectedPeriodicity,
-                ),
-            ],
+          return SingleChildScrollView(
+            child: SeparatedList(
+              separator: const SizedBox(height: 12),
+              children: [
+                for (final periodicity in Periodicity.values)
+                  CustomListTile(
+                    onTap: () {
+                      context
+                          .read<AddMedicineBloc>()
+                          .add(SetPeriodicity(periodicity));
+                      // _navigator.pushNamed(AddMedicineStepA.addDayPeriodicity);
+                      if (periodicity == Periodicity.certainDays) {
+                        _navigator.pushNamed(AddMedicineStep.addWeekdays);
+                      } else {
+                        _navigator.pushNamed(AddMedicineStep.addStartDay);
+                      }
+                    },
+                    content: Text(periodicity.toLocalizedString()),
+                    trailing: const CupertinoListTileChevron(),
+                    isSelected: periodicity == selectedPeriodicity,
+                  ),
+              ],
+            ),
           );
         },
       ),
@@ -217,21 +221,23 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
   //     child: BlocSelector<AddMedicineBloc, AddMedicineState, DayPeriodicity?>(
   //       selector: (state) => state.dayPeriodicity,
   //       builder: (context, selectedPeriodicity) {
-  //         return SeparatedList(
-  //           separator: const SizedBox(height: 12),
-  //           children: [
-  //             for (final periodicity in DayPeriodicity.values)
-  //               CustomListTile(
-  //                 onTap: () {
-  //                   context
-  //                       .read<AddMedicineBloc>()
-  //                       .add(SetDayPeriodicity(periodicity));
-  //                 },
-  //                 content: Text(periodicity.toLocalizedString()),
-  //                 trailing: const CupertinoListTileChevron(),
-  //                 isSelected: periodicity == selectedPeriodicity,
-  //               ),
-  //           ],
+  //         return SingleChildScrollView(
+  //           child: SeparatedList(
+  //             separator: const SizedBox(height: 12),
+  //             children: [
+  //               for (final periodicity in DayPeriodicity.values)
+  //                 CustomListTile(
+  //                   onTap: () {
+  //                     context
+  //                         .read<AddMedicineBloc>()
+  //                         .add(SetDayPeriodicity(periodicity));
+  //                   },
+  //                   content: Text(periodicity.toLocalizedString()),
+  //                   trailing: const CupertinoListTileChevron(),
+  //                   isSelected: periodicity == selectedPeriodicity,
+  //                 ),
+  //             ],
+  //           ),
   //         );
   //       },
   //     ),
@@ -250,44 +256,47 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                 'Оберіть дні тижня',
                 style: TextStyle(fontSize: 22, color: primary100),
               ),
-              const Spacer(),
-              SeparatedList(
-                axis: Axis.horizontal,
-                separator: const SizedBox(width: 8),
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  DateTime.daysPerWeek,
-                  (index) {
-                    final weekday = index + 1;
-                    final isSelected = selectedDays.contains(weekday);
-                    return SizedBox.square(
-                      dimension: 44,
-                      child: Material(
-                        color: isSelected ? primary100 : Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          side: BorderSide(color: darkNeutral800),
-                        ),
-                        textStyle: TextStyle(fontSize: 22, color: primary800),
-                        clipBehavior: Clip.hardEdge,
-                        child: InkWell(
-                          onTap: () {
-                            context.read<AddMedicineBloc>().add(
-                                  isSelected
-                                      ? RemoveWeekday(weekday)
-                                      : AddWeekday(weekday),
-                                );
-                          },
-                          child: Center(
-                            child: Text(getWeekdayName(weekday)),
+              Expanded(
+                child: Center(
+                  child: SeparatedList(
+                    axis: Axis.horizontal,
+                    separator: const SizedBox(width: 8),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      DateTime.daysPerWeek,
+                      (index) {
+                        final weekday = index + 1;
+                        final isSelected = selectedDays.contains(weekday);
+                        return SizedBox.square(
+                          dimension: 44,
+                          child: Material(
+                            color: isSelected ? primary100 : Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              side: BorderSide(color: darkNeutral800),
+                            ),
+                            textStyle:
+                                TextStyle(fontSize: 22, color: primary800),
+                            clipBehavior: Clip.hardEdge,
+                            child: InkWell(
+                              onTap: () {
+                                context.read<AddMedicineBloc>().add(
+                                      isSelected
+                                          ? RemoveWeekday(weekday)
+                                          : AddWeekday(weekday),
+                                    );
+                              },
+                              child: Center(
+                                child: Text(getWeekdayName(weekday)),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    );
-                  },
+                        );
+                      },
+                    ),
+                  ),
                 ),
               ),
-              const Spacer(),
               RoundedButton(
                 onPress: selectedDays.isNotEmpty
                     ? () {
@@ -311,20 +320,22 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
       middleText: const Text("Коли потрібно почати приймати першу дозу?"),
       child: Column(
         children: [
-          const Spacer(),
-          SizedBox(
-            height: 240,
-            child: DatePicker(
-              initialDateTime: selectedDate,
-              mode: CupertinoDatePickerMode.date,
-              dateOrder: DatePickerDateOrder.dmy,
-              onDateChanged: (DateTime date) {
-                selectedDate = date;
-              },
-              textStyle: TextStyle(fontSize: 28, color: primary800),
+          Expanded(
+            child: Center(
+              child: SizedBox(
+                height: 240,
+                child: DatePicker(
+                  initialDateTime: selectedDate,
+                  mode: CupertinoDatePickerMode.date,
+                  dateOrder: DatePickerDateOrder.dmy,
+                  onDateChanged: (DateTime date) {
+                    selectedDate = date;
+                  },
+                  textStyle: TextStyle(fontSize: 28, color: primary800),
+                ),
+              ),
             ),
           ),
-          const Spacer(),
           RoundedButton(
             onPress: () {
               context.read<AddMedicineBloc>().add(SetStartDate(selectedDate));
@@ -530,26 +541,28 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
             content: BlocSelector<AddMedicineBloc, AddMedicineState, bool>(
               selector: (state) => state.instruction != null,
               builder: (context, instructionAdded) {
-                return SeparatedList(
-                  axis: Axis.horizontal,
-                  separator: const SizedBox(width: 12),
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      AppIcons.addInstruction,
-                      height: 24,
-                      color: primary50,
-                    ),
-                    if (!instructionAdded)
-                      const Text("Додати інструкції?")
-                    else ...[
-                      const Text("Інструкції додані"),
-                      Icon(
-                        Icons.check,
+                return SingleChildScrollView(
+                  child: SeparatedList(
+                    axis: Axis.horizontal,
+                    separator: const SizedBox(width: 12),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        AppIcons.addInstruction,
+                        height: 24,
                         color: primary50,
                       ),
+                      if (!instructionAdded)
+                        const Text("Додати інструкції?")
+                      else ...[
+                        const Text("Інструкції додані"),
+                        Icon(
+                          Icons.check,
+                          color: primary50,
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 );
               },
             ),
@@ -573,22 +586,24 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
           BlocSelector<AddMedicineBloc, AddMedicineState, MedicineInstruction?>(
         selector: (state) => state.instruction,
         builder: (context, selectedInstruction) {
-          return SeparatedList(
-            separator: const SizedBox(height: 12),
-            children: [
-              for (final instruction in MedicineInstruction.values)
-                CustomListTile(
-                  onTap: () {
-                    context
-                        .read<AddMedicineBloc>()
-                        .add(AddInstruction(instruction));
-                    _navigator.pop();
-                  },
-                  content: Text(instruction.toLocalizedString()),
-                  trailing: const CupertinoListTileChevron(),
-                  isSelected: instruction == selectedInstruction,
-                ),
-            ],
+          return SingleChildScrollView(
+            child: SeparatedList(
+              separator: const SizedBox(height: 12),
+              children: [
+                for (final instruction in MedicineInstruction.values)
+                  CustomListTile(
+                    onTap: () {
+                      context
+                          .read<AddMedicineBloc>()
+                          .add(AddInstruction(instruction));
+                      _navigator.pop();
+                    },
+                    content: Text(instruction.toLocalizedString()),
+                    trailing: const CupertinoListTileChevron(),
+                    isSelected: instruction == selectedInstruction,
+                  ),
+              ],
+            ),
           );
         },
       ),

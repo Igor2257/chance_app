@@ -46,6 +46,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
   FutureOr<void> _onLoadData(
       LoadData event, Emitter<RemindersState> emit) async {
     emit(state.clear());
+    return;
     await Repository().updateLocalTasks().then((value) {
       List<Map<String, dynamic>> dates = [], week = [];
       DateTime now = DateTime.now();
