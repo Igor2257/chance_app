@@ -13,7 +13,7 @@ import 'package:chance_app/ui/pages/add_medicine_page/components/dose_count_pick
 import 'package:chance_app/ui/pages/add_medicine_page/components/dose_text.dart';
 import 'package:chance_app/ux/bloc/add_medicine_bloc/add_medicine_bloc.dart';
 // import 'package:chance_app/ux/enum/day_periodicity.dart';
-import 'package:chance_app/ux/enum/medicine_instruction.dart';
+import 'package:chance_app/ux/enum/instruction.dart';
 import 'package:chance_app/ux/enum/medicine_type.dart';
 import 'package:chance_app/ux/enum/periodicity.dart';
 import 'package:flutter/cupertino.dart';
@@ -583,14 +583,14 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
     return AddMedicinePageScaffold(
       middleText: const Text("Чи слід приймати це з їжею?"),
       child:
-          BlocSelector<AddMedicineBloc, AddMedicineState, MedicineInstruction?>(
+          BlocSelector<AddMedicineBloc, AddMedicineState, Instruction?>(
         selector: (state) => state.instruction,
         builder: (context, selectedInstruction) {
           return SingleChildScrollView(
             child: SeparatedList(
               separator: const SizedBox(height: 12),
               children: [
-                for (final instruction in MedicineInstruction.values)
+                for (final instruction in Instruction.values)
                   CustomListTile(
                     onTap: () {
                       context

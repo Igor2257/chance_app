@@ -66,31 +66,30 @@ _$GeocodingResultImpl _$$GeocodingResultImplFromJson(
         Map<String, dynamic> json) =>
     _$GeocodingResultImpl(
       types: (json['types'] as List<dynamic>).map((e) => e as String).toList(),
-      placeId: json['place_od'] as String?,
-      formattedAddress: json['formatted_address'] as String?,
-      addressComponents: (json['address_components'] as List<dynamic>?)
-              ?.map((e) => AddressComponent(
-                  types: e.types, longName: e.longName, shortName: e.shortName))
+      placeId: json['placeId'] as String?,
+      formattedAddress: json['formattedAddress'] as String? ?? null,
+      addressComponents: (json['addressComponents'] as List<dynamic>?)
+              ?.map((e) => AddressComponent.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      postcodeLocalities: (json['postcode_localities'] as List<dynamic>?)
+      postcodeLocalities: (json['postcodeLocalities'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
       geometry: json['geometry'] == null
           ? null
           : Geometry.fromJson(json['geometry'] as Map<String, dynamic>),
-      partialMatch: json['partial_match'] as bool? ?? false,
+      partialMatch: json['partialMatch'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$GeocodingResultImplToJson(
         _$GeocodingResultImpl instance) =>
     <String, dynamic>{
       'types': instance.types,
-      'place_id': instance.placeId,
-      'formatted_address': instance.formattedAddress,
-      'address_components': instance.addressComponents,
-      'postcode_localities': instance.postcodeLocalities,
+      'placeId': instance.placeId,
+      'formattedAddress': instance.formattedAddress,
+      'addressComponents': instance.addressComponents,
+      'postcodeLocalities': instance.postcodeLocalities,
       'geometry': instance.geometry,
-      'partial_match': instance.partialMatch,
+      'partialMatch': instance.partialMatch,
     };

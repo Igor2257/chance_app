@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
-enum MedicineInstruction {
+enum Instruction {
   beforeEating,
   whileEating,
   afterEating,
@@ -9,13 +9,13 @@ enum MedicineInstruction {
 
   String toLocalizedString() {
     switch (this) {
-      case MedicineInstruction.beforeEating:
+      case Instruction.beforeEating:
         return "Перед іжею";
-      case MedicineInstruction.whileEating:
+      case Instruction.whileEating:
         return "Під час їжі";
-      case MedicineInstruction.afterEating:
+      case Instruction.afterEating:
         return "Після їжі";
-      case MedicineInstruction.noMatter:
+      case Instruction.noMatter:
         return "Не має значення";
     }
   }

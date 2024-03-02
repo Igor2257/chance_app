@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'tasks_model.dart';
+part of 'task_model.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -25,14 +25,9 @@ mixin _$TaskModel {
   @HiveField(1)
   String get message => throw _privateConstructorUsedError;
   @HiveField(2)
-  DateTime? get date =>
-      throw _privateConstructorUsedError; //@HiveField(3) @Default("no") String notificationsBefore,
+  DateTime? get date => throw _privateConstructorUsedError;
   @HiveField(3)
   bool get isDone => throw _privateConstructorUsedError;
-  @HiveField(4)
-  String get userId => throw _privateConstructorUsedError;
-  @HiveField(5)
-  bool get isNotificationSent => throw _privateConstructorUsedError;
   @HiveField(6)
   bool get isSentToDB => throw _privateConstructorUsedError;
   @HiveField(7)
@@ -54,8 +49,6 @@ abstract class $TaskModelCopyWith<$Res> {
       @HiveField(1) String message,
       @HiveField(2) DateTime? date,
       @HiveField(3) bool isDone,
-      @HiveField(4) String userId,
-      @HiveField(5) bool isNotificationSent,
       @HiveField(6) bool isSentToDB,
       @HiveField(7) bool isRemoved});
 }
@@ -77,8 +70,6 @@ class _$TaskModelCopyWithImpl<$Res, $Val extends TaskModel>
     Object? message = null,
     Object? date = freezed,
     Object? isDone = null,
-    Object? userId = null,
-    Object? isNotificationSent = null,
     Object? isSentToDB = null,
     Object? isRemoved = null,
   }) {
@@ -98,14 +89,6 @@ class _$TaskModelCopyWithImpl<$Res, $Val extends TaskModel>
       isDone: null == isDone
           ? _value.isDone
           : isDone // ignore: cast_nullable_to_non_nullable
-              as bool,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      isNotificationSent: null == isNotificationSent
-          ? _value.isNotificationSent
-          : isNotificationSent // ignore: cast_nullable_to_non_nullable
               as bool,
       isSentToDB: null == isSentToDB
           ? _value.isSentToDB
@@ -132,8 +115,6 @@ abstract class _$$TaskModelImplCopyWith<$Res>
       @HiveField(1) String message,
       @HiveField(2) DateTime? date,
       @HiveField(3) bool isDone,
-      @HiveField(4) String userId,
-      @HiveField(5) bool isNotificationSent,
       @HiveField(6) bool isSentToDB,
       @HiveField(7) bool isRemoved});
 }
@@ -153,8 +134,6 @@ class __$$TaskModelImplCopyWithImpl<$Res>
     Object? message = null,
     Object? date = freezed,
     Object? isDone = null,
-    Object? userId = null,
-    Object? isNotificationSent = null,
     Object? isSentToDB = null,
     Object? isRemoved = null,
   }) {
@@ -174,14 +153,6 @@ class __$$TaskModelImplCopyWithImpl<$Res>
       isDone: null == isDone
           ? _value.isDone
           : isDone // ignore: cast_nullable_to_non_nullable
-              as bool,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      isNotificationSent: null == isNotificationSent
-          ? _value.isNotificationSent
-          : isNotificationSent // ignore: cast_nullable_to_non_nullable
               as bool,
       isSentToDB: null == isSentToDB
           ? _value.isSentToDB
@@ -203,8 +174,6 @@ class _$TaskModelImpl implements _TaskModel {
       @HiveField(1) this.message = "",
       @HiveField(2) this.date = null,
       @HiveField(3) this.isDone = false,
-      @HiveField(4) this.userId = "",
-      @HiveField(5) this.isNotificationSent = false,
       @HiveField(6) this.isSentToDB = false,
       @HiveField(7) this.isRemoved = false});
 
@@ -223,19 +192,10 @@ class _$TaskModelImpl implements _TaskModel {
   @JsonKey()
   @HiveField(2)
   final DateTime? date;
-//@HiveField(3) @Default("no") String notificationsBefore,
   @override
   @JsonKey()
   @HiveField(3)
   final bool isDone;
-  @override
-  @JsonKey()
-  @HiveField(4)
-  final String userId;
-  @override
-  @JsonKey()
-  @HiveField(5)
-  final bool isNotificationSent;
   @override
   @JsonKey()
   @HiveField(6)
@@ -247,7 +207,7 @@ class _$TaskModelImpl implements _TaskModel {
 
   @override
   String toString() {
-    return 'TaskModel(id: $id, message: $message, date: $date, isDone: $isDone, userId: $userId, isNotificationSent: $isNotificationSent, isSentToDB: $isSentToDB, isRemoved: $isRemoved)';
+    return 'TaskModel(id: $id, message: $message, date: $date, isDone: $isDone, isSentToDB: $isSentToDB, isRemoved: $isRemoved)';
   }
 
   @override
@@ -259,9 +219,6 @@ class _$TaskModelImpl implements _TaskModel {
             (identical(other.message, message) || other.message == message) &&
             (identical(other.date, date) || other.date == date) &&
             (identical(other.isDone, isDone) || other.isDone == isDone) &&
-            (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.isNotificationSent, isNotificationSent) ||
-                other.isNotificationSent == isNotificationSent) &&
             (identical(other.isSentToDB, isSentToDB) ||
                 other.isSentToDB == isSentToDB) &&
             (identical(other.isRemoved, isRemoved) ||
@@ -270,8 +227,8 @@ class _$TaskModelImpl implements _TaskModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, message, date, isDone,
-      userId, isNotificationSent, isSentToDB, isRemoved);
+  int get hashCode => Object.hash(
+      runtimeType, id, message, date, isDone, isSentToDB, isRemoved);
 
   @JsonKey(ignore: true)
   @override
@@ -293,8 +250,6 @@ abstract class _TaskModel implements TaskModel {
       @HiveField(1) final String message,
       @HiveField(2) final DateTime? date,
       @HiveField(3) final bool isDone,
-      @HiveField(4) final String userId,
-      @HiveField(5) final bool isNotificationSent,
       @HiveField(6) final bool isSentToDB,
       @HiveField(7) final bool isRemoved}) = _$TaskModelImpl;
 
@@ -310,15 +265,9 @@ abstract class _TaskModel implements TaskModel {
   @override
   @HiveField(2)
   DateTime? get date;
-  @override //@HiveField(3) @Default("no") String notificationsBefore,
+  @override
   @HiveField(3)
   bool get isDone;
-  @override
-  @HiveField(4)
-  String get userId;
-  @override
-  @HiveField(5)
-  bool get isNotificationSent;
   @override
   @HiveField(6)
   bool get isSentToDB;

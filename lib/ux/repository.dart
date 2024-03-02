@@ -5,9 +5,10 @@ import 'package:chance_app/main.dart';
 import 'package:chance_app/ui/pages/navigation/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ux/model/me_user.dart';
-import 'package:chance_app/ux/model/tasks_model.dart';
+import 'package:chance_app/ux/model/medicine_model.dart';
+import 'package:chance_app/ux/model/task_model.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:crypto/crypto.dart';
+import 'package:crypto/crypto.dart' show sha256;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -17,14 +18,16 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
 class Repository {
+  static const apiUrl = 'http://139.28.37.11:56565/stage/api';
+
   List<TaskModel> get myTasks =>
       tasksBox?.values.cast<TaskModel>().toList() ?? List.empty();
 
   List<PickResult> get savedAddresses =>
       savedAddressesBox?.values.cast<PickResult>().toList() ?? List.empty();
 
-  //List<MedicineModel> get myMedicine =>
-  //    medicineBox?.values.cast<MedicineModel>().toList() ?? List.empty();
+  List<MedicineModel> get myMedicines =>
+      medicineBox?.values.cast<MedicineModel>().toList() ?? List.empty();
 
   MeUser? get user =>
       userBox!.get('user') != null ? userBox!.get('user') as MeUser : null;
@@ -38,7 +41,7 @@ class Repository {
       error = "Немає підключення до інтернету";
     } else {
       try {
-        var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/login');
+        var url = Uri.parse('$apiUrl/auth/login');
         var salt = 'UVocjgjgXg8P7zIsC93kKlRU8sPbTBhsAMFLnLUPDRYFIWAk';
         var saltedPassword = salt + password;
         var bytes = utf8.encode(saltedPassword);
@@ -56,7 +59,7 @@ class Repository {
           final cookie = _parseCookieFromLogin(value);
 
           if (value.statusCode > 199 && value.statusCode < 300) {
-            var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/me');
+            var url = Uri.parse('$apiUrl/auth/me');
             await http.get(
               url,
               headers: <String, String>{
@@ -116,8 +119,7 @@ class Repository {
       error = "Немає підключення до інтернету";
     } else {
       try {
-        var url =
-            Uri.parse('http://139.28.37.11:56565/stage/api/auth/register');
+        var url = Uri.parse('$apiUrl/auth/register');
         var salt = 'UVocjgjgXg8P7zIsC93kKlRU8sPbTBhsAMFLnLUPDRYFIWAk';
         var saltedPassword = salt + password;
         var bytes = utf8.encode(saltedPassword);
@@ -167,7 +169,7 @@ class Repository {
       error = "Немає підключення до інтернету";
     } else {
       try {
-        var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/confirm');
+        var url = Uri.parse('$apiUrl/auth/confirm');
         await http
             .post(
           url,
@@ -207,7 +209,7 @@ class Repository {
       error = "Немає підключення до інтернету";
     } else {
       try {
-        var url = Uri.parse('http://139.28.37.11:56565/stage/api/user');
+        var url = Uri.parse('$apiUrl/user');
         await getCookie().then((cookie) async {
           await http
               .patch(url,
@@ -252,8 +254,7 @@ class Repository {
       error = "Немає підключення до інтернету";
     } else {
       try {
-        var url =
-            Uri.parse('http://139.28.37.11:56565/stage/api/auth/resend-code');
+        var url = Uri.parse('$apiUrl/auth/resend-code');
         await http
             .post(
           url,
@@ -289,8 +290,7 @@ class Repository {
       error = "Немає підключення до інтернету";
     } else {
       try {
-        var url = Uri.parse(
-            'http://139.28.37.11:56565/stage/api/auth/forget-password');
+        var url = Uri.parse('$apiUrl/auth/forget-password');
         await http
             .post(
           url,
@@ -331,8 +331,7 @@ class Repository {
         var saltedPassword = salt + newPassword;
         var bytes = utf8.encode(saltedPassword);
         var hash = sha256.convert(bytes);
-        var url = Uri.parse(
-            'http://139.28.37.11:56565/stage/api/auth/reset-password');
+        var url = Uri.parse('$apiUrl/auth/reset-password');
         await http
             .post(
           url,
@@ -395,7 +394,7 @@ class Repository {
           toastLength: Toast.LENGTH_LONG);
     } else {
       try {
-        var url = Uri.parse('http://139.28.37.11:56565/stage/api/task');
+        var url = Uri.parse('$apiUrl/task');
         final cookie = await getCookie();
         await http.get(
           url,
@@ -411,10 +410,8 @@ class Repository {
               TaskModel taskModel = TaskModel(
                   id: list[i]["_id"],
                   message: list[i]["message"],
-                  userId: list[i]["userId"],
                   date: DateTime.parse(list[i]["date"]).toLocal(),
                   isDone: list[i]["isDone"],
-                  isNotificationSent: list[i]["isSended"],
                   isSentToDB: true);
               tasks.add(taskModel);
             }
@@ -442,12 +439,10 @@ class Repository {
       //    msg: "Немає підключення до інтернету",
       //    toastLength: Toast.LENGTH_LONG);
       //error = "Немає підключення до інтернету";
-      if (isDone != null) {
-        await setIsDoneInLocalTask(id, isDone);
-      }
+      if (isDone != null) await setIsDoneInLocalTask(id, isDone);
     } else {
       try {
-        var url = Uri.parse('http://139.28.37.11:56565/stage/api/task/$id');
+        var url = Uri.parse('$apiUrl/task/$id');
         final cookie = await getCookie();
         String? newDate = date?.toUtc().toString();
         await http
@@ -487,7 +482,7 @@ class Repository {
       await addTask(taskModel);
     } else {
       try {
-        var url = Uri.parse('http://139.28.37.11:56565/stage/api/task');
+        var url = Uri.parse('$apiUrl/task');
         final cookie = await getCookie();
         String date = taskModel.date!.toUtc().toString();
 
@@ -520,7 +515,9 @@ class Repository {
         error = error.toString();
       }
     }
-    Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+    if (error != null) {
+      Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+    }
     return error;
   }
 
@@ -532,7 +529,7 @@ class Repository {
           toastLength: Toast.LENGTH_LONG);
     } else {
       try {
-        var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/me');
+        var url = Uri.parse('$apiUrl/auth/me');
         final cookie = await getCookie();
         if (cookie != null) {
           await http.get(
@@ -584,7 +581,7 @@ class Repository {
       removeLocalTask(taskId);
     } else {
       try {
-        var url = Uri.parse('http://139.28.37.11:56565/stage/api/task/$taskId');
+        var url = Uri.parse('$apiUrl/task/$taskId');
         final cookie = await getCookie();
         await http.delete(url, headers: <String, String>{
           'Content-Type': 'application/json',
@@ -660,7 +657,7 @@ class Repository {
       error = "Немає підключення до інтернету";
     } else {
       try {
-        var url = Uri.parse('http://139.28.37.11:56565/stage/api/auth/logout');
+        var url = Uri.parse('$apiUrl/auth/logout');
         final cookie = await getCookie();
         await http.post(url, headers: <String, String>{
           'Content-Type': 'application/json',
@@ -731,7 +728,8 @@ class Repository {
   }
 
   Future addSavedAddresses(PickResult savedAddress) async {
-    if (savedAddresses.any((element) => element.placeId == savedAddress.placeId)) {
+    if (savedAddresses
+        .any((element) => element.placeId == savedAddress.placeId)) {
       return;
     }
 
@@ -759,8 +757,7 @@ class Repository {
     } else {
       for (var task in myTasks) {
         try {
-          var url =
-              Uri.parse('http://139.28.37.11:56565/stage/api/task/${task.id}');
+          var url = Uri.parse('$apiUrl/task/${task.id}');
           final cookie = await getCookie();
           await http.delete(url, headers: <String, String>{
             'Content-Type': 'application/json',
@@ -823,8 +820,9 @@ class Repository {
         'Content-Type': 'application/json',
       }).then((value) async {
         if (value.statusCode > 199 && value.statusCode < 300) {
-          Map<String,dynamic> map=jsonDecode(value.body);
-          latLng=LatLng(map["result"]["geometry"]["location"]["lat"], map["result"]["geometry"]["location"]["lng"]);
+          Map<String, dynamic> map = jsonDecode(value.body);
+          latLng = LatLng(map["result"]["geometry"]["location"]["lat"],
+              map["result"]["geometry"]["location"]["lng"]);
         }
       });
     } catch (error) {

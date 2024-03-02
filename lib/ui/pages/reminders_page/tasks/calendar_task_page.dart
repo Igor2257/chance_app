@@ -6,7 +6,7 @@ import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/calendar_for_tasks.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/custom_bottom_sheet_notification_picker.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
-import 'package:chance_app/ux/model/tasks_model.dart';
+import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

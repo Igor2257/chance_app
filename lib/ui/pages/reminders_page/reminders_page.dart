@@ -6,7 +6,9 @@ import 'package:chance_app/ui/pages/reminders_page/medicine/medicine_list.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/task_list.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/tasks_sheets.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
+import 'package:chance_app/ux/enum/reminders.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
+import 'package:chance_app/ux/model/task_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,18 +22,27 @@ class RemindersPage extends StatefulWidget {
 
 class _RemindersPageState extends State<RemindersPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  var _selectedTab = SideSwipe.left;
+  var _selectedTab = Reminders.medicine;
+
+  late EdgeInsets _padding;
 
   Future<void> _onAddButtonPressed() async {
     final selectedReminders = await showModalBottomSheet<Reminders>(
       context: context,
       backgroundColor: beige100,
       enableDrag: true,
+      showDragHandle: true,
       builder: (_) => const CustomBottomSheet(),
     );
 
     if (selectedReminders != null) {
       switch (selectedReminders) {
+        case Reminders.tasks:
+          _scaffoldKey.currentState?.showBottomSheet(
+            backgroundColor: beige100,
+            (_) => const TasksSheets(),
+          );
+
         case Reminders.medicine:
           var addMedicine = true;
           do {
@@ -41,6 +52,8 @@ class _RemindersPageState extends State<RemindersPage> {
             if (result is MedicineModel && mounted) {
               final addMore = await showModalBottomSheet<bool>(
                 context: context,
+                backgroundColor: beige100,
+                enableDrag: true,
                 showDragHandle: true,
                 builder: (_) => MedicineAddedBottomSheet(result),
               );
@@ -48,12 +61,6 @@ class _RemindersPageState extends State<RemindersPage> {
             }
             addMedicine = false;
           } while (addMedicine);
-
-        case Reminders.tasks:
-          _scaffoldKey.currentState?.showBottomSheet(
-            backgroundColor: beige100,
-            (_) => const TasksSheets(),
-          );
       }
     }
   }
@@ -65,120 +72,148 @@ class _RemindersPageState extends State<RemindersPage> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _padding = MediaQuery.paddingOf(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocSelector<RemindersBloc, RemindersState, bool>(
-      selector: (state) => state.isLoading,
-      builder: (context, isLoading) {
-        return Scaffold(
-          key: _scaffoldKey,
-          backgroundColor: beigeBG,
-          appBar: AppBar(
-            centerTitle: true,
-            titleTextStyle: TextStyle(fontSize: 22, color: primaryText),
-            title: const Text("Нагадування"),
-            leading: BackButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed("/");
-              },
-            ),
-            actions: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.more_vert),
-              ),
-            ],
+    return Scaffold(
+      key: _scaffoldKey,
+      backgroundColor: beigeBG,
+      appBar: AppBar(
+        centerTitle: true,
+        titleTextStyle: TextStyle(fontSize: 22, color: primaryText),
+        title: const Text("Нагадування"),
+        leading: BackButton(
+          onPressed: () {
+            Navigator.of(context).pushNamed("/");
+          },
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.more_vert),
           ),
-          body: Stack(
-            fit: StackFit.expand,
-            alignment: Alignment.center,
-            children: [
-              Visibility(
-                visible: !isLoading,
-                replacement: CupertinoActivityIndicator(
-                  color: primary500,
-                  radius: 50,
-                ),
-                child: Column(
-                  children: [
-                    CalendarView(),
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: DefaultTextStyle(
-                        style: const TextStyle(fontSize: 16),
-                        child: CupertinoSlidingSegmentedControl(
-                          backgroundColor: beige100,
-                          thumbColor: darkNeutral600,
-                          groupValue: _selectedTab,
-                          onValueChanged: (value) => setState(() {
-                            _selectedTab = value!;
-                          }),
-                          children: {
-                            SideSwipe.left: _selectorItem(
-                              "Мої медикаменти",
-                              isSelected: _selectedTab == SideSwipe.left,
-                            ),
-                            SideSwipe.right: _selectorItem(
-                              "Мої завдання",
-                              isSelected: _selectedTab == SideSwipe.right,
-                            ),
-                          },
+        ],
+      ),
+      body: SafeArea(
+        bottom: false,
+        child: Stack(
+          fit: StackFit.expand,
+          alignment: Alignment.center,
+          children: [
+            BlocSelector<RemindersBloc, RemindersState, bool>(
+              selector: (state) => state.isLoading,
+              builder: (context, isLoading) {
+                return Visibility(
+                  visible: !isLoading,
+                  replacement: CupertinoActivityIndicator(
+                    color: primary500,
+                    radius: 50,
+                  ),
+                  child: Column(
+                    children: [
+                      CalendarView(),
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: _tabSwitcher(),
+                      ),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 125),
+                            child: _itemsList(),
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: IndexedStack(
-                        alignment: Alignment.topCenter,
-                        index: SideSwipe.values.indexOf(_selectedTab),
-                        children: const [
-                          TaskList(),
-                          MedicineList(),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Positioned(
-                right: 10,
-                bottom: 40,
-                child: ElevatedButton.icon(
-                  onPressed: _onAddButtonPressed,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primary1000,
-                    foregroundColor: primary50,
-                    padding: const EdgeInsets.all(12),
-                    minimumSize: const Size.square(44),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    textStyle: const TextStyle(
-                      fontSize: 16,
-                      letterSpacing: 0.15,
-                    ),
+                    ],
                   ),
-                  icon: const Icon(Icons.add),
-                  label: const Text("Додати"),
+                );
+              },
+            ),
+            Positioned(
+              right: _padding.right + 10,
+              bottom: _padding.bottom + 10,
+              child: ElevatedButton.icon(
+                onPressed: _onAddButtonPressed,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primary1000,
+                  foregroundColor: primary50,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 12,
+                  ),
+                  minimumSize: const Size.square(36),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  textStyle: const TextStyle(
+                    fontSize: 16,
+                    letterSpacing: 0.15,
+                  ),
                 ),
+                icon: const Icon(Icons.add),
+                label: const Text("Додати"),
               ),
-            ],
-          ),
-        );
-      },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget _selectorItem(
-    String label, {
-    required bool isSelected,
-  }) {
-    const selectedColor = Colors.white;
-    const unselectedColor = Color(0xff57524C);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      child: Text(
-        label,
-        style: TextStyle(color: isSelected ? selectedColor : unselectedColor),
+  Widget _tabSwitcher() {
+    const tabs = {
+      Reminders.medicine: "Мої медикаменти",
+      Reminders.tasks: "Мої завдання",
+    };
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: beige300),
+      ),
+      position: DecorationPosition.foreground,
+      child: CupertinoSlidingSegmentedControl(
+        backgroundColor: beige100,
+        thumbColor: darkNeutral600,
+        groupValue: _selectedTab,
+        onValueChanged: (value) => setState(() {
+          _selectedTab = value!;
+        }),
+        children: {
+          for (final tab in tabs.keys)
+            tab: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              child: Text(
+                tabs[tab]!,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: (_selectedTab == tab)
+                      ? Colors.white
+                      : const Color(0xff57524C),
+                ),
+              ),
+            ),
+        },
       ),
     );
+  }
+
+  Widget _itemsList() {
+    switch (_selectedTab) {
+      case Reminders.medicine:
+        return BlocSelector<RemindersBloc, RemindersState, List<MedicineModel>>(
+          selector: (state) => state.myMedicines,
+          builder: (context, items) => MedicineList(items),
+        );
+      case Reminders.tasks:
+        return BlocSelector<RemindersBloc, RemindersState, List<TaskModel>>(
+          selector: (state) => state.myTasks,
+          builder: (context, items) => TaskList(items),
+        );
+    }
   }
 }

@@ -42,7 +42,7 @@ class AddMedicineEvent with _$AddMedicineEvent {
   }) = ChangeDose;
 
   const factory AddMedicineEvent.addInstruction(
-    MedicineInstruction instruction,
+    Instruction instruction,
   ) = AddInstruction;
 
   const factory AddMedicineEvent.save() = SaveMedicine;

@@ -53,24 +53,22 @@ class GeometryAdapter extends TypeAdapter<Geometry> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$GeometryImpl _$$GeometryImplFromJson(Map<String, dynamic> json) {
-  return _$GeometryImpl(
-    location: json['location']as Location,
-    locationType: json['location_type'] as String?,
-    viewport: json['viewport'] == null
-        ? null
-        : json['viewport']as Bounds,
-    bounds: json['bounds'] == null
-        ? null
-        : json['bounds'] as Bounds,
-  );
-}
-
+_$GeometryImpl _$$GeometryImplFromJson(Map<String, dynamic> json) =>
+    _$GeometryImpl(
+      location: Location.fromJson(json['location'] as Map<String, dynamic>),
+      locationType: json['locationType'] as String? ?? null,
+      viewport: json['viewport'] == null
+          ? null
+          : Bounds.fromJson(json['viewport'] as Map<String, dynamic>),
+      bounds: json['bounds'] == null
+          ? null
+          : Bounds.fromJson(json['bounds'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$$GeometryImplToJson(_$GeometryImpl instance) =>
     <String, dynamic>{
       'location': instance.location,
-      'location_type': instance.locationType,
+      'locationType': instance.locationType,
       'viewport': instance.viewport,
       'bounds': instance.bounds,
     };

@@ -17,7 +17,7 @@ class MedicineModelAdapter extends TypeAdapter<MedicineModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return MedicineModel(
-      id: fields[0] as int,
+      id: fields[0] as String,
       reminderIds: (fields[1] as List).cast<int>(),
       name: fields[2] as String,
       type: fields[3] as MedicineType,
@@ -25,8 +25,9 @@ class MedicineModelAdapter extends TypeAdapter<MedicineModel> {
       startDate: fields[5] as DateTime,
       weekdays: (fields[6] as List).cast<int>(),
       doses: (fields[7] as Map).cast<int, int>(),
-      instruction: fields[8] as MedicineInstruction?,
-      userId: fields[10] as String,
+      instruction: fields[8] as Instruction,
+      doneAt: (fields[9] as List).cast<DateTime>(),
+      userId: fields[11] as String,
       isSentToDB: fields[12] as bool,
       isRemoved: fields[13] as bool,
     );
@@ -35,7 +36,7 @@ class MedicineModelAdapter extends TypeAdapter<MedicineModel> {
   @override
   void write(BinaryWriter writer, MedicineModel obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -54,7 +55,9 @@ class MedicineModelAdapter extends TypeAdapter<MedicineModel> {
       ..write(obj.doses)
       ..writeByte(8)
       ..write(obj.instruction)
-      ..writeByte(10)
+      ..writeByte(9)
+      ..write(obj.doneAt)
+      ..writeByte(11)
       ..write(obj.userId)
       ..writeByte(12)
       ..write(obj.isSentToDB)
@@ -79,7 +82,7 @@ class MedicineModelAdapter extends TypeAdapter<MedicineModel> {
 
 _$MedicineModelImpl _$$MedicineModelImplFromJson(Map<String, dynamic> json) =>
     _$MedicineModelImpl(
-      id: json['id'] as int,
+      id: json['id'] as String? ?? "",
       reminderIds:
           (json['reminderIds'] as List<dynamic>).map((e) => e as int).toList(),
       name: json['name'] as String,
@@ -89,12 +92,16 @@ _$MedicineModelImpl _$$MedicineModelImplFromJson(Map<String, dynamic> json) =>
       weekdays:
           (json['weekdays'] as List<dynamic>?)?.map((e) => e as int).toList() ??
               const [],
-      doses: (json['doses'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(int.parse(k), e as int),
-          ) ??
-          const {},
-      instruction: $enumDecodeNullable(
-          _$MedicineInstructionEnumMap, json['instruction']),
+      doses: (json['doses'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry(int.parse(k), e as int),
+      ),
+      instruction:
+          $enumDecodeNullable(_$InstructionEnumMap, json['instruction']) ??
+              Instruction.noMatter,
+      doneAt: (json['doneAt'] as List<dynamic>?)
+              ?.map((e) => DateTime.parse(e as String))
+              .toList() ??
+          const [],
       userId: json['userId'] as String? ?? "",
       isSentToDB: json['isSentToDB'] as bool? ?? false,
       isRemoved: json['isRemoved'] as bool? ?? false,
@@ -110,7 +117,8 @@ Map<String, dynamic> _$$MedicineModelImplToJson(_$MedicineModelImpl instance) =>
       'startDate': instance.startDate.toIso8601String(),
       'weekdays': instance.weekdays,
       'doses': instance.doses.map((k, e) => MapEntry(k.toString(), e)),
-      'instruction': _$MedicineInstructionEnumMap[instance.instruction],
+      'instruction': _$InstructionEnumMap[instance.instruction]!,
+      'doneAt': instance.doneAt.map((e) => e.toIso8601String()).toList(),
       'userId': instance.userId,
       'isSentToDB': instance.isSentToDB,
       'isRemoved': instance.isRemoved,
@@ -131,9 +139,9 @@ const _$PeriodicityEnumMap = {
   Periodicity.certainDays: 'certainDays',
 };
 
-const _$MedicineInstructionEnumMap = {
-  MedicineInstruction.beforeEating: 'beforeEating',
-  MedicineInstruction.whileEating: 'whileEating',
-  MedicineInstruction.afterEating: 'afterEating',
-  MedicineInstruction.noMatter: 'noMatter',
+const _$InstructionEnumMap = {
+  Instruction.beforeEating: 'beforeEating',
+  Instruction.whileEating: 'whileEating',
+  Instruction.afterEating: 'afterEating',
+  Instruction.noMatter: 'noMatter',
 };

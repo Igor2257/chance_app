@@ -27,7 +27,7 @@ mixin _$AddMedicineEvent {
     required TResult Function(TimeOfDay time, int count) addDose,
     required TResult Function(int index, TimeOfDay? time, int? count)
         changeDose,
-    required TResult Function(MedicineInstruction instruction) addInstruction,
+    required TResult Function(Instruction instruction) addInstruction,
     required TResult Function() save,
   }) =>
       throw _privateConstructorUsedError;
@@ -41,7 +41,7 @@ mixin _$AddMedicineEvent {
     TResult? Function(int weekday)? removeWeekday,
     TResult? Function(TimeOfDay time, int count)? addDose,
     TResult? Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult? Function(MedicineInstruction instruction)? addInstruction,
+    TResult? Function(Instruction instruction)? addInstruction,
     TResult? Function()? save,
   }) =>
       throw _privateConstructorUsedError;
@@ -55,7 +55,7 @@ mixin _$AddMedicineEvent {
     TResult Function(int weekday)? removeWeekday,
     TResult Function(TimeOfDay time, int count)? addDose,
     TResult Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult Function(MedicineInstruction instruction)? addInstruction,
+    TResult Function(Instruction instruction)? addInstruction,
     TResult Function()? save,
     required TResult orElse(),
   }) =>
@@ -196,7 +196,7 @@ class _$SetNameImpl implements SetName {
     required TResult Function(TimeOfDay time, int count) addDose,
     required TResult Function(int index, TimeOfDay? time, int? count)
         changeDose,
-    required TResult Function(MedicineInstruction instruction) addInstruction,
+    required TResult Function(Instruction instruction) addInstruction,
     required TResult Function() save,
   }) {
     return setName(name);
@@ -213,7 +213,7 @@ class _$SetNameImpl implements SetName {
     TResult? Function(int weekday)? removeWeekday,
     TResult? Function(TimeOfDay time, int count)? addDose,
     TResult? Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult? Function(MedicineInstruction instruction)? addInstruction,
+    TResult? Function(Instruction instruction)? addInstruction,
     TResult? Function()? save,
   }) {
     return setName?.call(name);
@@ -230,7 +230,7 @@ class _$SetNameImpl implements SetName {
     TResult Function(int weekday)? removeWeekday,
     TResult Function(TimeOfDay time, int count)? addDose,
     TResult Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult Function(MedicineInstruction instruction)? addInstruction,
+    TResult Function(Instruction instruction)? addInstruction,
     TResult Function()? save,
     required TResult orElse(),
   }) {
@@ -378,7 +378,7 @@ class _$SetTypeImpl implements SetType {
     required TResult Function(TimeOfDay time, int count) addDose,
     required TResult Function(int index, TimeOfDay? time, int? count)
         changeDose,
-    required TResult Function(MedicineInstruction instruction) addInstruction,
+    required TResult Function(Instruction instruction) addInstruction,
     required TResult Function() save,
   }) {
     return setType(type);
@@ -395,7 +395,7 @@ class _$SetTypeImpl implements SetType {
     TResult? Function(int weekday)? removeWeekday,
     TResult? Function(TimeOfDay time, int count)? addDose,
     TResult? Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult? Function(MedicineInstruction instruction)? addInstruction,
+    TResult? Function(Instruction instruction)? addInstruction,
     TResult? Function()? save,
   }) {
     return setType?.call(type);
@@ -412,7 +412,7 @@ class _$SetTypeImpl implements SetType {
     TResult Function(int weekday)? removeWeekday,
     TResult Function(TimeOfDay time, int count)? addDose,
     TResult Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult Function(MedicineInstruction instruction)? addInstruction,
+    TResult Function(Instruction instruction)? addInstruction,
     TResult Function()? save,
     required TResult orElse(),
   }) {
@@ -562,7 +562,7 @@ class _$SetPeriodicityImpl implements SetPeriodicity {
     required TResult Function(TimeOfDay time, int count) addDose,
     required TResult Function(int index, TimeOfDay? time, int? count)
         changeDose,
-    required TResult Function(MedicineInstruction instruction) addInstruction,
+    required TResult Function(Instruction instruction) addInstruction,
     required TResult Function() save,
   }) {
     return setPeriodicity(periodicity);
@@ -579,7 +579,7 @@ class _$SetPeriodicityImpl implements SetPeriodicity {
     TResult? Function(int weekday)? removeWeekday,
     TResult? Function(TimeOfDay time, int count)? addDose,
     TResult? Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult? Function(MedicineInstruction instruction)? addInstruction,
+    TResult? Function(Instruction instruction)? addInstruction,
     TResult? Function()? save,
   }) {
     return setPeriodicity?.call(periodicity);
@@ -596,7 +596,7 @@ class _$SetPeriodicityImpl implements SetPeriodicity {
     TResult Function(int weekday)? removeWeekday,
     TResult Function(TimeOfDay time, int count)? addDose,
     TResult Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult Function(MedicineInstruction instruction)? addInstruction,
+    TResult Function(Instruction instruction)? addInstruction,
     TResult Function()? save,
     required TResult orElse(),
   }) {
@@ -746,7 +746,7 @@ class _$SetStartDateImpl implements SetStartDate {
     required TResult Function(TimeOfDay time, int count) addDose,
     required TResult Function(int index, TimeOfDay? time, int? count)
         changeDose,
-    required TResult Function(MedicineInstruction instruction) addInstruction,
+    required TResult Function(Instruction instruction) addInstruction,
     required TResult Function() save,
   }) {
     return setStartDate(startDate);
@@ -763,7 +763,7 @@ class _$SetStartDateImpl implements SetStartDate {
     TResult? Function(int weekday)? removeWeekday,
     TResult? Function(TimeOfDay time, int count)? addDose,
     TResult? Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult? Function(MedicineInstruction instruction)? addInstruction,
+    TResult? Function(Instruction instruction)? addInstruction,
     TResult? Function()? save,
   }) {
     return setStartDate?.call(startDate);
@@ -780,7 +780,7 @@ class _$SetStartDateImpl implements SetStartDate {
     TResult Function(int weekday)? removeWeekday,
     TResult Function(TimeOfDay time, int count)? addDose,
     TResult Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult Function(MedicineInstruction instruction)? addInstruction,
+    TResult Function(Instruction instruction)? addInstruction,
     TResult Function()? save,
     required TResult orElse(),
   }) {
@@ -928,7 +928,7 @@ class _$AddWeekdayImpl implements AddWeekday {
     required TResult Function(TimeOfDay time, int count) addDose,
     required TResult Function(int index, TimeOfDay? time, int? count)
         changeDose,
-    required TResult Function(MedicineInstruction instruction) addInstruction,
+    required TResult Function(Instruction instruction) addInstruction,
     required TResult Function() save,
   }) {
     return addWeekday(weekday);
@@ -945,7 +945,7 @@ class _$AddWeekdayImpl implements AddWeekday {
     TResult? Function(int weekday)? removeWeekday,
     TResult? Function(TimeOfDay time, int count)? addDose,
     TResult? Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult? Function(MedicineInstruction instruction)? addInstruction,
+    TResult? Function(Instruction instruction)? addInstruction,
     TResult? Function()? save,
   }) {
     return addWeekday?.call(weekday);
@@ -962,7 +962,7 @@ class _$AddWeekdayImpl implements AddWeekday {
     TResult Function(int weekday)? removeWeekday,
     TResult Function(TimeOfDay time, int count)? addDose,
     TResult Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult Function(MedicineInstruction instruction)? addInstruction,
+    TResult Function(Instruction instruction)? addInstruction,
     TResult Function()? save,
     required TResult orElse(),
   }) {
@@ -1110,7 +1110,7 @@ class _$RemoveWeekdayImpl implements RemoveWeekday {
     required TResult Function(TimeOfDay time, int count) addDose,
     required TResult Function(int index, TimeOfDay? time, int? count)
         changeDose,
-    required TResult Function(MedicineInstruction instruction) addInstruction,
+    required TResult Function(Instruction instruction) addInstruction,
     required TResult Function() save,
   }) {
     return removeWeekday(weekday);
@@ -1127,7 +1127,7 @@ class _$RemoveWeekdayImpl implements RemoveWeekday {
     TResult? Function(int weekday)? removeWeekday,
     TResult? Function(TimeOfDay time, int count)? addDose,
     TResult? Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult? Function(MedicineInstruction instruction)? addInstruction,
+    TResult? Function(Instruction instruction)? addInstruction,
     TResult? Function()? save,
   }) {
     return removeWeekday?.call(weekday);
@@ -1144,7 +1144,7 @@ class _$RemoveWeekdayImpl implements RemoveWeekday {
     TResult Function(int weekday)? removeWeekday,
     TResult Function(TimeOfDay time, int count)? addDose,
     TResult Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult Function(MedicineInstruction instruction)? addInstruction,
+    TResult Function(Instruction instruction)? addInstruction,
     TResult Function()? save,
     required TResult orElse(),
   }) {
@@ -1300,7 +1300,7 @@ class _$AddDoseImpl implements AddDose {
     required TResult Function(TimeOfDay time, int count) addDose,
     required TResult Function(int index, TimeOfDay? time, int? count)
         changeDose,
-    required TResult Function(MedicineInstruction instruction) addInstruction,
+    required TResult Function(Instruction instruction) addInstruction,
     required TResult Function() save,
   }) {
     return addDose(time, count);
@@ -1317,7 +1317,7 @@ class _$AddDoseImpl implements AddDose {
     TResult? Function(int weekday)? removeWeekday,
     TResult? Function(TimeOfDay time, int count)? addDose,
     TResult? Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult? Function(MedicineInstruction instruction)? addInstruction,
+    TResult? Function(Instruction instruction)? addInstruction,
     TResult? Function()? save,
   }) {
     return addDose?.call(time, count);
@@ -1334,7 +1334,7 @@ class _$AddDoseImpl implements AddDose {
     TResult Function(int weekday)? removeWeekday,
     TResult Function(TimeOfDay time, int count)? addDose,
     TResult Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult Function(MedicineInstruction instruction)? addInstruction,
+    TResult Function(Instruction instruction)? addInstruction,
     TResult Function()? save,
     required TResult orElse(),
   }) {
@@ -1499,7 +1499,7 @@ class _$ChangeDoseImpl implements ChangeDose {
     required TResult Function(TimeOfDay time, int count) addDose,
     required TResult Function(int index, TimeOfDay? time, int? count)
         changeDose,
-    required TResult Function(MedicineInstruction instruction) addInstruction,
+    required TResult Function(Instruction instruction) addInstruction,
     required TResult Function() save,
   }) {
     return changeDose(index, time, count);
@@ -1516,7 +1516,7 @@ class _$ChangeDoseImpl implements ChangeDose {
     TResult? Function(int weekday)? removeWeekday,
     TResult? Function(TimeOfDay time, int count)? addDose,
     TResult? Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult? Function(MedicineInstruction instruction)? addInstruction,
+    TResult? Function(Instruction instruction)? addInstruction,
     TResult? Function()? save,
   }) {
     return changeDose?.call(index, time, count);
@@ -1533,7 +1533,7 @@ class _$ChangeDoseImpl implements ChangeDose {
     TResult Function(int weekday)? removeWeekday,
     TResult Function(TimeOfDay time, int count)? addDose,
     TResult Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult Function(MedicineInstruction instruction)? addInstruction,
+    TResult Function(Instruction instruction)? addInstruction,
     TResult Function()? save,
     required TResult orElse(),
   }) {
@@ -1619,7 +1619,7 @@ abstract class _$$AddInstructionImplCopyWith<$Res> {
           $Res Function(_$AddInstructionImpl) then) =
       __$$AddInstructionImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({MedicineInstruction instruction});
+  $Res call({Instruction instruction});
 }
 
 /// @nodoc
@@ -1639,7 +1639,7 @@ class __$$AddInstructionImplCopyWithImpl<$Res>
       null == instruction
           ? _value.instruction
           : instruction // ignore: cast_nullable_to_non_nullable
-              as MedicineInstruction,
+              as Instruction,
     ));
   }
 }
@@ -1650,7 +1650,7 @@ class _$AddInstructionImpl implements AddInstruction {
   const _$AddInstructionImpl(this.instruction);
 
   @override
-  final MedicineInstruction instruction;
+  final Instruction instruction;
 
   @override
   String toString() {
@@ -1688,7 +1688,7 @@ class _$AddInstructionImpl implements AddInstruction {
     required TResult Function(TimeOfDay time, int count) addDose,
     required TResult Function(int index, TimeOfDay? time, int? count)
         changeDose,
-    required TResult Function(MedicineInstruction instruction) addInstruction,
+    required TResult Function(Instruction instruction) addInstruction,
     required TResult Function() save,
   }) {
     return addInstruction(instruction);
@@ -1705,7 +1705,7 @@ class _$AddInstructionImpl implements AddInstruction {
     TResult? Function(int weekday)? removeWeekday,
     TResult? Function(TimeOfDay time, int count)? addDose,
     TResult? Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult? Function(MedicineInstruction instruction)? addInstruction,
+    TResult? Function(Instruction instruction)? addInstruction,
     TResult? Function()? save,
   }) {
     return addInstruction?.call(instruction);
@@ -1722,7 +1722,7 @@ class _$AddInstructionImpl implements AddInstruction {
     TResult Function(int weekday)? removeWeekday,
     TResult Function(TimeOfDay time, int count)? addDose,
     TResult Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult Function(MedicineInstruction instruction)? addInstruction,
+    TResult Function(Instruction instruction)? addInstruction,
     TResult Function()? save,
     required TResult orElse(),
   }) {
@@ -1789,10 +1789,10 @@ class _$AddInstructionImpl implements AddInstruction {
 }
 
 abstract class AddInstruction implements AddMedicineEvent {
-  const factory AddInstruction(final MedicineInstruction instruction) =
+  const factory AddInstruction(final Instruction instruction) =
       _$AddInstructionImpl;
 
-  MedicineInstruction get instruction;
+  Instruction get instruction;
   @JsonKey(ignore: true)
   _$$AddInstructionImplCopyWith<_$AddInstructionImpl> get copyWith =>
       throw _privateConstructorUsedError;
@@ -1845,7 +1845,7 @@ class _$SaveMedicineImpl implements SaveMedicine {
     required TResult Function(TimeOfDay time, int count) addDose,
     required TResult Function(int index, TimeOfDay? time, int? count)
         changeDose,
-    required TResult Function(MedicineInstruction instruction) addInstruction,
+    required TResult Function(Instruction instruction) addInstruction,
     required TResult Function() save,
   }) {
     return save();
@@ -1862,7 +1862,7 @@ class _$SaveMedicineImpl implements SaveMedicine {
     TResult? Function(int weekday)? removeWeekday,
     TResult? Function(TimeOfDay time, int count)? addDose,
     TResult? Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult? Function(MedicineInstruction instruction)? addInstruction,
+    TResult? Function(Instruction instruction)? addInstruction,
     TResult? Function()? save,
   }) {
     return save?.call();
@@ -1879,7 +1879,7 @@ class _$SaveMedicineImpl implements SaveMedicine {
     TResult Function(int weekday)? removeWeekday,
     TResult Function(TimeOfDay time, int count)? addDose,
     TResult Function(int index, TimeOfDay? time, int? count)? changeDose,
-    TResult Function(MedicineInstruction instruction)? addInstruction,
+    TResult Function(Instruction instruction)? addInstruction,
     TResult Function()? save,
     required TResult orElse(),
   }) {
@@ -1958,7 +1958,7 @@ mixin _$AddMedicineState {
   DateTime? get startDate => throw _privateConstructorUsedError;
   Set<int> get weekdays => throw _privateConstructorUsedError;
   Map<TimeOfDay, int> get doses => throw _privateConstructorUsedError;
-  MedicineInstruction? get instruction => throw _privateConstructorUsedError;
+  Instruction? get instruction => throw _privateConstructorUsedError;
   bool get isSaving => throw _privateConstructorUsedError;
   MedicineModel? get medicine => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
@@ -1981,7 +1981,7 @@ abstract class $AddMedicineStateCopyWith<$Res> {
       DateTime? startDate,
       Set<int> weekdays,
       Map<TimeOfDay, int> doses,
-      MedicineInstruction? instruction,
+      Instruction? instruction,
       bool isSaving,
       MedicineModel? medicine,
       String? errorMessage});
@@ -2041,7 +2041,7 @@ class _$AddMedicineStateCopyWithImpl<$Res, $Val extends AddMedicineState>
       instruction: freezed == instruction
           ? _value.instruction
           : instruction // ignore: cast_nullable_to_non_nullable
-              as MedicineInstruction?,
+              as Instruction?,
       isSaving: null == isSaving
           ? _value.isSaving
           : isSaving // ignore: cast_nullable_to_non_nullable
@@ -2085,7 +2085,7 @@ abstract class _$$StateImplCopyWith<$Res>
       DateTime? startDate,
       Set<int> weekdays,
       Map<TimeOfDay, int> doses,
-      MedicineInstruction? instruction,
+      Instruction? instruction,
       bool isSaving,
       MedicineModel? medicine,
       String? errorMessage});
@@ -2144,7 +2144,7 @@ class __$$StateImplCopyWithImpl<$Res>
       instruction: freezed == instruction
           ? _value.instruction
           : instruction // ignore: cast_nullable_to_non_nullable
-              as MedicineInstruction?,
+              as Instruction?,
       isSaving: null == isSaving
           ? _value.isSaving
           : isSaving // ignore: cast_nullable_to_non_nullable
@@ -2208,7 +2208,7 @@ class _$StateImpl extends _State {
   }
 
   @override
-  final MedicineInstruction? instruction;
+  final Instruction? instruction;
   @override
   @JsonKey()
   final bool isSaving;
@@ -2274,7 +2274,7 @@ abstract class _State extends AddMedicineState {
       final DateTime? startDate,
       final Set<int> weekdays,
       final Map<TimeOfDay, int> doses,
-      final MedicineInstruction? instruction,
+      final Instruction? instruction,
       final bool isSaving,
       final MedicineModel? medicine,
       final String? errorMessage}) = _$StateImpl;
@@ -2293,7 +2293,7 @@ abstract class _State extends AddMedicineState {
   @override
   Map<TimeOfDay, int> get doses;
   @override
-  MedicineInstruction? get instruction;
+  Instruction? get instruction;
   @override
   bool get isSaving;
   @override
