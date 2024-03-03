@@ -59,7 +59,8 @@ import 'package:timezone/timezone.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(
+      name: "chance-bab22", options: DefaultFirebaseOptions.currentPlatform);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
@@ -255,34 +256,40 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                         ),
                         if (InternetConnectionStream.showInternetConnection)
                           Container(
-                            decoration: BoxDecoration(
-                                color: InternetConnectionStream
-                                        .isUserHaveInternetConnection
-                                    ? green
-                                    : darkNeutral1000),
-                            height: 24,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  InternetConnectionStream
-                                          .isUserHaveInternetConnection
-                                      ? Icons.wifi
-                                      : Icons.wifi_off,
-                                  color: primary50,
+                              color: beigeBG,
+                              child:SafeArea(
+                                top: false,
+                                child: Container(
+                                decoration: BoxDecoration(
+                                    color: InternetConnectionStream
+                                            .isUserHaveInternetConnection
+                                        ? green
+                                        : darkNeutral1000),
+                                height: 24,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      InternetConnectionStream
+                                              .isUserHaveInternetConnection
+                                          ? Icons.wifi
+                                          : Icons.wifi_off,
+                                      color: primary50,
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      InternetConnectionStream
+                                              .isUserHaveInternetConnection
+                                          ? "З'єднання відновлено"
+                                          : "Немає з'єднання",
+                                      style:
+                                          TextStyle(fontSize: 16, color: primary50),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  InternetConnectionStream
-                                          .isUserHaveInternetConnection
-                                      ? "З'єднання відновлено"
-                                      : "Немає з'єднання",
-                                  style:
-                                      TextStyle(fontSize: 16, color: primary50),
-                                ),
-                              ],
+                              ),
                             ),
                           )
                       ],

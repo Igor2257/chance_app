@@ -363,7 +363,7 @@ class _MainPageState extends State<MainPage> {
       if (!isOkay) {
         if (mounted) {
           await showDialog(
-              barrierDismissible: false,
+              barrierDismissible: true,
               context: context,
               builder: (context) {
                 return PopScope(
@@ -372,10 +372,12 @@ class _MainPageState extends State<MainPage> {
                     child: AlertDialog(
                       title: Text(
                         "Дозвольте застосунку використовувати розташування",
+                        textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 24, color: primaryText),
                       ),
                       content: Text(
                         "Щоб програма працювала корректно, вам потрібно дозволити використовувати цей дозвіл",
+                        textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 16, color: primaryText),
                       ),
                       actions: [
