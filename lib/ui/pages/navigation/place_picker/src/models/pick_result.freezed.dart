@@ -294,7 +294,7 @@ class __$$PickResultImplCopyWithImpl<$Res>
     Object? utcOffset = freezed,
     Object? website = freezed,
     Object? star = null,
-    Object? isRecentlySearched = freezed,
+    Object? isRecentlySearched = null,
   }) {
     return _then(_$PickResultImpl(
       placeId: freezed == placeId
@@ -373,7 +373,7 @@ class __$$PickResultImplCopyWithImpl<$Res>
           ? _value.star
           : star // ignore: cast_nullable_to_non_nullable
               as bool,
-      isRecentlySearched: freezed == isRecentlySearched
+      isRecentlySearched: null == isRecentlySearched
           ? _value.isRecentlySearched
           : isRecentlySearched // ignore: cast_nullable_to_non_nullable
               as bool,

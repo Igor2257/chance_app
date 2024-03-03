@@ -21,7 +21,7 @@ MedicineModel _$MedicineModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$MedicineModel {
   @HiveField(0)
-  int get id => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
   @HiveField(1)
   List<int> get reminderIds => throw _privateConstructorUsedError;
   @HiveField(2)
@@ -33,13 +33,17 @@ mixin _$MedicineModel {
   @HiveField(5)
   DateTime get startDate => throw _privateConstructorUsedError;
   @HiveField(6)
-  List<int> get weekdays => throw _privateConstructorUsedError;
+  List<int> get weekdays =>
+      throw _privateConstructorUsedError; // if Periodicity.certainDays
   @HiveField(7)
-  Map<int, int> get doses => throw _privateConstructorUsedError;
+  Map<int, int> get doses =>
+      throw _privateConstructorUsedError; // minutes offset: count
   @HiveField(8)
-  MedicineInstruction? get instruction =>
-      throw _privateConstructorUsedError; //@HiveField(3) @Default("no") String notificationsBefore,
-  @HiveField(10)
+  Instruction get instruction => throw _privateConstructorUsedError;
+  @HiveField(9)
+  List<DateTime> get doneAt =>
+      throw _privateConstructorUsedError; // as it's a regular event
+  @HiveField(11)
   String get userId => throw _privateConstructorUsedError;
   @HiveField(12)
   bool get isSentToDB => throw _privateConstructorUsedError;
@@ -59,7 +63,7 @@ abstract class $MedicineModelCopyWith<$Res> {
       _$MedicineModelCopyWithImpl<$Res, MedicineModel>;
   @useResult
   $Res call(
-      {@HiveField(0) int id,
+      {@HiveField(0) String id,
       @HiveField(1) List<int> reminderIds,
       @HiveField(2) String name,
       @HiveField(3) MedicineType type,
@@ -67,8 +71,9 @@ abstract class $MedicineModelCopyWith<$Res> {
       @HiveField(5) DateTime startDate,
       @HiveField(6) List<int> weekdays,
       @HiveField(7) Map<int, int> doses,
-      @HiveField(8) MedicineInstruction? instruction,
-      @HiveField(10) String userId,
+      @HiveField(8) Instruction instruction,
+      @HiveField(9) List<DateTime> doneAt,
+      @HiveField(11) String userId,
       @HiveField(12) bool isSentToDB,
       @HiveField(13) bool isRemoved});
 }
@@ -94,7 +99,8 @@ class _$MedicineModelCopyWithImpl<$Res, $Val extends MedicineModel>
     Object? startDate = null,
     Object? weekdays = null,
     Object? doses = null,
-    Object? instruction = freezed,
+    Object? instruction = null,
+    Object? doneAt = null,
     Object? userId = null,
     Object? isSentToDB = null,
     Object? isRemoved = null,
@@ -103,7 +109,7 @@ class _$MedicineModelCopyWithImpl<$Res, $Val extends MedicineModel>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       reminderIds: null == reminderIds
           ? _value.reminderIds
           : reminderIds // ignore: cast_nullable_to_non_nullable
@@ -132,10 +138,14 @@ class _$MedicineModelCopyWithImpl<$Res, $Val extends MedicineModel>
           ? _value.doses
           : doses // ignore: cast_nullable_to_non_nullable
               as Map<int, int>,
-      instruction: freezed == instruction
+      instruction: null == instruction
           ? _value.instruction
           : instruction // ignore: cast_nullable_to_non_nullable
-              as MedicineInstruction?,
+              as Instruction,
+      doneAt: null == doneAt
+          ? _value.doneAt
+          : doneAt // ignore: cast_nullable_to_non_nullable
+              as List<DateTime>,
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
@@ -161,7 +171,7 @@ abstract class _$$MedicineModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@HiveField(0) int id,
+      {@HiveField(0) String id,
       @HiveField(1) List<int> reminderIds,
       @HiveField(2) String name,
       @HiveField(3) MedicineType type,
@@ -169,8 +179,9 @@ abstract class _$$MedicineModelImplCopyWith<$Res>
       @HiveField(5) DateTime startDate,
       @HiveField(6) List<int> weekdays,
       @HiveField(7) Map<int, int> doses,
-      @HiveField(8) MedicineInstruction? instruction,
-      @HiveField(10) String userId,
+      @HiveField(8) Instruction instruction,
+      @HiveField(9) List<DateTime> doneAt,
+      @HiveField(11) String userId,
       @HiveField(12) bool isSentToDB,
       @HiveField(13) bool isRemoved});
 }
@@ -194,7 +205,8 @@ class __$$MedicineModelImplCopyWithImpl<$Res>
     Object? startDate = null,
     Object? weekdays = null,
     Object? doses = null,
-    Object? instruction = freezed,
+    Object? instruction = null,
+    Object? doneAt = null,
     Object? userId = null,
     Object? isSentToDB = null,
     Object? isRemoved = null,
@@ -203,7 +215,7 @@ class __$$MedicineModelImplCopyWithImpl<$Res>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       reminderIds: null == reminderIds
           ? _value._reminderIds
           : reminderIds // ignore: cast_nullable_to_non_nullable
@@ -232,10 +244,14 @@ class __$$MedicineModelImplCopyWithImpl<$Res>
           ? _value._doses
           : doses // ignore: cast_nullable_to_non_nullable
               as Map<int, int>,
-      instruction: freezed == instruction
+      instruction: null == instruction
           ? _value.instruction
           : instruction // ignore: cast_nullable_to_non_nullable
-              as MedicineInstruction?,
+              as Instruction,
+      doneAt: null == doneAt
+          ? _value._doneAt
+          : doneAt // ignore: cast_nullable_to_non_nullable
+              as List<DateTime>,
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
@@ -256,28 +272,31 @@ class __$$MedicineModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$MedicineModelImpl implements _MedicineModel {
   _$MedicineModelImpl(
-      {@HiveField(0) required this.id,
+      {@HiveField(0) this.id = "",
       @HiveField(1) required final List<int> reminderIds,
       @HiveField(2) required this.name,
       @HiveField(3) required this.type,
       @HiveField(4) required this.periodicity,
       @HiveField(5) required this.startDate,
       @HiveField(6) final List<int> weekdays = const [],
-      @HiveField(7) final Map<int, int> doses = const {},
-      @HiveField(8) this.instruction,
-      @HiveField(10) this.userId = "",
+      @HiveField(7) required final Map<int, int> doses,
+      @HiveField(8) this.instruction = Instruction.noMatter,
+      @HiveField(9) final List<DateTime> doneAt = const [],
+      @HiveField(11) this.userId = "",
       @HiveField(12) this.isSentToDB = false,
       @HiveField(13) this.isRemoved = false})
       : _reminderIds = reminderIds,
         _weekdays = weekdays,
-        _doses = doses;
+        _doses = doses,
+        _doneAt = doneAt;
 
   factory _$MedicineModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$MedicineModelImplFromJson(json);
 
   @override
+  @JsonKey()
   @HiveField(0)
-  final int id;
+  final String id;
   final List<int> _reminderIds;
   @override
   @HiveField(1)
@@ -309,9 +328,10 @@ class _$MedicineModelImpl implements _MedicineModel {
     return EqualUnmodifiableListView(_weekdays);
   }
 
+// if Periodicity.certainDays
   final Map<int, int> _doses;
+// if Periodicity.certainDays
   @override
-  @JsonKey()
   @HiveField(7)
   Map<int, int> get doses {
     if (_doses is EqualUnmodifiableMapView) return _doses;
@@ -319,13 +339,25 @@ class _$MedicineModelImpl implements _MedicineModel {
     return EqualUnmodifiableMapView(_doses);
   }
 
-  @override
-  @HiveField(8)
-  final MedicineInstruction? instruction;
-//@HiveField(3) @Default("no") String notificationsBefore,
+// minutes offset: count
   @override
   @JsonKey()
-  @HiveField(10)
+  @HiveField(8)
+  final Instruction instruction;
+  final List<DateTime> _doneAt;
+  @override
+  @JsonKey()
+  @HiveField(9)
+  List<DateTime> get doneAt {
+    if (_doneAt is EqualUnmodifiableListView) return _doneAt;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_doneAt);
+  }
+
+// as it's a regular event
+  @override
+  @JsonKey()
+  @HiveField(11)
   final String userId;
   @override
   @JsonKey()
@@ -338,7 +370,7 @@ class _$MedicineModelImpl implements _MedicineModel {
 
   @override
   String toString() {
-    return 'MedicineModel(id: $id, reminderIds: $reminderIds, name: $name, type: $type, periodicity: $periodicity, startDate: $startDate, weekdays: $weekdays, doses: $doses, instruction: $instruction, userId: $userId, isSentToDB: $isSentToDB, isRemoved: $isRemoved)';
+    return 'MedicineModel(id: $id, reminderIds: $reminderIds, name: $name, type: $type, periodicity: $periodicity, startDate: $startDate, weekdays: $weekdays, doses: $doses, instruction: $instruction, doneAt: $doneAt, userId: $userId, isSentToDB: $isSentToDB, isRemoved: $isRemoved)';
   }
 
   @override
@@ -359,6 +391,7 @@ class _$MedicineModelImpl implements _MedicineModel {
             const DeepCollectionEquality().equals(other._doses, _doses) &&
             (identical(other.instruction, instruction) ||
                 other.instruction == instruction) &&
+            const DeepCollectionEquality().equals(other._doneAt, _doneAt) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.isSentToDB, isSentToDB) ||
                 other.isSentToDB == isSentToDB) &&
@@ -379,6 +412,7 @@ class _$MedicineModelImpl implements _MedicineModel {
       const DeepCollectionEquality().hash(_weekdays),
       const DeepCollectionEquality().hash(_doses),
       instruction,
+      const DeepCollectionEquality().hash(_doneAt),
       userId,
       isSentToDB,
       isRemoved);
@@ -399,16 +433,17 @@ class _$MedicineModelImpl implements _MedicineModel {
 
 abstract class _MedicineModel implements MedicineModel {
   factory _MedicineModel(
-      {@HiveField(0) required final int id,
+      {@HiveField(0) final String id,
       @HiveField(1) required final List<int> reminderIds,
       @HiveField(2) required final String name,
       @HiveField(3) required final MedicineType type,
       @HiveField(4) required final Periodicity periodicity,
       @HiveField(5) required final DateTime startDate,
       @HiveField(6) final List<int> weekdays,
-      @HiveField(7) final Map<int, int> doses,
-      @HiveField(8) final MedicineInstruction? instruction,
-      @HiveField(10) final String userId,
+      @HiveField(7) required final Map<int, int> doses,
+      @HiveField(8) final Instruction instruction,
+      @HiveField(9) final List<DateTime> doneAt,
+      @HiveField(11) final String userId,
       @HiveField(12) final bool isSentToDB,
       @HiveField(13) final bool isRemoved}) = _$MedicineModelImpl;
 
@@ -417,7 +452,7 @@ abstract class _MedicineModel implements MedicineModel {
 
   @override
   @HiveField(0)
-  int get id;
+  String get id;
   @override
   @HiveField(1)
   List<int> get reminderIds;
@@ -436,14 +471,17 @@ abstract class _MedicineModel implements MedicineModel {
   @override
   @HiveField(6)
   List<int> get weekdays;
-  @override
+  @override // if Periodicity.certainDays
   @HiveField(7)
   Map<int, int> get doses;
-  @override
+  @override // minutes offset: count
   @HiveField(8)
-  MedicineInstruction? get instruction;
-  @override //@HiveField(3) @Default("no") String notificationsBefore,
-  @HiveField(10)
+  Instruction get instruction;
+  @override
+  @HiveField(9)
+  List<DateTime> get doneAt;
+  @override // as it's a regular event
+  @HiveField(11)
   String get userId;
   @override
   @HiveField(12)

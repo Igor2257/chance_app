@@ -1,7 +1,7 @@
 // import 'package:chance_app/ux/enum/day_periodicity.dart';
 import 'dart:io';
 
-import 'package:chance_app/ux/enum/medicine_instruction.dart';
+import 'package:chance_app/ux/enum/instruction.dart';
 import 'package:chance_app/ux/enum/medicine_type.dart';
 import 'package:chance_app/ux/enum/periodicity.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
@@ -167,8 +167,8 @@ class AddMedicineBloc extends Bloc<AddMedicineEvent, AddMedicineState> {
         ];
     }
 
-    final instruction = state.instruction ?? MedicineInstruction.noMatter;
-    final shouldShowInstruction = instruction != MedicineInstruction.noMatter;
+    final instruction = state.instruction ?? Instruction.noMatter;
+    final shouldShowInstruction = instruction != Instruction.noMatter;
     final notificationIds = <int>{};
     var idCounter = 0;
 
@@ -238,7 +238,6 @@ class AddMedicineBloc extends Bloc<AddMedicineEvent, AddMedicineState> {
 
       // Create a model to save in local DB
       final model = MedicineModel(
-        id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
         reminderIds: notificationIds.toList(),
         name: state.name,
         type: state.type!,
@@ -247,10 +246,9 @@ class AddMedicineBloc extends Bloc<AddMedicineEvent, AddMedicineState> {
         weekdays: state.weekdays.toList(),
         doses: {
           for (final time in state.doses.keys)
-            Duration.minutesPerHour * time.hour + time.minute:
-                state.doses[time]!,
+            time.toTimeOffset(): state.doses[time]!,
         },
-        instruction: state.instruction,
+        instruction: state.instruction ?? Instruction.noMatter,
       );
 
       emit(state.copyWith(isSaving: false, medicine: model));

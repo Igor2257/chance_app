@@ -10,7 +10,7 @@ class AddMedicineState with _$AddMedicineState {
     DateTime? startDate,
     @Default({}) Set<int> weekdays,
     @Default({}) Map<TimeOfDay, int> doses,
-    MedicineInstruction? instruction,
+    Instruction? instruction,
     @Default(false) bool isSaving,
     MedicineModel? medicine,
     String? errorMessage,

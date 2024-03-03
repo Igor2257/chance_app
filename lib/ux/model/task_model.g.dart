@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'tasks_model.dart';
+part of 'task_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
@@ -21,8 +21,6 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
       message: fields[1] as String,
       date: fields[2] as DateTime?,
       isDone: fields[3] as bool,
-      userId: fields[4] as String,
-      isNotificationSent: fields[5] as bool,
       isSentToDB: fields[6] as bool,
       isRemoved: fields[7] as bool,
     );
@@ -31,7 +29,7 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
   @override
   void write(BinaryWriter writer, TaskModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -40,10 +38,6 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
       ..write(obj.date)
       ..writeByte(3)
       ..write(obj.isDone)
-      ..writeByte(4)
-      ..write(obj.userId)
-      ..writeByte(5)
-      ..write(obj.isNotificationSent)
       ..writeByte(6)
       ..write(obj.isSentToDB)
       ..writeByte(7)
@@ -72,8 +66,6 @@ _$TaskModelImpl _$$TaskModelImplFromJson(Map<String, dynamic> json) =>
       date:
           json['date'] == null ? null : DateTime.parse(json['date'] as String),
       isDone: json['isDone'] as bool? ?? false,
-      userId: json['userId'] as String? ?? "",
-      isNotificationSent: json['isNotificationSent'] as bool? ?? false,
       isSentToDB: json['isSentToDB'] as bool? ?? false,
       isRemoved: json['isRemoved'] as bool? ?? false,
     );
@@ -84,8 +76,6 @@ Map<String, dynamic> _$$TaskModelImplToJson(_$TaskModelImpl instance) =>
       'message': instance.message,
       'date': instance.date?.toIso8601String(),
       'isDone': instance.isDone,
-      'userId': instance.userId,
-      'isNotificationSent': instance.isNotificationSent,
       'isSentToDB': instance.isSentToDB,
       'isRemoved': instance.isRemoved,
     };

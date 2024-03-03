@@ -28,6 +28,7 @@ class RemindersState {
     "за 1 день",
   ];
   final List<TaskModel> myTasks;
+  final List<MedicineModel> myMedicines;
   final bool isLoading;
 
   RemindersState({
@@ -37,6 +38,7 @@ class RemindersState {
     this.days = const [],
     this.week = const [],
     this.myTasks = const [],
+    this.myMedicines = const [],
     this.daysForTasks = const [],
     this.selectedDate,
     this.dateForSwiping,
@@ -77,6 +79,7 @@ class RemindersState {
     NotificationsBefore? fromLastSession,
     TaskModel? taskModel,
     List<TaskModel>? myTasks,
+    List<MedicineModel>? myMedicines,
     bool? isLoading,
   }) {
     return RemindersState(
@@ -108,6 +111,7 @@ class RemindersState {
       sessionForSelectingDateForTask:
           sessionForSelectingDateForTask ?? this.sessionForSelectingDateForTask,
       myTasks: myTasks ?? this.myTasks,
+      myMedicines: myMedicines ?? this.myMedicines,
       isLoading: isLoading ?? this.isLoading,
     );
   }
@@ -134,6 +138,7 @@ class RemindersState {
       taskModel: null,
       sessionForSelectingDateForTask: 0,
       myTasks: const [],
+      myMedicines: const [],
       isLoading: true,
     );
   }

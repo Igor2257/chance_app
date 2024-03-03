@@ -1,3 +1,4 @@
+import 'package:chance_app/ux/model/hive_type_id.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
 
@@ -5,7 +6,7 @@ part 'me_user.freezed.dart';
 part 'me_user.g.dart';
 
 @freezed
-@HiveType(typeId: 1)
+@HiveType(typeId: HiveTypeId.meUser)
 class MeUser with _$MeUser {
   factory MeUser({
     @HiveField(0) required String id,

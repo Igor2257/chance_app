@@ -36,7 +36,7 @@ import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/internet_connection_stream.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
-import 'package:chance_app/ux/model/tasks_model.dart';
+import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -61,6 +61,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
       name: "chance-bab22", options: DefaultFirebaseOptions.currentPlatform);
+
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
@@ -180,79 +181,79 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                       children: [
                         Expanded(
                           child: KeyedSubtree(
-                              key: key,
-                              child: SizedBox(
-                                  width: size.width,
-                                  height: size.height,
-                                  child: MaterialApp(
-                                    title: 'Flutter Demo',
-                                    debugShowCheckedModeBanner: false,
-                                    theme: ThemeData(
-                                      scaffoldBackgroundColor: beigeBG,
-                                      dialogBackgroundColor: beigeBG,
-                                      dialogTheme: DialogTheme(
-                                          backgroundColor: beigeBG,
-                                          surfaceTintColor: beigeBG),
-                                      colorScheme: ColorScheme.fromSeed(
-                                          seedColor: primary400),
-                                      useMaterial3: true,
-                                    ),
-                                    supportedLocales: const [
-                                      Locale('en'),
-                                      Locale('uk'),
-                                      Locale('ru'),
-                                    ],
-                                    localizationsDelegates: const [
-                                      GlobalWidgetsLocalizations.delegate,
-                                      GlobalCupertinoLocalizations.delegate,
-                                      GlobalMaterialLocalizations.delegate,
-                                    ],
-                                    initialRoute: widget.route,
-                                    routes: {
-                                      "/": (context) => const MainPage(),
-                                      "/signinup": (context) =>
-                                          const SignInUpPage(),
-                                      "/registration": (context) =>
-                                          const RegistrationPage(),
-                                      "/login": (context) => const LoginPage(),
-                                      "/enter_code": (context) =>
-                                          const EnterCodeForRegister(),
-                                      "/subscription_page": (context) =>
-                                          const SubscriptionPage(),
-                                      "/reminders": (context) =>
-                                          const RemindersPage(),
-                                      "/date_picker_for_tasks": (context) =>
-                                          const CalendarTaskPage(),
-                                      "/add_medicine": (context) =>
-                                          BlocProvider(
-                                            create: (context) =>
-                                                AddMedicineBloc(),
-                                            child: const AddMedicinePage(),
-                                          ),
-                                      "/reset_password": (context) =>
-                                          const ResetPassword(),
-                                      "/tasks_for_today": (context) =>
-                                          const TasksForToday(),
-                                      "/menu": (context) => const MenuPage(),
-                                      "/sos": (context) => const MainPageSos(),
-                                      "/add_contact": (context) =>
-                                          const AddContactScreen(),
-                                      "/add_group": (context) =>
-                                          const AddGroupScreen(),
-                                      "/onboarding_page": (context) =>
-                                          const OnboardingPage(),
-                                      "/onboarding_tutorial": (context) =>
-                                          const OnboardingTutorial(),
-                                      "/delete_contact_sos": (context) =>
-                                          const DeleteContactsPage(),
-                                      "/my_information": (context) =>
-                                          const MyInformation(),
-                                      "/replace_contact_sos": (context) =>
-                                          const ReplaceContactSosScreen(),
-                                      "/navigation_page": (context) =>
-                                          const NavigationPage(),
-                                    },
-                                  ))),
+                            key: key,
+                            child: SizedBox(
+                              width: size.width,
+                              height: size.height,
+                              child: MaterialApp(
+                                title: 'Flutter Demo',
+                                debugShowCheckedModeBanner: false,
+                                theme: ThemeData(
+                                  scaffoldBackgroundColor: beigeBG,
+                                  dialogBackgroundColor: beigeBG,
+                                  dialogTheme: DialogTheme(
+                                      backgroundColor: beigeBG,
+                                      surfaceTintColor: beigeBG),
+                                  colorScheme: ColorScheme.fromSeed(
+                                      seedColor: primary400),
+                                  useMaterial3: true,
+                                ),
+                                supportedLocales: const [
+                                  Locale('en'),
+                                  Locale('uk'),
+                                  Locale('ru'),
+                                ],
+                                localizationsDelegates: const [
+                                  GlobalWidgetsLocalizations.delegate,
+                                  GlobalCupertinoLocalizations.delegate,
+                                  GlobalMaterialLocalizations.delegate,
+                                ],
+                                initialRoute: widget.route,
+                                routes: {
+                                  "/": (context) => const MainPage(),
+                                  "/signinup": (context) =>
+                                      const SignInUpPage(),
+                                  "/registration": (context) =>
+                                      const RegistrationPage(),
+                                  "/login": (context) => const LoginPage(),
+                                  "/enter_code": (context) =>
+                                      const EnterCodeForRegister(),
+                                  "/subscription_page": (context) =>
+                                      const SubscriptionPage(),
+                                  "/reminders": (context) =>
+                                      const RemindersPage(),
+                                  "/date_picker_for_tasks": (context) =>
+                                      const CalendarTaskPage(),
+                                  "/add_medicine": (context) => BlocProvider(
+                                        create: (context) => AddMedicineBloc(),
+                                        child: const AddMedicinePage(),
+                                      ),
+                                  "/reset_password": (context) =>
+                                      const ResetPassword(),
+                                  "/tasks_for_today": (context) =>
+                                      const TasksForToday(),
+                                  "/menu": (context) => const MenuPage(),
+                                  "/sos": (context) => const MainPageSos(),
+                                  "/add_contact": (context) =>
+                                      const AddContactScreen(),
+                                  "/add_group": (context) =>
+                                      const AddGroupScreen(),
+                                  "/onboarding_page": (context) =>
+                                      const OnboardingPage(),
+                                  "/onboarding_tutorial": (context) =>
+                                      const OnboardingTutorial(),
+                                  "/delete_contact_sos": (context) =>
+                                      const DeleteContactsPage(),
+                                  "/my_information": (context) =>
+                                      const MyInformation(),
+                                  "/replace_contact_sos": (context) =>
+                                      const ReplaceContactSosScreen(),
+                                  "/navigation_page": (context) =>
+                                      const NavigationPage(),
+                                },
+                              ),
+                            ),
+                          ),
                         ),
                         if (InternetConnectionStream.showInternetConnection)
                           Container(
@@ -466,10 +467,10 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 }
 
-Box? userBox;
-Box? tasksBox;
-Box? medicineBox;
-Box? savedAddressesBox;
+Box<MeUser>? userBox;
+Box<TaskModel>? tasksBox;
+Box<MedicineModel>? medicineBox;
+Box<PickResult>? savedAddressesBox;
 
 Future<bool> _initBoxes() async {
   final documentsDirectory = await getApplicationDocumentsDirectory();

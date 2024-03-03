@@ -12,11 +12,10 @@ class TasksSheets extends StatelessWidget {
     return BlocBuilder<RemindersBloc, RemindersState>(
       builder: (context, state) {
         return SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -24,21 +23,11 @@ class TasksSheets extends StatelessWidget {
                     "Що потрібно зробити?",
                     style: TextStyle(color: primaryText, fontSize: 22),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const SizedBox(
-                      width: 44,
-                      height: 44,
-                      child: Icon(Icons.close),
-                    ),
-                  )
+                  const CloseButton(),
                 ],
               ),
               const SizedBox(height: 20),
               pages(state),
-              const SizedBox(height: 20),
             ],
           ),
         );

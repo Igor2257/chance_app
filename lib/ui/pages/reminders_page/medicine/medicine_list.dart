@@ -1,46 +1,93 @@
-import 'package:chance_app/ui/pages/reminders_page/medicine/components/medicine_item.dart';
-import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
+import 'dart:collection';
+
+import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/pages/reminders_page/medicine/medicine_item.dart';
+import 'package:chance_app/ux/enum/medicine_type.dart';
+import 'package:chance_app/ux/enum/periodicity.dart';
+import 'package:chance_app/ux/model/medicine_model.dart';
+import 'package:cupertino_listview/cupertino_listview.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MedicineList extends StatefulWidget {
-  const MedicineList({super.key});
+class MedicineList extends StatelessWidget {
+  const MedicineList(
+    this.items, {
+    super.key,
+  });
 
-  @override
-  State<MedicineList> createState() => _MedicineListState();
-}
+  final List<MedicineModel> items;
 
-class _MedicineListState extends State<MedicineList> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RemindersBloc, RemindersState>(
-        builder: (context, state) {
-      //List<TaskModel> myTasks = List.from(state.myTasks);
-      //if (myTasks.isEmpty) {
-      //  return const Text(
-      //    "Додайте завдання",
-      //    style: TextStyle(fontSize: 24),
-      //  );
-      //}
-      List myMedicine = [];
-      if (myMedicine.isEmpty) {
-        return const Padding(
-          padding: EdgeInsets.all(16.0),
+    // TODO: delete and use read data
+    final items = List.generate(
+      3,
+      (index) => MedicineModel(
+        reminderIds: [],
+        name: 'Бісопролол',
+        type: MedicineType.pill,
+        periodicity: Periodicity.everyDay,
+        startDate: DateTime.now(),
+        doses: {
+          480: 1,
+          630: 2,
+          945: 1,
+        },
+      ),
+    );
+
+    if (items.isEmpty) return _emptyListPlaceholder();
+
+    final theme = Theme.of(context);
+    final groupedItems = SplayTreeMap<int, List<MedicineModel>>();
+
+    for (final item in items) {
+      for (final time in item.doses.keys) {
+        if (!groupedItems.containsKey(time)) groupedItems[time] = [];
+        groupedItems[time]!.add(item);
+      }
+    }
+
+    return CupertinoListView.builder(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      sectionCount: groupedItems.length,
+      itemInSectionCount: (i) => groupedItems.values.elementAt(i).length,
+      sectionBuilder: (context, sectionPath, _) {
+        final timeOffset = groupedItems.keys.elementAt(sectionPath.section);
+        final time = timeOffset.toTimeOfDay();
+        return Container(
+          color: theme.scaffoldBackgroundColor,
+          width: double.infinity,
           child: Text(
-            "Додайте нагадування про прийом ліків",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 24),
+            [
+              time.hour.toString().padLeft(2, "0"),
+              time.minute.toString().padLeft(2, "0"),
+            ].join(":"),
+            style: TextStyle(fontSize: 32, color: primaryText),
           ),
         );
-      }
+      },
+      childBuilder: (context, indexPath) {
+        final medicine = items[indexPath.child];
+        final timeOffset = groupedItems.keys.elementAt(indexPath.section);
+        return MedicineItem(
+          medicine,
+          time: timeOffset.toTimeOfDay(),
+          onTap: () {},
+        );
+      },
+      separatorBuilder: (context, indexPath) => const SizedBox(height: 4),
+    );
+  }
 
-      return ListView.builder(
-          itemCount: myMedicine.length,
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemBuilder: (context, position) {
-            return const MedicineItem();
-          });
-    });
+  Widget _emptyListPlaceholder() {
+    return const Padding(
+      padding: EdgeInsets.all(16),
+      child: Text(
+        "Додайте нагадування про прийом ліків",
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 24),
+      ),
+    );
   }
 }
