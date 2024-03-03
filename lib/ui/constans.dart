@@ -40,7 +40,7 @@ Color red1000 = const Color(0xff960000),
 
 Color background = const Color(0xffFFFDFC);
 
-const kDefaultAndroidIcon = "mipmap/ic_launcher";
+const kDefaultAndroidIcon = "ic_stat_onesignal_default";
 
 String getWeekdayName(int weekday) {
   switch (weekday) {
@@ -111,4 +111,3 @@ const errors400 = {
   "408": "Таймаут запиту",
   "429": "Забагато запитів"
 };
-
