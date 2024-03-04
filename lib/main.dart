@@ -257,10 +257,10 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                         ),
                         if (InternetConnectionStream.showInternetConnection)
                           Container(
-                              color: beigeBG,
-                              child:SafeArea(
-                                top: false,
-                                child: Container(
+                            color: beigeBG,
+                            child: SafeArea(
+                              top: false,
+                              child: Container(
                                 decoration: BoxDecoration(
                                     color: InternetConnectionStream
                                             .isUserHaveInternetConnection
@@ -285,8 +285,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                               .isUserHaveInternetConnection
                                           ? "З'єднання відновлено"
                                           : "Немає з'єднання",
-                                      style:
-                                          TextStyle(fontSize: 16, color: primary50),
+                                      style: TextStyle(
+                                          fontSize: 16, color: primary50),
                                     ),
                                   ],
                                 ),
@@ -327,7 +327,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                           height: 30,
                                         ),
                                         Text(
-                                          "У вас є не синхронізовані дані з сервером. Бажаєте відправити ваші данні на сервер чи синхронізувати ваші дані із сервером?",
+                                          "У вас є не синхронізовані дані з сервером. Бажаєте відправити ваші дані на сервер чи синхронізувати ваші дані із сервером?",
                                           textAlign: TextAlign.justify,
                                           style: TextStyle(
                                               fontSize: 16, color: primaryText),
