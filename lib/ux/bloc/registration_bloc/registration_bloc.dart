@@ -11,7 +11,7 @@ part 'registration_event.dart';
 part 'registration_state.dart';
 
 class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
-  RegistrationBloc() : super(RegistrationState()) {
+  RegistrationBloc() : super(const RegistrationState()) {
     on<LoadData>(_onLoadData);
     on<SaveFirstName>(_onSaveFirstName);
     on<SaveLastName>(_onSaveLastName);
@@ -337,7 +337,6 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     if (text.isEmpty) {
       return 'Невірний формат номеру телефону';
     }
-    print("text $text");
     if (!RegExp(r'^\+380\d{9}$').hasMatch(text)) {
       return 'Невірний формат номеру телефону';
     }

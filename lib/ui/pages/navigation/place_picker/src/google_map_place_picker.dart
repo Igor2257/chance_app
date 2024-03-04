@@ -41,7 +41,7 @@ typedef PinBuilder = Widget Function(
 
 class GoogleMapPlacePicker extends StatefulWidget {
   const GoogleMapPlacePicker({
-    Key? key,
+    super.key,
     required this.initialTarget,
     required this.appBarKey,
     this.selectedPlaceWidgetBuilder,
@@ -67,7 +67,7 @@ class GoogleMapPlacePicker extends StatefulWidget {
     this.outsideOfPickAreaText,
     this.zoomGesturesEnabled = true,
     this.fullMotion = false,
-  }) : super(key: key);
+  });
 
   final LatLng initialTarget;
   final GlobalKey appBarKey;

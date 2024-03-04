@@ -38,10 +38,10 @@ class _AnimatedPinState extends State<AnimatedPin>
 
 class JumpingContainer extends AnimatedWidget {
   const JumpingContainer({
-    Key? key,
+    super.key,
     required AnimationController controller,
     this.child,
-  }) : super(key: key, listenable: controller);
+  }) : super(listenable: controller);
 
   final Widget? child;
 

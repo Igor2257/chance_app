@@ -8,13 +8,13 @@ class LabeledTextField extends StatefulWidget {
   final bool isPhone;
 
   const LabeledTextField({
-    Key? key,
+    super.key,
     required this.label,
     required this.hintText,
     required this.isPhone,
     required this.controller,
     required Null Function(dynamic value) onChanged,
-  }) : super(key: key);
+  });
 
   @override
   LabeledTextFieldState createState() => LabeledTextFieldState();

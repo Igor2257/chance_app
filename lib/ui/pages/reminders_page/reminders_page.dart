@@ -50,6 +50,8 @@ class _RemindersPageState extends State<RemindersPage> {
             final result =
                 await Navigator.of(context).pushNamed("/add_medicine");
             if (result is MedicineModel && mounted) {
+              BlocProvider.of<RemindersBloc>(context)
+                  .add(SaveMedicine(medicineModel: result));
               final addMore = await showModalBottomSheet<bool>(
                 context: context,
                 backgroundColor: beige100,

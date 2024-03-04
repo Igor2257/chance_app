@@ -13,7 +13,7 @@ class _AddWardState extends State<AddWard> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Додати підопічного"),
+        title: const Text("Додати підопічного"),
       ),
 
     );

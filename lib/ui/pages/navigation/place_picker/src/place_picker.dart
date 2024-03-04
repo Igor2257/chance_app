@@ -26,7 +26,7 @@ enum SearchingState { Idle, Searching }
 
 class PlacePicker extends StatefulWidget {
   const PlacePicker({
-    Key? key,
+    super.key,
     required this.apiKey,
     this.onPlacePicked,
     required this.initialPosition,
@@ -72,7 +72,7 @@ class PlacePicker extends StatefulWidget {
     this.onCameraIdle,
     this.onMapTypeChanged,
     this.zoomGesturesEnabled = true,
-  }) : super(key: key);
+  });
 
   final String apiKey;
 

@@ -9,7 +9,7 @@ part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc() : super(LoginState()) {
+  LoginBloc() : super(const LoginState()) {
     on<SaveEmail>(_onSaveEmail);
     on<SavePassword>(_onSavePassword);
     on<ValidateField>(_onValidateField);

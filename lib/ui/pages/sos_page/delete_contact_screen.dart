@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DeleteContactsPage extends StatefulWidget {
-  const DeleteContactsPage({Key? key}) : super(key: key);
+  const DeleteContactsPage({super.key});
 
   @override
   State<DeleteContactsPage> createState() => _DeleteContactsPageState();
@@ -131,13 +131,13 @@ class ContainerButtonWithCheckbox extends StatefulWidget {
   final SosContactModel contactModel;
 
   const ContainerButtonWithCheckbox({
-    Key? key,
+    super.key,
     required this.text,
     required this.isSelected,
     required this.isEdit,
     required this.contactModel,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<ContainerButtonWithCheckbox> createState() =>

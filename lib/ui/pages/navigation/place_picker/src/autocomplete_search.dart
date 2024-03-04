@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 class AutoCompleteSearch extends StatefulWidget {
   const AutoCompleteSearch({
-    Key? key,
+    super.key,
     required this.sessionToken,
     required this.onPicked,
     required this.appBarKey,
@@ -36,7 +36,7 @@ class AutoCompleteSearch extends StatefulWidget {
     this.onTapCancel,
     this.textEditingController,
     this.onTap, this.focusNode,
-  }) : super(key: key);
+  });
 
   final String? sessionToken;
   final String? hintText;

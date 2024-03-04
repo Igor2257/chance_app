@@ -3,7 +3,7 @@ import 'package:chance_app/ui/pages/reminders_page/components/labeled_text_field
 import 'package:flutter/material.dart';
 
 class AddGroupScreen extends StatefulWidget {
-  const AddGroupScreen({Key? key}) : super(key: key);
+  const AddGroupScreen({super.key});
 
   @override
   State<AddGroupScreen> createState() => _AddGroupScreenState();

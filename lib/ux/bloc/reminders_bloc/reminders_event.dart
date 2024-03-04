@@ -99,3 +99,18 @@ class SaveTask extends RemindersEvent {
 
   SaveTask({required this.taskModel});
 }
+class SaveMedicine extends RemindersEvent {
+  final MedicineModel medicineModel;
+
+  SaveMedicine({required this.medicineModel});
+}
+class UpdateMedicine extends RemindersEvent {
+  final MedicineModel medicineModel;
+
+  UpdateMedicine({required this.medicineModel});
+}
+class DeleteMedicine extends RemindersEvent {
+  final String id;
+
+  DeleteMedicine({required this.id});
+}

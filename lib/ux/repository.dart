@@ -686,6 +686,10 @@ class Repository {
     await tasksBox!.clear();
   }
 
+  Future clearMedicines() async {
+    await medicineBox!.clear();
+  }
+
   Future addTask(TaskModel taskModel) async {
     await tasksBox!.put(taskModel.id, taskModel);
   }
@@ -832,15 +836,209 @@ class Repository {
     return latLng;
   }
 
-//Future addMedicine(MedicineModel medicineModel) async {
-//  await medicineBox!.put(medicineModel.id, medicineModel);
-//}
+  Future<List<MedicineModel>> updateLocalMedicines({bool? forcePush}) async {
+    List<MedicineModel> medicines = [];
 
-//Future updateMedicine(MedicineModel medicineModel) async {
-//  await medicineBox!.put(medicineModel.id, medicineModel);
-//}
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      medicines =
+          List.from(myMedicines.where((element) => element.isRemoved == false));
+    } else {
+      if ((forcePush != null && forcePush) || !checkIsAnyTasksNotSent()) {
+        await loadMedicines().then((value) async {
+          await clearMedicines().whenComplete(() {
+            medicines = value;
 
-//Future deleteMedicine(String id) async {
-//  await medicineBox!.delete(id);
-//}
+            for (var medicine in medicines) {
+              addMedicine(medicine);
+            }
+          });
+        });
+      }
+    }
+    return medicines;
+  }
+
+  Future<List<MedicineModel>> loadMedicines() async {
+    List<MedicineModel> medicines = [];
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      Fluttertoast.showToast(
+          msg: "Немає підключення до інтернету",
+          toastLength: Toast.LENGTH_LONG);
+    } else {
+      try {
+        var url = Uri.parse('$apiUrl/medicine');
+        final cookie = await getCookie();
+        await http.get(
+          url,
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Cookie': cookie.toString(),
+          },
+        ).then((value) {
+          if (value.statusCode > 199 && value.statusCode < 300) {
+            List<dynamic> list = jsonDecode(value.body);
+
+            for (int i = 0; i < list.length; i++) {
+              MedicineModel medicine = MedicineModel.fromJson(list[i]);
+              medicine = medicine.copyWith(isSentToDB: true);
+              medicines.add(medicine);
+            }
+          } else {
+            String error = jsonDecode(value.body)["message"]
+                .toString()
+                .replaceAll("[", "")
+                .replaceAll("]", "");
+            Fluttertoast.showToast(msg: error, toastLength: Toast.LENGTH_LONG);
+          }
+        });
+      } catch (error) {
+        Fluttertoast.showToast(
+            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+      }
+    }
+    return medicines;
+  }
+
+  Future<String?> saveMedicine(MedicineModel medicineModel) async {
+    String? error;
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      error = "Немає підключення до інтернету";
+      await addMedicine(medicineModel);
+    } else {
+      try {
+        var url = Uri.parse('$apiUrl/medicine');
+        final cookie = await getCookie();
+        String date = medicineModel.startDate!.toUtc().toString();
+        Map<String, dynamic> map = medicineModel.toJson();
+        map["startDate"] = date;
+        await http
+            .post(
+          url,
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Cookie': cookie.toString(),
+          },
+          body: jsonEncode(map),
+        )
+            .then((value) async {
+          if (!(value.statusCode > 199 && value.statusCode < 300)) {
+            error = jsonDecode(value.body)["message"]
+                .toString()
+                .replaceAll("[", "")
+                .replaceAll("]", "");
+          } else {
+            await await addMedicine(medicineModel).whenComplete(() async {
+              await setIsSentInLocalMedicine(true,
+                  medicineModel: medicineModel);
+            });
+          }
+        });
+      } catch (e) {
+        error = error.toString();
+      }
+    }
+    if (error != null) {
+      Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+    }
+    return error;
+  }
+
+  Future setIsSentInLocalMedicine(bool isSentToDB,
+      {String? id, MedicineModel? medicineModel}) async {
+    if (id != null) {
+      MedicineModel medicineModel =
+          myMedicines.firstWhere((element) => element.id == id);
+      medicineModel = medicineModel.copyWith(isSentToDB: isSentToDB);
+      await medicineBox!.put(medicineModel.id, medicineModel);
+    }
+    if (medicineModel != null) {
+      medicineModel = medicineModel.copyWith(isSentToDB: isSentToDB);
+      await medicineBox!.put(medicineModel.id, medicineModel);
+    }
+  }
+
+  Future<String?> updateMedicine(MedicineModel medicineModel) async {
+    String? error;
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      //Fluttertoast.showToast(
+      //    msg: "Немає підключення до інтернету",
+      //    toastLength: Toast.LENGTH_LONG);
+      //error = "Немає підключення до інтернету";
+      await updateLocalMedicine(medicineModel);
+    } else {
+      try {
+        var url = Uri.parse('$apiUrl/medicine/${medicineModel.id}');
+        final cookie = await getCookie();
+        String? newDate = medicineModel.startDate.toUtc().toString();
+        Map<String, dynamic> map = medicineModel.toJson();
+        map["startDate"] = newDate;
+        await http
+            .patch(url,
+                headers: <String, String>{
+                  'Content-Type': 'application/json',
+                  'Cookie': cookie.toString(),
+                },
+                body: jsonEncode(map))
+            .then((value) async {
+          if (!(value.statusCode > 199 && value.statusCode < 300)) {
+            error = jsonDecode(value.body)["message"]
+                .toString()
+                .replaceAll("[", "")
+                .replaceAll("]", "");
+            Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+          } else {
+            await setIsSentInLocalMedicine(medicineModel: medicineModel, true);
+          }
+        });
+      } catch (error) {
+        Fluttertoast.showToast(
+            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+      }
+    }
+    return error;
+  }
+
+  Future<String?> removeMedicine(String medicineId) async {
+    String? error;
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      //Fluttertoast.showToast(
+      //    msg: "Немає підключення до інтернету",
+      //    toastLength: Toast.LENGTH_LONG);
+      //error = "Немає підключення до інтернету";
+      removeLocalMedicine(medicineId);
+    } else {
+      try {
+        var url = Uri.parse('$apiUrl/medicine/$medicineId');
+        final cookie = await getCookie();
+        await http.delete(url, headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Cookie': cookie.toString(),
+        }).then((value) {
+          if (!(value.statusCode > 199 && value.statusCode < 300)) {
+            error = jsonDecode(value.body)["message"]
+                .toString()
+                .replaceAll("[", "")
+                .replaceAll("]", "");
+            Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+          }
+        });
+      } catch (error) {
+        Fluttertoast.showToast(
+            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+      }
+    }
+    return error;
+  }
+
+  Future addMedicine(MedicineModel medicineModel) async {
+    await medicineBox!.put(medicineModel.id, medicineModel);
+  }
+
+  Future updateLocalMedicine(MedicineModel medicineModel) async {
+    await medicineBox!.put(medicineModel.id, medicineModel);
+  }
+
+  Future removeLocalMedicine(String id) async {
+    await medicineBox!.delete(id);
+  }
 }

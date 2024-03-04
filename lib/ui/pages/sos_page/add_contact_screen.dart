@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddContactScreen extends StatefulWidget {
-  const AddContactScreen({Key? key}) : super(key: key);
+  const AddContactScreen({super.key});
 
   @override
   State<AddContactScreen> createState() => _AddContactScreenState();

@@ -17,15 +17,6 @@ class CustomNavigationBarPaint extends CustomPainter {
     path.lineTo(0, size.height);
     path.lineTo(0, 0);
 
-    // Закругляем углы
-    RRect rRect = RRect.fromRectAndCorners(
-      Rect.fromPoints(const Offset(0, 0), Offset(size.width, size.height)),
-      topLeft: const Radius.circular(20.0),
-      topRight: const Radius.circular(20.0),
-      bottomLeft: const Radius.circular(20.0),
-      bottomRight: const Radius.circular(20.0),
-    );
-
 
     canvas.drawShadow(path, Colors.black, 5, true);
     canvas.drawPath(path, paint);
