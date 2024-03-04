@@ -10,10 +10,11 @@ import GoogleMaps
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
 
+    GMSServices.provideAPIKey("AIzaSyDmTTd3yiTiyosQb_CYX2Ync20v-xiynYg")
     if #available(iOS 10.0, *) {
         UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
     }
-    GMSServices.provideAPIKey("AIzaSyDmTTd3yiTiyosQb_CYX2Ync20v-xiynYg")
+    UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(60*30))
 
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

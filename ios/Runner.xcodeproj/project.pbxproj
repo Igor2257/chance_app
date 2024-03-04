@@ -1,5 +1,10 @@
 // !$*UTF8*$!
 {
+	SystemCapabilities = {
+    	com.apple.BackgroundModes = {
+    		enabled = 1;
+    	};
+    };
 	archiveVersion = 1;
 	classes = {
 	};
@@ -164,7 +169,6 @@
 				B64E6146E01A9FA0DD165568 /* Pods-RunnerTests.release.xcconfig */,
 				A5CD2C07125821ACF02818ED /* Pods-RunnerTests.profile.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

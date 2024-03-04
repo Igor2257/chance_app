@@ -1,4 +1,3 @@
-// import 'package:chance_app/ux/enum/day_periodicity.dart';
 import 'dart:io';
 
 import 'package:chance_app/ux/enum/instruction.dart';
@@ -145,15 +144,15 @@ class AddMedicineBloc extends Bloc<AddMedicineEvent, AddMedicineState> {
           ),
         );
 
-      case Periodicity.inADay:
-        reminderDays = List.generate(
-          DateTime.daysPerWeek,
-          (i) => DateTime(
-            startDate.year,
-            startDate.month,
-            startDate.day + i * 2,
-          ),
-        );
+      // case Periodicity.inADay:
+      //   reminderDays = List.generate(
+      //     DateTime.daysPerWeek,
+      //     (i) => DateTime(
+      //       startDate.year,
+      //       startDate.month,
+      //       startDate.day + i * 2,
+      //     ),
+      //   );
 
       case Periodicity.certainDays:
         reminderDays = [

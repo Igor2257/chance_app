@@ -86,6 +86,7 @@ class _RemindersPageState extends State<RemindersPage> {
       backgroundColor: beigeBG,
       appBar: AppBar(
         centerTitle: true,
+        scrolledUnderElevation: 0,
         titleTextStyle: TextStyle(fontSize: 22, color: primaryText),
         title: const Text("Нагадування"),
         leading: BackButton(

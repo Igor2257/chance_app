@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chance_app/firebase_options.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/add_medicine_page/add_medicine_page.dart';
@@ -57,10 +59,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest_all.dart';
 import 'package:timezone/timezone.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      name: "chance-bab22", options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
@@ -96,7 +97,7 @@ void main() async {
   initializeTimeZones();
   setLocalLocation(getLocation(currentTimeZone));
 
-  await _initBoxes().then((value) async {
+  await initHiveBoxes().then((value) async {
     Repository repository = Repository();
     if (await repository.isUserEnteredEarlier()) {
       await repository.getUser().then((user) async {
@@ -130,7 +131,6 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Key key = UniqueKey();
-  List<String> toasts = [];
 
   late InternetConnectionStream internetConnectionStream;
 
@@ -472,7 +472,7 @@ Box<TaskModel>? tasksBox;
 Box<MedicineModel>? medicineBox;
 Box<PickResult>? savedAddressesBox;
 
-Future<bool> _initBoxes() async {
+Future<bool> initHiveBoxes() async {
   final documentsDirectory = await getApplicationDocumentsDirectory();
   Hive.init(documentsDirectory.path);
   //await Repository().deleteCookie();
@@ -488,10 +488,13 @@ Future<bool> _initBoxes() async {
   Hive.registerAdapter(AddressComponentAdapter());
   Hive.registerAdapter(BoundsAdapter());
   Hive.registerAdapter(PickResultAdapter());
-  userBox = await Hive.openBox<MeUser>("user");
-  tasksBox = await Hive.openBox<TaskModel>("myTasks");
-  medicineBox = await Hive.openBox<MedicineModel>("myMedicines");
-  savedAddressesBox = await Hive.openBox<PickResult>("savedAddresses");
-
-  return true;
+  try {
+    userBox = await Hive.openBox<MeUser>("user");
+    tasksBox = await Hive.openBox<TaskModel>("myTasks");
+    medicineBox = await Hive.openBox<MedicineModel>("myMedicines");
+    savedAddressesBox = await Hive.openBox<PickResult>("savedAddresses");
+    return true;
+  } catch (_) {
+    return false;
+  }
 }

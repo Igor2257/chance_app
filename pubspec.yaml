@@ -73,6 +73,7 @@ dependencies:
   uuid: ^4.3.3
   package_info_plus: ^5.0.1
   cupertino_listview: ^2.0.0
+  workmanager: ^0.5.2
 
 
   # The following adds the Cupertino Icons font to your application.

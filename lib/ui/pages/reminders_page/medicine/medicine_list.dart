@@ -70,13 +70,15 @@ class MedicineList extends StatelessWidget {
       childBuilder: (context, indexPath) {
         final medicine = items[indexPath.child];
         final timeOffset = groupedItems.keys.elementAt(indexPath.section);
-        return MedicineItem(
-          medicine,
-          time: timeOffset.toTimeOfDay(),
-          onTap: () {},
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 4),
+          child: MedicineItem(
+            medicine,
+            time: timeOffset.toTimeOfDay(),
+            onTap: () {},
+          ),
         );
       },
-      separatorBuilder: (context, indexPath) => const SizedBox(height: 4),
     );
   }
 

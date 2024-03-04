@@ -135,7 +135,6 @@ const _$MedicineTypeEnumMap = {
 
 const _$PeriodicityEnumMap = {
   Periodicity.everyDay: 'everyDay',
-  Periodicity.inADay: 'inADay',
   Periodicity.certainDays: 'certainDays',
 };
 
