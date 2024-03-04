@@ -169,7 +169,7 @@ class __$$TaskModelImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$TaskModelImpl implements _TaskModel {
-  _$TaskModelImpl(
+  const _$TaskModelImpl(
       {@HiveField(0) this.id = "",
       @HiveField(1) this.message = "",
       @HiveField(2) this.date = null,
@@ -245,7 +245,7 @@ class _$TaskModelImpl implements _TaskModel {
 }
 
 abstract class _TaskModel implements TaskModel {
-  factory _TaskModel(
+  const factory _TaskModel(
       {@HiveField(0) final String id,
       @HiveField(1) final String message,
       @HiveField(2) final DateTime? date,

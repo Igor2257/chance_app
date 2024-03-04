@@ -8,7 +8,7 @@ part 'sos_contact_model.g.dart';
 @freezed
 @HiveType(typeId: HiveTypeId.sosContactModel)
 class SosContactModel with _$SosContactModel {
-  factory SosContactModel({
+  const factory SosContactModel({
     @HiveField(1) required String name,
     @HiveField(2) required String phone,
     @HiveField(3) @Default("") String? groupName,

@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:chance_app/main.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ux/enum/instruction.dart';
-import 'package:chance_app/ux/enum/periodicity.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -116,23 +115,7 @@ Future<void> _callbackDispatcher() async {
         if (hiveIsInitialized) {
           var notificationIdCounter = 4567; // must be a unique int value
           for (final medicine in medicineBox!.values) {
-            final startDay = DateUtils.dateOnly(medicine.startDate);
-            final hoursDiff = today.difference(startDay).inHours;
-            final isStarted = !hoursDiff.isNegative;
-
-            switch (medicine.periodicity) {
-              case Periodicity.everyDay:
-                if (!isStarted) continue;
-                break;
-              // case Periodicity.inADay:
-              //   final daysDiff = (hoursDiff / Duration.hoursPerDay).round();
-              //   if (!isStarted || daysDiff.isOdd) continue;
-              //   break;
-              case Periodicity.certainDays:
-                final isSelected = medicine.weekdays.contains(today.weekday);
-                if (!isStarted || !isSelected) continue;
-                break;
-            }
+            if (!medicine.hasRemindersAt(today)) continue;
 
             const androidNotificationsChannel = AndroidNotificationChannel(
               "myMedicines",

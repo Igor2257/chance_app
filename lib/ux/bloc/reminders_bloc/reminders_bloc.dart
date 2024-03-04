@@ -138,8 +138,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
             isLoading: false,
             myMedicines: medicines
                 .where((element) =>
-                    //DateUtils.isSameDay(element.date, now) &&
-                    element.isRemoved == false)
+                    element.hasRemindersAt(now) && element.isRemoved == false)
                 .toList()));
       });
     });
@@ -180,8 +179,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         days: dates,
         selectedDate: selectedDate,
         myMedicines: List.from(Repository().myMedicines.where((element) =>
-            // DateUtils.isSameDay(element.date, now) &&
-            element.isRemoved == false))));
+            element.hasRemindersAt(now) && element.isRemoved == false))));
   }
 
   FutureOr<void> _onChangeCalendarState(

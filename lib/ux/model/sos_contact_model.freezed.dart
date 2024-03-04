@@ -128,7 +128,7 @@ class __$$SosContactModelImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$SosContactModelImpl implements _SosContactModel {
-  _$SosContactModelImpl(
+  const _$SosContactModelImpl(
       {@HiveField(1) required this.name,
       @HiveField(2) required this.phone,
       @HiveField(3) this.groupName = ""});
@@ -183,7 +183,7 @@ class _$SosContactModelImpl implements _SosContactModel {
 }
 
 abstract class _SosContactModel implements SosContactModel {
-  factory _SosContactModel(
+  const factory _SosContactModel(
       {@HiveField(1) required final String name,
       @HiveField(2) required final String phone,
       @HiveField(3) final String? groupName}) = _$SosContactModelImpl;

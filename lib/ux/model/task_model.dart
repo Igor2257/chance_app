@@ -8,7 +8,7 @@ part 'task_model.g.dart';
 @freezed
 @HiveType(typeId: HiveTypeId.taskModel)
 class TaskModel with _$TaskModel {
-  factory TaskModel({
+  const factory TaskModel({
     @HiveField(0) @Default("") String id,
     @HiveField(1) @Default("") String message,
     @HiveField(2) @Default(null) DateTime? date,

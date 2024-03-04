@@ -209,7 +209,7 @@ class __$$MeUserImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$MeUserImpl implements _MeUser {
-  _$MeUserImpl(
+  const _$MeUserImpl(
       {@HiveField(0) required this.id,
       @HiveField(1) this.name = "",
       @HiveField(2) this.lastName = "",
@@ -304,7 +304,7 @@ class _$MeUserImpl implements _MeUser {
 }
 
 abstract class _MeUser implements MeUser {
-  factory _MeUser(
+  const factory _MeUser(
       {@HiveField(0) required final String id,
       @HiveField(1) final String name,
       @HiveField(2) final String lastName,

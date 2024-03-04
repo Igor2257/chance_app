@@ -2,7 +2,7 @@ import 'package:chance_app/ux/enum/instruction.dart';
 import 'package:chance_app/ux/enum/medicine_type.dart';
 import 'package:chance_app/ux/enum/periodicity.dart';
 import 'package:chance_app/ux/model/hive_type_id.dart';
-import 'package:flutter/material.dart' show TimeOfDay;
+import 'package:flutter/material.dart' show DateUtils, TimeOfDay;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
 
@@ -12,7 +12,7 @@ part 'medicine_model.g.dart';
 @freezed
 @HiveType(typeId: HiveTypeId.medicineModel)
 class MedicineModel with _$MedicineModel {
-  factory MedicineModel({
+  const factory MedicineModel({
     @HiveField(0) @Default("") String id,
     @HiveField(1) required List<int> reminderIds,
     @HiveField(2) required String name,
@@ -28,8 +28,25 @@ class MedicineModel with _$MedicineModel {
     @HiveField(13) @Default(false) bool isRemoved,
   }) = _MedicineModel;
 
+  const MedicineModel._();
+
   factory MedicineModel.fromJson(Map<String, dynamic> json) =>
       _$MedicineModelFromJson(json);
+
+  bool hasRemindersAt(DateTime dayDate) {
+    final currentDay = DateUtils.dateOnly(dayDate);
+    final startDay = DateUtils.dateOnly(startDate);
+    final hoursDiff = currentDay.difference(startDay).inHours;
+    final isStarted = !hoursDiff.isNegative;
+    switch (periodicity) {
+      case Periodicity.everyDay:
+        return isStarted;
+      // case Periodicity.inADay:
+      //   return isStarted && (hoursDiff / Duration.hoursPerDay).round().isEven;
+      case Periodicity.certainDays:
+        return isStarted && weekdays.contains(currentDay.weekday);
+    }
+  }
 }
 
 extension ToTimeOffset on TimeOfDay {

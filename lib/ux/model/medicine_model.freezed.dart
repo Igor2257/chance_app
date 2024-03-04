@@ -270,8 +270,8 @@ class __$$MedicineModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$MedicineModelImpl implements _MedicineModel {
-  _$MedicineModelImpl(
+class _$MedicineModelImpl extends _MedicineModel {
+  const _$MedicineModelImpl(
       {@HiveField(0) this.id = "",
       @HiveField(1) required final List<int> reminderIds,
       @HiveField(2) required this.name,
@@ -288,7 +288,8 @@ class _$MedicineModelImpl implements _MedicineModel {
       : _reminderIds = reminderIds,
         _weekdays = weekdays,
         _doses = doses,
-        _doneAt = doneAt;
+        _doneAt = doneAt,
+        super._();
 
   factory _$MedicineModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$MedicineModelImplFromJson(json);
@@ -431,8 +432,8 @@ class _$MedicineModelImpl implements _MedicineModel {
   }
 }
 
-abstract class _MedicineModel implements MedicineModel {
-  factory _MedicineModel(
+abstract class _MedicineModel extends MedicineModel {
+  const factory _MedicineModel(
       {@HiveField(0) final String id,
       @HiveField(1) required final List<int> reminderIds,
       @HiveField(2) required final String name,
@@ -446,6 +447,7 @@ abstract class _MedicineModel implements MedicineModel {
       @HiveField(11) final String userId,
       @HiveField(12) final bool isSentToDB,
       @HiveField(13) final bool isRemoved}) = _$MedicineModelImpl;
+  const _MedicineModel._() : super._();
 
   factory _MedicineModel.fromJson(Map<String, dynamic> json) =
       _$MedicineModelImpl.fromJson;

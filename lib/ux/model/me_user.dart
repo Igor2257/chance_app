@@ -8,7 +8,7 @@ part 'me_user.g.dart';
 @freezed
 @HiveType(typeId: HiveTypeId.meUser)
 class MeUser with _$MeUser {
-  factory MeUser({
+  const factory MeUser({
     @HiveField(0) required String id,
     @HiveField(1) @Default("") String name,
     @HiveField(2) @Default("") String lastName,
