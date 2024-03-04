@@ -35,6 +35,10 @@ import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
+import 'package:chance_app/ux/enum/day_periodicity.dart';
+import 'package:chance_app/ux/enum/instruction.dart';
+import 'package:chance_app/ux/enum/medicine_type.dart';
+import 'package:chance_app/ux/enum/periodicity.dart';
 import 'package:chance_app/ux/internet_connection_stream.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
@@ -488,6 +492,10 @@ Future<bool> initHiveBoxes() async {
   Hive.registerAdapter(AddressComponentAdapter());
   Hive.registerAdapter(BoundsAdapter());
   Hive.registerAdapter(PickResultAdapter());
+  Hive.registerAdapter(DayPeriodicityAdapter());
+  Hive.registerAdapter(InstructionAdapter());
+  Hive.registerAdapter(MedicineTypeAdapter());
+  Hive.registerAdapter(PeriodicityAdapter());
   try {
     userBox = await Hive.openBox<MeUser>("user");
     tasksBox = await Hive.openBox<TaskModel>("myTasks");

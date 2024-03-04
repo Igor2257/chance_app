@@ -1,13 +1,24 @@
 import 'package:chance_app/resources/medicine_icons.dart';
+import 'package:chance_app/ux/model/hive_type_id.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+part 'medicine_type.g.dart';
 
 @JsonEnum()
+@HiveType(typeId: HiveTypeId.medicineType)
 enum MedicineType {
+  @HiveField(0)
   pill,
+  @HiveField(1)
   injection,
+  @HiveField(2)
   solution,
+  @HiveField(3)
   drops,
+  @HiveField(4)
   powder,
+  @HiveField(5)
   other;
 
   String get svgIcon {
