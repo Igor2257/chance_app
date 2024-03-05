@@ -8,9 +8,9 @@ part 'sos_contacts_event.dart';
 
 class SosContactsBloc extends Bloc<SosContactsEvent, SosContactsState> {
   List<SosContactModel> contacts = [
-    SosContactModel(name: 'TestContact1', phone: '+380951234567'),
-    SosContactModel(name: 'TestContact2', phone: '+380954444444'),
-    SosContactModel(name: 'TestContact3', phone: '+380954445555'),
+    const SosContactModel(name: 'TestContact1', phone: '+380951234567'),
+    const SosContactModel(name: 'TestContact2', phone: '+380954444444'),
+    const SosContactModel(name: 'TestContact3', phone: '+380954445555'),
   ];
   SosContactsBloc() : super(SosContactsState()) {
     on<SaveContact>(_onSaveContact);

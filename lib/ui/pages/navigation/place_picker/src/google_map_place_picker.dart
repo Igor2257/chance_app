@@ -15,8 +15,8 @@ import 'package:chance_app/ui/pages/navigation/place_picker/src/models/location.
     as mylocation;
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/place_picker.dart';
+import 'package:chance_app/ux/hive_crum.dart';
 import 'package:chance_app/ux/model/me_user.dart';
-import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -115,7 +115,7 @@ class GoogleMapPlacePicker extends StatefulWidget {
 }
 
 class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
-  MeUser meUser = Repository().user!;
+  MeUser meUser = HiveCRUM().user!;
 
   _searchByCameraLocation(PlaceProvider provider) async {
     // We don't want to search location again if camera location is changed by zooming in/out.
@@ -547,7 +547,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
             GestureDetector(
               onTap: () async {
                 meUser = meUser.copyWith(mapType: 0);
-                await Repository()
+                await HiveCRUM()
                     .updateUser(meUser)
                     .whenComplete(() => setState(() {}));
               },
@@ -567,7 +567,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
             GestureDetector(
               onTap: () async {
                 meUser = meUser.copyWith(mapType: 1);
-                await Repository()
+                await HiveCRUM()
                     .updateUser(meUser)
                     .whenComplete(() => setState(() {}));
               },
@@ -587,7 +587,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
             GestureDetector(
               onTap: () async {
                 meUser = meUser.copyWith(mapType: 2);
-                await Repository()
+                await HiveCRUM()
                     .updateUser(meUser)
                     .whenComplete(() => setState(() {}));
               },

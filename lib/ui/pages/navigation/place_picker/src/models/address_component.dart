@@ -1,4 +1,5 @@
 
+import 'package:chance_app/ux/model/hive_type_id.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
 
@@ -7,7 +8,7 @@ part 'address_component.freezed.dart';
 part 'address_component.g.dart';
 
 @freezed
-@HiveType(typeId: 13)
+@HiveType(typeId: HiveTypeId.addressComponentModel)
 class AddressComponent with _$AddressComponent {
   factory AddressComponent({
     @HiveField(0) required List<String> types,

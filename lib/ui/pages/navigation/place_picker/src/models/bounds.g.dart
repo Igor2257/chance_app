@@ -8,7 +8,7 @@ part of 'bounds.dart';
 
 class BoundsAdapter extends TypeAdapter<Bounds> {
   @override
-  final int typeId = 11;
+  final int typeId = 12;
 
   @override
   Bounds read(BinaryReader reader) {

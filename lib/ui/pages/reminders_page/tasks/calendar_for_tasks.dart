@@ -1,6 +1,7 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/calendar.dart';
-import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
+import 'package:chance_app/ux/bloc/add_task_bloc/add_task_bloc.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,7 +11,7 @@ final DateTime now=DateTime.now();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return BlocBuilder<RemindersBloc, RemindersState>(
+    return BlocBuilder<AddTaskBloc, AddTaskState>(
         builder: (context, state) {
       List<Map<String, dynamic>>
           days = List.from(state.daysForTasks);
@@ -37,13 +38,13 @@ final DateTime now=DateTime.now();
                 const Spacer(),
                 IconButton(
                     onPressed: () {
-                      BlocProvider.of<RemindersBloc>(context)
+                      BlocProvider.of<AddTaskBloc>(context)
                           .add(ChangeMonthForTasks(sideSwipe: SideSwipe.left));
                     },
                     icon: Icon(Icons.arrow_back_ios, color: primaryText)),
                 IconButton(
                     onPressed: () {
-                      BlocProvider.of<RemindersBloc>(context)
+                      BlocProvider.of<AddTaskBloc>(context)
                           .add(ChangeMonthForTasks(sideSwipe: SideSwipe.right));
                     },
                     icon: Icon(Icons.arrow_forward_ios, color: primaryText)),
@@ -145,7 +146,7 @@ final DateTime now=DateTime.now();
                     }
                     return GestureDetector(
                       onTap: () {
-                        BlocProvider.of<RemindersBloc>(context)
+                        BlocProvider.of<AddTaskBloc>(context)
                             .add(SelectedDateForTasks(selectedDate: e));
                       },
                       child: Stack(

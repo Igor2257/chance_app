@@ -5,7 +5,9 @@ import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/calendar_for_tasks.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/custom_bottom_sheet_notification_picker.dart';
+import 'package:chance_app/ux/bloc/add_task_bloc/add_task_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
+
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +23,7 @@ class CalendarTaskPage extends StatefulWidget {
 class _CalendarTaskPageState extends State<CalendarTaskPage> {
   @override
   void initState() {
-    BlocProvider.of<RemindersBloc>(context).add(LoadDataForSelectDateForTasks());
+    BlocProvider.of<AddTaskBloc>(context).add(LoadDataForSelectDateForTasks());
     super.initState();
   }
 
@@ -30,7 +32,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return BlocBuilder<RemindersBloc, RemindersState>(
+    return BlocBuilder<AddTaskBloc, AddTaskState>(
         builder: (context, state) {
       DateTime? deadlineForTask = state.newDeadlineForTask;
       return Scaffold(
@@ -44,7 +46,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
           ),
           leading: IconButton(
               onPressed: () {
-                BlocProvider.of<RemindersBloc>(context)
+                BlocProvider.of<AddTaskBloc>(context)
                     .add(CancelAllDataNotificationBefore(session));
                 Navigator.of(context).pop();
               },
@@ -121,7 +123,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                                   actions: [
                                     GestureDetector(
                                       onTap: () {
-                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pop(true);
                                         BlocProvider.of<RemindersBloc>(context)
                                             .add(LoadData());
 
@@ -170,7 +172,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                           title: const Text("Термін виконання"),
                         );
                         if (dateTime != null && context.mounted) {
-                          BlocProvider.of<RemindersBloc>(context)
+                          BlocProvider.of<AddTaskBloc>(context)
                               .add(SaveDeadlineForTask(dateTime: dateTime));
                         }
                       },

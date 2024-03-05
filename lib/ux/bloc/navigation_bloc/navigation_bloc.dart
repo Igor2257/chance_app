@@ -13,7 +13,7 @@ part 'navigation_event.dart';
 part 'navigation_state.dart';
 
 class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
-  NavigationBloc() : super(NavigationState()) {
+  NavigationBloc() : super(const NavigationState()) {
     on<UpdateMarkers>(_onUpdateMarkers);
     on<UpdatePolyline>(_onUpdatePolyline);
     on<UpdateFirstPickResult>(_onUpdateFirstPickResult);

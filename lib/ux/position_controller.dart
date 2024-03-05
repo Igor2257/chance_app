@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -31,7 +31,9 @@ class PositionController {
                     : LocationAccuracy.best,
                 distanceFilter: 5))
         .listen((Position? position) async {
-          print("position: $position");
+      if (kDebugMode) {
+        print("position: $position");
+      }
       try {
         if (position != null) {
           if (_myPreviousPosition != null) {

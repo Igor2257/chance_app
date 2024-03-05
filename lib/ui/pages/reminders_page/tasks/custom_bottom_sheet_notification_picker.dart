@@ -1,7 +1,7 @@
 import 'package:bottom_picker/resources/context_extension.dart';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
+import 'package:chance_app/ux/bloc/add_task_bloc/add_task_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -54,7 +54,7 @@ class _CustomBottomSheetNotificationPickerState
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RemindersBloc, RemindersState>(
+    return BlocBuilder<AddTaskBloc, AddTaskState>(
         builder: (context, state) {
       NotificationsBefore notificationsBefore = state.newNotificationsBefore;
       final List<String> notifications = state.notifications;
@@ -80,7 +80,7 @@ class _CustomBottomSheetNotificationPickerState
                     border: Border.all(color: darkNeutral800),
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     onPress: () {
-                      BlocProvider.of<RemindersBloc>(context).add(
+                      BlocProvider.of<AddTaskBloc>(context).add(
                           SelectNotificationBefore(
                               notificationsBefore:
                                   NotificationsBefore.values[position],
@@ -110,7 +110,7 @@ class _CustomBottomSheetNotificationPickerState
             children: [
               GestureDetector(
                 onTap: () {
-                  BlocProvider.of<RemindersBloc>(context)
+                  BlocProvider.of<AddTaskBloc>(context)
                       .add(CancelNotificationBefore(session: session));
                   Navigator.of(context).pop();
                 },

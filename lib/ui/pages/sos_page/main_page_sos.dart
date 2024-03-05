@@ -90,7 +90,7 @@ class _MainPageSosState extends State<MainPageSos> {
               ContainerButton(
                 text: 'Служба екстренноЇ допомоги 112',
                 onPressed: () => _pushToCallScreen(
-                  SosContactModel(
+                  const SosContactModel(
                     name: 'Служба екстренноЇ допомоги 112',
                     phone: "112",
                   ),

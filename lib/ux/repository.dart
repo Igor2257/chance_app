@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:chance_app/main.dart';
 import 'package:chance_app/ui/pages/navigation/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
+import 'package:chance_app/ux/hive_crum.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/task_model.dart';
@@ -20,17 +21,6 @@ import 'package:http/http.dart' as http;
 class Repository {
   static const apiUrl = 'http://139.28.37.11:56565/stage/api';
 
-  List<TaskModel> get myTasks =>
-      tasksBox?.values.cast<TaskModel>().toList() ?? List.empty();
-
-  List<PickResult> get savedAddresses =>
-      savedAddressesBox?.values.cast<PickResult>().toList() ?? List.empty();
-
-  List<MedicineModel> get myMedicines =>
-      medicineBox?.values.cast<MedicineModel>().toList() ?? List.empty();
-
-  MeUser? get user =>
-      userBox!.get('user') != null ? userBox!.get('user') as MeUser : null;
 
   Future<String?> sendLoginData(String email, String password) async {
     String? error;
@@ -79,7 +69,7 @@ class Repository {
                   isConfirmed: map["isConfirmed"],
                   deviceId: map["deviceId"],
                 );
-                await addUser(meUser);
+                await HiveCRUM().addUser(meUser);
                 await FirebaseMessaging.instance.getToken().then((token) {
                   patchUserData(token: token);
                 });
@@ -369,15 +359,15 @@ class Repository {
     List<TaskModel> list = [];
 
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      list = List.from(myTasks.where((element) => element.isRemoved == false));
+      list = List.from(HiveCRUM().myTasks.where((element) => element.isRemoved == false));
     } else {
       if ((forcePush != null && forcePush) || !checkIsAnyTasksNotSent()) {
         await loadTasks().then((value) async {
-          await clearTasks().whenComplete(() {
+          await HiveCRUM().clearTasks().whenComplete(() {
             list = value;
 
             for (var task in list) {
-              addTask(task);
+              HiveCRUM().addTask(task);
             }
           });
         });
@@ -439,7 +429,7 @@ class Repository {
       //    msg: "Немає підключення до інтернету",
       //    toastLength: Toast.LENGTH_LONG);
       //error = "Немає підключення до інтернету";
-      if (isDone != null) await setIsDoneInLocalTask(id, isDone);
+      if (isDone != null) await HiveCRUM().setIsDoneInLocalTask(id, isDone);
     } else {
       try {
         var url = Uri.parse('$apiUrl/task/$id');
@@ -464,7 +454,7 @@ class Repository {
                 .replaceAll("]", "");
             Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
           } else {
-            await setIsSentInLocalTask(id: id, true);
+            await HiveCRUM().setIsSentInLocalTask(id: id, true);
           }
         });
       } catch (error) {
@@ -479,7 +469,7 @@ class Repository {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       error = "Немає підключення до інтернету";
-      await addTask(taskModel);
+      await HiveCRUM().addTask(taskModel);
     } else {
       try {
         var url = Uri.parse('$apiUrl/task');
@@ -506,8 +496,8 @@ class Repository {
                 .replaceAll("[", "")
                 .replaceAll("]", "");
           } else {
-            await addTask(taskModel).whenComplete(() async {
-              await setIsSentInLocalTask(true, taskModel: taskModel);
+            await HiveCRUM().addTask(taskModel).whenComplete(() async {
+              await HiveCRUM().setIsSentInLocalTask(true, taskModel: taskModel);
             });
           }
         });
@@ -550,9 +540,9 @@ class Repository {
                 isGoogle: map["isGoogle"],
                 isConfirmed: map["isConfirmed"],
                 deviceId: map["deviceId"],
-              );
-              await addUser(meUser!);
-              return user;
+              );HiveCRUM();
+              await HiveCRUM().addUser(meUser!);
+              return meUser;
             } else {
               String error = jsonDecode(value.body)["message"]
                   .toString()
@@ -578,7 +568,7 @@ class Repository {
       //    msg: "Немає підключення до інтернету",
       //    toastLength: Toast.LENGTH_LONG);
       //error = "Немає підключення до інтернету";
-      removeLocalTask(taskId);
+      HiveCRUM().removeLocalTask(taskId);
     } else {
       try {
         var url = Uri.parse('$apiUrl/task/$taskId');
@@ -606,7 +596,7 @@ class Repository {
   Future<bool> sendAllLocalData() async {
     List<TaskModel> dbTasks = await loadTasks(),
         localTasks =
-            List.from(myTasks.where((element) => element.isSentToDB == false));
+            List.from(HiveCRUM().myTasks.where((element) => element.isSentToDB == false));
     for (int i = 0; i < localTasks.length; i++) {
       if (dbTasks.any((element) => element.id == localTasks[i].id)) {
         if (localTasks[i].isRemoved) {
@@ -665,7 +655,7 @@ class Repository {
         }).then((value) async {
           if (value.statusCode > 199 && value.statusCode < 300) {
             await deleteCookie();
-            await removeUser();
+            await HiveCRUM().removeUser();
           }
         });
       } catch (error) {
@@ -677,76 +667,13 @@ class Repository {
   }
 
   bool checkIsAnyTasksNotSent() {
+    List<TaskModel> myTasks=List.from(HiveCRUM().myTasks);
     return myTasks.isNotEmpty
         ? myTasks.any((element) => element.isSentToDB == false)
         : false;
   }
 
-  Future clearTasks() async {
-    await tasksBox!.clear();
-  }
 
-  Future clearMedicines() async {
-    await medicineBox!.clear();
-  }
-
-  Future addTask(TaskModel taskModel) async {
-    await tasksBox!.put(taskModel.id, taskModel);
-  }
-
-  Future setIsDoneInLocalTask(String id, bool isDone) async {
-    TaskModel taskModel = myTasks.firstWhere((element) => element.id == id);
-    taskModel = taskModel.copyWith(isDone: isDone, isSentToDB: false);
-    await tasksBox!.put(taskModel.id, taskModel);
-  }
-
-  Future setIsSentInLocalTask(bool isSentToDB,
-      {String? id, TaskModel? taskModel}) async {
-    if (id != null) {
-      TaskModel taskModel = myTasks.firstWhere((element) => element.id == id);
-      taskModel = taskModel.copyWith(isSentToDB: isSentToDB);
-      await tasksBox!.put(taskModel.id, taskModel);
-    }
-    if (taskModel != null) {
-      taskModel = taskModel.copyWith(isSentToDB: isSentToDB);
-      await tasksBox!.put(taskModel.id, taskModel);
-    }
-  }
-
-  Future removeLocalTask(String id) async {
-    TaskModel taskModel = myTasks.firstWhere((element) => element.id == id);
-    taskModel = taskModel.copyWith(isRemoved: true, isSentToDB: false);
-    await tasksBox!.put(taskModel.id, taskModel);
-  }
-
-  Future addUser(MeUser meUser) async {
-    await userBox!.put("user", meUser);
-  }
-
-  Future updateUser(MeUser meUser) async {
-    await userBox!.put("user", meUser);
-  }
-
-  Future removeUser() async {
-    await userBox!.delete("user");
-  }
-
-  Future addSavedAddresses(PickResult savedAddress) async {
-    if (savedAddresses
-        .any((element) => element.placeId == savedAddress.placeId)) {
-      return;
-    }
-
-    await savedAddressesBox!.put(savedAddress.placeId, savedAddress);
-  }
-
-  Future updateSavedAddresses(PickResult savedAddresses) async {
-    await savedAddressesBox!.put(savedAddresses.placeId, savedAddresses);
-  }
-
-  Future removeSavedAddresses(int id) async {
-    await savedAddressesBox!.delete(id);
-  }
 
   Future<String?> deleteAllTasks() async {
     String? error;
@@ -755,11 +682,11 @@ class Repository {
       //    msg: "Немає підключення до інтернету",
       //    toastLength: Toast.LENGTH_LONG);
       //error = "Немає підключення до інтернету";
-      for (var task in myTasks) {
-        removeLocalTask(task.id);
+      for (var task in HiveCRUM().myTasks) {
+        HiveCRUM().removeLocalTask(task.id);
       }
     } else {
-      for (var task in myTasks) {
+      for (var task in HiveCRUM().myTasks) {
         try {
           var url = Uri.parse('$apiUrl/task/${task.id}');
           final cookie = await getCookie();
@@ -841,15 +768,15 @@ class Repository {
 
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       medicines =
-          List.from(myMedicines.where((element) => element.isRemoved == false));
+          List.from(HiveCRUM().myMedicines.where((element) => element.isRemoved == false));
     } else {
       if ((forcePush != null && forcePush) || !checkIsAnyTasksNotSent()) {
         await loadMedicines().then((value) async {
-          await clearMedicines().whenComplete(() {
+          await HiveCRUM().clearMedicines().whenComplete(() {
             medicines = value;
 
             for (var medicine in medicines) {
-              addMedicine(medicine);
+              HiveCRUM().addMedicine(medicine);
             }
           });
         });
@@ -903,12 +830,12 @@ class Repository {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       error = "Немає підключення до інтернету";
-      await addMedicine(medicineModel);
+      await HiveCRUM().addMedicine(medicineModel);
     } else {
       try {
         var url = Uri.parse('$apiUrl/medicine');
         final cookie = await getCookie();
-        String date = medicineModel.startDate!.toUtc().toString();
+        String date = medicineModel.startDate.toUtc().toString();
         Map<String, dynamic> map = medicineModel.toJson();
         map["startDate"] = date;
         await http
@@ -927,7 +854,7 @@ class Repository {
                 .replaceAll("[", "")
                 .replaceAll("]", "");
           } else {
-            await await addMedicine(medicineModel).whenComplete(() async {
+            await await HiveCRUM().addMedicine(medicineModel).whenComplete(() async {
               await setIsSentInLocalMedicine(true,
                   medicineModel: medicineModel);
             });
@@ -947,7 +874,7 @@ class Repository {
       {String? id, MedicineModel? medicineModel}) async {
     if (id != null) {
       MedicineModel medicineModel =
-          myMedicines.firstWhere((element) => element.id == id);
+      HiveCRUM().myMedicines.firstWhere((element) => element.id == id);
       medicineModel = medicineModel.copyWith(isSentToDB: isSentToDB);
       await medicineBox!.put(medicineModel.id, medicineModel);
     }
@@ -964,7 +891,7 @@ class Repository {
       //    msg: "Немає підключення до інтернету",
       //    toastLength: Toast.LENGTH_LONG);
       //error = "Немає підключення до інтернету";
-      await updateLocalMedicine(medicineModel);
+      await HiveCRUM().updateLocalMedicine(medicineModel);
     } else {
       try {
         var url = Uri.parse('$apiUrl/medicine/${medicineModel.id}');
@@ -1005,7 +932,7 @@ class Repository {
       //    msg: "Немає підключення до інтернету",
       //    toastLength: Toast.LENGTH_LONG);
       //error = "Немає підключення до інтернету";
-      removeLocalMedicine(medicineId);
+      HiveCRUM().removeLocalMedicine(medicineId);
     } else {
       try {
         var url = Uri.parse('$apiUrl/medicine/$medicineId');
@@ -1029,16 +956,47 @@ class Repository {
     }
     return error;
   }
-
-  Future addMedicine(MedicineModel medicineModel) async {
-    await medicineBox!.put(medicineModel.id, medicineModel);
+  Future<String?> sendConfirmToWard(String email) async {
+    String? error;
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      error = "Немає підключення до інтернету";
+    } else {
+      try {
+        //var url = Uri.parse('$apiUrl/medicine');
+        //final cookie = await getCookie();
+        //String date = medicineModel.startDate!.toUtc().toString();
+        //Map<String, dynamic> map = medicineModel.toJson();
+        //map["startDate"] = date;
+        //await http
+        //    .post(
+        //  url,
+        //  headers: <String, String>{
+        //    'Content-Type': 'application/json',
+        //    'Cookie': cookie.toString(),
+        //  },
+        //  body: jsonEncode(map),
+        //)
+        //    .then((value) async {
+        //  if (!(value.statusCode > 199 && value.statusCode < 300)) {
+        //    error = jsonDecode(value.body)["message"]
+        //        .toString()
+        //        .replaceAll("[", "")
+        //        .replaceAll("]", "");
+        //  } else {
+        //    await await addMedicine(medicineModel).whenComplete(() async {
+        //      await setIsSentInLocalMedicine(true,
+        //          medicineModel: medicineModel);
+        //    });
+        //  }
+        //});
+      } catch (e) {
+        error = error.toString();
+      }
+    }
+    if (error != null) {
+      Fluttertoast.showToast(msg: error, toastLength: Toast.LENGTH_LONG);
+    }
+    return error;
   }
 
-  Future updateLocalMedicine(MedicineModel medicineModel) async {
-    await medicineBox!.put(medicineModel.id, medicineModel);
-  }
-
-  Future removeLocalMedicine(String id) async {
-    await medicineBox!.delete(id);
-  }
 }

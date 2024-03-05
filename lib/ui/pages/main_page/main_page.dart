@@ -76,11 +76,7 @@ class _MainPageState extends State<MainPage> {
 
   _listenFCM() async {
     FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
-      print("message.data");
-      print(remoteMessage.data.toString());
-      print(remoteMessage.notification.toString());
-      print(remoteMessage.category.toString());
-      print(remoteMessage.sentTime.toString());
+
       showDialog(
           context: context,
           builder: (context) {

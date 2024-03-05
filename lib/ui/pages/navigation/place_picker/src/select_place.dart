@@ -11,9 +11,9 @@ import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_resu
     as myPick;
 import 'package:chance_app/ui/pages/navigation/place_picker/src/place_picker.dart';
 import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
+import 'package:chance_app/ux/hive_crum.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/position_controller.dart';
-import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_google_maps_webservices/places.dart';
@@ -43,11 +43,10 @@ class _SelectPlaceState extends State<SelectPlace> {
   SearchBarController searchBarController = SearchBarController();
   List<Map<String, dynamic>> predictionForList = [];
   List<Prediction> predictionForTap = [];
-  List<myPick.PickResult> savedAddresses = Repository()
-      .savedAddresses
+  List<myPick.PickResult> savedAddresses = HiveCRUM().savedAddresses
       .where((element) => element.isRecentlySearched == true)
       .toList();
-  MeUser meUser = Repository().user!;
+  MeUser meUser = HiveCRUM().user!;
 
   @override
   void initState() {
@@ -264,8 +263,7 @@ class _SelectPlaceState extends State<SelectPlace> {
                                                                 result));
                                                     break;
                                                 }
-                                                await Repository()
-                                                    .addSavedAddresses(result)
+                                                await HiveCRUM().addSavedAddresses(result)
                                                     .whenComplete(() =>
                                                         Navigator.of(context)
                                                             .pop());
@@ -466,7 +464,7 @@ class _SelectPlaceState extends State<SelectPlace> {
           break;
       }
       selectedPlace = selectedPlace.copyWith(isRecentlySearched: true);
-      await Repository().addSavedAddresses(selectedPlace);
+      await HiveCRUM().addSavedAddresses(selectedPlace);
     }
     setState(() {
 

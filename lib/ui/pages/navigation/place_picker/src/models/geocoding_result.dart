@@ -1,6 +1,7 @@
 
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/address_component.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geometry.dart';
+import 'package:chance_app/ux/model/hive_type_id.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
 
@@ -9,7 +10,7 @@ part 'geocoding_result.freezed.dart';
 part 'geocoding_result.g.dart';
 
 @freezed
-@HiveType(typeId: 14)
+@HiveType(typeId: HiveTypeId.geocodingResultModel)
 class GeocodingResult with _$GeocodingResult {
   factory GeocodingResult({
     @HiveField(0) required List<String> types,

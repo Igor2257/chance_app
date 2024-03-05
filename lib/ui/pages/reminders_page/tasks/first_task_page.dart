@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/input_reminders_layout.dart';
+import 'package:chance_app/ux/bloc/add_task_bloc/add_task_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository.dart';
@@ -20,19 +21,18 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
 
   @override
   void initState() {
-    BlocProvider.of<RemindersBloc>(context)
-        .add(LoadDataForSelectDateForTasks());
+    BlocProvider.of<AddTaskBloc>(context).add(LoadDataForSelectDateForTasks());
     super.initState();
   }
   final DateTime now = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RemindersBloc, RemindersState>(
-        builder: (context, state) {
+    return BlocBuilder<AddTaskBloc, AddTaskState>(builder: (context, state) {
       TaskModel? taskModel = state.taskModel;
 
-      return Column(
+      return SafeArea(
+          child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -41,12 +41,11 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
             title: 'Введіть завдання',
             subTitle: '',
             saveData: (String value) {
-              BlocProvider.of<RemindersBloc>(context)
+              BlocProvider.of<AddTaskBloc>(context)
                   .add(SaveTaskName(name: value));
             },
             clearData: () {
-              BlocProvider.of<RemindersBloc>(context)
-                  .add(SaveTaskName(name: ""));
+              BlocProvider.of<AddTaskBloc>(context).add(SaveTaskName(name: ""));
             },
           ),
           if (state.taskTitle.trim().isNotEmpty)
@@ -166,9 +165,16 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
             height: 100,
           ),
           InkWell(
-            onTap: () {
-              Navigator.of(context).pushNamed(
-                  "/date_picker_for_tasks");
+            onTap: () async {
+              await Navigator.of(context)
+                  .pushNamed("/date_picker_for_tasks")
+                  .then((value) {
+                if (value is bool) {
+                  nameTextEditingController.text = "";
+                  BlocProvider.of<AddTaskBloc>(context)
+                      .add(SaveTaskName(name: ""));
+                }
+              });
             },
             child: Container(
               height: 40,
@@ -191,12 +197,12 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
                         : "${taskModel.date!.day.toString().padLeft(2, "0")}.${taskModel.date!.month.toString().padLeft(2, "0")}.${taskModel.date!.year}",
                     style: TextStyle(fontSize: 14, color: primaryText),
                   ),
-                    ],
-                  ),
-                ),
+                ],
               ),
-            ],
-          );
+            ),
+          ),
+        ],
+      ));
     });
   }
 }

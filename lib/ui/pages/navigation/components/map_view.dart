@@ -5,9 +5,9 @@ import 'package:chance_app/ui/pages/navigation/components/build_route_bottom_she
 import 'package:chance_app/ui/pages/navigation/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/components/saved_addresses_component.dart';
 import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
+import 'package:chance_app/ux/hive_crum.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/position_controller.dart';
-import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -102,7 +102,7 @@ class _MapViewState extends State<MapView>
     super.dispose();
   }
 
-  MeUser meUser = Repository().user!;
+  MeUser meUser = HiveCRUM().user!;
 
   @override
   void initState() {
@@ -340,8 +340,7 @@ class _MapViewState extends State<MapView>
                             GestureDetector(
                               onTap: () async {
                                 meUser = meUser.copyWith(mapType: 0);
-                                await Repository()
-                                    .updateUser(meUser)
+                                await HiveCRUM().updateUser(meUser)
                                     .whenComplete(() => setState(() {}));
                               },
                               onTapDown: (TapDownDetails details) {
@@ -378,8 +377,7 @@ class _MapViewState extends State<MapView>
                             GestureDetector(
                               onTap: () async {
                                 meUser = meUser.copyWith(mapType: 1);
-                                await Repository()
-                                    .updateUser(meUser)
+                                await HiveCRUM().updateUser(meUser)
                                     .whenComplete(() => setState(() {}));
                               },
                               onTapDown: (TapDownDetails details) {
@@ -414,8 +412,7 @@ class _MapViewState extends State<MapView>
                             GestureDetector(
                               onTap: () async {
                                 meUser = meUser.copyWith(mapType: 2);
-                                await Repository()
-                                    .updateUser(meUser)
+                                await HiveCRUM().updateUser(meUser)
                                     .whenComplete(() => setState(() {}));
                               },
                               onTapDown: (TapDownDetails details) {

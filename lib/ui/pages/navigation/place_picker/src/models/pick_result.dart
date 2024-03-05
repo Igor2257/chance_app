@@ -2,6 +2,7 @@
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/address_component.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geocoding_result.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geometry.dart';
+import 'package:chance_app/ux/model/hive_type_id.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
 
@@ -9,7 +10,7 @@ part 'pick_result.freezed.dart';
 part 'pick_result.g.dart';
 
 @freezed
-@HiveType(typeId: 16)
+@HiveType(typeId: HiveTypeId.pickResultModel)
 class PickResult with _$PickResult {
   factory PickResult({
     @HiveField(0)  @Default(null) String? placeId,

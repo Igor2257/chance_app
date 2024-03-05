@@ -1,7 +1,7 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/menu/components/input_my_info_layout.dart';
+import 'package:chance_app/ux/hive_crum.dart';
 import 'package:chance_app/ux/model/me_user.dart';
-import 'package:chance_app/ux/repository.dart';
 import 'package:flutter/material.dart';
 
 class MyInformation extends StatefulWidget {
@@ -73,7 +73,7 @@ class _MyInformationState extends State<MyInformation> {
   }
 
   void loadData() async {
-    MeUser user = Repository().user!;
+    MeUser user = HiveCRUM().user!;
     firstNameTextEditingController.text = user.name;
     lastNameTextEditingController.text = user.lastName;
     phoneTextEditingController.text = user.phone;

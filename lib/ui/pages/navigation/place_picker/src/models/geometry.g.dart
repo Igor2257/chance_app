@@ -8,7 +8,7 @@ part of 'geometry.dart';
 
 class GeometryAdapter extends TypeAdapter<Geometry> {
   @override
-  final int typeId = 12;
+  final int typeId = 11;
 
   @override
   Geometry read(BinaryReader reader) {

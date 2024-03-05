@@ -3,7 +3,16 @@ abstract class HiveTypeId {
   static const taskModel = 0;
   static const meUser = 1;
   static const sosContactModel = 2;
-  static const medicineModel = 4;
+  static const settingsModel = 3;
+  static const productModel = 4;
+  static const medicineModel = 5;
+  static const locationModel = 10;
+  static const geometryModel = 11;
+  static const boundsModel = 12;
+  static const addressComponentModel = 13;
+  static const geocodingResultModel = 14;
+  static const pickResultModel = 16;
+
 
   // Enums
   static const medicineType = 100;
