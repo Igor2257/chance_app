@@ -5,7 +5,6 @@ import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/chat_bubble_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 class StreamSocket {
   final _socketResponse = StreamController<String>();
@@ -27,7 +26,7 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  Socket? socket;
+ late final Socket socket;
   final TextEditingController _controller = TextEditingController();
   StreamSocket streamSocket = StreamSocket();
 
@@ -52,37 +51,37 @@ class _ChatPageState extends State<ChatPage> {
             .setExtraHeaders({'withCredentials': true}) // optional
             .build(),
       );
-
-      socket?.onConnect((_) {
+      socket.connect();
+      socket.onConnect((_) {
         print('connect');
-        socket?.emit('msg', 'connect');
+        socket.emit('msg', 'connect');
       });
-      socket?.onConnectError((e) {
+      socket.onConnectError((e) {
         print('onConnectError - $e');
-        socket?.emit('msg', 'test');
+        socket.emit('msg', 'test');
       });
-      socket?.onConnecting((e) {
+      socket.onConnecting((e) {
         print('onConnecting');
-        socket?.emit('msg', 'test');
+        socket.emit('msg', 'test');
       });
-      socket?.onError((e) {
+      socket.onError((e) {
         print('onError $e');
-        socket?.emit('msg', 'test');
+        socket.emit('msg', 'test');
       });
-      socket?.onReconnect((_) {
+      socket.onReconnect((_) {
         print('onReconnect');
-        socket?.emit('msg', 'test');
+        socket.emit('msg', 'test');
       });
-      socket?.on('text-chat', (data) {
-        print(data);
+      socket.on('text-chat', (data) {
+        print("data $data");
         streamSocket.addResponse(data);
       });
-      socket?.on('msg', (data) {
-        print(data);
+      socket.on('msg', (data) {
+        print("data $data");
         //streamSocket.addResponse(data);
       });
-      socket?.onDisconnect((_) => print('disconnect'));
-      socket?.on('fromServer', (_) => print(_));
+      socket.onDisconnect((_) => print('disconnect'));
+      socket.on('fromServer', (_) => print(_));
     } catch (e) {
       print(e);
     }
@@ -91,8 +90,8 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void dispose() {
-    socket?.disconnect();
-    socket?.dispose();
+    socket.disconnect();
+    socket.dispose();
 
     _controller.dispose();
     super.dispose();
@@ -176,35 +175,40 @@ class _ChatPageState extends State<ChatPage> {
         color: darkNeutral800,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(8.0)),
       ),
-      child: TextField(
-        controller: _controller,
-        textInputAction: TextInputAction.send,
-        textCapitalization: TextCapitalization.sentences,
-        style: TextStyle(
-          fontWeight: FontWeight.w400,
-          fontSize: 17,
-          height: 22 / 17,
-          letterSpacing: -0.4,
-          color: primary1000,
-        ),
-        decoration: InputDecoration(
-          fillColor: background,
-          filled: true,
-          suffixIcon: IconButton(
-            onPressed: _onSendBtnTap,
-            icon: const Icon(Icons.send),
-          ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
-          hintText: 'Що нового?',
-          hintStyle: const TextStyle(
+      child: SafeArea(
+        child: TextField(
+          controller: _controller,
+          textInputAction: TextInputAction.send,
+          textCapitalization: TextCapitalization.sentences,
+          style: TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 17,
             height: 22 / 17,
             letterSpacing: -0.4,
-            color: Color(0xFF8E8E93),
+            color: primary1000,
           ),
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16.0)),
+          decoration: InputDecoration(
+            fillColor: background,
+            filled: true,
+            suffixIcon: IconButton(
+              onPressed: _onSendBtnTap,
+              icon: Icon(
+                Icons.send,
+                color: primary1000,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+            hintText: 'Що нового?',
+            hintStyle: const TextStyle(
+              fontWeight: FontWeight.w400,
+              fontSize: 17,
+              height: 22 / 17,
+              letterSpacing: -0.4,
+              color: Color(0xFF8E8E93),
+            ),
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(16.0)),
+            ),
           ),
         ),
       ),
@@ -220,8 +224,8 @@ class _ChatPageState extends State<ChatPage> {
       _controller.clear();
       if (mounted) {
         _unFocus(context);
-        print('socket - $socket');
-        socket?.emit(
+        print('socket - ${socket.active}');
+        socket.emit(
           'text-chat',
           json.encode(
             {
