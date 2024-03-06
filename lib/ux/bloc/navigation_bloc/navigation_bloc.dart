@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:chance_app/ui/pages/navigation/components/map_data.dart';
+import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/pages/navigation/navigation_page/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/select_place.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +89,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       }
       Polyline polyline = Polyline(
         polylineId: const PolylineId("route"),
-        color: Colors.red,
+        color: red900,
         points: polylineCoordinates,
         width: 3,
       );

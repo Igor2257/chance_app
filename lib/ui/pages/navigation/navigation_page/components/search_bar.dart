@@ -1,5 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/navigation/components/map_data.dart';
+import 'package:chance_app/ui/pages/navigation/navigation_page/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/controllers/autocomplete_search_controller.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/providers/place_provider.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/autocomplete_search.dart';
@@ -20,7 +20,8 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 enum MenuItems {
-  add(id: 0, name: "Додати підопічного");
+  add(id: 0, name: "Додати підопічного"),
+  checkInvitation(id: 1, name: "Запрошення");
 
   final int id;
   final String name;
@@ -220,6 +221,10 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                               });
                                         }
                                       });
+                                      break;
+                                    case MenuItems.checkInvitation:
+                                      Navigator.of(context)
+                                          .pushNamed("/check_my_invitation");
                                       break;
                                   }
                                 },

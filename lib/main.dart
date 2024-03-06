@@ -7,7 +7,9 @@ import 'package:chance_app/ui/pages/main_page/main_page.dart';
 import 'package:chance_app/ui/pages/menu/menu_page.dart';
 import 'package:chance_app/ui/pages/menu/pages/my_information.dart';
 import 'package:chance_app/ui/pages/navigation/add_ward/add_ward.dart';
-import 'package:chance_app/ui/pages/navigation/navigation_page.dart';
+import 'package:chance_app/ui/pages/navigation/invitations/check_my_invitation/check_my_invitation.dart';
+import 'package:chance_app/ui/pages/navigation/invitations/enter_accept_code/enter_accept_code.dart';
+import 'package:chance_app/ui/pages/navigation/navigation_page/navigation_page.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/address_component.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/bounds.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geocoding_result.dart';
@@ -34,6 +36,7 @@ import 'package:chance_app/ux/bloc/add_medicine_bloc/add_medicine_bloc.dart';
 import 'package:chance_app/ux/bloc/add_task_bloc/add_task_bloc.dart';
 import 'package:chance_app/ux/bloc/login_bloc/login_bloc.dart';
 import 'package:chance_app/ux/bloc/navigation_bloc/add_ward/add_ward_bloc.dart';
+import 'package:chance_app/ux/bloc/navigation_bloc/invitation_bloc/invitation_bloc.dart';
 import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
@@ -263,6 +266,9 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
           BlocProvider(
             create: (context) => AddTaskBloc(),
           ),
+          BlocProvider(
+            create: (context) => InvitationBloc(),
+          ),
         ],
         child: Builder(builder: (context) {
           return MediaQuery(
@@ -366,6 +372,10 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                             const NavigationPage(),
                                         "/add_ward": (context) =>
                                             const AddWard(),
+                                        "/check_my_invitation": (context) =>
+                                            const CheckMyInvitation(),
+                                        "/enter_accept_code": (context) =>
+                                            const EnterAcceptCode(),
                                       },
                                     ),
                                   ),

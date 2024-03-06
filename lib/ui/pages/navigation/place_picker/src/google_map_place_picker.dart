@@ -341,12 +341,12 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
     } else if (state == PinState.Idle) {
       return Stack(
         children: <Widget>[
-          const Center(
+           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Icon(Icons.place, size: 36, color: Colors.red),
-                SizedBox(height: 42),
+                Icon(Icons.place, size: 36, color: red900),
+                const SizedBox(height: 42),
               ],
             ),
           ),
@@ -365,14 +365,12 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
     } else {
       return Stack(
         children: <Widget>[
-          const Center(
+          Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                AnimatedPin(
-                    child:
-                        Icon(Icons.place, size: 36, color: Colors.red)),
-                SizedBox(height: 42),
+                AnimatedPin(child: Icon(Icons.place, size: 36, color: red900)),
+                const SizedBox(height: 42),
               ],
             ),
           ),
@@ -457,7 +455,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                 result.geometry!.location.lng) <=
             widget.pickArea!.radius;
     MaterialStateColor buttonColor = MaterialStateColor.resolveWith(
-        (states) => canBePicked ? Colors.lightGreen : Colors.red);
+        (states) => canBePicked ? green : red900);
     return Container(
       margin: const EdgeInsets.all(10),
       child: Column(

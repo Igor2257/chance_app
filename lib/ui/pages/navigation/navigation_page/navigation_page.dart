@@ -1,6 +1,7 @@
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/navigation/components/map_view.dart';
-import 'package:chance_app/ui/pages/navigation/components/search_bar.dart';
+import 'package:chance_app/ui/pages/navigation/navigation_page/components/map_view.dart';
+import 'package:chance_app/ui/pages/navigation/navigation_page/components/search_bar.dart';
+
 import 'package:flutter/material.dart';
 
 class NavigationPage extends StatefulWidget {

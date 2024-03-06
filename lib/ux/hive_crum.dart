@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:chance_app/main.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
+import 'package:chance_app/ux/model/invitation_model.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/product_model.dart';
@@ -28,7 +29,6 @@ class HiveCRUM {
           ? settingsBox!.get('settings') as Settings
           : const Settings()
       : const Settings();
-
   Future addMedicine(MedicineModel medicineModel) async {
     await medicineBox!.put(medicineModel.id, medicineModel);
   }

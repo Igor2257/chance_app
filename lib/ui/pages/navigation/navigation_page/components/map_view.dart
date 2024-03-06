@@ -1,9 +1,9 @@
 import 'package:bottom_picker/resources/context_extension.dart';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/navigation/components/build_route_bottom_sheet.dart';
-import 'package:chance_app/ui/pages/navigation/components/map_data.dart';
-import 'package:chance_app/ui/pages/navigation/components/saved_addresses_component.dart';
+import 'package:chance_app/ui/pages/navigation/navigation_page/components/build_route_bottom_sheet.dart';
+import 'package:chance_app/ui/pages/navigation/navigation_page/components/map_data.dart';
+import 'package:chance_app/ui/pages/navigation/navigation_page/components/saved_addresses_component.dart';
 import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:chance_app/ux/hive_crum.dart';
 import 'package:chance_app/ux/model/me_user.dart';

@@ -1,5 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/navigation/components/map_data.dart';
+import 'package:chance_app/ui/pages/navigation/navigation_page/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/controllers/autocomplete_search_controller.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/providers/place_provider.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/autocomplete_search.dart';
