@@ -104,12 +104,14 @@ class _MainPageState extends State<MainPage> {
                                 color: beige500,
                               ),
                               Text(
-                                "Завдання",textAlign: TextAlign.center,
+                                "Завдання",
+                                textAlign: TextAlign.center,
                                 style:
                                     TextStyle(fontSize: 16, color: primaryText),
                               ),
                               Text(
-                                remoteMessage.data["message"],textAlign: TextAlign.center,
+                                remoteMessage.data["message"],
+                                textAlign: TextAlign.center,
                                 style:
                                     TextStyle(fontSize: 24, color: primaryText),
                               ),
@@ -152,7 +154,8 @@ class _MainPageState extends State<MainPage> {
                                         height: 10,
                                       ),
                                       Text(
-                                        "Пропустити",textAlign: TextAlign.center,
+                                        "Пропустити",
+                                        textAlign: TextAlign.center,
                                         style: TextStyle(
                                             color: primary50, fontSize: 16),
                                       ),
@@ -200,7 +203,8 @@ class _MainPageState extends State<MainPage> {
                                         height: 10,
                                       ),
                                       Text(
-                                        "Виконано",textAlign: TextAlign.center,
+                                        "Виконано",
+                                        textAlign: TextAlign.center,
                                         style: TextStyle(
                                             color: primary50, fontSize: 16),
                                       ),
@@ -230,6 +234,7 @@ class _MainPageState extends State<MainPage> {
           ));
     });
   }
+
   @override
   void initState() {
     super.initState();
@@ -272,7 +277,8 @@ class _MainPageState extends State<MainPage> {
                     width: cardWidth,
                     margin: const EdgeInsets.only(bottom: 8, top: 8, right: 8),
                     onPress: () async {
-                      Navigator.of(context).pushNamedAndRemoveUntil("/reminders", (route) => true);
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          "/reminders", (route) => true);
                     },
                   ),
                   CustomCard(
@@ -311,7 +317,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                     width: cardWidth,
                     margin: const EdgeInsets.only(bottom: 8, top: 8, right: 8),
-                    onPress: () {},
+                    onPress: () => _onChatsBtnTap(context),
                   ),
                   CustomCard(
                     icon: Image.asset(
@@ -403,4 +409,7 @@ class _MainPageState extends State<MainPage> {
 
     return isOkay;
   }
+
+  void _onChatsBtnTap(BuildContext context) =>
+      Navigator.of(context).pushNamed('/chats_page');
 }

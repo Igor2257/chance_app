@@ -3,6 +3,12 @@ import 'dart:async';
 import 'package:chance_app/firebase_options.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/add_medicine_page/add_medicine_page.dart';
+import 'package:chance_app/ui/pages/chat_page/chat_page.dart';
+import 'package:chance_app/ui/pages/chat_page/create_chat_page.dart';
+import 'package:chance_app/ui/pages/chat_page/new_chat_page.dart';
+import 'package:chance_app/ui/pages/chat_page/new_group_page.dart';
+import 'package:chance_app/ui/pages/chat_page/search_page.dart';
+import 'package:chance_app/ui/pages/chats_page/chats_page.dart';
 import 'package:chance_app/ui/pages/main_page/main_page.dart';
 import 'package:chance_app/ui/pages/menu/menu_page.dart';
 import 'package:chance_app/ui/pages/menu/pages/my_information.dart';
@@ -376,6 +382,17 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                             const CheckMyInvitation(),
                                         "/enter_accept_code": (context) =>
                                             const EnterAcceptCode(),
+                                        "/chats_page": (context) =>
+                                            const ChatsPage(),
+                                        "/create_chat": (context) =>
+                                            const CreateChatPage(),
+                                        "/new_group": (context) =>
+                                            const NewGroupPage(),
+                                        "/new_chat": (context) =>
+                                            const NewChatPage(),
+                                        "/chat": (context) => const ChatPage(),
+                                        "/search": (context) =>
+                                            const SearchPage(),
                                       },
                                     ),
                                   ),
