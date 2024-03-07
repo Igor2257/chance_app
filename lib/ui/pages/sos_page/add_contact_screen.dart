@@ -73,12 +73,12 @@ class _AddContactScreenState extends State<AddContactScreen> {
                   if (nameTextField != null && phoneTextField != null) {
                     if (nameTextField.validate() && phoneTextField.validate()) {
                       _sosContactsBloc.add(
-                        SaveContact(
-                          contactModel: SosContactModel(
+                        SaveContact(contacts: [
+                          SosContactModel(
                             name: nameController.text,
                             phone: phoneController.text,
                           ),
-                        ),
+                        ]),
                       );
                       Navigator.of(context)
                           .pushNamedAndRemoveUntil("/sos", (route) => false);

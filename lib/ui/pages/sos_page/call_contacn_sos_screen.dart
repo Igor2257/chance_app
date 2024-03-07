@@ -1,7 +1,7 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_audio_manager_plus/flutter_audio_manager_plus.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 
 class CallContactSosScreen extends StatefulWidget {
@@ -57,7 +57,7 @@ class _CallContactSosScreenState extends State<CallContactSosScreen> {
                   height: 44,
                   child: ElevatedButton(
                     onPressed: () async {
-                      FlutterAudioManagerPlus.changeToSpeaker();
+                      // FlutterAudioManagerPlus.changeToSpeaker();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primary900,
@@ -110,7 +110,7 @@ class _CallContactSosScreenState extends State<CallContactSosScreen> {
   }
 
   void _makePhoneCall(String phoneNumber) async {
-    final url = 'tel:$phoneNumber';
+    final url = 'tel:+$phoneNumber';
     if (await canLaunch(url)) {
       await launch(url);
     } else {

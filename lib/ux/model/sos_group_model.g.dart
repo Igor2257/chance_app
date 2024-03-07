@@ -1,41 +1,38 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'sos_contact_model.dart';
+part of 'sos_group_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class SosContactModelAdapter extends TypeAdapter<SosContactModel> {
+class SosGroupModelAdapter extends TypeAdapter<SosGroupModel> {
   @override
-  final int typeId = 2;
+  final int typeId = 5;
 
   @override
-  SosContactModel read(BinaryReader reader) {
+  SosGroupModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return SosContactModel(
+    return SosGroupModel(
       id: fields[0] as String,
       name: fields[1] as String,
-      phone: fields[2] as String,
-      group: fields[3] as String?,
+      contacts: (fields[2] as List).cast<SosContactModel>(),
     );
   }
 
   @override
-  void write(BinaryWriter writer, SosContactModel obj) {
+  void write(BinaryWriter writer, SosGroupModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.phone)
-      ..writeByte(3)
-      ..write(obj.group);
+      ..write(obj.contacts);
   }
 
   @override
@@ -44,7 +41,7 @@ class SosContactModelAdapter extends TypeAdapter<SosContactModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SosContactModelAdapter &&
+      other is SosGroupModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
@@ -53,20 +50,18 @@ class SosContactModelAdapter extends TypeAdapter<SosContactModel> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SosContactModelImpl _$$SosContactModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$SosContactModelImpl(
+_$SosGroupModelImpl _$$SosGroupModelImplFromJson(Map<String, dynamic> json) =>
+    _$SosGroupModelImpl(
       id: json['id'] as String? ?? "",
       name: json['name'] as String,
-      phone: json['phone'] as String,
-      group: json['group'] as String? ?? "",
+      contacts: (json['contacts'] as List<dynamic>)
+          .map((e) => SosContactModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
-Map<String, dynamic> _$$SosContactModelImplToJson(
-        _$SosContactModelImpl instance) =>
+Map<String, dynamic> _$$SosGroupModelImplToJson(_$SosGroupModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'phone': instance.phone,
-      'group': instance.group,
+      'contacts': instance.contacts,
     };

@@ -25,6 +25,7 @@ class LabeledTextFieldState extends State<LabeledTextField> {
 
   static LabeledTextFieldState? nameTextField;
   static LabeledTextFieldState? phoneTextField;
+  static LabeledTextFieldState? groupTextField;
 
   bool validateInput(String input) {
     if (widget.isPhone) {
@@ -52,6 +53,7 @@ class LabeledTextFieldState extends State<LabeledTextField> {
       phoneTextField = this;
     } else {
       nameTextField = this;
+      groupTextField = this;
     }
   }
 

@@ -1,6 +1,7 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
+import 'package:chance_app/ux/model/sos_group_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -97,17 +98,28 @@ class _MainPageSosState extends State<MainPageSos> {
                 ),
               ),
               ListView.builder(
-                itemCount: _sosContactsBloc.contacts.length,
+                itemCount: _sosContactsBloc.state.contacts.length +
+                    _sosContactsBloc.state.groups.length,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.only(bottom: 29),
                 itemBuilder: (context, index) {
-                  SosContactModel contactModel =
-                      _sosContactsBloc.contacts[index];
-                  return ContainerButton(
-                    text: contactModel.name,
-                    onPressed: () => _pushToCallScreen(contactModel),
-                  );
+                  if (index < _sosContactsBloc.state.groups.length) {
+                    // Элемент - группа
+                    SosGroupModel groupModel =
+                        _sosContactsBloc.state.groups[index];
+                    return ContainerButton(
+                      text: 'Група: ${groupModel.name}',
+                      onPressed: () => _pushToGroupScreen(groupModel),
+                    );
+                  } else {
+                    // Элемент - контакт
+                    SosContactModel contactModel = _sosContactsBloc.state
+                        .contacts[index - _sosContactsBloc.state.groups.length];
+                    return ContainerButton(
+                      text: contactModel.name,
+                      onPressed: () => _pushToCallScreen(contactModel),
+                    );
+                  }
                 },
               ),
             ],
@@ -177,7 +189,8 @@ class _MainPageSosState extends State<MainPageSos> {
                         ),
                         child: TextButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, '/add_contact');
+                            Navigator.pushNamed(context, '/add_group',
+                                arguments: false);
                           },
                           child: Text(
                             "Контакт",
@@ -190,7 +203,7 @@ class _MainPageSosState extends State<MainPageSos> {
                         ),
                       ),
                       const SizedBox(
-                        width: 15,
+                        width: 1,
                       ),
                       Container(
                         width: 164,
@@ -201,7 +214,8 @@ class _MainPageSosState extends State<MainPageSos> {
                         ),
                         child: TextButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, '/add_group');
+                            Navigator.pushNamed(context, '/add_group',
+                                arguments: true);
                           },
                           child: Text(
                             "Групу",
@@ -227,6 +241,10 @@ class _MainPageSosState extends State<MainPageSos> {
   _pushToCallScreen(SosContactModel contactModel) =>
       Navigator.pushNamed(context, "/call_contact_sos",
           arguments: contactModel);
+}
+
+void _pushToGroupScreen(SosGroupModel groupModel) {
+  // Ваш код для перехода к экрану группы
 }
 
 class ContainerButton extends StatelessWidget {

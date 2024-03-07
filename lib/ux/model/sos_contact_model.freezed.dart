@@ -20,12 +20,14 @@ SosContactModel _$SosContactModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SosContactModel {
+  @HiveField(0)
+  String get id => throw _privateConstructorUsedError;
   @HiveField(1)
   String get name => throw _privateConstructorUsedError;
   @HiveField(2)
   String get phone => throw _privateConstructorUsedError;
   @HiveField(3)
-  String? get groupName => throw _privateConstructorUsedError;
+  String? get group => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -40,9 +42,10 @@ abstract class $SosContactModelCopyWith<$Res> {
       _$SosContactModelCopyWithImpl<$Res, SosContactModel>;
   @useResult
   $Res call(
-      {@HiveField(1) String name,
+      {@HiveField(0) String id,
+      @HiveField(1) String name,
       @HiveField(2) String phone,
-      @HiveField(3) String? groupName});
+      @HiveField(3) String? group});
 }
 
 /// @nodoc
@@ -58,11 +61,16 @@ class _$SosContactModelCopyWithImpl<$Res, $Val extends SosContactModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? name = null,
     Object? phone = null,
-    Object? groupName = freezed,
+    Object? group = freezed,
   }) {
     return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -71,9 +79,9 @@ class _$SosContactModelCopyWithImpl<$Res, $Val extends SosContactModel>
           ? _value.phone
           : phone // ignore: cast_nullable_to_non_nullable
               as String,
-      groupName: freezed == groupName
-          ? _value.groupName
-          : groupName // ignore: cast_nullable_to_non_nullable
+      group: freezed == group
+          ? _value.group
+          : group // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -88,9 +96,10 @@ abstract class _$$SosContactModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@HiveField(1) String name,
+      {@HiveField(0) String id,
+      @HiveField(1) String name,
       @HiveField(2) String phone,
-      @HiveField(3) String? groupName});
+      @HiveField(3) String? group});
 }
 
 /// @nodoc
@@ -104,11 +113,16 @@ class __$$SosContactModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? name = null,
     Object? phone = null,
-    Object? groupName = freezed,
+    Object? group = freezed,
   }) {
     return _then(_$SosContactModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -117,9 +131,9 @@ class __$$SosContactModelImplCopyWithImpl<$Res>
           ? _value.phone
           : phone // ignore: cast_nullable_to_non_nullable
               as String,
-      groupName: freezed == groupName
-          ? _value.groupName
-          : groupName // ignore: cast_nullable_to_non_nullable
+      group: freezed == group
+          ? _value.group
+          : group // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -129,13 +143,18 @@ class __$$SosContactModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$SosContactModelImpl implements _SosContactModel {
   _$SosContactModelImpl(
-      {@HiveField(1) required this.name,
+      {@HiveField(0) this.id = "",
+      @HiveField(1) required this.name,
       @HiveField(2) required this.phone,
-      @HiveField(3) this.groupName = ""});
+      @HiveField(3) this.group = ""});
 
   factory _$SosContactModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$SosContactModelImplFromJson(json);
 
+  @override
+  @JsonKey()
+  @HiveField(0)
+  final String id;
   @override
   @HiveField(1)
   final String name;
@@ -145,11 +164,11 @@ class _$SosContactModelImpl implements _SosContactModel {
   @override
   @JsonKey()
   @HiveField(3)
-  final String? groupName;
+  final String? group;
 
   @override
   String toString() {
-    return 'SosContactModel(name: $name, phone: $phone, groupName: $groupName)';
+    return 'SosContactModel(id: $id, name: $name, phone: $phone, group: $group)';
   }
 
   @override
@@ -157,15 +176,15 @@ class _$SosContactModelImpl implements _SosContactModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SosContactModelImpl &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.phone, phone) || other.phone == phone) &&
-            (identical(other.groupName, groupName) ||
-                other.groupName == groupName));
+            (identical(other.group, group) || other.group == group));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, name, phone, groupName);
+  int get hashCode => Object.hash(runtimeType, id, name, phone, group);
 
   @JsonKey(ignore: true)
   @override
@@ -184,13 +203,17 @@ class _$SosContactModelImpl implements _SosContactModel {
 
 abstract class _SosContactModel implements SosContactModel {
   factory _SosContactModel(
-      {@HiveField(1) required final String name,
+      {@HiveField(0) final String id,
+      @HiveField(1) required final String name,
       @HiveField(2) required final String phone,
-      @HiveField(3) final String? groupName}) = _$SosContactModelImpl;
+      @HiveField(3) final String? group}) = _$SosContactModelImpl;
 
   factory _SosContactModel.fromJson(Map<String, dynamic> json) =
       _$SosContactModelImpl.fromJson;
 
+  @override
+  @HiveField(0)
+  String get id;
   @override
   @HiveField(1)
   String get name;
@@ -199,7 +222,7 @@ abstract class _SosContactModel implements SosContactModel {
   String get phone;
   @override
   @HiveField(3)
-  String? get groupName;
+  String? get group;
   @override
   @JsonKey(ignore: true)
   _$$SosContactModelImplCopyWith<_$SosContactModelImpl> get copyWith =>

@@ -189,7 +189,7 @@ class MyAppState extends State<MyApp> {
                             "/sos": (context) => const MainPageSos(),
                             "/add_contact": (context) =>
                                 const AddContactScreen(),
-                            "/add_group": (context) => const AddGroupScreen(),
+                            "/add_group": (context) => AddGroupScreen(),
                             "/onboarding_page": (context) =>
                                 const OnboardingPage(),
                             "/onboarding_tutorial": (context) =>
