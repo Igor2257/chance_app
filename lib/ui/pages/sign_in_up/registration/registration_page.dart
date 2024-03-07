@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/first_sub_page.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/second_sub_page.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/third_sub_page.dart';
@@ -46,12 +47,12 @@ class _RegistrationPageState extends State<RegistrationPage>
             return AlertDialog(
 
               title: Text(
-                "Бажаєте залишити реєстрацію?",
+                "${AppLocalizations.instance.translate("wannaLeaveRegistration")}?",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 24, color: primaryText),
               ),
               content: Text(
-                "При виході з реєстрації ваші дані не будуть збережені",
+                AppLocalizations.instance.translate("whenYouCloseRegistrationDataWontBeSave"),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: primaryText, fontSize: 16),
               ),
@@ -63,7 +64,7 @@ class _RegistrationPageState extends State<RegistrationPage>
                         Navigator.of(context).pop();
                       },
                       child: Text(
-                        "Продовжити",
+                        AppLocalizations.instance.translate("continue"),
                         style: TextStyle(fontSize: 16, color: primary500),
                       ),
                     ),
@@ -76,7 +77,7 @@ class _RegistrationPageState extends State<RegistrationPage>
                             .add(Dispose());
                       },
                       child: Text(
-                        "Завершити",
+                        AppLocalizations.instance.translate("complete"),
                         style: TextStyle(fontSize: 16, color: primary500),
                       ),
                     ),
@@ -105,7 +106,7 @@ class _RegistrationPageState extends State<RegistrationPage>
               backgroundColor: Colors.transparent,
               surfaceTintColor: Colors.transparent,
               centerTitle: true,
-              title: const Text("Реєстрація"),
+              title:  Text(AppLocalizations.instance.translate("registration")),
               leading: BackButton(
                 onPressed: () {
                   onBack(state);

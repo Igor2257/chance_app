@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:chance_app/ux/enum/invitation_status.dart';
 import 'package:chance_app/ux/model/invitation_model.dart';
-import 'package:chance_app/ux/repository.dart';
+import 'package:chance_app/ux/repository/invitation_repository.dart';
+import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:meta/meta.dart';
 
 part 'invitation_event.dart';
@@ -21,7 +22,7 @@ class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
     emit(state.copyWith(isLoading: true, page: 0));
     String error = "";
     List<InvitationModel> list = [];
-    await Repository().getInvitationForMe().then((value) {
+    await InvitationRepository().getInvitationForMe().then((value) {
       if (value is List<InvitationModel>) {
         list = value;
       } else {
@@ -57,7 +58,7 @@ class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
     emit(state.copyWith(isLoading: true, page: 1));
     String error = "";
     List<InvitationModel> list = [];
-    await Repository().getInvitationFromMe().then((value) {
+    await InvitationRepository().getInvitationFromMe().then((value) {
       if (value is List<InvitationModel>) {
         list = value;
       } else {

@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:chance_app/ux/repository.dart';
+import 'package:chance_app/ux/repository/user_repository.dart';
+import 'package:chance_app/ux/repository/tasks_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class InternetConnectionStream {
@@ -22,7 +23,8 @@ class InternetConnectionStream {
 
   Future<void> _checkInternetConnectivity({ConnectivityResult? result}) async {
     var newResult = result ?? await _connectivity.checkConnectivity();
-    bool value = Repository().checkIsAnyTasksNotSent();
+    bool value = TasksRepository().checkIsAnyTasksNotSent();
+    ///TODO
     if (newResult != ConnectivityResult.none) {
       changeUserHaveInternetConnection(true);
       if (value) {

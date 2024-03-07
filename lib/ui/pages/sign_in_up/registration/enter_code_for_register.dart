@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
-import 'package:chance_app/ux/repository.dart';
+import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -55,7 +56,7 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
           backgroundColor: Colors.transparent,
           surfaceTintColor: Colors.transparent,
           centerTitle: true,
-          title: const Text("Реєстрація"),
+          title: Text(AppLocalizations.instance.translate("registration")),
         ),
         backgroundColor: beigeBG,
         body: Padding(
@@ -63,11 +64,12 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
+              SizedBox(
                 height: 120,
                 child: Text(
-                  "Ми відправили на вашу пошту електронний лист з верифікаційним посиланням — код з 4 символів. Перевірте пошту, і якщо не знайдете листа — подивіться у папці «Спам».",
-                  style: TextStyle(fontSize: 16, letterSpacing: 0.5),
+                  AppLocalizations.instance
+                      .translate("weHaveSentLetterOnYourEmail"),
+                  style: const TextStyle(fontSize: 16, letterSpacing: 0.5),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -93,13 +95,15 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
                     isTaped = true;
                     String code = textEditingController.text;
                     if (code.length == 4) {
-                      await Repository()
+                      await UserRepository()
                           .checkIsCodeValid(
                               code, state.email, state.passwordFirst)
                           .then((value) {
                         if (value != null) {
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              "/subscription_page", (route) => false);
+                          Navigator.of(context)
+                              .pushNamedAndRemoveUntil("/", (route) => false);
+                          BlocProvider.of<RegistrationBloc>(context)
+                              .add(ClearData());
                         }
                       });
                     }
@@ -110,7 +114,7 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 28),
                 child: Text(
-                  "Введіть код",
+                  AppLocalizations.instance.translate("enterCode"),
                   style: TextStyle(color: primaryText, fontSize: 14),
                 ),
               ),
@@ -121,13 +125,15 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
                     isTaped = true;
                     String code = textEditingController.text;
                     if (code.length == 4) {
-                      await Repository()
+                      await UserRepository()
                           .checkIsCodeValid(textEditingController.text,
                               state.email, state.passwordFirst)
                           .then((value) {
                         if (value != null) {
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              "/subscription_page", (route) => false);
+                          Navigator.of(context)
+                              .pushNamedAndRemoveUntil("/", (route) => false);
+                          BlocProvider.of<RegistrationBloc>(context)
+                              .add(ClearData());
                         }
                       });
                     }
@@ -137,7 +143,7 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
                   },
                   color: primary1000,
                   child: Text(
-                    "Завершити",
+                    AppLocalizations.instance.translate("complete"),
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
@@ -150,7 +156,7 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
                   SizedBox(
                       height: 40,
                       child: Text(
-                        "Не отримали?   ${secondsLeft > 0 ? "Відправити знову: $secondsLeft сек." : ""}",
+                        "${AppLocalizations.instance.translate("didntReceive")}?   ${secondsLeft > 0 ? "${AppLocalizations.instance.translate("resend")}: $secondsLeft${AppLocalizations.instance.translate("sec")}." : ""}",
                         style: TextStyle(color: primaryText, fontSize: 14),
                       )),
                   SizedBox(
@@ -159,14 +165,17 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
                         onTap: () {
                           isTaped = true;
                           if (!(secondsLeft > 0)) {
-                            //Repository().resendCode(state.email);
-                            Repository().resendCode("vbifko4@gmail.com");
+                            UserRepository().resendCode(state.email);
+                            //Repository().resendCode(textEditingController.text);
                             loadTimer();
                           }
                           isTaped = false;
                         },
                         child: Text(
-                          secondsLeft > 0 ? "" : "Відправити повторно",
+                          secondsLeft > 0
+                              ? ""
+                              : AppLocalizations.instance
+                                  .translate("resendAgain"),
                           style: TextStyle(
                               color: secondsLeft > 0 ? primaryText : primary500,
                               fontSize: 16),

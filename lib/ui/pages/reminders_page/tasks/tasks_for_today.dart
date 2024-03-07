@@ -1,7 +1,8 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/model/task_model.dart';
-import 'package:chance_app/ux/repository.dart';
+import 'package:chance_app/ux/repository/tasks_repository.dart';
+import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,7 +58,7 @@ class _TasksForTodayState extends State<TasksForToday> {
             if (kDebugMode)
               IconButton(
                   onPressed: () async {
-                    await Repository().deleteAllTasks();
+                    await TasksRepository().deleteAllTasks();
                   },
                   icon: const Icon(Icons.delete)),
           ],

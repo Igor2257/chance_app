@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:chance_app/firebase_options.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/add_medicine_page/add_medicine_page.dart';
 import 'package:chance_app/ui/pages/main_page/main_page.dart';
 import 'package:chance_app/ui/pages/menu/menu_page.dart';
@@ -25,7 +26,6 @@ import 'package:chance_app/ui/pages/sign_in_up/log_in/log_in_page.dart';
 import 'package:chance_app/ui/pages/sign_in_up/log_in/reset_password.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/enter_code_for_register.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/registration_page.dart';
-import 'package:chance_app/ui/pages/sign_in_up/registration/subscription_page.dart';
 import 'package:chance_app/ui/pages/sign_in_up/sign_in_up_page.dart';
 import 'package:chance_app/ui/pages/sos_page/add_contact_screen.dart';
 import 'package:chance_app/ui/pages/sos_page/add_group_screen.dart';
@@ -53,7 +53,8 @@ import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/product_model.dart';
 import 'package:chance_app/ux/model/settings.dart';
 import 'package:chance_app/ux/model/task_model.dart';
-import 'package:chance_app/ux/repository.dart';
+import 'package:chance_app/ux/repository/tasks_repository.dart';
+import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -116,7 +117,7 @@ Future<void> main() async {
     if ((!HiveCRUM().setting.blockAd)) {
       unawaited(MobileAds.instance.initialize());
     }
-    Repository repository = Repository();
+    UserRepository repository = UserRepository();
     if (await repository.isUserEnteredEarlier()) {
       await repository.getUser().then((user) async {
         String route = "/signinup";
@@ -155,6 +156,22 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final Settings settings = HiveCRUM().setting;
 
   @override
+  void initState() {
+    super.initState();
+    internetConnectionStream = InternetConnectionStream(setState);
+    try {
+      if (!settings.blockAd) initAd();
+    } catch (e) {
+      FlutterError("Error ${e.toString()}");
+    }
+    try {
+      checkIfDocsAreAvailable();
+    } catch (e) {
+      FlutterError("Error ${e.toString()}");
+    }
+  }
+
+  @override
   void dispose() {
     super.dispose();
     if (bannerAd != null) {
@@ -163,6 +180,9 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   initAd() {
+    if (bannerAd != null) {
+      bannerAd!.dispose();
+    }
     bannerAd = BannerAd(
         size: AdSize.banner,
         adUnitId: AdHelper.bannerMainScreen,
@@ -178,25 +198,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
           },
         ),
         request: const AdRequest());
-    if (isBannerLoad) {
-      bannerAd!.load();
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    internetConnectionStream = InternetConnectionStream(setState);
-    try {
-      if (!settings.blockAd) initAd();
-    } catch (e) {
-      FlutterError(e.toString());
-    }
-    try {
-      checkIfDocsAreAvailable();
-    } catch (e) {
-      FlutterError(e.toString());
-    }
+    bannerAd!.load();
+    print("object");
   }
 
   checkIfDocsAreAvailable() async {
@@ -299,7 +302,6 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                     width: size.width,
                                     height: size.height,
                                     child: MaterialApp(
-                                      title: 'Flutter Demo',
                                       debugShowCheckedModeBanner: false,
                                       theme: ThemeData(
                                           scaffoldBackgroundColor: beigeBG,
@@ -320,6 +322,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                         Locale('ru'),
                                       ],
                                       localizationsDelegates: const [
+                                        MyLocalizationsDelegate(),
                                         GlobalWidgetsLocalizations.delegate,
                                         GlobalCupertinoLocalizations.delegate,
                                         GlobalMaterialLocalizations.delegate,
@@ -335,8 +338,6 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                             const LoginPage(),
                                         "/enter_code": (context) =>
                                             const EnterCodeForRegister(),
-                                        "/subscription_page": (context) =>
-                                            const SubscriptionPage(),
                                         "/reminders": (context) =>
                                             const RemindersPage(),
                                         "/date_picker_for_tasks": (context) =>
@@ -377,6 +378,20 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                         "/enter_accept_code": (context) =>
                                             const EnterAcceptCode(),
                                       },
+                                      localeResolutionCallback:
+                                          (locale, supportedLocales) {
+                                        for (Locale supportedLocale
+                                            in supportedLocales) {
+                                          if (supportedLocale.languageCode ==
+                                                  locale?.languageCode ||
+                                              supportedLocale.countryCode ==
+                                                  locale?.countryCode) {
+                                            return supportedLocale;
+                                          }
+                                        }
+
+                                        return supportedLocales.first;
+                                      },
                                     ),
                                   ),
                                 ),
@@ -411,8 +426,12 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                             Text(
                                               InternetConnectionStream
                                                       .isUserHaveInternetConnection
-                                                  ? "З'єднання відновлено"
-                                                  : "Немає з'єднання",
+                                                  ? AppLocalizations.instance
+                                                      .translate(
+                                                          "connectionRestored")
+                                                  : AppLocalizations.instance
+                                                      .translate(
+                                                          "noConnection"),
                                               style: TextStyle(
                                                   fontSize: 16,
                                                   color: primary50),
@@ -427,21 +446,16 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                 Container(
                                     width: size.width,
                                     color: beigeBG,
-                                    height: settings.blockAd == false &&
-                                            isBannerLoad &&
-                                            bannerAd != null
-                                        ? bannerAd!.size.height.toDouble()
-                                        : 0,
                                     child: SafeArea(
                                         top: false,
                                         child: Center(
-                                          child: !settings.blockAd &&
-                                                  isBannerLoad &&
-                                                  bannerAd != null
-                                              ? AdWidget(
-                                                  ad: bannerAd!,
-                                                )
-                                              : const SizedBox(),
+                                          child: SizedBox(
+                                            height: bannerAd!.size.height
+                                                .toDouble(),
+                                            child: AdWidget(
+                                              ad: bannerAd!,
+                                            ),
+                                          ),
                                         ))),
                             ],
                           ),
@@ -470,7 +484,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                                 color: beige500,
                                               ),
                                               Text(
-                                                "Завдання",
+                                                AppLocalizations.instance
+                                                    .translate("tasks"),
                                                 style: TextStyle(
                                                     fontSize: 24,
                                                     color: primaryText),
@@ -479,7 +494,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                                 height: 30,
                                               ),
                                               Text(
-                                                "У вас є не синхронізовані дані з сервером. Бажаєте відправити ваші дані на сервер чи синхронізувати ваші дані із сервером?",
+                                                AppLocalizations.instance.translate(
+                                                    "uHaveNotSynchronizedDataWithServer"),
                                                 textAlign: TextAlign.justify,
                                                 style: TextStyle(
                                                     fontSize: 16,
@@ -504,8 +520,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                             children: [
                                               GestureDetector(
                                                 onTap: () async {
-                                                  await Repository()
-                                                      .sendAllLocalData()
+                                                  await TasksRepository()
+                                                      .sendAllLocalTasksData()
                                                       .then((value) {
                                                     if (value) {
                                                       internetConnectionStream
@@ -542,7 +558,10 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                                       ),
                                                       Expanded(
                                                         child: Text(
-                                                          "Відправити мої дані на сервер",
+                                                          AppLocalizations
+                                                              .instance
+                                                              .translate(
+                                                                  "sendMyDataOnServer"),
                                                           maxLines: 2,
                                                           textAlign:
                                                               TextAlign.center,
@@ -559,7 +578,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                               ),
                                               GestureDetector(
                                                 onTap: () async {
-                                                  await Repository()
+                                                  await TasksRepository()
                                                       .updateLocalTasks()
                                                       .whenComplete(() {
                                                     internetConnectionStream
@@ -597,7 +616,10 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                                       ),
                                                       Expanded(
                                                         child: Text(
-                                                          "Синхронізація із сервером",
+                                                          AppLocalizations
+                                                              .instance
+                                                              .translate(
+                                                                  "synchronizeDataWithServer"),
                                                           maxLines: 2,
                                                           textAlign:
                                                               TextAlign.center,

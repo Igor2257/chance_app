@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:chance_app/main.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
-import 'package:chance_app/ux/model/invitation_model.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/product_model.dart';
@@ -77,6 +76,19 @@ class HiveCRUM {
     if (taskModel != null) {
       taskModel = taskModel.copyWith(isSentToDB: isSentToDB);
       await tasksBox!.put(taskModel.id, taskModel);
+    }
+  }
+  Future setIsSentInLocalMedicine(bool isSentToDB,
+      {String? id, MedicineModel? medicineModel}) async {
+    if (id != null) {
+      MedicineModel medicineModel =
+      HiveCRUM().myMedicines.firstWhere((element) => element.id == id);
+      medicineModel = medicineModel.copyWith(isSentToDB: isSentToDB);
+      await medicineBox!.put(medicineModel.id, medicineModel);
+    }
+    if (medicineModel != null) {
+      medicineModel = medicineModel.copyWith(isSentToDB: isSentToDB);
+      await medicineBox!.put(medicineModel.id, medicineModel);
     }
   }
 

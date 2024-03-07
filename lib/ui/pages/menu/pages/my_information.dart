@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/menu/components/input_my_info_layout.dart';
 import 'package:chance_app/ux/hive_crum.dart';
 import 'package:chance_app/ux/model/me_user.dart';
@@ -38,7 +39,7 @@ class _MyInformationState extends State<MyInformation> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Особиста інформація"),
+        title:  Text(AppLocalizations.instance.translate("myInfo")),
       ),
       backgroundColor: beigeBG,
       body: Padding(
@@ -46,22 +47,22 @@ class _MyInformationState extends State<MyInformation> {
         child: Column(
           children: [
             InputMyInfoLayout(
-                title: "Імʼя*", text: firstNameTextEditingController.text),
+                title: AppLocalizations.instance.translate("name"), text: firstNameTextEditingController.text),
             const SizedBox(
               height: 30,
             ),
             InputMyInfoLayout(
-                title: "Прізвище*", text: lastNameTextEditingController.text),
+                title: AppLocalizations.instance.translate("surname"), text: lastNameTextEditingController.text),
             const SizedBox(
               height: 30,
             ),
             InputMyInfoLayout(
-                title: "Номер телефону", text: phoneTextEditingController.text),
+                title: AppLocalizations.instance.translate("phoneNumber"), text: phoneTextEditingController.text),
             const SizedBox(
               height: 30,
             ),
             InputMyInfoLayout(
-                title: "Електронна пошта",
+                title: AppLocalizations.instance.translate("email"),
                 text: emailTextEditingController.text),
             const SizedBox(
               height: 30,

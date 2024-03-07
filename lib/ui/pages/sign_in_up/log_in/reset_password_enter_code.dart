@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/sign_in_up/log_in/reset_password_enter_new_password.dart';
-import 'package:chance_app/ux/repository.dart';
+import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -44,7 +45,7 @@ class _ResetPasswordEnterCodeState extends State<ResetPasswordEnterCode> {
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         centerTitle: true,
-        title: const Text("Відновити пароль"),
+        title: Text(AppLocalizations.instance.translate("resetPassword")),
       ),
       backgroundColor: beigeBG,
       body: Padding(
@@ -52,11 +53,12 @@ class _ResetPasswordEnterCodeState extends State<ResetPasswordEnterCode> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
+            SizedBox(
               height: 120,
               child: Text(
-                "Ми відправили на вашу пошту електронний лист з верифікаційним посиланням — код з 4 символів. Перевірте пошту, і якщо не знайдете листа — теку «спам»",
-                style: TextStyle(fontSize: 16, letterSpacing: 0.5),
+                AppLocalizations.instance
+                    .translate("weHaveSentLetterOnYourEmail"),
+                style: const TextStyle(fontSize: 16, letterSpacing: 0.5),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -94,7 +96,7 @@ class _ResetPasswordEnterCodeState extends State<ResetPasswordEnterCode> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 28),
               child: Text(
-                "Введіть код",
+                AppLocalizations.instance.translate("enterCode"),
                 style: TextStyle(color: primaryText, fontSize: 14),
               ),
             ),
@@ -114,7 +116,7 @@ class _ResetPasswordEnterCodeState extends State<ResetPasswordEnterCode> {
                 },
                 color: primary1000,
                 child: Text(
-                  "Підтвердити",
+                  AppLocalizations.instance.translate("confirm"),
                   style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
@@ -127,7 +129,7 @@ class _ResetPasswordEnterCodeState extends State<ResetPasswordEnterCode> {
                 SizedBox(
                     height: 40,
                     child: Text(
-                      "Не отримали?   ${secondsLeft > 0 ? "Відправити знову: $secondsLeft сек." : ""}",
+                      "${AppLocalizations.instance.translate("didntReceive")}?   ${secondsLeft > 0 ? "${AppLocalizations.instance.translate("resend")}: $secondsLeft${AppLocalizations.instance.translate("sec")}." : ""}",
                       style: TextStyle(color: primaryText, fontSize: 14),
                     )),
                 SizedBox(
@@ -135,13 +137,16 @@ class _ResetPasswordEnterCodeState extends State<ResetPasswordEnterCode> {
                     child: GestureDetector(
                       onTap: () {
                         if (!(secondsLeft > 0)) {
-                          Repository().resendCode(widget.email);
+                          UserRepository().resendCode(widget.email);
                           //Repository().resendCode("vbifko4@gmail.com");
                           loadTimer();
                         }
                       },
                       child: Text(
-                        secondsLeft > 0 ? "" : "Відправити повторно",
+                        secondsLeft > 0
+                            ? ""
+                            : AppLocalizations.instance
+                                .translate("resendAgain"),
                         style: TextStyle(
                             color: secondsLeft > 0 ? primaryText : primary500,
                             fontSize: 16),

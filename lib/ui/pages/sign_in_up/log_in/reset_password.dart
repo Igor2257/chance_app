@@ -1,7 +1,8 @@
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/sign_in_up/log_in/reset_password_enter_code.dart';
-import 'package:chance_app/ux/repository.dart';
+import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 
 class ResetPassword extends StatefulWidget {
@@ -32,7 +33,7 @@ class _ResetPasswordState extends State<ResetPassword> {
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         centerTitle: true,
-        title: const Text("Відновити пароль"),
+        title: Text(AppLocalizations.instance.translate("resetPassword")),
       ),
       backgroundColor: beigeBG,
       body: Padding(
@@ -43,7 +44,7 @@ class _ResetPasswordState extends State<ResetPassword> {
             Padding(
               padding: const EdgeInsets.only(left: 16),
               child: Text(
-                "Введіть електронну пошту*",
+                "${AppLocalizations.instance.translate("enterYourEmail")}*",
                 style: TextStyle(
                     fontSize: 14, color: isError ? red900 : primaryText),
               ),
@@ -82,7 +83,7 @@ class _ResetPasswordState extends State<ResetPassword> {
             RoundedButton(
               color: primary1000,
               child: Text(
-                "Підтвердити",
+                AppLocalizations.instance.translate("confirm"),
                 style: TextStyle(
                     fontSize: 16,
                     color: primary50,
@@ -91,7 +92,7 @@ class _ResetPasswordState extends State<ResetPassword> {
               onPress: () async {
                 validate();
                 if (!isError) {
-                  await Repository().forgotPassword(editingController.text).then((value) {
+                  await UserRepository().forgotPassword(editingController.text).then((value) {
                   showDialog(
                       context: context,
                       builder: (context) {
@@ -99,7 +100,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                           backgroundColor: beigeBG,
                           title: Center(
                             child: Text(
-                              "Лист був відправлений",
+                                AppLocalizations.instance
+                                    .translate("letterHasBeenSend"),
                                 textAlign: TextAlign.center,
                                 style:
                                     TextStyle(color: primaryText, fontSize: 24),
@@ -109,11 +111,11 @@ class _ResetPasswordState extends State<ResetPassword> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                "Перевірте свою пошту ${editingController.text},щоб отримати подальші інструкції звідновлення паролю",
-                                style:
-                                    TextStyle(color: primaryText, fontSize: 16),
-                                textAlign: TextAlign.center,
-                              ),
+                                  "${AppLocalizations.instance.translate("checkYourMailPart1")} ${editingController.text}, ${AppLocalizations.instance.translate("checkYourMailPart2")}",
+                                  style: TextStyle(
+                                      color: primaryText, fontSize: 16),
+                                  textAlign: TextAlign.center,
+                                ),
                               Row(
                                 children: [
                                   const Spacer(),
@@ -147,7 +149,8 @@ class _ResetPasswordState extends State<ResetPassword> {
               height: 20,
             ),
             Text(
-              "Ми відправимо вам на email лист з інструкціями по відновленню паролю.",
+              AppLocalizations.instance
+                  .translate("weWillSentLetterOnYourEmail"),
               textAlign: TextAlign.center,
               style: TextStyle(
                   color: primary700,
@@ -164,13 +167,13 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   void validate() {
     if (editingController.text.trim().isEmpty) {
-      errorText = 'Невірний формат електронної пошти';
+      errorText = AppLocalizations.instance.translate("invalidEmailFormat");
       isError = true;
     } else {
       if (!RegExp(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b',
               caseSensitive: false)
           .hasMatch(editingController.text)) {
-        errorText = 'Невірний формат електронної пошти';
+        errorText = AppLocalizations.instance.translate("invalidEmailFormat");
         isError = true;
       } else {
         errorText = "";

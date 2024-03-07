@@ -75,6 +75,7 @@ dependencies:
   cupertino_listview: ^2.0.0
   workmanager: ^0.5.2
   google_mobile_ads: ^4.0.0
+  in_app_purchase: ^3.1.13
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -120,6 +121,7 @@ flutter:
     - assets/medicine_icons/
     - assets/menu_icons/
     - assets/onboarding_images/
+    - assets/localizations/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

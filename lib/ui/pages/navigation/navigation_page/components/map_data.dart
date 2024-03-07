@@ -15,7 +15,9 @@ import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_resu
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/select_place.dart';
 import 'package:chance_app/ux/position_controller.dart';
-import 'package:chance_app/ux/repository.dart';
+import 'package:chance_app/ux/repository/invitation_repository.dart';
+import 'package:chance_app/ux/repository/navigation_repository.dart';
+import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_google_maps_webservices/places.dart';
@@ -47,7 +49,7 @@ String autoCompleteUrl(String text) {
 }
 
 Future<PointLatLng?> getPositionOfPoint(PickResult pickResult) async {
-  final result = await Repository().getLocationFromPlaceId(pickResult);
+  final result = await NavigationRepository().getLocationFromPlaceId(pickResult);
   if (result == null) {
     return null;
   }

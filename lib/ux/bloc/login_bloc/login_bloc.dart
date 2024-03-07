@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:chance_app/ui/pages/sign_in_up/log_in/input_login_layout.dart';
-import 'package:chance_app/ux/repository.dart';
+import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 
 part 'login_event.dart';
@@ -44,7 +44,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(state.copyWith(isLoading: true,email: event.email,password: event.password));
     bool isValid = validate(emit);
     if (isValid) {
-      await Repository()
+      await UserRepository()
           .sendLoginData(state.email, state.password)
           .then((value) {
         if (value == null) {

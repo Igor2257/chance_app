@@ -4,11 +4,11 @@ import 'package:chance_app/ui/pages/navigation/place_picker/controllers/autocomp
 import 'package:chance_app/ui/pages/navigation/place_picker/providers/place_provider.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/autocomplete_search.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geometry.dart'
-    as myGeometry;
+    as mygeometry;
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/location.dart'
-    as myLocation;
+    as mylocation;
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart'
-    as myPick;
+    as mypick;
 import 'package:chance_app/ui/pages/navigation/place_picker/src/place_picker.dart';
 import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:chance_app/ux/hive_crum.dart';
@@ -43,7 +43,8 @@ class _SelectPlaceState extends State<SelectPlace> {
   SearchBarController searchBarController = SearchBarController();
   List<Map<String, dynamic>> predictionForList = [];
   List<Prediction> predictionForTap = [];
-  List<myPick.PickResult> savedAddresses = HiveCRUM().savedAddresses
+  List<mypick.PickResult> savedAddresses = HiveCRUM()
+      .savedAddresses
       .where((element) => element.isRecentlySearched == true)
       .toList();
   MeUser meUser = HiveCRUM().user!;
@@ -176,11 +177,11 @@ class _SelectPlaceState extends State<SelectPlace> {
                                             BlocProvider.of<NavigationBloc>(
                                                     context)
                                                 .add(UpdateFirstPickResult(
-                                                    firstPickResult: myPick.PickResult(
+                                                firstPickResult: mypick.PickResult(
                                                         id: "me",
                                                         formattedAddress: "Я",
-                                                        geometry: myGeometry.Geometry(
-                                                            location: myLocation
+                                                        geometry: mygeometry.Geometry(
+                                                            location: mylocation
                                                                 .Location(
                                                                     lat: position
                                                                         .latitude,
@@ -191,11 +192,11 @@ class _SelectPlaceState extends State<SelectPlace> {
                                             BlocProvider.of<NavigationBloc>(
                                                     context)
                                                 .add(UpdateSecondPickResult(
-                                                    secondPickResult: myPick.PickResult(
+                                                secondPickResult: mypick.PickResult(
                                                         id: "me",
                                                         formattedAddress: "Я",
-                                                        geometry: myGeometry.Geometry(
-                                                            location: myLocation
+                                                        geometry: mygeometry.Geometry(
+                                                            location: mylocation
                                                                 .Location(
                                                                     lat: position
                                                                         .latitude,
@@ -451,7 +452,7 @@ class _SelectPlaceState extends State<SelectPlace> {
     return true;
   }
 
-  saveCoordinates(myPick.PickResult? selectedPlace) async {
+  saveCoordinates(mypick.PickResult? selectedPlace) async {
     if (selectedPlace != null) {
       switch (widget.pickResultFor) {
         case PickResultFor.first:

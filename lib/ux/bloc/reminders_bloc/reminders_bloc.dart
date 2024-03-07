@@ -5,7 +5,9 @@ import 'package:chance_app/ui/pages/reminders_page/components/calendar.dart';
 import 'package:chance_app/ux/hive_crum.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/task_model.dart';
-import 'package:chance_app/ux/repository.dart';
+import 'package:chance_app/ux/repository/medicine_repository.dart';
+import 'package:chance_app/ux/repository/tasks_repository.dart';
+import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -43,8 +45,8 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
   FutureOr<void> _onLoadData(
       LoadData event, Emitter<RemindersState> emit) async {
     emit(state.clear());
-    await Repository().updateLocalTasks().then((tasks) async {
-      await Repository().updateLocalMedicines().then((medicines) {
+    await TasksRepository().updateLocalTasks().then((tasks) async {
+      await MedicineRepository().updateLocalMedicines().then((medicines) {
         List<Map<String, dynamic>> dates = [], week = [];
         DateTime now = DateTime.now();
         final int year = now.year;
@@ -280,7 +282,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
   FutureOr<void> _onSelectTask(
       SelectTask event, Emitter<RemindersState> emit) async {
     final task = event.task.copyWith(isDone: !event.task.isDone);
-    await Repository().updateTask(id: task.id, isDone: task.isDone);
+    await TasksRepository().updateTask(id: task.id, isDone: task.isDone);
     emit(
       state.copyWith(
         myTasks: [
@@ -304,7 +306,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
 
   FutureOr<void> _onChangeIsDoneForTask(
       ChangeIsDoneForTask event, Emitter<RemindersState> emit) async {
-    Repository repository = Repository();
+    TasksRepository repository = TasksRepository();
     List<TaskModel> myTasks = List.from(state.myTasks);
     int index = myTasks.indexWhere(
         (element) => element.id == event.id && element.isRemoved == false);
@@ -332,7 +334,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
 
   FutureOr<void> _onDeleteTask(
       DeleteTask event, Emitter<RemindersState> emit) async {
-    await Repository().removeTask(event.id).then((value) {
+    await TasksRepository().removeTask(event.id).then((value) {
       if (value == null) {
         List<TaskModel> myTasks = state.myTasks
             .where((element) =>
@@ -352,7 +354,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
 
   FutureOr<void> _onSaveMedicine(
       SaveMedicine event, Emitter<RemindersState> emit) async {
-    await Repository().saveMedicine(event.medicineModel).then((value) {
+    await MedicineRepository().saveMedicine(event.medicineModel).then((value) {
       if (value == null) {
         List<MedicineModel> myMedicines = state.myMedicines
             .where((element) => element.isRemoved == false)
@@ -366,7 +368,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
 
   FutureOr<void> _onUpdateMedicine(
       UpdateMedicine event, Emitter<RemindersState> emit) async {
-    await Repository().updateMedicine(event.medicineModel).then((value) {
+    await MedicineRepository().updateMedicine(event.medicineModel).then((value) {
       if (value == null) {
         List<MedicineModel> myMedicines = state.myMedicines
             .where((element) =>
@@ -381,7 +383,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
 
   FutureOr<void> _onDeleteMedicine(
       DeleteMedicine event, Emitter<RemindersState> emit) async {
-    await Repository().removeMedicine(event.id).then((value) {
+    await MedicineRepository().removeMedicine(event.id).then((value) {
       if (value == null) {
         List<MedicineModel> myMedicines = state.myMedicines
             .where((element) =>

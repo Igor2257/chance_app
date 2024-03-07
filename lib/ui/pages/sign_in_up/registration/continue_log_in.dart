@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,7 +55,7 @@ class _ContinueLogInState extends State<ContinueLogIn> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Вже маєте аккаунт?",
+                "${AppLocalizations.instance.translate("alreadyHaveAccount")}?",
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 16,
@@ -70,7 +71,7 @@ class _ContinueLogInState extends State<ContinueLogIn> {
                     }
                   },
                   child: Text(
-                    "Увійти",
+                    AppLocalizations.instance.translate("enter"),
                     style: TextStyle(
                         decoration: TextDecoration.underline,
                         decorationColor: primary700,

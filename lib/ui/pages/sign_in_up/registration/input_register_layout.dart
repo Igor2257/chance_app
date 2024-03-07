@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -103,7 +104,7 @@ class _InputRegisterLayoutState extends State<InputRegisterLayout> {
                   maxLength: 11,
                   keyboardAction: widget.textInputAction,
                   focusNode: focusNode,
-                  hintText: "Номер телефону",
+                  hintText: AppLocalizations.instance.translate("phoneNumber"),
                   errorMessage: "",
                   locale: "uk",
                   countries: const ["UA"],

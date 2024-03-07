@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/sign_in_up/log_in/input_login_layout.dart';
 import 'package:chance_app/ux/bloc/login_bloc/login_bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
             backgroundColor: Colors.transparent,
             surfaceTintColor: Colors.transparent,
             centerTitle: true,
-            title: const Text("Вхід"),
+            title:  Text(AppLocalizations.instance.translate("signIn")),
             leading: BackButton(
               onPressed: () {
                 Navigator.of(context)
@@ -51,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               const SizedBox(height: 24),
               InputLoginLayout(
-                title: "Введіть електронну пошту*",
+                title:"${AppLocalizations.instance.translate("enterYourEmail")}*",
                 focusNode: emailFocusNode,
                 obscureText: false,
                 textInputAction: TextInputAction.next,
@@ -65,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 24),
               InputLoginLayout(
-                title: "Введіть пароль*",
+                title: "${AppLocalizations.instance.translate("enterYourPassword")}*",
                 focusNode: passwordFocusNode,
                 obscureText: true,
                 textInputAction: TextInputAction.done,
@@ -103,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                           width: 5,
                         ),
                       Text(
-                        "Увійти",
+                        AppLocalizations.instance.translate("enter"),
                         style: TextStyle(
                             color: primary50,
                             fontSize: 16,
@@ -126,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Text(
-                      "Не маєте облікового запису?",
+                      "${AppLocalizations.instance.translate("dontHaveAccount")}?",
                       style: TextStyle(
                           letterSpacing: 0.5,
                           color: primary700,
@@ -146,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                           }
                         },
                         child: Text(
-                          "Створити",
+                          AppLocalizations.instance.translate("create"),
                           style: TextStyle(
                               decoration: TextDecoration.underline,
                               decorationColor: primary700,
@@ -168,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                     height: 44,
                     child: Center(
                       child: Text(
-                        "Забули пароль?",
+                        "${AppLocalizations.instance.translate("forgotPassword")}?",
                         style: TextStyle(
                             decoration: TextDecoration.underline,
                             decorationColor: primary700,

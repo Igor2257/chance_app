@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/input_register_layout.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/registration_page.dart';
-import 'package:chance_app/ux/repository.dart';
+import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -88,7 +88,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       emit(state.copyWith(
           passwordSecond: event.second.replaceAll(" ", ""), passwordFirst: event.first.replaceAll(" ", "")));
       if (validate(emit)) {
-        await Repository()
+        await UserRepository()
             .sendRegisterData(state.lastName, state.firstName, state.phone,
                 state.email, state.passwordFirst)
             .then((value) {

@@ -1,3 +1,4 @@
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/continue_log_in.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/input_register_layout.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class _SecondSubPageState extends State<SecondSubPage> {
         const SizedBox(height: 24),
         InputRegisterLayout(
           textEditingController: phoneEditingController,
-          title: "Введіть номер телефону*",
+          title: "${AppLocalizations.instance.translate("enterPhoneNumber")}*",
           focusNode: phoneFocusNode,
           useCancelButton: false,
           obscureText: false,
@@ -47,7 +48,7 @@ class _SecondSubPageState extends State<SecondSubPage> {
         const SizedBox(height: 24),
         InputRegisterLayout(
           textEditingController: emailEditingController,
-          title: "Введіть електрону пошту*",
+          title: "${AppLocalizations.instance.translate("enterYourEmail")}*",
           focusNode: emailFocusNode,
           useCancelButton: false,
           obscureText: false,
@@ -60,7 +61,7 @@ class _SecondSubPageState extends State<SecondSubPage> {
         ),
         const Spacer(),
         ContinueLogIn(
-          name: "Продовжити",
+          name: AppLocalizations.instance.translate("continue"),
           firstText: phoneEditingController,
           secondText: emailEditingController,
           firstFocusNode: phoneFocusNode,

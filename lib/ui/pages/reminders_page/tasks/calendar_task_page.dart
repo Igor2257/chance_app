@@ -9,7 +9,8 @@ import 'package:chance_app/ux/bloc/add_task_bloc/add_task_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 
 import 'package:chance_app/ux/model/task_model.dart';
-import 'package:chance_app/ux/repository.dart';
+import 'package:chance_app/ux/repository/tasks_repository.dart';
+import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -84,7 +85,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
 
                     BlocProvider.of<RemindersBloc>(context)
                         .add(SaveTask(taskModel: taskModel));
-                    await Repository().saveTask(taskModel).then((value) {
+                    await TasksRepository().saveTask(taskModel).then((value) {
 
                       showDialog(
                           barrierDismissible: false,

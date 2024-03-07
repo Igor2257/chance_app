@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/onboarding/components/onboarding_tutorial_page_item.dart';
 import 'package:flutter/material.dart';
 
@@ -17,21 +18,20 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> {
   int page = 0;
   List<Image> images = [];
   final List<String> titles = [
-        'Нагадування',
-        'Спілкування',
-        'Пошук роботи',
-        'Запис до лікаря',
-        'Навігація',
-        'Нагадування',
+        AppLocalizations.instance.translate("reminder"),
+        AppLocalizations.instance.translate("communication"),
+        AppLocalizations.instance.translate("jobSearch"),
+        AppLocalizations.instance.translate("appointmentWithDoctor"),
+        AppLocalizations.instance.translate("navigation"),
         'SOS',
       ],
       subtitles = [
-        'Створюйте завдання та нагадування про прийом ліків',
-        'Обговорюйте, діліться думками та спілкуйтеся у дружньому колі',
-        'Не гайте часу — шукайте роботу своєї мрії прямо зараз!',
-        'Медицина без черг — це просто! Запиcуйтесь до лікаря в зручний час',
-        'Плануйте свої маршрути разом з функцією навігація',
-        'В екстрених випадках тисніть на кнопку SOS і ми подбаємо про вашу безпеку',
+        AppLocalizations.instance.translate("onboardingReminder"),
+        AppLocalizations.instance.translate("onboardingCommunication"),
+        AppLocalizations.instance.translate("onboardingJobSearch"),
+        AppLocalizations.instance.translate("onboardingAppointmentWithDoctor"),
+        AppLocalizations.instance.translate("onboardingNavigation"),
+        AppLocalizations.instance.translate("onboardingSos"),
       ];
 
   @override
@@ -108,12 +108,14 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> {
                 },
                 color: primary1000,
                 child: Text(
-                  page == 5 ? "Завершити" : "Далі",
-                  style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w400,
-                      color: primary50),
-                ),
+                      page == 5
+                          ? AppLocalizations.instance.translate("complete")
+                          : AppLocalizations.instance.translate("next"),
+                      style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w400,
+                          color: primary50),
+                    ),
               ),
               const SizedBox(
                 height: 24,
@@ -186,7 +188,7 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> {
                         color: beigeTransparent),
                     child: Center(
                       child: Text(
-                        'Пропустити',
+                            AppLocalizations.instance.translate("miss"),
                             style: TextStyle(fontSize: 16, color: primaryText),
                           ),
                         ),

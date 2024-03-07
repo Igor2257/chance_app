@@ -170,8 +170,8 @@ class _RemindersPageState extends State<RemindersPage> {
 
   Widget _tabSwitcher() {
     const tabs = {
-      Reminders.medicine: "Мої медикаменти",
-      Reminders.tasks: "Мої завдання",
+      Reminders.medicine: "Запрошення для мене",
+      Reminders.tasks: "Запрошення від мене",
     };
     return DecoratedBox(
       decoration: BoxDecoration(

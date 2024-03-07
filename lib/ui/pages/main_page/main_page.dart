@@ -4,7 +4,8 @@ import 'package:chance_app/ui/components/logo_name.dart';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/components/sos_button.dart';
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ux/repository.dart';
+import 'package:chance_app/ux/repository/tasks_repository.dart';
+import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -163,7 +164,7 @@ class _MainPageState extends State<MainPage> {
                               GestureDetector(
                                 onTap: () async {
                                   try {
-                                    await Repository()
+                                    await TasksRepository()
                                         .updateTask(
                                             id: remoteMessage.data["id"]
                                                 .toString(),

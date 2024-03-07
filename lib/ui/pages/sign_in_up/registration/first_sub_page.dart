@@ -1,3 +1,4 @@
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/continue_log_in.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/input_register_layout.dart';
 import 'package:flutter/material.dart';
@@ -16,62 +17,63 @@ class _FirstSubPageState extends State<FirstSubPage> {
       lastNameFocusNode = FocusNode();
 
   final TextEditingController firstNameEditingController =
-          TextEditingController(),
+  TextEditingController(),
       lastNameEditingController = TextEditingController();
 @override
-  void dispose() {
+void dispose() {
   //firstNameFocusNode.dispose();
   //lastNameFocusNode.dispose();
   //firstNameEditingController.dispose();
   //lastNameEditingController.dispose();
-    super.dispose();
-  }
+  super.dispose();
+}
+
   @override
   Widget build(BuildContext context) {
     return  SizedBox(
         height: MediaQuery.of(context).size.height,
-    child:Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        const SizedBox(height: 24),
-        InputRegisterLayout(
-          textEditingController: lastNameEditingController,
-          title: "Введіть ім`я*",
-          focusNode: lastNameFocusNode,
-          useCancelButton: false,
-          obscureText: false,
-          textInputAction: TextInputAction.next,
-          inputLayouts: InputLayouts.lastName,
-          focusOtherField: () {
-            lastNameFocusNode.unfocus();
-            FocusScope.of(context).requestFocus(firstNameFocusNode);
-          },
-          textInputType: TextInputType.name,
-        ),
-        const SizedBox(height: 24),
-        InputRegisterLayout(
-          title: "Введіть прізвище*",
-          focusNode: firstNameFocusNode,
-          useCancelButton: false,
-          obscureText: false,
-          textInputAction: TextInputAction.done,
-          inputLayouts: InputLayouts.firstName,
-          focusOtherField: () {
-            firstNameFocusNode.unfocus();
-          },
-          textInputType: TextInputType.name,
-          textEditingController: firstNameEditingController,
-        ),
-        const Spacer(),
-        ContinueLogIn(
-          name: "Продовжити",
-          firstText: lastNameEditingController,
-          secondText: firstNameEditingController,
-          firstFocusNode: firstNameFocusNode,
-          lastFocusNode: lastNameFocusNode,
-        ),
-        const Spacer(),
-      ],
-    ));
+        child:Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const SizedBox(height: 24),
+            InputRegisterLayout(
+              textEditingController: lastNameEditingController,
+              title: "${AppLocalizations.instance.translate("enterName")}*",
+              focusNode: lastNameFocusNode,
+              useCancelButton: false,
+              obscureText: false,
+              textInputAction: TextInputAction.next,
+              inputLayouts: InputLayouts.lastName,
+              focusOtherField: () {
+                lastNameFocusNode.unfocus();
+                FocusScope.of(context).requestFocus(firstNameFocusNode);
+              },
+              textInputType: TextInputType.name,
+            ),
+            const SizedBox(height: 24),
+            InputRegisterLayout(
+              title: "${AppLocalizations.instance.translate("enterSurname")}*",
+              focusNode: firstNameFocusNode,
+              useCancelButton: false,
+              obscureText: false,
+              textInputAction: TextInputAction.done,
+              inputLayouts: InputLayouts.firstName,
+              focusOtherField: () {
+                firstNameFocusNode.unfocus();
+              },
+              textInputType: TextInputType.name,
+              textEditingController: firstNameEditingController,
+            ),
+            const Spacer(),
+            ContinueLogIn(
+              name: AppLocalizations.instance.translate("continue"),
+              firstText: lastNameEditingController,
+              secondText: firstNameEditingController,
+              firstFocusNode: firstNameFocusNode,
+              lastFocusNode: lastNameFocusNode,
+            ),
+            const Spacer(),
+          ],
+        ));
   }
 }

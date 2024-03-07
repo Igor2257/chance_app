@@ -31,26 +31,29 @@ class _InvitationFromMeTimerState extends State<InvitationFromMeTimer> {
   @override
   Widget build(BuildContext context) {
     return
-          GestureDetector(
-            onTap: () {
-              if (!(secondsLeft > 0)) {
-                loadTimer();
+          Row(children: [
+            const Spacer(),
+            GestureDetector(
+              onTap: () {
+                if (!(secondsLeft > 0)) {
+                  loadTimer();
 
-                BlocProvider.of<InvitationBloc>(context)
-                    .add(LoadInvitationsFromMe());
-              }
-            },
-            child: SizedBox(
-              height: 40,
-              child: Center(
-                child: Text(
-                  "Оновити${secondsLeft != 0 ? " через $secondsLeft" : ""}",
-                  style: TextStyle(
-                      fontSize: 16, color: secondsLeft != 0 ? darkNeutral600 : primary700),
+                  BlocProvider.of<InvitationBloc>(context)
+                      .add(LoadInvitationsFromMe());
+                }
+              },
+              child: SizedBox(
+                height: 40,
+                child: Center(
+                  child: Text(
+                    "Оновити${secondsLeft != 0 ? " через $secondsLeft" : ""}",
+                    style: TextStyle(
+                        fontSize: 20, color: secondsLeft != 0 ? darkNeutral600 : primary700),
+                  ),
                 ),
               ),
-            ),
-          );
+            )
+          ],);
   }
 
   loadTimer() async {

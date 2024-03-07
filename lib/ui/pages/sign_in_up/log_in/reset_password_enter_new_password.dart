@@ -1,6 +1,7 @@
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ux/repository.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
+import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 
 class ResetPasswordEnterNewPassword extends StatefulWidget {
@@ -42,7 +43,7 @@ class _ResetPasswordEnterNewPasswordState
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         centerTitle: true,
-        title: const Text("Відновити пароль"),
+        title: Text(AppLocalizations.instance.translate("resetPassword")),
       ),
       backgroundColor: beigeBG,
       body: Padding(
@@ -53,7 +54,7 @@ class _ResetPasswordEnterNewPasswordState
             Padding(
               padding: const EdgeInsets.only(left: 16),
               child: Text(
-                "Введіть новий пароль",
+                AppLocalizations.instance.translate("enterNewCode"),
                 style: TextStyle(
                     fontSize: 14, color: isErrorFirst ? red900 : primaryText),
               ),
@@ -105,7 +106,7 @@ class _ResetPasswordEnterNewPasswordState
             Padding(
               padding: const EdgeInsets.only(left: 16),
               child: Text(
-                "Введіть новий пароль ще раз",
+                AppLocalizations.instance.translate("enterNewCodeAgain"),
                 style: TextStyle(
                     fontSize: 14, color: isErrorSecond ? red900 : primaryText),
               ),
@@ -156,7 +157,7 @@ class _ResetPasswordEnterNewPasswordState
                 onPress: () async {
                   validate();
                   if (!isErrorFirst && !isErrorSecond) {
-                    await Repository()
+                    await UserRepository()
                         .resetPassword(
                             widget.email, widget.code, firstPassword.text)
                         .then((value) {
@@ -174,7 +175,7 @@ class _ResetPasswordEnterNewPasswordState
                 },
                 color: primary1000,
                 child: Text(
-                  "Зберегти",
+                  AppLocalizations.instance.translate("save"),
                   style: TextStyle(fontSize: 16, color: primary50),
                 )),
             const Spacer(),
@@ -186,14 +187,16 @@ class _ResetPasswordEnterNewPasswordState
 
   void validate() {
     if (firstPassword.text.trim().length < 8) {
-      errorTextFirst = 'Пароль має бути 8 або більше символів';
+      errorTextFirst =
+          AppLocalizations.instance.translate("passwordLengthMustBeMoreThan");
       isErrorFirst = true;
     } else {
       errorTextFirst = '';
       isErrorFirst = false;
     }
     if (firstPassword.text.trim().length > 14) {
-      errorTextFirst = "Пароль має бути менше 14 символів";
+      errorTextFirst =
+          AppLocalizations.instance.translate("passwordLengthMustBeLessThan");
       isErrorFirst = true;
     } else {
       errorTextFirst = '';
@@ -201,14 +204,16 @@ class _ResetPasswordEnterNewPasswordState
     }
 
     if (secondPassword.text.trim().length < 8) {
-      errorTextSecond = 'Пароль має бути 8 або більше символів';
+      errorTextSecond =
+          AppLocalizations.instance.translate("passwordLengthMustBeMoreThan");
       isErrorSecond = true;
     } else {
       errorTextFirst = '';
       isErrorSecond = false;
     }
     if (secondPassword.text.trim().length > 14) {
-      errorTextSecond = "Пароль має бути менше 14 символів";
+      errorTextSecond =
+          AppLocalizations.instance.translate("passwordLengthMustBeLessThan");
       isErrorSecond = true;
     } else {
       errorTextSecond = '';
@@ -217,7 +222,8 @@ class _ResetPasswordEnterNewPasswordState
     if (!isErrorFirst) {
       if (!isErrorSecond) {
         if (firstPassword.text != secondPassword.text) {
-          errorTextSecond = 'Паролі не співпадають';
+          errorTextSecond =
+              AppLocalizations.instance.translate("passwordsAreNotSame");
         }
       }
     }

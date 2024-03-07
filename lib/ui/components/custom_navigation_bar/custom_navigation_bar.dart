@@ -10,7 +10,7 @@ class CustomNavigationBar extends  StatelessWidget {
   Widget build(BuildContext context) {
     Size size=MediaQuery.of(context).size;
     return Container(
-      margin: const EdgeInsets.only(bottom: 50),
+      margin: const EdgeInsets.only(bottom: 10),
       width: size.width * 0.9,
       height: size.height / 10,
       child: Stack(

@@ -1,7 +1,8 @@
 import 'package:chance_app/ui/components/logo_name.dart';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ux/repository.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
+import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -22,7 +23,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             const Spacer(),
             const LogoName(),
             const SizedBox(height: 24.0),
-            Text("Ласкаво просимо у світ без обмежень!",
+            Text(AppLocalizations.instance.translate("onboardingTitle"),
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 28.0, color: primaryText)),
             const Spacer(),
@@ -30,10 +31,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
               onPress: ()async{
 
                 Navigator.of(context).pushNamedAndRemoveUntil("/onboarding_tutorial", (route) => true);
-              await Repository().firstEnter();
+              await UserRepository().firstEnter();
                 },
                 color: primary1000,
-                child: Text("Стартуємо",
+                child: Text(AppLocalizations.instance.translate("letsStart"),
                     style: TextStyle(fontSize: 22.0, color: primary50))),
             const SizedBox(height: 40.0),
             Row(
@@ -41,7 +42,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               children: [
                 SizedBox(
                   height: 44,
-                  child: Text("Вже є профіль?",
+                  child: Text("${AppLocalizations.instance.translate("alreadyHaveAccount")}?",
                       style: TextStyle(fontSize: 16.0, color: primary700)),
                 ),
                 const SizedBox(width: 10),
@@ -49,11 +50,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   onTap: ()async {
                     Navigator.of(context)
                         .pushNamedAndRemoveUntil("/login", (route) => false);
-                    await Repository().firstEnter();
+                    await UserRepository().firstEnter();
                   },
                   child: SizedBox(
                     height: 44,
-                    child: Text("Увійти",
+                    child: Text(AppLocalizations.instance.translate("enter"),
                         style: TextStyle(
                           fontSize: 16.0,
                           color: primary700,

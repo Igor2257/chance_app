@@ -67,7 +67,7 @@ _$GeocodingResultImpl _$$GeocodingResultImplFromJson(
     _$GeocodingResultImpl(
       types: (json['types'] as List<dynamic>).map((e) => e as String).toList(),
       placeId: json['placeId'] as String?,
-      formattedAddress: json['formattedAddress'] as String? ?? null,
+      formattedAddress: json['formattedAddress'] as String?,
       addressComponents: (json['addressComponents'] as List<dynamic>?)
               ?.map((e) => AddressComponent.fromJson(e as Map<String, dynamic>))
               .toList() ??

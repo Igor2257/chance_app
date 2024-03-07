@@ -1,6 +1,7 @@
 import 'package:chance_app/ui/components/logo_name.dart';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 class SignInUpPage extends StatefulWidget {
@@ -31,7 +32,7 @@ class _SignInUpPageState extends State<SignInUpPage> {
                 },
                 color: primary1000,
                 child: Text(
-                  "Створити обліковий запис",
+                  AppLocalizations.instance.translate("createAccount"),
                   style: TextStyle(color: primary50, fontSize: 16,fontWeight: FontWeight.w500),
                 )),
             const SizedBox(
@@ -43,7 +44,7 @@ class _SignInUpPageState extends State<SignInUpPage> {
                       "/login", (route) => true);
                 },
                 child: Text(
-                  "Увійти",
+                  AppLocalizations.instance.translate("enter"),
                   style: TextStyle(
                       decoration: TextDecoration.underline,
                       decorationColor: primary700,
@@ -64,7 +65,7 @@ class _SignInUpPageState extends State<SignInUpPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Увійти за допомогою",
+                      AppLocalizations.instance.translate("enterWith"),
                       style: TextStyle(
                           color: primary1000,
                           fontSize: 16,
@@ -86,7 +87,7 @@ class _SignInUpPageState extends State<SignInUpPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Увійти за допомогою",
+                      AppLocalizations.instance.translate("enterWith"),
                       style: TextStyle(
                           color: primary1000,
                           fontSize: 16,
@@ -108,7 +109,7 @@ class _SignInUpPageState extends State<SignInUpPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Увійти за допомогою",
+                      AppLocalizations.instance.translate("enterWith"),
                       style: TextStyle(
                           color: primary1000,
                           fontSize: 16,

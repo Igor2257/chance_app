@@ -1,5 +1,7 @@
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
+const apiUrl = 'http://139.28.37.11:56565/stage/api';
 Color beigeTransparent = const Color(0xfffbf6f0),
     beigeBG = const Color(0xfffffdfc),
     beige0 = const Color(0xffffffff),
@@ -44,19 +46,19 @@ const kDefaultAndroidIcon = "ic_stat_onesignal_default";
 String getWeekdayName(int weekday) {
   switch (weekday) {
     case DateTime.monday:
-      return 'ПН';
+      return AppLocalizations.instance.translate("mon").toUpperCase();
     case DateTime.tuesday:
-      return 'ВТ';
+      return AppLocalizations.instance.translate("tue").toUpperCase();
     case DateTime.wednesday:
-      return 'СР';
+      return AppLocalizations.instance.translate("wed").toUpperCase();
     case DateTime.thursday:
-      return 'ЧТ';
+      return AppLocalizations.instance.translate("thu").toUpperCase();
     case DateTime.friday:
-      return 'ПТ';
+      return AppLocalizations.instance.translate("fri").toUpperCase();
     case DateTime.saturday:
-      return 'СБ';
+      return AppLocalizations.instance.translate("sat").toUpperCase();
     case DateTime.sunday:
-      return 'НД';
+      return AppLocalizations.instance.translate("sun").toUpperCase();
     default:
       return '';
   }
@@ -65,39 +67,40 @@ String getWeekdayName(int weekday) {
 String getMonthName(int month) {
   switch (month) {
     case DateTime.january:
-      return 'Січень';
+      return AppLocalizations.instance.translate("january");
     case DateTime.february:
-      return 'Лютий';
+      return AppLocalizations.instance.translate("february");
     case DateTime.march:
-      return 'Березень';
+      return AppLocalizations.instance.translate("march");
     case DateTime.april:
-      return 'Квітень';
+      return AppLocalizations.instance.translate("april");
     case DateTime.may:
-      return 'Травень';
+      return AppLocalizations.instance.translate("may");
     case DateTime.june:
-      return 'Червень';
+      return AppLocalizations.instance.translate("june");
     case DateTime.july:
-      return 'Липень';
+      return AppLocalizations.instance.translate("july");
     case DateTime.august:
-      return 'Серпень';
+      return AppLocalizations.instance.translate("august");
     case DateTime.september:
-      return 'Вересень';
+      return AppLocalizations.instance.translate("september");
     case DateTime.october:
-      return 'Жовтень';
+      return AppLocalizations.instance.translate("october");
     case DateTime.november:
-      return 'Листопад';
+      return AppLocalizations.instance.translate("november");
     case DateTime.december:
-      return 'Грудень';
+      return AppLocalizations.instance.translate("december");
     default:
       return '';
   }
 }
-const errors400 = {
-  "400": "Некоректний запит",
-  "401": "Не авторизовано",
-  "403": "Заборонено",
-  "404": "Не знайдено",
-  "405": "Метод не дозволений",
-  "408": "Таймаут запиту",
-  "429": "Забагато запитів"
+
+final errors400 = {
+  "400": AppLocalizations.instance.translate("error400"),
+  "401": AppLocalizations.instance.translate("error401"),
+  "403": AppLocalizations.instance.translate("error403"),
+  "404": AppLocalizations.instance.translate("error404"),
+  "405": AppLocalizations.instance.translate("error405"),
+  "408": AppLocalizations.instance.translate("error408"),
+  "429": AppLocalizations.instance.translate("error429"),
 };

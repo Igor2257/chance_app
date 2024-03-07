@@ -1,6 +1,7 @@
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ux/repository.dart';
+import 'package:chance_app/ux/repository/invitation_repository.dart';
+import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -96,7 +97,7 @@ class _EnterAcceptCodeState extends State<EnterAcceptCode> {
   }
 
   Future<void> checkOnValidCode() async {
-    await Repository()
+    await InvitationRepository()
         .checkOnValidCode(textEditingController.text)
         .then((value) {
       if (value == null) {

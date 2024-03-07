@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class GivePermission extends StatelessWidget {
             direction: Axis.vertical,
             children: [
               Text(
-                "Надаю дозвіл на обробку персональних даних.",
+                AppLocalizations.instance.translate("iGivePermission"),
                 style: TextStyle(color: primaryText),
                 maxLines: 5,
                 textAlign: TextAlign.justify,
@@ -42,7 +43,7 @@ class GivePermission extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () {},
                     child: Text(
-                      "Політика конфіденційності",
+                      AppLocalizations.instance.translate("privacyPolicy"),
                       style: TextStyle(color: primary700),
                     ),
                   )),

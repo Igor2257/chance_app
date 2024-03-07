@@ -2,7 +2,8 @@ import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/navigation/add_ward/components/input_ward_layout.dart';
 import 'package:chance_app/ux/bloc/navigation_bloc/add_ward/add_ward_bloc.dart';
-import 'package:chance_app/ux/repository.dart';
+import 'package:chance_app/ux/repository/invitation_repository.dart';
+import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -71,7 +72,7 @@ class _AddWardState extends State<AddWard> {
                                 state.errorEmail!.isEmpty) &&
                             (state.errorName != null &&
                                 state.errorName!.isEmpty))) {
-                      await Repository()
+                      await InvitationRepository()
                           .sendConfirmToWard(emailTextEditingController.text)
                           .then((value) {
                         if (value == null) {
