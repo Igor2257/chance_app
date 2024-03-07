@@ -1,5 +1,6 @@
 {
-  // Information
+  "@comment": "Information",
+
   "signIn": "Sign In",
   "registration": "Registration",
   "register": "Register",
@@ -54,7 +55,10 @@
   "adblockerExists": "You already have an ad blocker",
   "enjoy": "We hope you enjoy your purchase!",
 
-  // Actions
+
+
+  "@comment": "Actions",
+
   "previous": "Previous",
   "add": "Add",
   "next": "Next",
@@ -93,7 +97,8 @@
   "buyAdblocker": "Buy ad blocker",
   "logOut": "Log out",
 
-  // Errors
+  "@comment": "Ошибки",
+
   "error400": "Bad Request",
   "error401": "Unauthorized",
   "error403": "Forbidden",
