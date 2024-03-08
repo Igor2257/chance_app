@@ -2,7 +2,7 @@ import 'package:chance_app/ui/constans.dart';
 import 'package:flutter/material.dart';
 
 class InputMyInfoLayout extends StatelessWidget {
-  const InputMyInfoLayout({super.key, required this.title, required this.text});
+  const InputMyInfoLayout({required super.key, required this.title, required this.text});
 
   final String title;
   final String text;

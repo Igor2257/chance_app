@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
             backgroundColor: Colors.transparent,
             surfaceTintColor: Colors.transparent,
             centerTitle: true,
-            title:  Text(AppLocalizations.instance.translate("signIn")),
+            title: Text(AppLocalizations.instance.translate("signIn")),
             leading: BackButton(
               onPressed: () {
                 Navigator.of(context)
@@ -52,7 +52,8 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               const SizedBox(height: 24),
               InputLoginLayout(
-                title:"${AppLocalizations.instance.translate("enterYourEmail")}*",
+                title:
+                    "${AppLocalizations.instance.translate("enterYourEmail")}*",
                 focusNode: emailFocusNode,
                 obscureText: false,
                 textInputAction: TextInputAction.next,
@@ -63,10 +64,12 @@ class _LoginPageState extends State<LoginPage> {
                 },
                 textInputType: TextInputType.emailAddress,
                 textEditingController: emailTextEditingController,
+                key: const ValueKey("email"),
               ),
               const SizedBox(height: 24),
               InputLoginLayout(
-                title: "${AppLocalizations.instance.translate("enterYourPassword")}*",
+                title:
+                    "${AppLocalizations.instance.translate("enterYourPassword")}*",
                 focusNode: passwordFocusNode,
                 obscureText: true,
                 textInputAction: TextInputAction.done,
@@ -77,6 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                 textInputType: TextInputType.text,
                 textEditingController: passwordTextEditingController,
                 emailTextEditingController: emailTextEditingController,
+                key: const ValueKey("password"),
               ),
               const Spacer(),
               RoundedButton(

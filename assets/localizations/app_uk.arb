@@ -1,6 +1,6 @@
 {
   "@comment": "Информация",
-  
+
   "signIn": "Вхід",
   "registration": "Реєстрація",
   "register": "Зареєструвати",
@@ -54,6 +54,9 @@
   "aboutTheApplication": "Про застосунок",
   "adblockerExists": "Ви вже маєте блокувальник реклами",
   "enjoy": "Сподіваємося, вам сподобається ваш товар!",
+  "changeLanguage":"Змінити мову",
+  "languageHaveChanged":"Мову змінено",
+  "":"",
 
 
 

@@ -98,6 +98,9 @@ class _MenuPageState extends State<MenuPage> {
               height: 30,
             ),
             RoundedButton(
+              onPress: (){
+                findMatch(products[0], 0);
+              },
                 padding: const EdgeInsets.all(16),
                 height: 70,
                 color: darkNeutral600,
@@ -141,6 +144,30 @@ class _MenuPageState extends State<MenuPage> {
                   children: [
                     Text(
                       AppLocalizations.instance.translate("privacyPolicy"),
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: primaryText,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: primaryText,
+                    )
+                  ],
+                )),
+            RoundedButton(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                margin: const EdgeInsets.symmetric(vertical: 4),
+                border: Border.all(color: darkNeutral800),
+                onPress: () async {
+                  Navigator.of(context).pushNamed("/choose_language");
+                },
+                color: Colors.transparent,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      AppLocalizations.instance.translate("changeLanguage"),
                       style: TextStyle(
                           fontSize: 16,
                           color: primaryText,

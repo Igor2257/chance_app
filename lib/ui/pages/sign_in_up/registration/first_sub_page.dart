@@ -49,6 +49,7 @@ void dispose() {
                 FocusScope.of(context).requestFocus(firstNameFocusNode);
               },
               textInputType: TextInputType.name,
+              key: const ValueKey("name"),
             ),
             const SizedBox(height: 24),
             InputRegisterLayout(
@@ -63,6 +64,7 @@ void dispose() {
               },
               textInputType: TextInputType.name,
               textEditingController: firstNameEditingController,
+              key: const ValueKey("surname"),
             ),
             const Spacer(),
             ContinueLogIn(

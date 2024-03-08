@@ -7,6 +7,7 @@ abstract class HiveTypeId {
   static const productModel = 4;
   static const medicineModel = 5;
   static const invitationModel = 6;
+  static const wardLocationModel = 6;
   static const locationModel = 10;
   static const geometryModel = 11;
   static const boundsModel = 12;
