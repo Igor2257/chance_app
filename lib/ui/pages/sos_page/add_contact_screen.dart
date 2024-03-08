@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/labeled_text_field.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
@@ -23,9 +24,9 @@ class _AddContactScreenState extends State<AddContactScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Створити контакт',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.instance.translate("createAContact"),
+          style: const TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 22,
             // fontFamily: ,
@@ -49,14 +50,14 @@ class _AddContactScreenState extends State<AddContactScreen> {
           children: [
             LabeledTextField(
               controller: nameController,
-              label: "Введіть ім'я",
-              hintText: "ім'я",
+              label: AppLocalizations.instance.translate("enterYourName"),
+              hintText: AppLocalizations.instance.translate("name"),
               isPhone: false,
               onChanged: (value) {},
             ),
             LabeledTextField(
               controller: phoneController,
-              label: "Введіть номер телефону",
+              label: AppLocalizations.instance.translate("enterPhoneNumber"),
               hintText: '+380',
               isPhone: true,
               onChanged: (value) {},
@@ -86,8 +87,9 @@ class _AddContactScreenState extends State<AddContactScreen> {
                       phoneTextField.clear();
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Перевірте коректність даних'),
+                        SnackBar(
+                          content: Text(AppLocalizations.instance
+                              .translate("checkTheCorrectnessOfTheData")),
                         ),
                       );
                     }
@@ -100,7 +102,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                   ),
                 ),
                 child: Text(
-                  'Зберегти контакт',
+                  AppLocalizations.instance.translate("saveTheContact"),
                   style: TextStyle(
                     color: primary50,
                     fontWeight: FontWeight.w500,

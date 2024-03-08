@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/labeled_text_field.dart';
 import 'package:flutter/material.dart';
 
@@ -17,9 +18,9 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Створити групу',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.instance.translate("createAGroup"),
+          style: const TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 22,
           ),
@@ -42,8 +43,8 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
             children: [
               LabeledTextField(
                 controller: groupNameController,
-                label: "Введіть назву групи",
-                hintText: "Сім'я",
+                label: AppLocalizations.instance.translate("enterGroupName"),
+                hintText: AppLocalizations.instance.translate("family"),
                 isPhone: false,
                 onChanged: (value) {},
               ),
@@ -55,7 +56,8 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Контакт ${index + 1}',
+                          AppLocalizations.instance
+                              .translate("contact ${index + 1}"),
                           style: const TextStyle(
                             fontWeight: FontWeight.w400,
                             fontSize: 14,
@@ -67,14 +69,14 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                         ),
                         LabeledTextField(
                           controller: TextEditingController(),
-                          label: "ім'я",
-                          hintText: "ім'я",
+                          label: AppLocalizations.instance.translate("name"),
+                          hintText: AppLocalizations.instance.translate("name"),
                           isPhone: false,
                           onChanged: (value) {},
                         ),
                         LabeledTextField(
                           controller: TextEditingController(),
-                          label: 'Телефон',
+                          label: AppLocalizations.instance.translate("phone"),
                           hintText: '+380',
                           isPhone: true,
                           onChanged: (value) {},
@@ -96,7 +98,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                         const Icon(Icons.add),
                         const SizedBox(width: 8),
                         Text(
-                          'Додати контакт',
+                          AppLocalizations.instance.translate("addedContact"),
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
@@ -126,7 +128,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                           ),
                         ),
                         child: Text(
-                          'Зберегти групу',
+                          AppLocalizations.instance.translate("saveTheGroup"),
                           style: TextStyle(
                             color: primary50,
                             fontWeight: FontWeight.w500,

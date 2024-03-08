@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/labeled_text_field.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
@@ -35,7 +36,7 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Редагування контакту'),
+            title: Text(AppLocalizations.instance.translate("editingContact")),
           ),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -43,15 +44,15 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
               children: [
                 LabeledTextField(
                   controller: nameController,
-                  label: "Ім'я",
-                  hintText: "Ім'я",
+                  label: AppLocalizations.instance.translate("name"),
+                  hintText: AppLocalizations.instance.translate("name"),
                   isPhone: false,
                   onChanged: (value) {},
                 ),
                 const SizedBox(height: 8),
                 LabeledTextField(
                   controller: phoneController,
-                  label: 'Телефон',
+                  label: AppLocalizations.instance.translate("phone"),
                   hintText: '+380',
                   isPhone: true,
                   onChanged: (value) {},
@@ -81,8 +82,9 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
                         phoneController.clear();
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Перевірте коректність даних'),
+                          SnackBar(
+                            content: Text(AppLocalizations.instance
+                                .translate("checkTheCorrectnessOfTheData")),
                           ),
                         );
                       }
@@ -94,7 +96,7 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
                       ),
                     ),
                     child: Text(
-                      'Зберегти контакт',
+                      AppLocalizations.instance.translate("saveTheContact"),
                       style: TextStyle(
                         color: primary50,
                         fontWeight: FontWeight.w500,

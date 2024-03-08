@@ -54,6 +54,13 @@
   "aboutTheApplication": "О приложении",
   "adblockerExists": "У вас уже есть блокировщик рекламы",
   "enjoy": "Надеемся, вам понравится ваш товар!",
+  "emergencyCall": "Экстренный вызов",
+  "emergencyService112": "Служба экстренной помощи 112",
+  "family": "Семья",
+  "phone": "Телефон",
+  "enterGroupName": "Введите название группы",
+  "enterYourName": "Введите ваше имя",
+  
 
 
 
@@ -96,6 +103,20 @@
   "letsStart": "Начнем",
   "buyAdblocker": "Приобрести блокировщик рекламы",
   "logOut": "Выйти из учетной записи",
+  "addedContact": "Добавить контакт",
+  "saveTheGroup": "Сохранить группу",
+  "deletingContacts": "Удаление контактов",
+  "tOchange": "Изменить",
+  "editingContact": "Редактирование контакта",
+  "createAGroup": "Создать группу",
+  "deleteContact": "Удалить контакт",
+  "editContacts": "Изменить контакты",
+  "added": "Добавить",
+  "contact": "Контакт",
+  "group": "Группу",
+  "saveTheContact": "Сохранить контакт",
+  "createAContact": "Создать контакт",
+
 
 
   "@comment": "Ошибки",
@@ -112,5 +133,6 @@
   "passwordLengthMustBeMoreThan": "Пароль должен быть 8 или более символов",
   "passwordLengthMustBeLessThan": "Пароль должен быть менее 14 символов",
   "passwordsAreNotSame": "Пароли не совпадают",
-  "smthWentWrong": "Что-то пошло не так"
+  "smthWentWrong": "Что-то пошло не так",
+  "checkTheCorrectnessOfTheData": "Проверьте корректность данных"
 }

@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,11 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEdit == true ? 'Видалення контактів' : 'Змінити'),
+        title: Text(
+          isEdit == true
+              ? AppLocalizations.instance.translate("createAGroup")
+              : AppLocalizations.instance.translate("tOchange"),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

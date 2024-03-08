@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
@@ -28,9 +29,9 @@ class _MainPageSosState extends State<MainPageSos> {
           onPressed: () => Navigator.of(context)
               .pushNamedAndRemoveUntil("/", (route) => false),
         ),
-        title: const Text(
-          'Екстрений дзвінок',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.instance.translate("emergencyCall"),
+          style: const TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 22,
             // fontFamily: ,
@@ -48,10 +49,10 @@ class _MainPageSosState extends State<MainPageSos> {
                       border: Border(
                           bottom: BorderSide(width: 1.0, color: Colors.black)),
                     ),
-                    child: const Text(
-                      'Замінити контакти',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                    child: Text(
+                      AppLocalizations.instance.translate("editContacts"),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w400),
                     ),
                   ),
                 ),
@@ -62,10 +63,10 @@ class _MainPageSosState extends State<MainPageSos> {
                       border: Border(
                           bottom: BorderSide(width: 1.0, color: Colors.black)),
                     ),
-                    child: const Text(
-                      'Видалити контакт',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                    child: Text(
+                      AppLocalizations.instance.translate("deleteContact"),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w400),
                     ),
                   ),
                 ),
@@ -88,10 +89,12 @@ class _MainPageSosState extends State<MainPageSos> {
           child: Column(
             children: [
               ContainerButton(
-                text: 'Служба екстренноЇ допомоги 112',
+                text:
+                    AppLocalizations.instance.translate("emergencyService112"),
                 onPressed: () => _pushToCallScreen(
-                  const SosContactModel(
-                    name: 'Служба екстренноЇ допомоги 112',
+                  SosContactModel(
+                    name: AppLocalizations.instance
+                        .translate("emergencyService112"),
                     phone: "112",
                   ),
                 ),
@@ -127,7 +130,7 @@ class _MainPageSosState extends State<MainPageSos> {
             color: primary50,
           ),
           label: Text(
-            "Додати",
+            AppLocalizations.instance.translate("added"),
             style: TextStyle(
               color: primary50,
               fontSize: 16,
@@ -180,7 +183,7 @@ class _MainPageSosState extends State<MainPageSos> {
                             Navigator.pushNamed(context, '/add_contact');
                           },
                           child: Text(
-                            "Контакт",
+                            AppLocalizations.instance.translate("contact"),
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               color: primary50,
@@ -204,7 +207,7 @@ class _MainPageSosState extends State<MainPageSos> {
                             Navigator.pushNamed(context, '/add_group');
                           },
                           child: Text(
-                            "Групу",
+                            AppLocalizations.instance.translate("group"),
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               color: primary50,

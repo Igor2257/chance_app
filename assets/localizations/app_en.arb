@@ -54,6 +54,13 @@
   "aboutTheApplication": "About the Application",
   "adblockerExists": "You already have an ad blocker",
   "enjoy": "We hope you enjoy your purchase!",
+  "emergencyCall": "Emergency call",
+  "emergencyService112": "Emergency service 112",
+  "family": "Family",
+  "phone": "Phone",
+  "enterGroupName": "Enter group name",
+  "enterYourName": "Enter your name",
+  
 
 
 
@@ -96,6 +103,21 @@
   "letsStart": "Let's start",
   "buyAdblocker": "Buy ad blocker",
   "logOut": "Log out",
+  "addedContact": "Added contact",
+  "saveTheGroup": "Save the group",
+  "deletingContacts": "Deleting contacts",
+  "editingContact": "Editing contact",
+  "createAGroup": "Create a group",
+  "deleteContact": "Delete contact",
+  "tOchange": "To change",
+  "editContacts": "Edit contacts",
+  "added": "Added",
+  "contact": "Contact",
+  "group": "Group",
+  "saveTheContact": "Save the contact",
+  "createAContact": "Create a contact",
+
+
 
   "@comment": "Ошибки",
 
@@ -111,5 +133,7 @@
   "passwordLengthMustBeMoreThan": "Password must be more than 8 characters",
   "passwordLengthMustBeLessThan": "Password must be less than 14 characters",
   "passwordsAreNotSame": "Passwords do not match",
-  "smthWentWrong": "Something went wrong"
+  "smthWentWrong": "Something went wrong",
+  "checkTheCorrectnessOfTheData": "Check the correctness of the data"
+  
 }

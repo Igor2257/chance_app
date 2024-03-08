@@ -54,6 +54,13 @@
   "aboutTheApplication": "Про застосунок",
   "adblockerExists": "Ви вже маєте блокувальник реклами",
   "enjoy": "Сподіваємося, вам сподобається ваш товар!",
+  "emergencyCall": "Екстрений дзвінок",
+  "emergencyService112": "Служба екстреноЇ допомоги 112",
+  "family": "Сім'я",
+  "phone": "Телефон",
+  "enterGroupName": "Введіть назву групи",
+  "enterYourName": "Введіть ваше ім'я",
+  
 
 
 
@@ -96,6 +103,20 @@
   "letsStart": "Стартуємо",
   "buyAdblocker": "Придбати блокувальник реклами",
   "logOut": "Вийти з облікового запису",
+  "addedContact": "Додати контакт",
+  "saveTheGroup": "Зберегти групу",
+  "deletingContacts": "Видалення контактів",
+  "tOchange": "Змінити",
+  "editingContact": "Редагування контакту",
+  "createAGroup": "Створити групу",
+  "deleteContact": "Видалити контакт",
+  "editContacts": "Замінити контакти",
+  "added": "Додати",
+  "contact": "Контакт",
+  "group": "Групу",
+  "saveTheContact": "Зберегти контакт",
+  "createAContact": "Створити контакт",
+  
 
 
 
@@ -113,5 +134,6 @@
   "passwordLengthMustBeMoreThan": "Пароль має бути 8 або більше символів",
   "passwordLengthMustBeLessThan": "Пароль має бути менше 14 символів",
   "passwordsAreNotSame": "Паролі не співпадають",
-  "smthWentWrong": "Щось пішло не так"
+  "smthWentWrong": "Щось пішло не так",
+  "checkTheCorrectnessOfTheData": "Перевірте коректність даних"
 }
