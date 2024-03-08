@@ -39,7 +39,7 @@ class _MyInformationState extends State<MyInformation> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title:  Text(AppLocalizations.instance.translate("myInfo")),
+        title: Text(AppLocalizations.instance.translate("myInfo")),
       ),
       backgroundColor: beigeBG,
       body: Padding(
@@ -47,23 +47,34 @@ class _MyInformationState extends State<MyInformation> {
         child: Column(
           children: [
             InputMyInfoLayout(
-                title: AppLocalizations.instance.translate("name"), text: firstNameTextEditingController.text),
+              title: AppLocalizations.instance.translate("name"),
+              text: firstNameTextEditingController.text,
+              key: const ValueKey("name"),
+            ),
             const SizedBox(
               height: 30,
             ),
             InputMyInfoLayout(
-                title: AppLocalizations.instance.translate("surname"), text: lastNameTextEditingController.text),
+              title: AppLocalizations.instance.translate("surname"),
+              text: lastNameTextEditingController.text,
+              key: const ValueKey("surname"),
+            ),
             const SizedBox(
               height: 30,
             ),
             InputMyInfoLayout(
-                title: AppLocalizations.instance.translate("phoneNumber"), text: phoneTextEditingController.text),
+              title: AppLocalizations.instance.translate("phoneNumber"),
+              text: phoneTextEditingController.text,
+              key: const ValueKey("phone"),
+            ),
             const SizedBox(
               height: 30,
             ),
             InputMyInfoLayout(
-                title: AppLocalizations.instance.translate("email"),
-                text: emailTextEditingController.text),
+              title: AppLocalizations.instance.translate("email"),
+              text: emailTextEditingController.text,
+              key: const ValueKey("email"),
+            ),
             const SizedBox(
               height: 30,
             ),

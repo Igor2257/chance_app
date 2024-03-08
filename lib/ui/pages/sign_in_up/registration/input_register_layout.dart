@@ -16,7 +16,7 @@ enum InputLayouts {
 
 class InputRegisterLayout extends StatefulWidget {
   const InputRegisterLayout(
-      {super.key,
+      {required super.key,
       required this.title,
       required this.focusNode,
       required this.useCancelButton,

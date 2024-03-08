@@ -49,6 +49,7 @@ class _ThirdSubPageState extends State<ThirdSubPage> {
                 FocusScope.of(context).requestFocus(secondPasswordFocusNode);
               },
               textInputType: TextInputType.text,
+              key: const ValueKey("first"),
             ),
             const SizedBox(height: 24),
             InputRegisterLayout(
@@ -64,6 +65,7 @@ class _ThirdSubPageState extends State<ThirdSubPage> {
                 secondPasswordFocusNode.unfocus();
               },
               textInputType: TextInputType.text,
+              key: const ValueKey("second"),
             ),
             const Spacer(),
             const GivePermission(),

@@ -1,6 +1,6 @@
 {
   "@comment": "Информация",
-  
+
   "signIn": "Вхід",
   "registration": "Реєстрація",
   "register": "Зареєструвати",
@@ -60,7 +60,10 @@
   "phone": "Телефон",
   "enterGroupName": "Введіть назву групи",
   "enterYourName": "Введіть ваше ім'я",
-  
+  "changeLanguage":"Змінити мову",
+  "languageHaveChanged":"Мову змінено",
+  "":"",
+
 
 
 

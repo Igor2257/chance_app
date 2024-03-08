@@ -22,6 +22,7 @@ class _SecondSubPageState extends State<SecondSubPage> {
   //  emailEditingController.dispose();
   //  super.dispose();
   //}
+
   @override
   Widget build(BuildContext context) {
     return  SizedBox(
@@ -30,45 +31,49 @@ class _SecondSubPageState extends State<SecondSubPage> {
       mainAxisAlignment: MainAxisAlignment.center,
 
       children: <Widget>[
-        const SizedBox(height: 24),
-        InputRegisterLayout(
-          textEditingController: phoneEditingController,
-          title: "${AppLocalizations.instance.translate("enterPhoneNumber")}*",
-          focusNode: phoneFocusNode,
-          useCancelButton: false,
-          obscureText: false,
-          textInputAction: TextInputAction.next,
-          inputLayouts: InputLayouts.phone,
-          focusOtherField: () {
-            phoneFocusNode.unfocus();
-            FocusScope.of(context).requestFocus(emailFocusNode);
-          },
-          textInputType: TextInputType.phone,
-        ),
-        const SizedBox(height: 24),
-        InputRegisterLayout(
-          textEditingController: emailEditingController,
-          title: "${AppLocalizations.instance.translate("enterYourEmail")}*",
-          focusNode: emailFocusNode,
-          useCancelButton: false,
-          obscureText: false,
-          textInputAction: TextInputAction.done,
-          inputLayouts: InputLayouts.email,
-          focusOtherField: () {
-            emailFocusNode.unfocus();
-          },
-          textInputType: TextInputType.emailAddress,
-        ),
-        const Spacer(),
-        ContinueLogIn(
-          name: AppLocalizations.instance.translate("continue"),
-          firstText: phoneEditingController,
-          secondText: emailEditingController,
-          firstFocusNode: phoneFocusNode,
-          lastFocusNode: emailFocusNode,
-        ),
-        const Spacer(),
-      ],
+            const SizedBox(height: 24),
+            InputRegisterLayout(
+              textEditingController: phoneEditingController,
+              title:
+                  "${AppLocalizations.instance.translate("enterPhoneNumber")}*",
+              focusNode: phoneFocusNode,
+              useCancelButton: false,
+              obscureText: false,
+              textInputAction: TextInputAction.next,
+              inputLayouts: InputLayouts.phone,
+              focusOtherField: () {
+                phoneFocusNode.unfocus();
+                FocusScope.of(context).requestFocus(emailFocusNode);
+              },
+              textInputType: TextInputType.phone,
+              key: const ValueKey("email"),
+            ),
+            const SizedBox(height: 24),
+            InputRegisterLayout(
+              textEditingController: emailEditingController,
+              title:
+                  "${AppLocalizations.instance.translate("enterYourEmail")}*",
+              focusNode: emailFocusNode,
+              useCancelButton: false,
+              obscureText: false,
+              textInputAction: TextInputAction.done,
+              inputLayouts: InputLayouts.email,
+              focusOtherField: () {
+                emailFocusNode.unfocus();
+              },
+              textInputType: TextInputType.emailAddress,
+              key: const ValueKey("phone"),
+            ),
+            const Spacer(),
+            ContinueLogIn(
+              name: AppLocalizations.instance.translate("continue"),
+              firstText: phoneEditingController,
+              secondText: emailEditingController,
+              firstFocusNode: phoneFocusNode,
+              lastFocusNode: emailFocusNode,
+            ),
+            const Spacer(),
+          ],
     ));
   }
 }

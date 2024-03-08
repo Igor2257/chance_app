@@ -364,39 +364,36 @@ class _MainPageState extends State<MainPage> {
               barrierDismissible: true,
               context: context,
               builder: (context) {
-                return PopScope(
-                    canPop: false,
-                    onPopInvoked: (value) {},
-                    child: AlertDialog(
-                      title: Text(
-                        "Дозвольте застосунку використовувати розташування",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 24, color: primaryText),
-                      ),
-                      content: Text(
-                        "Щоб програма працювала корректно, вам потрібно дозволити використовувати цей дозвіл",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16, color: primaryText),
-                      ),
-                      actions: [
-                        RoundedButton(
-                          onPress: () async {
-                            await Geolocator.openAppSettings().whenComplete(() {
-                              if (mounted) {
-                                Navigator.of(context).pop();
-                              }
-                            });
+                return AlertDialog(
+                  title: Text(
+                    "Дозвольте застосунку використовувати розташування",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 24, color: primaryText),
+                  ),
+                  content: Text(
+                    "Щоб програма працювала корректно, вам потрібно дозволити використовувати цей дозвіл",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, color: primaryText),
+                  ),
+                  actions: [
+                    RoundedButton(
+                      onPress: () async {
+                        await Geolocator.openAppSettings().whenComplete(() {
+                          if (mounted) {
+                            Navigator.of(context).pop();
+                          }
+                        });
 
-                            return true;
-                          },
-                          color: primary1000,
-                          child: Text(
-                            "Перейти",
-                            style: TextStyle(color: primary50),
-                          ),
-                        ),
-                      ],
-                    ));
+                        return true;
+                      },
+                      color: primary1000,
+                      child: Text(
+                        "Перейти",
+                        style: TextStyle(color: primary50),
+                      ),
+                    ),
+                  ],
+                );
               });
         }
       }

@@ -7,6 +7,7 @@ import 'package:chance_app/ui/pages/add_medicine_page/add_medicine_page.dart';
 import 'package:chance_app/ui/pages/main_page/main_page.dart';
 import 'package:chance_app/ui/pages/menu/menu_page.dart';
 import 'package:chance_app/ui/pages/menu/pages/my_information.dart';
+import 'package:chance_app/ui/pages/menu/pages/select_language.dart';
 import 'package:chance_app/ui/pages/navigation/add_ward/add_ward.dart';
 import 'package:chance_app/ui/pages/navigation/invitations/check_my_invitation/check_my_invitation.dart';
 import 'package:chance_app/ui/pages/navigation/invitations/enter_accept_code/enter_accept_code.dart';
@@ -67,6 +68,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -143,7 +145,11 @@ class MyApp extends StatefulWidget {
   const MyApp(this.route, {super.key});
 
   final String route;
-
+  static void restartApp(BuildContext context) {
+    context
+        .findAncestorStateOfType<MyAppState>()!
+        .restartApp();
+  }
   @override
   State<MyApp> createState() => MyAppState();
 }
@@ -154,7 +160,23 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   BannerAd? bannerAd;
   late InternetConnectionStream internetConnectionStream;
   final Settings settings = HiveCRUM().setting;
-
+  void restartApp() {
+    setState(() {
+      key = UniqueKey();
+    });
+    try {
+      if (!settings.blockAd) initAd();
+    } catch (e) {
+      FlutterError("Error ${e.toString()}");
+    }
+    try {
+      checkIfDocsAreAvailable();
+    } catch (e) {
+      FlutterError(e.toString());
+    }
+    Fluttertoast.showToast(
+        msg: AppLocalizations.instance.translate("languageHaveChanged"));
+  }
   @override
   void initState() {
     super.initState();
@@ -377,6 +399,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                             const CheckMyInvitation(),
                                         "/enter_accept_code": (context) =>
                                             const EnterAcceptCode(),
+                                        "/choose_language": (context) =>
+                                            const ChooseLanguage(),
                                       },
                                       localeResolutionCallback:
                                           (locale, supportedLocales) {

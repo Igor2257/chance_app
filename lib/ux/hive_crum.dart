@@ -131,10 +131,6 @@ class HiveCRUM {
     await itemsBox!.put(productModel.id, productModel);
   }
 
-  Future updateItem(ProductModel productModel) async {
-    await itemsBox!.put(productModel.id, productModel);
-  }
-
   Future removeItem(String id) async {
     await itemsBox!.delete(id);
   }

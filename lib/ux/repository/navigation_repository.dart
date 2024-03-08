@@ -27,4 +27,13 @@ class NavigationRepository {
     }
     return latLng;
   }
+
+  Future<String?> sendMyLocation() async {
+    String? error;
+    try {} catch (e) {
+      error = e.toString();
+    }
+
+    return error;
+  }
 }

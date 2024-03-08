@@ -7,7 +7,7 @@ enum InputLoginLayouts { email, password }
 
 class InputLoginLayout extends StatefulWidget {
   const InputLoginLayout(
-      {super.key,
+      {required super.key,
       required this.title,
       required this.focusNode,
       required this.obscureText,
