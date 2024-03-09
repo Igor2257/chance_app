@@ -5,7 +5,6 @@ import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/chat_bubble_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 class StreamSocket {
   final _socketResponse = StreamController<String>();
@@ -27,7 +26,7 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  Socket? socket;
+ late final Socket socket;
   final TextEditingController _controller = TextEditingController();
   StreamSocket streamSocket = StreamSocket();
 
@@ -54,62 +53,37 @@ class _ChatPageState extends State<ChatPage> {
             .disableAutoConnect()
             .build(),
       );
-
-      socket?.connect();
-
-      socket?.onConnect((conn) {
-        socket?.emit('connection', 'connect');
-        socket?.emit(
-          'join-room',
-          {'room': 'Name'},
-        );
+      socket.connect();
+      socket.onConnect((_) {
+        print('connect');
+        socket.emit('msg', 'connect');
       });
-      socket?.onConnectError((e) {
+      socket.onConnectError((e) {
         print('onConnectError - $e');
-        socket?.emit('msg', 'test');
+        socket.emit('msg', 'test');
       });
-      socket?.onConnecting((e) {
+      socket.onConnecting((e) {
         print('onConnecting');
-        socket?.emit('msg', 'test');
+        socket.emit('msg', 'test');
       });
-      socket?.onError((e) {
+      socket.onError((e) {
         print('onError $e');
-        socket?.emit('msg', 'test');
+        socket.emit('msg', 'test');
       });
-      socket?.onReconnect((_) {
+      socket.onReconnect((_) {
         print('onReconnect');
-        socket?.emit('msg', 'test');
+        socket.emit('msg', 'test');
       });
-      socket?.on('connection', (data) {
-        print('connection - $data');
-
+      socket.on('text-chat', (data) {
+        print("data $data");
         streamSocket.addResponse(data);
       });
-      socket?.on('disconnect', (data) {
-        print('disconnect - $data');
-        streamSocket.addResponse(data);
-      });
-      socket?.on('join-room', (data) {
-        print(data);
+      socket.on('msg', (data) {
+        print("data $data");
         //streamSocket.addResponse(data);
       });
-      socket?.on('text-chat', (data) {
-        print(data);
-        streamSocket.addResponse(data);
-      });
-      socket?.on('msg', (data) {
-        print(data);
-        //streamSocket.addResponse(data);
-      });
-      socket?.on('event', (data) {
-        print(data);
-        //streamSocket.addResponse(data);
-      });
-      print(socket?.json.toString());
-      socket?.send(['data']);
-      socket?.on('message', (data) => print('message - $data'));
-      socket?.onDisconnect((ds) => print('$ds disconnect'));
-      socket?.on('fromServer', (info) => print('fromServer $info'));
+      socket.onDisconnect((_) => print('disconnect'));
+      socket.on('fromServer', (_) => print(_));
     } catch (e) {
       print(e);
     }
@@ -118,9 +92,8 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void dispose() {
-    socket?.disconnect();
-    socket?.dispose();
-    streamSocket.dispose();
+    socket.disconnect();
+    socket.dispose();
 
     _controller.dispose();
     super.dispose();
@@ -204,35 +177,40 @@ class _ChatPageState extends State<ChatPage> {
         color: darkNeutral800,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(8.0)),
       ),
-      child: TextField(
-        controller: _controller,
-        textInputAction: TextInputAction.send,
-        textCapitalization: TextCapitalization.sentences,
-        style: TextStyle(
-          fontWeight: FontWeight.w400,
-          fontSize: 17,
-          height: 22 / 17,
-          letterSpacing: -0.4,
-          color: primary1000,
-        ),
-        decoration: InputDecoration(
-          fillColor: background,
-          filled: true,
-          suffixIcon: IconButton(
-            onPressed: _onSendBtnTap,
-            icon: const Icon(Icons.send),
-          ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
-          hintText: 'Що нового?',
-          hintStyle: const TextStyle(
+      child: SafeArea(
+        child: TextField(
+          controller: _controller,
+          textInputAction: TextInputAction.send,
+          textCapitalization: TextCapitalization.sentences,
+          style: TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 17,
             height: 22 / 17,
             letterSpacing: -0.4,
-            color: Color(0xFF8E8E93),
+            color: primary1000,
           ),
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16.0)),
+          decoration: InputDecoration(
+            fillColor: background,
+            filled: true,
+            suffixIcon: IconButton(
+              onPressed: _onSendBtnTap,
+              icon: Icon(
+                Icons.send,
+                color: primary1000,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+            hintText: 'Що нового?',
+            hintStyle: const TextStyle(
+              fontWeight: FontWeight.w400,
+              fontSize: 17,
+              height: 22 / 17,
+              letterSpacing: -0.4,
+              color: Color(0xFF8E8E93),
+            ),
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(16.0)),
+            ),
           ),
         ),
       ),
@@ -248,8 +226,8 @@ class _ChatPageState extends State<ChatPage> {
       _controller.clear();
       if (mounted) {
         _unFocus(context);
-        print('socket - $socket');
-        socket?.emit(
+        print('socket - ${socket.active}');
+        socket.emit(
           'text-chat',
           {
             'name': 'Name',

@@ -259,6 +259,12 @@
         <string>3qcr597p9d.skadnetwork</string>
       </dict>
     </array>
+    <key>com.apple.security.network.client</key>
+    <true/>
+    <dict>
+    <key>NSAllowsArbitraryLoads</key>
+        <true/>
+     </dict>
 
 
 </dict>
