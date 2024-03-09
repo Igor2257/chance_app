@@ -1,9 +1,12 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/pages/chat_page/blocs/select_cubit/select_cubit.dart';
+import 'package:chance_app/ui/pages/chat_page/search_group_page.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/add_new_contect_widget.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/user_checkbox_tile.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/user_input_chip.dart';
 import 'package:chance_app/ux/model/chat_user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class NewGroupPage extends StatefulWidget {
   const NewGroupPage({super.key});
@@ -27,81 +30,102 @@ class _NewGroupPageState extends State<NewGroupPage> {
 
   late final Map<String, List<ChatUserModel>> _users =
       _generateSortMap(_testUsers);
-  final List<ChatUserModel> _selected = [];
 
   @override
   Widget build(BuildContext context) {
-    print(_selected);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Нова група',
-          style: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: 22,
-            height: 28 / 22,
-          ),
-        ),
-        centerTitle: true,
-        actions: [
-          TextButton(
-            onPressed: _selected.isEmpty ? null : () {},
-            child: Text(
-              'Далі',
+    return BlocBuilder<SelectCubit, List<ChatUserModel>>(
+      builder: (context, state) {
+        bool isEmpty = state.isEmpty;
+
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Нова група',
               style: TextStyle(
                 fontWeight: FontWeight.w400,
-                fontSize: 16,
-                height: 24 / 16,
-                letterSpacing: 0.5,
-                color: _selected.isEmpty ? darkNeutral400 : primary800,
+                fontSize: 22,
+                height: 28 / 22,
               ),
             ),
-          ),
-        ],
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(height: 32.0),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Wrap(
-                  spacing: 4.0,
-                  runSpacing: 4.0,
-                  children: _selected
-                      .map((t) => UserInputChip(
-                            value: t,
-                            onTap: _removeOnTap,
-                          ))
-                      .toList(),
+            centerTitle: true,
+            actions: [
+              TextButton(
+                onPressed: isEmpty ? null : () {},
+                child: Text(
+                  'Далі',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16,
+                    height: 24 / 16,
+                    letterSpacing: 0.5,
+                    color: isEmpty ? darkNeutral400 : primary800,
+                  ),
                 ),
-                const SizedBox(height: 8.0),
-                const Divider(
-                  height: 0,
-                  thickness: 1,
-                  color: Color(0xFFD9D9D9),
-                ),
-              ],
-            ),
-          ),
-          const AddNewContactWidget(),
-          if (_users.isNotEmpty)
-            Expanded(
-              child: ListView(
-                children: _users.entries.map(_buildSortedList).toList(),
               ),
-            ),
-        ],
-      ),
+            ],
+          ),
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 32.0),
+              GestureDetector(
+                onTap: () => _onSearchTap(context),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (isEmpty)
+                        const Text(
+                          'Пошук контакту',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                            height: 24 / 16,
+                            letterSpacing: 0.5,
+                            color: Color(0xFFD9D9D9),
+                          ),
+                        )
+                      else
+                        Wrap(
+                          spacing: 4.0,
+                          runSpacing: 4.0,
+                          children: state
+                              .map((v) => UserInputChip(value: v))
+                              .toList(),
+                        ),
+                      const SizedBox(height: 8.0),
+                      const Divider(
+                        height: 0,
+                        thickness: 1,
+                        color: Color(0xFFD9D9D9),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const AddNewContactWidget(),
+              if (_users.isNotEmpty)
+                Expanded(
+                  child: ListView(
+                    children: _users.entries
+                        .map((entry) => _buildSortedList(entry, state))
+                        .toList(),
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildSortedList(MapEntry<String, List<ChatUserModel>> entry) {
+  Widget _buildSortedList(
+    MapEntry<String, List<ChatUserModel>> entry,
+    List<ChatUserModel> list,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -126,7 +150,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                 .map((val) => Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
                       child: UserCheckboxTile(
-                        isSelected: _selected.contains(val),
+                        isSelected: list.contains(val),
                         value: val,
                         onChanged: _changeCheckbox,
                       ),
@@ -151,17 +175,21 @@ class _NewGroupPageState extends State<NewGroupPage> {
   }
 
   void _changeCheckbox(ChatUserModel user) {
-    if (_selected.contains(user)) {
-      _selected.remove(user);
+    SelectCubit cubit = context.read<SelectCubit>();
+    if (cubit.state.contains(user)) {
+      cubit.remove(user);
     } else {
-      _selected.add(user);
+      cubit.add(user);
     }
-    setState(() {});
   }
 
-  void _removeOnTap(ChatUserModel value) {
-    setState(() {
-      _selected.remove(value);
-    });
+  void _onSearchTap(BuildContext context) {
+    Navigator.of(context).pushNamed(
+      '/search_group',
+      arguments: SearchGroupPageParameters(
+        _testUsers,
+        context.read<SelectCubit>(),
+      ),
+    );
   }
 }

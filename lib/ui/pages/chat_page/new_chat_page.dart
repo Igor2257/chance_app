@@ -145,7 +145,9 @@ class _NewChatPageState extends State<NewChatPage> {
     return map;
   }
 
-  void _onTextFieldTap(BuildContext context) => Navigator.of(context).pushNamed('/search');
+  void _onTextFieldTap(BuildContext context) =>
+      Navigator.of(context).pushNamed('/search_chat', arguments: _testUsers);
 
-  void _openChat(BuildContext context) {}
+  void _openChat(BuildContext context) =>
+      Navigator.of(context).pushNamed('/chat');
 }

@@ -3,11 +3,12 @@ import 'package:chance_app/ux/model/chat_user_model.dart';
 import 'package:flutter/material.dart';
 
 class UserCheckboxTile extends StatelessWidget {
-  const UserCheckboxTile(
-      {super.key,
-      this.onChanged,
-      required this.isSelected,
-      required this.value});
+  const UserCheckboxTile({
+    super.key,
+    this.onChanged,
+    required this.isSelected,
+    required this.value,
+  });
 
   final bool isSelected;
   final ChatUserModel value;

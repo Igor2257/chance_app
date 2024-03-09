@@ -2,43 +2,14 @@ import 'dart:async';
 
 import 'package:chance_app/firebase_options.dart';
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/add_medicine_page/add_medicine_page.dart';
-import 'package:chance_app/ui/pages/chat_page/chat_page.dart';
-import 'package:chance_app/ui/pages/chat_page/create_chat_page.dart';
-import 'package:chance_app/ui/pages/chat_page/new_chat_page.dart';
-import 'package:chance_app/ui/pages/chat_page/new_group_page.dart';
-import 'package:chance_app/ui/pages/chat_page/search_page.dart';
-import 'package:chance_app/ui/pages/chats_page/chats_page.dart';
-import 'package:chance_app/ui/pages/main_page/main_page.dart';
-import 'package:chance_app/ui/pages/menu/menu_page.dart';
-import 'package:chance_app/ui/pages/menu/pages/my_information.dart';
-import 'package:chance_app/ui/pages/navigation/add_ward/add_ward.dart';
-import 'package:chance_app/ui/pages/navigation/invitations/check_my_invitation/check_my_invitation.dart';
-import 'package:chance_app/ui/pages/navigation/invitations/enter_accept_code/enter_accept_code.dart';
-import 'package:chance_app/ui/pages/navigation/navigation_page/navigation_page.dart';
+
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/address_component.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/bounds.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geocoding_result.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geometry.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/location.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
-import 'package:chance_app/ui/pages/onboarding/onboarding_page.dart';
-import 'package:chance_app/ui/pages/onboarding/onboarding_tutorial.dart';
-import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
-import 'package:chance_app/ui/pages/reminders_page/tasks/calendar_task_page.dart';
-import 'package:chance_app/ui/pages/reminders_page/tasks/tasks_for_today.dart';
-import 'package:chance_app/ui/pages/sign_in_up/log_in/log_in_page.dart';
-import 'package:chance_app/ui/pages/sign_in_up/log_in/reset_password.dart';
-import 'package:chance_app/ui/pages/sign_in_up/registration/enter_code_for_register.dart';
-import 'package:chance_app/ui/pages/sign_in_up/registration/registration_page.dart';
-import 'package:chance_app/ui/pages/sign_in_up/registration/subscription_page.dart';
-import 'package:chance_app/ui/pages/sign_in_up/sign_in_up_page.dart';
-import 'package:chance_app/ui/pages/sos_page/add_contact_screen.dart';
-import 'package:chance_app/ui/pages/sos_page/add_group_screen.dart';
-import 'package:chance_app/ui/pages/sos_page/delete_contact_screen.dart';
-import 'package:chance_app/ui/pages/sos_page/main_page_sos.dart';
-import 'package:chance_app/ui/pages/sos_page/replace_contact_sos.dart';
-import 'package:chance_app/ux/bloc/add_medicine_bloc/add_medicine_bloc.dart';
+
 import 'package:chance_app/ux/bloc/add_task_bloc/add_task_bloc.dart';
 import 'package:chance_app/ux/bloc/login_bloc/login_bloc.dart';
 import 'package:chance_app/ux/bloc/navigation_bloc/add_ward/add_ward_bloc.dart';
@@ -52,6 +23,7 @@ import 'package:chance_app/ux/enum/instruction.dart';
 import 'package:chance_app/ux/enum/medicine_type.dart';
 import 'package:chance_app/ux/enum/periodicity.dart';
 import 'package:chance_app/ux/helpers/ad_helper.dart';
+import 'package:chance_app/ux/helpers/app_router.dart';
 import 'package:chance_app/ux/hive_crum.dart';
 import 'package:chance_app/ux/internet_connection_stream.dart';
 import 'package:chance_app/ux/model/me_user.dart';
@@ -331,69 +303,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                         GlobalMaterialLocalizations.delegate,
                                       ],
                                       initialRoute: widget.route,
-                                      routes: {
-                                        "/": (context) => const MainPage(),
-                                        "/signinup": (context) =>
-                                            const SignInUpPage(),
-                                        "/registration": (context) =>
-                                            const RegistrationPage(),
-                                        "/login": (context) =>
-                                            const LoginPage(),
-                                        "/enter_code": (context) =>
-                                            const EnterCodeForRegister(),
-                                        "/subscription_page": (context) =>
-                                            const SubscriptionPage(),
-                                        "/reminders": (context) =>
-                                            const RemindersPage(),
-                                        "/date_picker_for_tasks": (context) =>
-                                            const CalendarTaskPage(),
-                                        "/add_medicine": (context) =>
-                                            BlocProvider(
-                                              create: (context) =>
-                                                  AddMedicineBloc(),
-                                              child: const AddMedicinePage(),
-                                            ),
-                                        "/reset_password": (context) =>
-                                            const ResetPassword(),
-                                        "/tasks_for_today": (context) =>
-                                            const TasksForToday(),
-                                        "/menu": (context) => const MenuPage(),
-                                        "/sos": (context) =>
-                                            const MainPageSos(),
-                                        "/add_contact": (context) =>
-                                            const AddContactScreen(),
-                                        "/add_group": (context) =>
-                                            const AddGroupScreen(),
-                                        "/onboarding_page": (context) =>
-                                            const OnboardingPage(),
-                                        "/onboarding_tutorial": (context) =>
-                                            const OnboardingTutorial(),
-                                        "/delete_contact_sos": (context) =>
-                                            const DeleteContactsPage(),
-                                        "/my_information": (context) =>
-                                            const MyInformation(),
-                                        "/replace_contact_sos": (context) =>
-                                            const ReplaceContactSosScreen(),
-                                        "/navigation_page": (context) =>
-                                            const NavigationPage(),
-                                        "/add_ward": (context) =>
-                                            const AddWard(),
-                                        "/check_my_invitation": (context) =>
-                                            const CheckMyInvitation(),
-                                        "/enter_accept_code": (context) =>
-                                            const EnterAcceptCode(),
-                                        "/chats_page": (context) =>
-                                            const ChatsPage(),
-                                        "/create_chat": (context) =>
-                                            const CreateChatPage(),
-                                        "/new_group": (context) =>
-                                            const NewGroupPage(),
-                                        "/new_chat": (context) =>
-                                            const NewChatPage(),
-                                        "/chat": (context) => const ChatPage(),
-                                        "/search": (context) =>
-                                            const SearchPage(),
-                                      },
+                                      onGenerateRoute: AppRouter.onGenerateRoute,
                                     ),
                                   ),
                                 ),

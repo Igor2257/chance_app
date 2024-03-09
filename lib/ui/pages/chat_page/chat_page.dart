@@ -48,14 +48,21 @@ class _ChatPageState extends State<ChatPage> {
     try {
       socket = io(
         'http://139.28.37.11:56565/',
-        OptionBuilder().setTransports(['websocket']) // for Flutter or Dart VM
+        OptionBuilder()
+            .setTransports(['websocket']) // for Flutter or Dart VM
             .setExtraHeaders({'withCredentials': true}) // optional
+            .disableAutoConnect()
             .build(),
       );
 
-      socket?.onConnect((_) {
-        print('connect');
-        socket?.emit('msg', 'connect');
+      socket?.connect();
+
+      socket?.onConnect((conn) {
+        socket?.emit('connection', 'connect');
+        socket?.emit(
+          'join-room',
+          {'room': 'Name'},
+        );
       });
       socket?.onConnectError((e) {
         print('onConnectError - $e');
@@ -73,6 +80,19 @@ class _ChatPageState extends State<ChatPage> {
         print('onReconnect');
         socket?.emit('msg', 'test');
       });
+      socket?.on('connection', (data) {
+        print('connection - $data');
+
+        streamSocket.addResponse(data);
+      });
+      socket?.on('disconnect', (data) {
+        print('disconnect - $data');
+        streamSocket.addResponse(data);
+      });
+      socket?.on('join-room', (data) {
+        print(data);
+        //streamSocket.addResponse(data);
+      });
       socket?.on('text-chat', (data) {
         print(data);
         streamSocket.addResponse(data);
@@ -81,8 +101,15 @@ class _ChatPageState extends State<ChatPage> {
         print(data);
         //streamSocket.addResponse(data);
       });
-      socket?.onDisconnect((_) => print('disconnect'));
-      socket?.on('fromServer', (_) => print(_));
+      socket?.on('event', (data) {
+        print(data);
+        //streamSocket.addResponse(data);
+      });
+      print(socket?.json.toString());
+      socket?.send(['data']);
+      socket?.on('message', (data) => print('message - $data'));
+      socket?.onDisconnect((ds) => print('$ds disconnect'));
+      socket?.on('fromServer', (info) => print('fromServer $info'));
     } catch (e) {
       print(e);
     }
@@ -93,6 +120,7 @@ class _ChatPageState extends State<ChatPage> {
   void dispose() {
     socket?.disconnect();
     socket?.dispose();
+    streamSocket.dispose();
 
     _controller.dispose();
     super.dispose();
@@ -115,7 +143,7 @@ class _ChatPageState extends State<ChatPage> {
           centerTitle: true,
         ),
         body: StreamBuilder(
-          stream: streamSocket.getResponse,
+          stream: null,
           builder: (context, snapshot) {
             print(snapshot);
 
@@ -223,13 +251,11 @@ class _ChatPageState extends State<ChatPage> {
         print('socket - $socket');
         socket?.emit(
           'text-chat',
-          json.encode(
-            {
-              'name': 'Name',
-              'fromUserId': '10',
-              'message': _controller.text,
-            },
-          ),
+          {
+            'name': 'Name',
+            'toUserId': '1',
+            'message': _controller.text,
+          },
         );
         //_channel?.sink.add('Info');
       }
