@@ -16,9 +16,6 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
   List<String> selectedIds = [];
   bool isButtonEnable = false;
   late bool isEdit;
-  SosContactsBloc get _sosContactsBloc {
-    return BlocProvider.of<SosContactsBloc>(context);
-  }
 
   @override
   void didChangeDependencies() {
@@ -41,13 +38,16 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              child: ListView.builder(
-                itemCount: _sosContactsBloc.contacts.length,
+                child: BlocSelector<SosContactsBloc, SosContactsState,
+                    List<SosGroupModel>>(
+              selector: (state) => state.contacts,
+              builder: (context, contacts) => ListView.builder(
+                itemCount: contacts.length,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.only(bottom: 29),
                 itemBuilder: (context, index) {
-                  SosGroupModel contactModel = _sosContactsBloc.contacts[index];
+                  SosGroupModel contactModel = contacts[index];
                   return ContainerButtonWithCheckbox(
                       contactModel: contactModel,
                       text: contactModel.name.isNotEmpty
@@ -65,7 +65,7 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
                       });
                 },
               ),
-            ),
+            )),
             if (isEdit)
               SliverFillRemaining(
                 child: Align(
@@ -83,7 +83,7 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
                       ),
                       onPressed: () {
                         if (isButtonEnable) {
-                          _sosContactsBloc.add(
+                          BlocProvider.of<SosContactsBloc>(context).add(
                             DeleteContact(ids: selectedIds),
                           );
                           Navigator.of(context).pushNamedAndRemoveUntil(

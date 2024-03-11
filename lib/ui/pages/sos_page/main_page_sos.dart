@@ -19,10 +19,6 @@ class _MainPageSosState extends State<MainPageSos> {
   //   BlocProvider.of<SosContactsBloc>(context).loadContacts();
   // }
 
-  SosContactsBloc get _sosContactsBloc {
-    return BlocProvider.of<SosContactsBloc>(context);
-  }
-
   bool isDeletePage = false;
 
   @override
@@ -105,31 +101,28 @@ class _MainPageSosState extends State<MainPageSos> {
                   ),
                 ),
               ),
-              BlocBuilder(
-                bloc: _sosContactsBloc,
-                builder: (context, state) {
-                  return ListView.builder(
-                    itemCount: _sosContactsBloc.contacts.length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.only(bottom: 29),
-                    itemBuilder: (context, index) {
-                      SosGroupModel contactModel =
-                          _sosContactsBloc.contacts[index];
-                      return ContainerButton(
-                        text: contactModel.name.isNotEmpty
-                            ? contactModel.name
-                            : contactModel.contacts[0].name,
-                        onPressed: () {
-                          _pushToCallScreen(SosContactModel(
-                              name: contactModel.contacts[0].name,
-                              phone: contactModel.contacts[0].phone));
+              BlocSelector<SosContactsBloc, SosContactsState,
+                      List<SosGroupModel>>(
+                  selector: (state) => state.contacts,
+                  builder: (context, contacts) => ListView.builder(
+                        itemCount: contacts.length,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.only(bottom: 29),
+                        itemBuilder: (context, index) {
+                          SosGroupModel contactModel = contacts[index];
+                          return ContainerButton(
+                            text: contactModel.name.isNotEmpty
+                                ? contactModel.name
+                                : contactModel.contacts[0].name,
+                            onPressed: () {
+                              _pushToCallScreen(SosContactModel(
+                                  name: contactModel.contacts[0].name,
+                                  phone: contactModel.contacts[0].phone));
+                            },
+                          );
                         },
-                      );
-                    },
-                  );
-                },
-              ),
+                      )),
             ],
           ),
         ),
