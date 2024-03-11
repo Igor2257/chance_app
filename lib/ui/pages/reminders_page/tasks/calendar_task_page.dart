@@ -10,10 +10,10 @@ import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository/tasks_repository.dart';
-import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:uuid/uuid.dart';
 
 class CalendarTaskPage extends StatefulWidget {
   const CalendarTaskPage({super.key});
@@ -33,8 +33,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return BlocBuilder<AddTaskBloc, AddTaskState>(
-        builder: (context, state) {
+    return BlocBuilder<AddTaskBloc, AddTaskState>(builder: (context, state) {
       DateTime? deadlineForTask = state.newDeadlineForTask;
       return Scaffold(
         appBar: AppBar(
@@ -56,7 +55,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                   : Icons.arrow_back_ios)),
           actions: [
             IconButton(
-                onPressed: ()async {
+                onPressed: () async {
                   DateTime now = DateTime.now();
                   String name = state.taskTitle;
                   if (name.trim().isNotEmpty) {
@@ -78,15 +77,15 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                     }
 
                     TaskModel taskModel = TaskModel(
+                      id: const Uuid().v1(),
                       message: name,
                       date: date,
                       //notificationsBefore: state.oldNotificationsBefore.name,
                     );
 
                     BlocProvider.of<RemindersBloc>(context)
-                        .add(SaveTask(taskModel: taskModel));
+                        .add(SaveTask(taskModel));
                     await TasksRepository().saveTask(taskModel).then((value) {
-
                       showDialog(
                           barrierDismissible: false,
                           context: context,
@@ -127,7 +126,6 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                                         Navigator.of(context).pop(true);
                                         BlocProvider.of<RemindersBloc>(context)
                                             .add(LoadData());
-
                                       },
                                       child: SizedBox(
                                         height: 44,
@@ -213,7 +211,8 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                   ),
                   RoundedButton(
                       onPress: () {
-                        const CustomBottomSheetNotificationPicker().show(context);
+                        const CustomBottomSheetNotificationPicker()
+                            .show(context);
                       },
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       height: 48,

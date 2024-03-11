@@ -20,7 +20,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 abstract class AddMedicineStep {
   static const addName = "addName";
@@ -64,11 +63,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
   Widget build(BuildContext context) {
     return BlocListener<AddMedicineBloc, AddMedicineState>(
       listener: (context, state) {
-        if (state.medicine != null) {
-          Navigator.of(context).pop(state.medicine);
-        } else if (state.errorMessage != null) {
-          Fluttertoast.showToast(msg: "Щось пішло не так");
-        }
+        if (state.medicine != null) Navigator.of(context).pop(state.medicine);
       },
       child: Scaffold(
         body: Navigator(
@@ -443,12 +438,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   child: Text(
-                                    [
-                                      doseTime.hour.toString().padLeft(2, "0"),
-                                      doseTime.minute
-                                          .toString()
-                                          .padLeft(2, "0"),
-                                    ].join(':'),
+                                    doseTime.format(context),
                                     style: const TextStyle(
                                       fontSize: 22,
                                       color: Color(0xFF212833),
@@ -582,8 +572,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
   Widget _addInstructionsPage() {
     return AddMedicinePageScaffold(
       middleText: const Text("Чи слід приймати це з їжею?"),
-      child:
-          BlocSelector<AddMedicineBloc, AddMedicineState, Instruction?>(
+      child: BlocSelector<AddMedicineBloc, AddMedicineState, Instruction?>(
         selector: (state) => state.instruction,
         builder: (context, selectedInstruction) {
           return SingleChildScrollView(

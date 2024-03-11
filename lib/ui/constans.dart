@@ -2,46 +2,49 @@ import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 const apiUrl = 'http://139.28.37.11:56565/stage/api';
-Color beigeTransparent = const Color(0xfffbf6f0),
-    beigeBG = const Color(0xfffffdfc),
-    beige0 = const Color(0xffffffff),
-    beige50 = const Color(0xfffbf6f0),
-    beige100 = const Color(0xfff4eee7),
-    beige200 = const Color(0xffefe6db),
-    beige300 = const Color(0xffE5D9CB),
-    beige400 = const Color(0xffC6B098),
-    beige500 = const Color(0xffBD967A),
-    beige600 = const Color(0xff876C4F),
-    beige800 = const Color(0xff4E3B26); //Beige
 
-Color primaryText = const Color(0xff212833),
-    primary1000 = const Color(0xff0E265D),
-    primary900 = const Color(0xff12327B),
-    primary800 = const Color(0xff0F3A9C),
-    primary700 = const Color(0xff0057FF),
-    primary600 = const Color(0xff066CFF),
-    primary500 = const Color(0xff1E8DFF),
-    primary400 = const Color(0xff48B1FF),
-    primary300 = const Color(0xff83CEFF),
-    primary200 = const Color(0xffB5E0FF),
-    primary100 = const Color(0xffD6ECFF),
-    primary50 = const Color(0xffEDF7FF); //primary
+const Color beigeTransparent = Color(0xfffbf6f0);
+const Color beigeBG = Color(0xfffffdfc);
+const Color beige0 = Color(0xffffffff);
+const Color beige50 = Color(0xfffbf6f0);
+const Color beige100 = Color(0xfff4eee7);
+const Color beige200 = Color(0xffefe6db);
+const Color beige300 = Color(0xffE5D9CB);
+const Color beige400 = Color(0xffC6B098);
+const Color beige500 = Color(0xffBD967A);
+const Color beige600 = Color(0xff876C4F);
+const Color beige800 = Color(0xff4E3B26); //Beige
 
-Color darkNeutral1000 = const Color(0xff212833),
-    darkNeutral800 = const Color(0xff354457),
-    darkNeutral600 = const Color(0xff4A627F),
-    darkNeutral400 = const Color(0xff7E97B2),
-    darkNeutral300 = const Color(0xffD8DEE6),
-    grey = const Color(0xffD9D9D9);
+const Color primaryText = Color(0xff212833);
+const Color primary1000 = Color(0xff0E265D);
+const Color primary900 = Color(0xff12327B);
+const Color primary800 = Color(0xff0F3A9C);
+const Color primary700 = Color(0xff0057FF);
+const Color primary600 = Color(0xff066CFF);
+const Color primary500 = Color(0xff1E8DFF);
+const Color primary400 = Color(0xff48B1FF);
+const Color primary300 = Color(0xff83CEFF);
+const Color primary200 = Color(0xffB5E0FF);
+const Color primary100 = Color(0xffD6ECFF);
+const Color primary50 = Color(0xffEDF7FF); //primary
 
-Color red1000 = const Color(0xff960000),
-    red900 = const Color(0xffb00000),
-    red800 = const Color(0xffFF4F4F),
-    green = const Color(0xff2E7A00);
+const Color darkNeutral1000 = Color(0xff212833);
+const Color darkNeutral800 = Color(0xff354457);
+const Color darkNeutral600 = Color(0xff4A627F);
+const Color darkNeutral400 = Color(0xff7E97B2);
+const Color darkNeutral300 = Color(0xffD8DEE6);
+const Color grey = Color(0xffD9D9D9);
 
-Color background = const Color(0xffFFFDFC);
+const Color red1000 = Color(0xff960000);
+const Color red900 = Color(0xffb00000);
+const Color red800 = Color(0xffFF4F4F);
+const Color green = Color(0xff2E7A00);
 
-const kDefaultAndroidIcon = "ic_stat_onesignal_default";
+const Color background = Color(0xffFFFDFC);
+
+const String kDefaultAndroidIcon = "ic_stat_onesignal_default";
+
+const int kScheduleDays = 10;
 
 String getWeekdayName(int weekday) {
   switch (weekday) {

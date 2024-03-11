@@ -6,9 +6,11 @@ import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart'as http;
+import 'package:http/http.dart' as http;
 
 class TasksRepository {
+  final _userRepository = UserRepository();
+
   Future<List<TaskModel>> updateLocalTasks({bool? forcePush}) async {
     List<TaskModel> list = [];
 
@@ -40,7 +42,7 @@ class TasksRepository {
     } else {
       try {
         var url = Uri.parse('$apiUrl/task');
-        final cookie = await UserRepository().getCookie();
+        final cookie = await _userRepository.getCookie();
         await http.get(
           url,
           headers: <String, String>{
@@ -88,7 +90,7 @@ class TasksRepository {
     } else {
       try {
         var url = Uri.parse('$apiUrl/task/$id');
-        final cookie = await UserRepository().getCookie();
+        final cookie = await _userRepository.getCookie();
         String? newDate = date?.toUtc().toString();
         await http
             .patch(url,
@@ -128,8 +130,8 @@ class TasksRepository {
     } else {
       try {
         var url = Uri.parse('$apiUrl/task');
-        final cookie = await UserRepository().getCookie();
-        String date = taskModel.date!.toUtc().toString();
+        final cookie = await _userRepository.getCookie();
+        String date = taskModel.date.toUtc().toString();
 
         await http
             .post(
@@ -166,18 +168,18 @@ class TasksRepository {
     return error;
   }
 
-  Future<String?> removeTask(String taskId) async {
+  Future<String?> removeTask(TaskModel taskModel) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       //Fluttertoast.showToast(
       //    msg: "Немає підключення до інтернету",
       //    toastLength: Toast.LENGTH_LONG);
       //error = "Немає підключення до інтернету";
-      HiveCRUM().removeLocalTask(taskId);
+      HiveCRUM().removeLocalTask(taskModel);
     } else {
       try {
-        var url = Uri.parse('$apiUrl/task/$taskId');
-        final cookie = await UserRepository().getCookie();
+        var url = Uri.parse('$apiUrl/task/${taskModel.id}');
+        final cookie = await _userRepository.getCookie();
         await http.delete(url, headers: <String, String>{
           'Content-Type': 'application/json',
           'Cookie': cookie.toString(),
@@ -206,13 +208,13 @@ class TasksRepository {
       //    toastLength: Toast.LENGTH_LONG);
       //error = "Немає підключення до інтернету";
       for (var task in HiveCRUM().myTasks) {
-        HiveCRUM().removeLocalTask(task.id);
+        HiveCRUM().removeLocalTask(task);
       }
     } else {
       for (var task in HiveCRUM().myTasks) {
         try {
           var url = Uri.parse('$apiUrl/task/${task.id}');
-          final cookie = await UserRepository().getCookie();
+          final cookie = await _userRepository.getCookie();
           await http.delete(url, headers: <String, String>{
             'Content-Type': 'application/json',
             'Cookie': cookie.toString(),
@@ -234,14 +236,15 @@ class TasksRepository {
     }
     return error;
   }
+
   Future<bool> sendAllLocalTasksData() async {
     List<TaskModel> dbTasks = await loadTasks(),
-        localTasks =
-        List.from(HiveCRUM().myTasks.where((element) => element.isSentToDB == false));
+        localTasks = List.from(
+            HiveCRUM().myTasks.where((element) => element.isSentToDB == false));
     for (int i = 0; i < localTasks.length; i++) {
       if (dbTasks.any((element) => element.id == localTasks[i].id)) {
         if (localTasks[i].isRemoved) {
-          await removeTask(localTasks[i].id);
+          await removeTask(localTasks[i]);
           continue;
         }
         await updateTask(id: localTasks[i].id);
@@ -256,8 +259,9 @@ class TasksRepository {
 
     return true;
   }
+
   bool checkIsAnyTasksNotSent() {
-    List<TaskModel> myTasks=List.from(HiveCRUM().myTasks);
+    List<TaskModel> myTasks = List.from(HiveCRUM().myTasks);
     return myTasks.isNotEmpty
         ? myTasks.any((element) => element.isSentToDB == false)
         : false;

@@ -8,17 +8,23 @@ import 'package:flutter/material.dart';
 
 class MedicineList extends StatelessWidget {
   const MedicineList(
-    this.items, {
+    this.medicines, {
+    required this.dayDate,
     super.key,
   });
 
-  final List<MedicineModel> items;
+  final List<MedicineModel> medicines;
+  final DateTime dayDate;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final items = medicines
+        .where((element) => !element.isRemoved)
+        .where((element) => element.hasRemindersAt(dayDate));
+
     if (items.isEmpty) return _emptyListPlaceholder();
 
-    final theme = Theme.of(context);
     final groupedItems = SplayTreeMap<int, List<MedicineModel>>();
 
     for (final item in items) {
@@ -35,27 +41,28 @@ class MedicineList extends StatelessWidget {
       itemInSectionCount: (i) => groupedItems.values.elementAt(i).length,
       sectionBuilder: (context, sectionPath, _) {
         final timeOffset = groupedItems.keys.elementAt(sectionPath.section);
-        final time = timeOffset.toTimeOfDay();
         return Container(
           color: theme.scaffoldBackgroundColor,
           width: double.infinity,
           child: Text(
-            [
-              time.hour.toString().padLeft(2, "0"),
-              time.minute.toString().padLeft(2, "0"),
-            ].join(":"),
-            style: TextStyle(fontSize: 32, color: primaryText),
+            timeOffset.toTimeOfDay().format(context),
+            style: const TextStyle(fontSize: 32, color: primaryText),
           ),
         );
       },
       childBuilder: (context, indexPath) {
-        final medicine = items[indexPath.child];
         final timeOffset = groupedItems.keys.elementAt(indexPath.section);
+        final time = timeOffset.toTimeOfDay();
+        final group = groupedItems.values.elementAt(indexPath.section);
+        final medicine = group[indexPath.child];
         return Padding(
           padding: const EdgeInsets.only(bottom: 4),
           child: MedicineItem(
             medicine,
-            time: timeOffset.toTimeOfDay(),
+            doseTime: dayDate.copyWith(
+              hour: time.hour,
+              minute: time.minute,
+            ),
             onTap: () {},
           ),
         );

@@ -1,17 +1,18 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/add_medicine_page/components/medicine_added_bottom_sheet.dart';
-import 'package:chance_app/ui/pages/reminders_page/components/calendar.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/custom_bottom_sheet.dart';
+import 'package:chance_app/ui/pages/reminders_page/components/expandable_calendar.dart';
 import 'package:chance_app/ui/pages/reminders_page/medicine/medicine_list.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/task_list.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/tasks_sheets.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/enum/reminders.dart';
+import 'package:chance_app/ux/hive_crum.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
-import 'package:chance_app/ux/model/task_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class RemindersPage extends StatefulWidget {
   const RemindersPage({super.key});
@@ -50,8 +51,7 @@ class _RemindersPageState extends State<RemindersPage> {
             final result =
                 await Navigator.of(context).pushNamed("/add_medicine");
             if (result is MedicineModel && mounted) {
-              BlocProvider.of<RemindersBloc>(context)
-                  .add(SaveMedicine(medicineModel: result));
+              BlocProvider.of<RemindersBloc>(context).add(SaveMedicine(result));
               final addMore = await showModalBottomSheet<bool>(
                 context: context,
                 backgroundColor: beige100,
@@ -70,7 +70,7 @@ class _RemindersPageState extends State<RemindersPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<RemindersBloc>(context).add(LoadData());
+    BlocProvider.of<RemindersBloc>(context).add(const LoadData());
   }
 
   @override
@@ -87,7 +87,7 @@ class _RemindersPageState extends State<RemindersPage> {
       appBar: AppBar(
         centerTitle: true,
         scrolledUnderElevation: 0,
-        titleTextStyle: TextStyle(fontSize: 22, color: primaryText),
+        titleTextStyle: const TextStyle(fontSize: 22, color: primaryText),
         title: const Text("Нагадування"),
         leading: BackButton(
           onPressed: () {
@@ -112,26 +112,18 @@ class _RemindersPageState extends State<RemindersPage> {
               builder: (context, isLoading) {
                 return Visibility(
                   visible: !isLoading,
-                  replacement: CupertinoActivityIndicator(
+                  replacement: const CupertinoActivityIndicator(
                     color: primary500,
                     radius: 50,
                   ),
                   child: Column(
                     children: [
-                      CalendarView(),
+                      _calendarView(),
                       Padding(
                         padding: const EdgeInsets.all(16),
                         child: _tabSwitcher(),
                       ),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 125),
-                            child: _itemsList(),
-                          ),
-                        ),
-                      ),
+                      Expanded(child: _tabViews()),
                     ],
                   ),
                 );
@@ -168,10 +160,28 @@ class _RemindersPageState extends State<RemindersPage> {
     );
   }
 
+  Widget _calendarView() {
+    return ValueListenableBuilder(
+      valueListenable: tasksBox.listenable(),
+      builder: (context, box, child) {
+        return BlocSelector<RemindersBloc, RemindersState, DateTime>(
+          selector: (state) => state.selectedDay,
+          builder: (context, selectedDay) => ExpandableCalendar(
+            selectedDay: selectedDay,
+            onDaySelect: (dayDate) {
+              BlocProvider.of<RemindersBloc>(context).add(SelectDay(dayDate));
+            },
+            tasks: box.values.toList(),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _tabSwitcher() {
     const tabs = {
-      Reminders.medicine: "Запрошення для мене",
-      Reminders.tasks: "Запрошення від мене",
+      Reminders.medicine: "Мої медикаменти",
+      Reminders.tasks: "Мої завдання",
     };
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -205,17 +215,35 @@ class _RemindersPageState extends State<RemindersPage> {
     );
   }
 
-  Widget _itemsList() {
+  Widget _tabViews() {
+    return BlocSelector<RemindersBloc, RemindersState, DateTime>(
+      selector: (state) => state.selectedDay,
+      builder: (context, selectedDay) => AnimatedSwitcher(
+        duration: const Duration(milliseconds: 100),
+        child: Align(
+          key: ValueKey(selectedDay),
+          alignment: Alignment.topCenter,
+          child: _itemList(selectedDay),
+        ),
+      ),
+    );
+  }
+
+  Widget _itemList(DateTime dayDate) {
     switch (_selectedTab) {
       case Reminders.medicine:
-        return BlocSelector<RemindersBloc, RemindersState, List<MedicineModel>>(
-          selector: (state) => state.myMedicines,
-          builder: (context, items) => MedicineList(items),
+        return ValueListenableBuilder(
+          valueListenable: medicineBox.listenable(),
+          builder: (context, box, child) {
+            return MedicineList(box.values.toList(), dayDate: dayDate);
+          },
         );
       case Reminders.tasks:
-        return BlocSelector<RemindersBloc, RemindersState, List<TaskModel>>(
-          selector: (state) => state.myTasks,
-          builder: (context, items) => TaskList(items),
+        return ValueListenableBuilder(
+          valueListenable: tasksBox.listenable(),
+          builder: (context, box, child) {
+            return TaskList(box.values.toList(), dayDate: dayDate);
+          },
         );
     }
   }

@@ -38,8 +38,8 @@ class TaskItem extends StatelessWidget {
       ),
       additionalInfo: Text(
         [
-          task.date!.hour.toString().padLeft(2, "0"),
-          task.date!.minute.toString().padLeft(2, "0"),
+          task.date.hour.toString().padLeft(2, "0"),
+          task.date.minute.toString().padLeft(2, "0"),
         ].join(":"),
         style: TextStyle(
           fontSize: 16,

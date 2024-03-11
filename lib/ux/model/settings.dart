@@ -3,7 +3,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
 
 part 'settings.freezed.dart';
-
 part 'settings.g.dart';
 
 @freezed
@@ -18,5 +17,6 @@ class Settings with _$Settings {
     @HiveField(5) @Default(null) String? languageCode,
   }) = _Settings;
 
-  factory Settings.fromJson(Map<String, dynamic> json) => _$SettingsFromJson(json);
+  factory Settings.fromJson(Map<String, dynamic> json) =>
+      _$SettingsFromJson(json);
 }

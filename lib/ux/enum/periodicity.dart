@@ -9,8 +9,8 @@ part 'periodicity.g.dart';
 enum Periodicity {
   @HiveField(0)
   everyDay,
-  // @HiveField(1)
-  // inADay,
+  @HiveField(1)
+  inADay,
   @HiveField(2)
   certainDays;
 
@@ -18,8 +18,8 @@ enum Periodicity {
     switch (this) {
       case Periodicity.everyDay:
         return "Щодня";
-      // case Periodicity.inADay:
-      //   return "Кожні 2 дні";
+      case Periodicity.inADay:
+        return "Кожні 2 дні";
       case Periodicity.certainDays:
         return "Певні дні тижня";
     }

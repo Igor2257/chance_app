@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:developer' show log;
+import 'dart:ui' show DartPluginRegistrant;
 
 import 'package:chance_app/firebase_options.dart';
 import 'package:chance_app/ui/constans.dart';
@@ -12,12 +14,6 @@ import 'package:chance_app/ui/pages/navigation/add_ward/add_ward.dart';
 import 'package:chance_app/ui/pages/navigation/invitations/check_my_invitation/check_my_invitation.dart';
 import 'package:chance_app/ui/pages/navigation/invitations/enter_accept_code/enter_accept_code.dart';
 import 'package:chance_app/ui/pages/navigation/navigation_page/navigation_page.dart';
-import 'package:chance_app/ui/pages/navigation/place_picker/src/models/address_component.dart';
-import 'package:chance_app/ui/pages/navigation/place_picker/src/models/bounds.dart';
-import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geocoding_result.dart';
-import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geometry.dart';
-import 'package:chance_app/ui/pages/navigation/place_picker/src/models/location.dart';
-import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ui/pages/onboarding/onboarding_page.dart';
 import 'package:chance_app/ui/pages/onboarding/onboarding_tutorial.dart';
 import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
@@ -42,18 +38,12 @@ import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
-import 'package:chance_app/ux/enum/day_periodicity.dart';
-import 'package:chance_app/ux/enum/instruction.dart';
-import 'package:chance_app/ux/enum/medicine_type.dart';
-import 'package:chance_app/ux/enum/periodicity.dart';
 import 'package:chance_app/ux/helpers/ad_helper.dart';
+import 'package:chance_app/ux/helpers/reminders_helper.dart';
 import 'package:chance_app/ux/hive_crum.dart';
 import 'package:chance_app/ux/internet_connection_stream.dart';
-import 'package:chance_app/ux/model/me_user.dart';
-import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/product_model.dart';
 import 'package:chance_app/ux/model/settings.dart';
-import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository/tasks_repository.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -62,6 +52,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -70,9 +61,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest_all.dart';
 import 'package:timezone/timezone.dart';
@@ -101,21 +90,11 @@ Future<void> main() async {
     }
   });
 
-  // Local notifications plugin setup
-  await FlutterLocalNotificationsPlugin().initialize(
-    const InitializationSettings(
-      android: AndroidInitializationSettings(kDefaultAndroidIcon),
-      iOS: DarwinInitializationSettings(),
-    ),
-  );
   await Permission.notification.request();
+  await _initializeLocalNotifications();
+  await _initializeBackgroundService();
 
-  // Timezone setup, is required by scheduler
-  final currentTimeZone = await FlutterTimezone.getLocalTimezone();
-  initializeTimeZones();
-  setLocalLocation(getLocation(currentTimeZone));
-
-  await initHiveBoxes().then((value) async {
+  await HiveCRUM().initialize().then((value) async {
     if ((!HiveCRUM().setting.blockAd)) {
       unawaited(MobileAds.instance.initialize());
     }
@@ -141,15 +120,71 @@ Future<void> main() async {
   });
 }
 
+Future<void> _initializeLocalNotifications() async {
+  // Local notifications plugin setup
+  await FlutterLocalNotificationsPlugin().initialize(
+    const InitializationSettings(
+      android: AndroidInitializationSettings(kDefaultAndroidIcon),
+      iOS: DarwinInitializationSettings(),
+    ),
+  );
+
+  // Timezone setup, is required by scheduler
+  final currentTimeZone = await FlutterTimezone.getLocalTimezone();
+  initializeTimeZones();
+  setLocalLocation(getLocation(currentTimeZone));
+}
+
+Future<void> _initializeBackgroundService() async {
+  await FlutterBackgroundService().configure(
+    iosConfiguration: IosConfiguration(
+      onBackground: _onStartBackgroundService,
+      onForeground: _onStartBackgroundService,
+    ),
+    androidConfiguration: AndroidConfiguration(
+      onStart: _onStartBackgroundService,
+      isForegroundMode: false,
+    ),
+  );
+}
+
+@pragma('vm:entry-point')
+Future<bool> _onStartBackgroundService(ServiceInstance service) async {
+  DartPluginRegistrant.ensureInitialized();
+  const serviceName = "BackgroundService";
+
+  final hiveIsInitialized = await HiveCRUM().initialize();
+  await _initializeLocalNotifications();
+
+  log("Service is started", name: serviceName);
+
+  if (hiveIsInitialized) {
+    // Setup medicine reminders
+    for (final medicine in medicineBox.values) {
+      await RemindersHelper.addMedicineReminders(
+        medicine,
+        dateRange: DateTimeRange(
+          start: DateTime.now(),
+          end: DateUtils.addDaysToDate(DateTime.now(), kScheduleDays),
+        ),
+      );
+    }
+    log("Reminders are schedules", name: serviceName);
+
+    return true;
+  }
+
+  return false;
+}
+
 class MyApp extends StatefulWidget {
   const MyApp(this.route, {super.key});
 
   final String route;
   static void restartApp(BuildContext context) {
-    context
-        .findAncestorStateOfType<MyAppState>()!
-        .restartApp();
+    context.findAncestorStateOfType<MyAppState>()!.restartApp();
   }
+
   @override
   State<MyApp> createState() => MyAppState();
 }
@@ -177,6 +212,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     Fluttertoast.showToast(
         msg: AppLocalizations.instance.translate("languageHaveChanged"));
   }
+
   @override
   void initState() {
     super.initState();
@@ -339,9 +375,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                               surfaceTintColor:
                                                   beigeTransparent)),
                                       supportedLocales: const [
-                                        Locale('en'),
                                         Locale('uk'),
-                                        Locale('ru'),
                                       ],
                                       localizationsDelegates: const [
                                         MyLocalizationsDelegate(),
@@ -349,6 +383,12 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                         GlobalCupertinoLocalizations.delegate,
                                         GlobalMaterialLocalizations.delegate,
                                       ],
+                                      builder: (context, child) {
+                                        final locale =
+                                            Localizations.localeOf(context);
+                                        Jiffy.setLocale(locale.toLanguageTag());
+                                        return child!;
+                                      },
                                       initialRoute: widget.route,
                                       routes: {
                                         "/": (context) => const MainPage(),
@@ -668,60 +708,5 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                         ],
                       ))));
         }));
-  }
-}
-
-Box<MeUser>? userBox;
-Box<TaskModel>? tasksBox;
-Box<MedicineModel>? medicineBox;
-Box<PickResult>? savedAddressesBox;
-Box<Settings>? settingsBox;
-Box<ProductModel>? itemsBox;
-
-Future<bool> initHiveBoxes() async {
-  final documentsDirectory = await getApplicationDocumentsDirectory();
-  Hive.init(documentsDirectory.path);
-  //await Repository().deleteCookie();
-  //await Hive.deleteBoxFromDisk('user');
-  //await Hive.deleteBoxFromDisk('myTasks');
-  //await Hive.deleteBoxFromDisk('savedAddresses');
-  //await Hive.deleteBoxFromDisk('myMedicines');
-  //await Hive.deleteBoxFromDisk('settings');
-  //await Hive.deleteBoxFromDisk('items');
-  Hive.registerAdapter(MeUserAdapter());
-  Hive.registerAdapter(TaskModelAdapter());
-  Hive.registerAdapter(MedicineModelAdapter());
-  Hive.registerAdapter(LocationAdapter());
-  Hive.registerAdapter(GeocodingResultAdapter());
-  Hive.registerAdapter(GeometryAdapter());
-  Hive.registerAdapter(AddressComponentAdapter());
-  Hive.registerAdapter(BoundsAdapter());
-  Hive.registerAdapter(PickResultAdapter());
-  Hive.registerAdapter(DayPeriodicityAdapter());
-  Hive.registerAdapter(InstructionAdapter());
-  Hive.registerAdapter(MedicineTypeAdapter());
-  Hive.registerAdapter(PeriodicityAdapter());
-  Hive.registerAdapter(SettingsAdapter());
-  Hive.registerAdapter(ProductModelAdapter());
-  try {
-    userBox = await Hive.openBox<MeUser>("user");
-    tasksBox = await Hive.openBox<TaskModel>("myTasks");
-    medicineBox = await Hive.openBox<MedicineModel>("myMedicines");
-    savedAddressesBox = await Hive.openBox<PickResult>("savedAddresses");
-    itemsBox = await Hive.openBox<ProductModel>("items");
-    await Hive.openBox<Settings>("settings").then((value) async {
-      settingsBox = value;
-      Settings setting = settingsBox != null
-          ? settingsBox!.get('settings') != null
-              ? settingsBox!.get('settings') as Settings
-              : const Settings()
-          : const Settings();
-      if (setting.firstEnter == null) {
-        HiveCRUM().updateSettings(Settings(firstEnter: DateTime.now()));
-      }
-    });
-    return true;
-  } catch (_) {
-    return false;
   }
 }

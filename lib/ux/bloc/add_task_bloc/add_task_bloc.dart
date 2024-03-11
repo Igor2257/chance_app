@@ -1,15 +1,19 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/reminders_page/components/calendar.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/custom_bottom_sheet_notification_picker.dart';
 import 'package:chance_app/ux/hive_crum.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'add_task_event.dart';
 part 'add_task_state.dart';
+
+enum SideSwipe {
+  left,
+  right,
+}
 
 class AddTaskBloc extends Bloc<AddTaskEvent, AddTaskState> {
   AddTaskBloc() : super(AddTaskState()) {
@@ -25,13 +29,14 @@ class AddTaskBloc extends Bloc<AddTaskEvent, AddTaskState> {
   bool checkIfDayHasTask(
       List<TaskModel> myTasks, int day, int month, int year) {
     for (int i = 0; i < myTasks.length; i++) {
-      DateTime taskDate = myTasks[i].date!;
+      DateTime taskDate = myTasks[i].date;
       if (DateUtils.isSameDay(taskDate, DateTime(year, month, day))) {
         return true;
       }
     }
     return false;
   }
+
   FutureOr<void> _onSaveTaskName(
       SaveTaskName event, Emitter<AddTaskState> emit) {
     emit(state.copyWith(taskTitle: event.name));
@@ -154,10 +159,10 @@ class AddTaskBloc extends Bloc<AddTaskEvent, AddTaskState> {
     }
     myTasks = myTasks
         .where((element) =>
-    DateUtils.isSameDay(element.date, now) &&
-        element.isRemoved == false)
+            DateUtils.isSameDay(element.date, now) &&
+            element.isRemoved == false)
         .toList();
-    myTasks.sort((a, b) => a.date!.compareTo(b.date!));
+    myTasks.sort((a, b) => a.date.compareTo(b.date));
     emit(state.copyWith(
       daysForTasks: dates,
       oldSelectedDateForTasks: DateTime.now(),

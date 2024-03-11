@@ -19,17 +19,18 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
     return TaskModel(
       id: fields[0] as String,
       message: fields[1] as String,
-      date: fields[2] as DateTime?,
-      isDone: fields[3] as bool,
-      isSentToDB: fields[6] as bool,
-      isRemoved: fields[7] as bool,
+      date: fields[2] as DateTime,
+      remindBeforeMinutes: fields[3] as int?,
+      isDone: fields[4] as bool,
+      isSentToDB: fields[5] as bool,
+      isRemoved: fields[6] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, TaskModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -37,10 +38,12 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
       ..writeByte(2)
       ..write(obj.date)
       ..writeByte(3)
+      ..write(obj.remindBeforeMinutes)
+      ..writeByte(4)
       ..write(obj.isDone)
-      ..writeByte(6)
+      ..writeByte(5)
       ..write(obj.isSentToDB)
-      ..writeByte(7)
+      ..writeByte(6)
       ..write(obj.isRemoved);
   }
 
@@ -61,10 +64,10 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
 
 _$TaskModelImpl _$$TaskModelImplFromJson(Map<String, dynamic> json) =>
     _$TaskModelImpl(
-      id: json['id'] as String? ?? "",
-      message: json['message'] as String? ?? "",
-      date:
-          json['date'] == null ? null : DateTime.parse(json['date'] as String),
+      id: json['id'] as String,
+      message: json['message'] as String,
+      date: DateTime.parse(json['date'] as String),
+      remindBeforeMinutes: json['remindBeforeMinutes'] as int?,
       isDone: json['isDone'] as bool? ?? false,
       isSentToDB: json['isSentToDB'] as bool? ?? false,
       isRemoved: json['isRemoved'] as bool? ?? false,
@@ -74,7 +77,8 @@ Map<String, dynamic> _$$TaskModelImplToJson(_$TaskModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'message': instance.message,
-      'date': instance.date?.toIso8601String(),
+      'date': instance.date.toIso8601String(),
+      'remindBeforeMinutes': instance.remindBeforeMinutes,
       'isDone': instance.isDone,
       'isSentToDB': instance.isSentToDB,
       'isRemoved': instance.isRemoved,

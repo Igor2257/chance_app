@@ -2,23 +2,31 @@ import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/task_item.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/model/task_model.dart';
+import 'package:collection/collection.dart';
 import 'package:cupertino_listview/cupertino_listview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jiffy/jiffy.dart';
 
 class TaskList extends StatelessWidget {
   const TaskList(
-    this.items, {
+    this.tasks, {
+    required this.dayDate,
     super.key,
   });
 
-  final List<TaskModel> items;
+  final List<TaskModel> tasks;
+  final DateTime dayDate;
 
   @override
   Widget build(BuildContext context) {
-    if (items.isEmpty) return _emptyListPlaceholder();
-
     final theme = Theme.of(context);
+    final items = tasks
+        .where((element) => !element.isRemoved)
+        .where((element) => DateUtils.isSameDay(element.date, dayDate))
+        .sortedBy((element) => element.date);
+
+    if (items.isEmpty) return _emptyListPlaceholder();
 
     return CupertinoListView.builder(
       physics: const BouncingScrollPhysics(),
@@ -32,15 +40,17 @@ class TaskList extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  "Сьогодні", // TODO: show correct day
-                  style: TextStyle(fontSize: 28, color: primaryText),
+                  DateUtils.isSameDay(dayDate, DateTime.now())
+                      ? "Сьогодні"
+                      : Jiffy.parseFromDateTime(dayDate).MMMMd,
+                  style: const TextStyle(fontSize: 28, color: primaryText),
                 ),
               ),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed("/tasks_for_today");
                 },
-                child: Text(
+                child: const Text(
                   "Всі завдання",
                   style: TextStyle(
                     fontSize: 16,
@@ -59,7 +69,7 @@ class TaskList extends StatelessWidget {
         return TaskItem(
           task,
           onTap: () {
-            context.read<RemindersBloc>().add(SelectTask(task: task));
+            context.read<RemindersBloc>().add(TaskIsDone(task));
           },
         );
       },

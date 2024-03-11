@@ -1959,9 +1959,7 @@ mixin _$AddMedicineState {
   Set<int> get weekdays => throw _privateConstructorUsedError;
   Map<TimeOfDay, int> get doses => throw _privateConstructorUsedError;
   Instruction? get instruction => throw _privateConstructorUsedError;
-  bool get isSaving => throw _privateConstructorUsedError;
   MedicineModel? get medicine => throw _privateConstructorUsedError;
-  String? get errorMessage => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AddMedicineStateCopyWith<AddMedicineState> get copyWith =>
@@ -1982,9 +1980,7 @@ abstract class $AddMedicineStateCopyWith<$Res> {
       Set<int> weekdays,
       Map<TimeOfDay, int> doses,
       Instruction? instruction,
-      bool isSaving,
-      MedicineModel? medicine,
-      String? errorMessage});
+      MedicineModel? medicine});
 
   $MedicineModelCopyWith<$Res>? get medicine;
 }
@@ -2009,9 +2005,7 @@ class _$AddMedicineStateCopyWithImpl<$Res, $Val extends AddMedicineState>
     Object? weekdays = null,
     Object? doses = null,
     Object? instruction = freezed,
-    Object? isSaving = null,
     Object? medicine = freezed,
-    Object? errorMessage = freezed,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -2042,18 +2036,10 @@ class _$AddMedicineStateCopyWithImpl<$Res, $Val extends AddMedicineState>
           ? _value.instruction
           : instruction // ignore: cast_nullable_to_non_nullable
               as Instruction?,
-      isSaving: null == isSaving
-          ? _value.isSaving
-          : isSaving // ignore: cast_nullable_to_non_nullable
-              as bool,
       medicine: freezed == medicine
           ? _value.medicine
           : medicine // ignore: cast_nullable_to_non_nullable
               as MedicineModel?,
-      errorMessage: freezed == errorMessage
-          ? _value.errorMessage
-          : errorMessage // ignore: cast_nullable_to_non_nullable
-              as String?,
     ) as $Val);
   }
 
@@ -2086,9 +2072,7 @@ abstract class _$$StateImplCopyWith<$Res>
       Set<int> weekdays,
       Map<TimeOfDay, int> doses,
       Instruction? instruction,
-      bool isSaving,
-      MedicineModel? medicine,
-      String? errorMessage});
+      MedicineModel? medicine});
 
   @override
   $MedicineModelCopyWith<$Res>? get medicine;
@@ -2112,9 +2096,7 @@ class __$$StateImplCopyWithImpl<$Res>
     Object? weekdays = null,
     Object? doses = null,
     Object? instruction = freezed,
-    Object? isSaving = null,
     Object? medicine = freezed,
-    Object? errorMessage = freezed,
   }) {
     return _then(_$StateImpl(
       name: null == name
@@ -2145,18 +2127,10 @@ class __$$StateImplCopyWithImpl<$Res>
           ? _value.instruction
           : instruction // ignore: cast_nullable_to_non_nullable
               as Instruction?,
-      isSaving: null == isSaving
-          ? _value.isSaving
-          : isSaving // ignore: cast_nullable_to_non_nullable
-              as bool,
       medicine: freezed == medicine
           ? _value.medicine
           : medicine // ignore: cast_nullable_to_non_nullable
               as MedicineModel?,
-      errorMessage: freezed == errorMessage
-          ? _value.errorMessage
-          : errorMessage // ignore: cast_nullable_to_non_nullable
-              as String?,
     ));
   }
 }
@@ -2172,9 +2146,7 @@ class _$StateImpl extends _State {
       final Set<int> weekdays = const {},
       final Map<TimeOfDay, int> doses = const {},
       this.instruction,
-      this.isSaving = false,
-      this.medicine,
-      this.errorMessage})
+      this.medicine})
       : _weekdays = weekdays,
         _doses = doses,
         super._();
@@ -2210,16 +2182,11 @@ class _$StateImpl extends _State {
   @override
   final Instruction? instruction;
   @override
-  @JsonKey()
-  final bool isSaving;
-  @override
   final MedicineModel? medicine;
-  @override
-  final String? errorMessage;
 
   @override
   String toString() {
-    return 'AddMedicineState(name: $name, type: $type, periodicity: $periodicity, startDate: $startDate, weekdays: $weekdays, doses: $doses, instruction: $instruction, isSaving: $isSaving, medicine: $medicine, errorMessage: $errorMessage)';
+    return 'AddMedicineState(name: $name, type: $type, periodicity: $periodicity, startDate: $startDate, weekdays: $weekdays, doses: $doses, instruction: $instruction, medicine: $medicine)';
   }
 
   @override
@@ -2237,12 +2204,8 @@ class _$StateImpl extends _State {
             const DeepCollectionEquality().equals(other._doses, _doses) &&
             (identical(other.instruction, instruction) ||
                 other.instruction == instruction) &&
-            (identical(other.isSaving, isSaving) ||
-                other.isSaving == isSaving) &&
             (identical(other.medicine, medicine) ||
-                other.medicine == medicine) &&
-            (identical(other.errorMessage, errorMessage) ||
-                other.errorMessage == errorMessage));
+                other.medicine == medicine));
   }
 
   @override
@@ -2255,9 +2218,7 @@ class _$StateImpl extends _State {
       const DeepCollectionEquality().hash(_weekdays),
       const DeepCollectionEquality().hash(_doses),
       instruction,
-      isSaving,
-      medicine,
-      errorMessage);
+      medicine);
 
   @JsonKey(ignore: true)
   @override
@@ -2275,9 +2236,7 @@ abstract class _State extends AddMedicineState {
       final Set<int> weekdays,
       final Map<TimeOfDay, int> doses,
       final Instruction? instruction,
-      final bool isSaving,
-      final MedicineModel? medicine,
-      final String? errorMessage}) = _$StateImpl;
+      final MedicineModel? medicine}) = _$StateImpl;
   const _State._() : super._();
 
   @override
@@ -2295,11 +2254,7 @@ abstract class _State extends AddMedicineState {
   @override
   Instruction? get instruction;
   @override
-  bool get isSaving;
-  @override
   MedicineModel? get medicine;
-  @override
-  String? get errorMessage;
   @override
   @JsonKey(ignore: true)
   _$$StateImplCopyWith<_$StateImpl> get copyWith =>

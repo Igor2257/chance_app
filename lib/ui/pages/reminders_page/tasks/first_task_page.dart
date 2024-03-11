@@ -4,7 +4,6 @@ import 'package:chance_app/ux/bloc/add_task_bloc/add_task_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository/tasks_repository.dart';
-import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -25,6 +24,7 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
     BlocProvider.of<AddTaskBloc>(context).add(LoadDataForSelectDateForTasks());
     super.initState();
   }
+
   final DateTime now = DateTime.now();
 
   @override
@@ -54,7 +54,6 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
               onTap: () async {
                 if (state.taskTitle.trimLeft().length > 1) {
                   if (state.taskTitle.trimLeft().length <= 300) {
-
                     DateTime now = DateTime.now();
                     String name = state.taskTitle;
                     if (name.trim().isNotEmpty) {
@@ -81,7 +80,8 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
                         date: date,
                         //notificationsBefore: state.oldNotificationsBefore.name,
                       );
-                      BlocProvider.of<RemindersBloc>(context).add(SaveTask(taskModel: taskModel));
+                      BlocProvider.of<RemindersBloc>(context)
+                          .add(SaveTask(taskModel));
                       await TasksRepository().saveTask(taskModel).then((value) {
                         showDialog(
                             barrierDismissible: false,
@@ -189,13 +189,11 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
                   SvgPicture.asset("assets/icons/calendar.svg"),
                   Text(
                     (taskModel == null) ||
-                            (taskModel.date == null) ||
-                            (taskModel.date != null &&
-                                taskModel.date!.day == now.day &&
-                                taskModel.date!.month == now.month &&
-                                taskModel.date!.year == now.year)
+                            (taskModel.date.day == now.day &&
+                                taskModel.date.month == now.month &&
+                                taskModel.date.year == now.year)
                         ? "Сьогодні"
-                        : "${taskModel.date!.day.toString().padLeft(2, "0")}.${taskModel.date!.month.toString().padLeft(2, "0")}.${taskModel.date!.year}",
+                        : "${taskModel.date.day.toString().padLeft(2, "0")}.${taskModel.date.month.toString().padLeft(2, "0")}.${taskModel.date.year}",
                     style: TextStyle(fontSize: 14, color: primaryText),
                   ),
                 ],

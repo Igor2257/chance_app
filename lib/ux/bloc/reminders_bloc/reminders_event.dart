@@ -1,72 +1,46 @@
 part of 'reminders_bloc.dart';
 
-@immutable
-abstract class RemindersEvent {}
+@freezed
+class RemindersEvent with _$RemindersEvent {
+  const factory RemindersEvent.loadData() = LoadData;
 
-class LoadData extends RemindersEvent {
-  LoadData();
-}
+  const factory RemindersEvent.selectDay(
+    DateTime dayDate,
+  ) = SelectDay;
 
+  const factory RemindersEvent.saveTask(
+    TaskModel task,
+  ) = SaveTask;
 
+  const factory RemindersEvent.taskIsDone(
+    TaskModel task,
+  ) = TaskIsDone;
 
-class ChangeCalendarState extends RemindersEvent {
-  ChangeCalendarState();
-}
+  const factory RemindersEvent.taskIsPostponed(
+    TaskModel task, {
+    required int minutes,
+  }) = TaskIsPostponed;
 
-class SelectedDate extends RemindersEvent {
-  final Map<String, dynamic> selectedDate;
+  const factory RemindersEvent.deleteTask(
+    TaskModel task,
+  ) = DeleteTask;
 
-  SelectedDate({required this.selectedDate});
-}
+  const factory RemindersEvent.saveMedicine(
+    MedicineModel medicine,
+  ) = SaveMedicine;
 
-class ChangeMonth extends RemindersEvent {
-  final SideSwipe sideSwipe;
+  const factory RemindersEvent.medicineIsDone(
+    MedicineModel medicine, {
+    required DateTime at,
+  }) = MedicineIsDone;
 
-  ChangeMonth({required this.sideSwipe});
-}
+  const factory RemindersEvent.medicineIsPostponed(
+    MedicineModel medicine, {
+    required DateTime doseTime,
+    required int minutes,
+  }) = MedicineIsPostponed;
 
-
-class SelectTask extends RemindersEvent {
-  final TaskModel task;
-
-  SelectTask({required this.task});
-}
-
-class LoadTasksForToday extends RemindersEvent {
-  final DateTime datetime;
-
-  LoadTasksForToday({required this.datetime});
-}
-
-class ChangeIsDoneForTask extends RemindersEvent {
-  final String id;
-
-  ChangeIsDoneForTask({required this.id});
-}
-
-class DeleteTask extends RemindersEvent {
-  final String id;
-
-  DeleteTask({required this.id});
-}
-
-class SaveTask extends RemindersEvent {
-  final TaskModel taskModel;
-
-  SaveTask({required this.taskModel});
-}
-class SaveMedicine extends RemindersEvent {
-  final MedicineModel medicineModel;
-
-  SaveMedicine({required this.medicineModel});
-}
-class UpdateMedicine extends RemindersEvent {
-  final MedicineModel medicineModel;
-
-  UpdateMedicine({required this.medicineModel});
-}
-class DeleteMedicine extends RemindersEvent {
-  final String id;
-
-  DeleteMedicine({required this.id});
+  const factory RemindersEvent.deleteMedicine(
+    MedicineModel medicine,
+  ) = DeleteMedicine;
 }

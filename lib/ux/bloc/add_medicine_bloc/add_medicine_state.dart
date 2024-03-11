@@ -11,9 +11,7 @@ class AddMedicineState with _$AddMedicineState {
     @Default({}) Set<int> weekdays,
     @Default({}) Map<TimeOfDay, int> doses,
     Instruction? instruction,
-    @Default(false) bool isSaving,
     MedicineModel? medicine,
-    String? errorMessage,
   }) = _State;
 
   const AddMedicineState._();

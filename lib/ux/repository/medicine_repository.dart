@@ -9,6 +9,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 class MedicineRepository {
+  final _userRepository = UserRepository();
+
   Future<List<MedicineModel>> updateLocalMedicines({bool? forcePush}) async {
     List<MedicineModel> medicines = [];
 
@@ -41,7 +43,7 @@ class MedicineRepository {
     } else {
       try {
         var url = Uri.parse('$apiUrl/medicine');
-        final cookie = await UserRepository().getCookie();
+        final cookie = await _userRepository.getCookie();
         await http.get(
           url,
           headers: <String, String>{
@@ -81,7 +83,7 @@ class MedicineRepository {
     } else {
       try {
         var url = Uri.parse('$apiUrl/medicine');
-        final cookie = await UserRepository().getCookie();
+        final cookie = await _userRepository.getCookie();
         String date = medicineModel.startDate.toUtc().toString();
         Map<String, dynamic> map = medicineModel.toJson();
         map["startDate"] = date;
@@ -101,7 +103,7 @@ class MedicineRepository {
                 .replaceAll("[", "")
                 .replaceAll("]", "");
           } else {
-            await await HiveCRUM()
+            await HiveCRUM()
                 .addMedicine(medicineModel)
                 .whenComplete(() async {
               await HiveCRUM()
@@ -130,7 +132,7 @@ class MedicineRepository {
     } else {
       try {
         var url = Uri.parse('$apiUrl/medicine/${medicineModel.id}');
-        final cookie = await UserRepository().getCookie();
+        final cookie = await _userRepository.getCookie();
         String? newDate = medicineModel.startDate.toUtc().toString();
         Map<String, dynamic> map = medicineModel.toJson();
         map["startDate"] = newDate;
@@ -161,18 +163,18 @@ class MedicineRepository {
     return error;
   }
 
-  Future<String?> removeMedicine(String medicineId) async {
+  Future<String?> removeMedicine(MedicineModel medicineModel) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       //Fluttertoast.showToast(
       //    msg: "Немає підключення до інтернету",
       //    toastLength: Toast.LENGTH_LONG);
       //error = "Немає підключення до інтернету";
-      HiveCRUM().removeLocalMedicine(medicineId);
+      HiveCRUM().removeLocalMedicine(medicineModel);
     } else {
       try {
-        var url = Uri.parse('$apiUrl/medicine/$medicineId');
-        final cookie = await UserRepository().getCookie();
+        var url = Uri.parse('$apiUrl/medicine/${medicineModel.id}');
+        final cookie = await _userRepository.getCookie();
         await http.delete(url, headers: <String, String>{
           'Content-Type': 'application/json',
           'Cookie': cookie.toString(),

@@ -1,397 +1,152 @@
 import 'dart:async';
 
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/reminders_page/components/calendar.dart';
+import 'package:chance_app/ux/helpers/reminders_helper.dart';
 import 'package:chance_app/ux/hive_crum.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository/medicine_repository.dart';
 import 'package:chance_app/ux/repository/tasks_repository.dart';
-import 'package:chance_app/ux/repository/user_repository.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' show DateTimeRange, DateUtils;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'reminders_event.dart';
 part 'reminders_state.dart';
+part 'reminders_bloc.freezed.dart';
 
 class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
-  RemindersBloc() : super(const RemindersState()) {
+  RemindersBloc()
+      : super(
+          RemindersState(
+            selectedDay: DateUtils.dateOnly(DateTime.now()),
+          ),
+        ) {
     on<LoadData>(_onLoadData);
-    on<SelectedDate>(_onSelectedDate);
-    on<ChangeCalendarState>(_onChangeCalendarState);
-    on<ChangeMonth>(_onChangeMonth);
-
-    on<SelectTask>(_onSelectTask);
-    on<LoadTasksForToday>(_onLoadTasksForToday);
-    on<ChangeIsDoneForTask>(_onChangeIsDoneForTask);
-    on<DeleteTask>(_onDeleteTask);
+    on<SelectDay>(_onSelectedDay);
+    // Tasks
     on<SaveTask>(_onSaveTask);
+    on<TaskIsDone>(_onTaskIsDone);
+    on<TaskIsPostponed>(_onTaskIsPostponed);
+    on<DeleteTask>(_onDeleteTask);
+    // Medicines
     on<SaveMedicine>(_onSaveMedicine);
-    on<UpdateMedicine>(_onUpdateMedicine);
+    on<MedicineIsDone>(_onMedicineIsDone);
+    on<MedicineIsPostponed>(_onMedicineIsPostponed);
     on<DeleteMedicine>(_onDeleteMedicine);
   }
 
-  bool checkIfDayHasTask(
-      List<TaskModel> myTasks, int day, int month, int year) {
-    for (int i = 0; i < myTasks.length; i++) {
-      DateTime taskDate = myTasks[i].date!;
-      if (DateUtils.isSameDay(taskDate, DateTime(year, month, day))) {
-        return true;
-      }
-    }
-    return false;
-  }
+  final _tasksRepository = TasksRepository();
+  final _medicineRepository = MedicineRepository();
 
-  FutureOr<void> _onLoadData(
-      LoadData event, Emitter<RemindersState> emit) async {
-    emit(state.clear());
-    await TasksRepository().updateLocalTasks().then((tasks) async {
-      await MedicineRepository().updateLocalMedicines().then((medicines) {
-        List<Map<String, dynamic>> dates = [], week = [];
-        DateTime now = DateTime.now();
-        final int year = now.year;
-        final int month = now.month;
-        final int day = now.day;
-        int daysInMonth = DateTime(year, month + 1, 0).day;
-        List<TaskModel> myTasks =
-            tasks.where((element) => element.isRemoved == false).toList();
-        for (int i = 1; i <= daysInMonth; i++) {
-          DateTime date = DateTime(year, month, i);
-          String weekDay = getWeekdayName(date.weekday);
-          dates.add({
-            "weekDay": weekDay,
-            "number": (i.toString()).padLeft(2, "0"),
-            "month": month,
-            "year": year,
-            "isSelected": day == i ||
-                (state.selectedDate != null &&
-                    DateUtils.isSameDay(date, state.selectedDate)),
-            "hasTasks": checkIfDayHasTask(myTasks, i, month, year),
-          });
-        }
-        myTasks = myTasks
-            .where((element) => DateUtils.isSameDay(element.date, now))
-            .toList();
-        myTasks.sort((a, b) => a.date!.compareTo(b.date!));
-        int startOfWeek = day - now.weekday;
-        int endOfWeek = startOfWeek + 7;
-        if (dates.length >= endOfWeek) {
-          int daysLeftOfMonth = endOfWeek;
-          week = dates
-              .getRange(startOfWeek < 0 ? 0 : startOfWeek, daysLeftOfMonth)
-              .toList();
-          int weekLength = week.length;
-          int dayInPreviousMonth;
-          if (month - 1 > 0) {
-            dayInPreviousMonth = DateUtils.getDaysInMonth(year, month - 1);
-          } else {
-            dayInPreviousMonth = DateUtils.getDaysInMonth(year - 1, 1);
-          }
-          for (int i = 0; i < (7) - weekLength; i++) {
-            DateTime date = DateTime(year, month - 1, dayInPreviousMonth - i);
-            String weekDay = getWeekdayName(date.weekday);
+  Future<void> _onLoadData(LoadData event, Emitter<RemindersState> emit) async {
+    emit(state.copyWith(isLoading: true));
+    final reminders = await Future.wait([
+      _tasksRepository.updateLocalTasks(),
+      _medicineRepository.updateLocalMedicines(),
+    ]);
+    emit(state.copyWith(isLoading: false));
 
-            week.insert(0, {
-              "weekDay": weekDay,
-              "number": ((dayInPreviousMonth - i).toString()).padLeft(2, "0"),
-              "month": month - 1,
-              "year": year,
-              "isSelected": day == dayInPreviousMonth - i ||
-                  (state.selectedDate != null &&
-                      DateUtils.isSameDay(date, state.selectedDate)),
-              "hasTasks": checkIfDayHasTask(
-                  myTasks, dayInPreviousMonth - i, month - 1, year),
-            });
-          }
-        } else {
-          int daysLeftOfMonth = dates.length;
-          week = dates.getRange(startOfWeek, daysLeftOfMonth).toList();
-          int weekLength = week.length;
-          for (int i = 0; i < 7 - weekLength; i++) {
-            DateTime date = DateTime(year, month + 1, i + 1);
-            String weekDay = getWeekdayName(date.weekday);
+    final permissionGranted = await RemindersHelper.requestPermissions();
+    if (!permissionGranted) return;
 
-            week.add({
-              "weekDay": weekDay,
-              "number": ((i + 1).toString()).padLeft(2, "0"),
-              "month": month + 1,
-              "year": year,
-              "isSelected": day == i + 1 ||
-                  (state.selectedDate != null &&
-                      DateUtils.isSameDay(date, state.selectedDate)),
-              "hasTasks": checkIfDayHasTask(myTasks, i + 1, month + 1, year),
-            });
-          }
-        }
-
-        emit(state.copyWith(
-            days: dates,
-            week: week,
-            selectedDate: DateTime.now(),
-            dateForSwiping: DateTime.now(),
-            myTasks: myTasks,
-            isLoading: false,
-            myMedicines: medicines
-                .where((element) =>
-                    element.hasRemindersAt(now) && element.isRemoved == false)
-                .toList()));
-      });
-    });
-  }
-
-  FutureOr<void> _onSelectedDate(
-      SelectedDate event, Emitter<RemindersState> emit) {
-    List<Map<String, dynamic>> dates = state.days, week = state.week;
-    Map<String, dynamic> date = event.selectedDate;
-    DateTime now = DateTime(date["year"], date["month"], date["day"]);
-    date["isSelected"] = true;
-
-    int index = dates.indexWhere((e) => e["number"] == date["number"]);
-    for (int i = 0; i < dates.length; i++) {
-      dates[i]["isSelected"] = false;
-    }
-    dates[index]["isSelected"] = true;
-
-    int index2 = week.indexWhere((e) => e["number"] == date["number"]);
-    for (int i = 0; i < week.length; i++) {
-      week[i]["isSelected"] = false;
-    }
-    if (index2 != -1) {
-      week[index2]["isSelected"] = true;
-    }
-    DateTime selectedDate = DateTime(dates[index]["year"],
-        dates[index]["month"], int.parse(dates[index]["number"]));
-    List<TaskModel> myTasks = List.from(
-        HiveCRUM().myTasks.where((element) => element.isRemoved == false));
-
-    myTasks = myTasks
-        .where((element) => DateUtils.isSameDay(element.date, selectedDate))
-        .toList();
-    myTasks.sort((a, b) => a.date!.compareTo(b.date!));
-    emit(state.copyWith(
-        myTasks: myTasks,
-        week: week,
-        days: dates,
-        selectedDate: selectedDate,
-        myMedicines: List.from(HiveCRUM().myMedicines.where((element) =>
-            element.hasRemindersAt(now) && element.isRemoved == false))));
-  }
-
-  FutureOr<void> _onChangeCalendarState(
-      ChangeCalendarState event, Emitter<RemindersState> emit) {
-    emit(state.copyWith(isCalendarOpened: !state.isCalendarOpened));
-  }
-
-  FutureOr<void> _onChangeMonth(
-      ChangeMonth event, Emitter<RemindersState> emit) {
-    List<Map<String, dynamic>> dates = [], week = [];
-    DateTime now = state.dateForSwiping ?? DateTime.now();
-    int plusOrMinus = event.sideSwipe == SideSwipe.left ? -1 : 1;
-    int year = now.year;
-    int month = now.month;
-    if (month + plusOrMinus <= 12 && month + plusOrMinus >= 0) {
-      month = now.month + plusOrMinus;
-    } else {
-      if (event.sideSwipe == SideSwipe.left) {
-        year = now.year - 1;
-        month = 12;
-      } else {
-        year = now.year + 1;
-        month = 1;
-      }
-    }
-
-    int daysInMonth = DateTime(year, month + 1, 0).day;
-    DateTime? selectedDate = state.selectedDate;
-    List<TaskModel> myTasks = List.from(
-        HiveCRUM().myTasks.where((element) => element.isRemoved == false));
-
-    for (int i = 1; i <= daysInMonth; i++) {
-      DateTime date = DateTime(year, month, i);
-      String weekDay = getWeekdayName(date.weekday);
-      dates.add({
-        "weekDay": weekDay,
-        "number": (i.toString()).padLeft(2, "0"),
-        "month": month,
-        "year": year,
-        "isSelected":
-            (selectedDate != null && DateUtils.isSameDay(date, selectedDate)),
-        "hasTasks": checkIfDayHasTask(myTasks, i, month, year)
-      });
-    }
-    int day = DateTime.now().day;
-    int startOfWeek =
-        (month == DateTime.now().month && year == DateTime.now().year)
-            ? day - DateTime.now().weekday
-            : 0;
-    int endOfWeek = startOfWeek + 7;
-    if (dates.length >= endOfWeek) {
-      int daysLeftOfMonth = endOfWeek;
-      week = dates
-          .getRange(startOfWeek < 0 ? 0 : startOfWeek, daysLeftOfMonth)
-          .toList();
-      int weekLength = week.length;
-      int dayInPreviousMonth;
-      if (month - 1 > 0) {
-        dayInPreviousMonth = DateUtils.getDaysInMonth(year, month - 1);
-      } else {
-        dayInPreviousMonth = DateUtils.getDaysInMonth(year - 1, 1);
-      }
-      for (int i = 0; i < (7) - weekLength; i++) {
-        DateTime date = DateTime(year, month - 1, dayInPreviousMonth - i);
-        String weekDay = getWeekdayName(date.weekday);
-
-        week.insert(0, {
-          "weekDay": weekDay,
-          "number": ((dayInPreviousMonth - i).toString()).padLeft(2, "0"),
-          "month": month - 1,
-          "year": year,
-          "isSelected": day == dayInPreviousMonth - i ||
-              (selectedDate != null && DateUtils.isSameDay(date, selectedDate)),
-          "hasTasks": checkIfDayHasTask(
-              myTasks, dayInPreviousMonth - i, month - 1, year),
-        });
-      }
-    } else {
-      int daysLeftOfMonth = dates.length;
-      week = dates.getRange(startOfWeek, daysLeftOfMonth).toList();
-      int weekLength = week.length;
-      for (int i = 0; i < 7 - weekLength; i++) {
-        DateTime date = DateTime(year, month + 1, i + 1);
-        String weekDay = getWeekdayName(date.weekday);
-
-        week.add({
-          "weekDay": weekDay,
-          "number": ((i + 1).toString()).padLeft(2, "0"),
-          "month": month + 1,
-          "year": year,
-          "isSelected": day == i + 1 ||
-              (selectedDate != null && DateUtils.isSameDay(date, selectedDate)),
-          "hasTasks": checkIfDayHasTask(myTasks, i + 1, month + 1, year),
-        });
-      }
-    }
-    myTasks = myTasks
-        .where((element) => DateUtils.isSameDay(element.date, now))
-        .toList();
-    myTasks.sort((a, b) => a.date!.compareTo(b.date!));
-    emit(state.copyWith(
-        days: dates, week: week, dateForSwiping: DateTime(year, month)));
-  }
-
-  FutureOr<void> _onSelectTask(
-      SelectTask event, Emitter<RemindersState> emit) async {
-    final task = event.task.copyWith(isDone: !event.task.isDone);
-    await TasksRepository().updateTask(id: task.id, isDone: task.isDone);
-    emit(
-      state.copyWith(
-        myTasks: [
-          for (final element in state.myTasks)
-            if (element.id == task.id) task else element,
-        ],
-      ),
+    unawaited(
+      Future.wait([
+        for (final task in reminders[0] as List<TaskModel>)
+          RemindersHelper.addTaskReminder(task),
+        for (final medicine in reminders[1] as List<MedicineModel>)
+          RemindersHelper.addMedicineReminders(
+            medicine,
+            dateRange: DateTimeRange(
+              start: DateTime.now(),
+              end: DateUtils.addDaysToDate(DateTime.now(), kScheduleDays),
+            ),
+          ),
+      ]),
     );
   }
 
-  FutureOr<void> _onLoadTasksForToday(
-      LoadTasksForToday event, Emitter<RemindersState> emit) {
-    DateTime now = event.datetime;
-    List<TaskModel> myTasks = List.from(HiveCRUM().myTasks
-        .where((element) =>
-            DateUtils.isSameDay(element.date, now) &&
-            element.isRemoved == false)
-        .toList());
-    emit(state.copyWith(myTasks: myTasks));
+  void _onSelectedDay(SelectDay event, Emitter<RemindersState> emit) {
+    emit(state.copyWith(selectedDay: DateUtils.dateOnly(event.dayDate)));
   }
 
-  FutureOr<void> _onChangeIsDoneForTask(
-      ChangeIsDoneForTask event, Emitter<RemindersState> emit) async {
-    TasksRepository repository = TasksRepository();
-    List<TaskModel> myTasks = List.from(state.myTasks);
-    int index = myTasks.indexWhere(
-        (element) => element.id == event.id && element.isRemoved == false);
-    TaskModel myTask = myTasks[index];
-    myTask = myTask.copyWith(isDone: !myTask.isDone);
-
-    await repository
-        .updateTask(isDone: myTask.isDone, id: myTask.id)
-        .then((value) {
-      if (value == null) {
-        DateTime now =
-            DateTime(myTask.date!.year, myTask.date!.month, myTask.date!.day);
-        myTasks[index] = myTask;
-        emit(state.copyWith(
-            myTasks: myTasks
-                .where((element) =>
-                    element.date!.day == now.day &&
-                    element.date!.month == now.month &&
-                    element.date!.year == now.year &&
-                    element.isRemoved == false)
-                .toList()));
-      }
-    });
+  Future<void> _onSaveTask(SaveTask event, Emitter<RemindersState> emit) async {
+    final task = event.task;
+    await RemindersHelper.addTaskReminder(task);
+    await tasksBox.put(task.id, task);
+    await _tasksRepository.saveTask(task);
   }
 
-  FutureOr<void> _onDeleteTask(
+  Future<void> _onTaskIsDone(
+      TaskIsDone event, Emitter<RemindersState> emit) async {
+    final task = event.task.copyWith(isDone: !event.task.isDone);
+    if (task.isDone) {
+      await RemindersHelper.cancelTaskReminder(task);
+    } else {
+      await RemindersHelper.addTaskReminder(task);
+    }
+    await tasksBox.put(task.id, task.copyWith(isSentToDB: false));
+    await _tasksRepository.updateTask(id: task.id, isDone: task.isDone);
+  }
+
+  Future<void> _onTaskIsPostponed(
+      TaskIsPostponed event, Emitter<RemindersState> emit) async {
+    final task = event.task.reschedule(Duration(minutes: event.minutes));
+    await RemindersHelper.cancelTaskReminder(task);
+    await RemindersHelper.addTaskReminder(task);
+    await tasksBox.put(task.id, task.copyWith(isSentToDB: false));
+    // TODO: task isn't updated
+    // await _repository.updateTask(task);
+  }
+
+  Future<void> _onDeleteTask(
       DeleteTask event, Emitter<RemindersState> emit) async {
-    await TasksRepository().removeTask(event.id).then((value) {
-      if (value == null) {
-        List<TaskModel> myTasks = state.myTasks
-            .where((element) =>
-                element.id != event.id && element.isRemoved == false)
-            .toList();
-
-        emit(state.copyWith(myTasks: myTasks));
-      }
-    });
+    final task = event.task.copyWith(isRemoved: true);
+    await RemindersHelper.cancelTaskReminder(task);
+    await tasksBox.put(task.id, task.copyWith(isSentToDB: false));
+    await _tasksRepository.removeTask(task);
   }
 
-  FutureOr<void> _onSaveTask(SaveTask event, Emitter<RemindersState> emit) {
-    List<TaskModel> tasks = List.from(state.myTasks);
-    tasks.add(event.taskModel);
-    emit(state.clear());
-  }
-
-  FutureOr<void> _onSaveMedicine(
+  Future<void> _onSaveMedicine(
       SaveMedicine event, Emitter<RemindersState> emit) async {
-    await MedicineRepository().saveMedicine(event.medicineModel).then((value) {
-      if (value == null) {
-        List<MedicineModel> myMedicines = state.myMedicines
-            .where((element) => element.isRemoved == false)
-            .toList();
-        myMedicines.add(event.medicineModel);
-
-        emit(state.copyWith(myMedicines: myMedicines));
-      }
-    });
+    final medicine = event.medicine;
+    await RemindersHelper.addMedicineReminders(
+      medicine,
+      dateRange: DateTimeRange(
+        start: DateTime.now(),
+        end: DateUtils.addDaysToDate(DateTime.now(), kScheduleDays),
+      ),
+    );
+    await medicineBox.put(medicine.id, medicine.copyWith(isSentToDB: false));
+    await _medicineRepository.saveMedicine(medicine);
   }
 
-  FutureOr<void> _onUpdateMedicine(
-      UpdateMedicine event, Emitter<RemindersState> emit) async {
-    await MedicineRepository().updateMedicine(event.medicineModel).then((value) {
-      if (value == null) {
-        List<MedicineModel> myMedicines = state.myMedicines
-            .where((element) =>
-                element.id != event.medicineModel.id &&
-                element.isRemoved == false)
-            .toList();
-        myMedicines.add(event.medicineModel);
-        emit(state.copyWith(myMedicines: myMedicines));
-      }
-    });
+  Future<void> _onMedicineIsDone(
+      MedicineIsDone event, Emitter<RemindersState> emit) async {
+    final medicine = event.medicine.setDoneAt(event.at);
+    await RemindersHelper.cancelMedicineReminder(medicine, dateTime: event.at);
+    await medicineBox.put(medicine.id, medicine.copyWith(isSentToDB: false));
+    await _medicineRepository.updateMedicine(medicine);
   }
 
-  FutureOr<void> _onDeleteMedicine(
+  Future<void> _onMedicineIsPostponed(
+      MedicineIsPostponed event, Emitter<RemindersState> emit) async {
+    final doseTime = event.doseTime;
+    final medicine = event.medicine.reschedule(
+      doseTime,
+      Duration(minutes: event.minutes),
+    );
+    await RemindersHelper.cancelMedicineReminder(medicine, dateTime: doseTime);
+    await RemindersHelper.addMedicineReminder(medicine, dateTime: doseTime);
+    await medicineBox.put(medicine.id, medicine.copyWith(isSentToDB: false));
+    await _medicineRepository.updateMedicine(medicine);
+  }
+
+  Future<void> _onDeleteMedicine(
       DeleteMedicine event, Emitter<RemindersState> emit) async {
-    await MedicineRepository().removeMedicine(event.id).then((value) {
-      if (value == null) {
-        List<MedicineModel> myMedicines = state.myMedicines
-            .where((element) =>
-                element.id != event.id && element.isRemoved == false)
-            .toList();
-
-        emit(state.copyWith(myMedicines: myMedicines));
-      }
-    });
+    final medicine = event.medicine.copyWith(isRemoved: true);
+    await RemindersHelper.cancelMedicineReminders(medicine);
+    await medicineBox.put(medicine.id, medicine.copyWith(isSentToDB: false));
+    await _medicineRepository.removeMedicine(medicine);
   }
 }
