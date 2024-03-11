@@ -73,6 +73,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
+import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -86,7 +88,10 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
+  final GoogleMapsFlutterPlatform platform = GoogleMapsFlutterPlatform.instance;
+  // Default to Hybrid Composition for the example.
+  (platform as GoogleMapsFlutterAndroid).useAndroidViewSurface = true;
+  initializeMapRenderer();
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   PlatformDispatcher.instance.onError = (error, stack) {
     if (!kDebugMode) {
@@ -146,6 +151,26 @@ Future<void> main() async {
   });
 }
 
+Completer<AndroidMapRenderer?>? _initializedRendererCompleter;
+
+Future<AndroidMapRenderer?> initializeMapRenderer() async {
+  if (_initializedRendererCompleter != null) {
+    return _initializedRendererCompleter!.future;
+  }
+
+  final Completer<AndroidMapRenderer?> completer =
+      Completer<AndroidMapRenderer?>();
+  _initializedRendererCompleter = completer;
+
+  final GoogleMapsFlutterPlatform platform = GoogleMapsFlutterPlatform.instance;
+  unawaited((platform as GoogleMapsFlutterAndroid)
+      .initializeWithRenderer(AndroidMapRenderer.latest)
+      .then((AndroidMapRenderer initializedRenderer) =>
+          completer.complete(initializedRenderer)));
+
+  return completer.future;
+}
+
 class MyApp extends StatefulWidget {
   const MyApp(this.route, {super.key});
 
@@ -165,8 +190,26 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   BannerAd? bannerAd;
   late InternetConnectionStream internetConnectionStream;
   final Settings settings = HiveCRUD().setting;
+  late String route;
 
-  void restartApp() {
+  void restartApp() async {
+    UserRepository repository = UserRepository();
+    if (await repository.isUserEnteredEarlier()) {
+      await repository.getUser().then((user) async {
+        route = "/signinup";
+        if (user != null) {
+          route = "/";
+        } else {
+          await repository.getCookie().then((value) {
+            if (value != null) {
+              route = "/";
+            }
+          });
+        }
+      });
+    } else {
+      route = "/onboarding_page";
+    }
     setState(() {
       key = UniqueKey();
     });
@@ -186,6 +229,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    route = widget.route;
     internetConnectionStream = InternetConnectionStream(setState);
     try {
       if (!settings.blockAd) initAd();
@@ -208,10 +252,6 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   initAd() async {
-    if (bannerAd != null) {
-      bannerAd!.dispose();
-      isBannerLoad = false;
-    }
     bannerAd = BannerAd(
         size: AdSize.banner,
         adUnitId: AdHelper.bannerMainScreen,
@@ -360,7 +400,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                     GlobalCupertinoLocalizations.delegate,
                                     GlobalMaterialLocalizations.delegate,
                                   ],
-                                  initialRoute: widget.route,
+                                  initialRoute: route,
                                   routes: {
                                     "/": (context) => const MainPage(),
                                     "/signinup": (context) =>

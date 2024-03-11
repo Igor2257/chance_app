@@ -6,10 +6,7 @@ import 'package:chance_app/ui/components/sos_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/repository/tasks_repository.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
@@ -24,61 +21,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-  late AndroidNotificationChannel _androidNotificationChannel;
-
-  _requests() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-    await messaging
-        .requestPermission(
-      alert: true,
-      announcement: true,
-      badge: true,
-      carPlay: true,
-      criticalAlert: true,
-      provisional: true,
-      sound: true,
-    )
-        .then((settings) {
-      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      } else if (settings.authorizationStatus ==
-          AuthorizationStatus.provisional) {
-      } else {
-        _requests();
-      }
-      _loadFCM();
-    });
-  }
-
-  _loadFCM() async {
-    if (!kIsWeb) {
-      _androidNotificationChannel =  AndroidNotificationChannel(
-        "myTasks",
-        AppLocalizations.instance.translate("tasks"),
-        importance: Importance.high,
-        enableVibration: true,
-        playSound: true,
-      );
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
-          ?.createNotificationChannel(_androidNotificationChannel);
-
-      await FirebaseMessaging.instance
-          .setForegroundNotificationPresentationOptions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
-      _listenFCM();
-    }
-  }
-
   _listenFCM() async {
-    FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
-
-      showDialog(
+    showDialog(
           context: context,
           builder: (context) {
             Size size = MediaQuery.of(context).size;
@@ -110,10 +54,11 @@ class _MainPageState extends State<MainPage> {
                                     TextStyle(fontSize: 16, color: primaryText),
                               ),
                               Text(
-                                remoteMessage.data["message"],textAlign: TextAlign.center,
-                                style:
-                                    TextStyle(fontSize: 24, color: primaryText),
-                              ),
+                                'remoteMessage.data["message"]',
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(fontSize: 24, color: primaryText),
+                            ),
                             ],
                           ),
                         ),
@@ -166,9 +111,8 @@ class _MainPageState extends State<MainPage> {
                                   try {
                                     await TasksRepository()
                                         .updateTask(
-                                            id: remoteMessage.data["id"]
-                                                .toString(),
-                                            isDone: true)
+                                        id: 'remoteMessage.data["id"].toString()',
+                                          isDone: true)
                                         .then((value) {
                                       if (value == null) {
                                         Navigator.of(context).pop();
@@ -216,25 +160,11 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ),
                 ));
-          });
-      flutterLocalNotificationsPlugin.show(
-          DateTime.now().millisecondsSinceEpoch ~/ 1000,
-          remoteMessage.data["type"] == "task" ? AppLocalizations.instance.translate("tasks") : "",
-          remoteMessage.data["message"].toString(),
-          NotificationDetails(
-            iOS: const DarwinNotificationDetails(),
-            android: AndroidNotificationDetails(_androidNotificationChannel.id,
-                _androidNotificationChannel.name,
-                icon: '@drawable/logo',
-                autoCancel: false,
-                fullScreenIntent: true),
-          ));
-    });
+        });
   }
   @override
   void initState() {
     super.initState();
-    _requests();
   }
 
   @override

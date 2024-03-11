@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "587357455921-55s1sjrp3qk7lggf508c26k59r2e6n4c.apps.googleusercontent.com",
+          "client_id": "587357455921-hvfrgm33l656vck69s2rq8af9i8au9g3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chance_app.chance_app",
+            "certificate_hash": "37d5be5d1b5dc799b82105887f17a3022680f48c"
+          }
+        },
+        {
+          "client_id": "587357455921-a821j295lsegn88f9704mraajbfmbs1l.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

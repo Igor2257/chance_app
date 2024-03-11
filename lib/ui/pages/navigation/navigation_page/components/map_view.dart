@@ -15,6 +15,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
+import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class MapView extends StatefulWidget {
@@ -26,6 +28,7 @@ class MapView extends StatefulWidget {
 
 class _MapViewState extends State<MapView>
     with TickerProviderStateMixin, WidgetsBindingObserver {
+
   late AnimationController _controllerMyLocation,
       _controllerCloseMap,
       _controllerBuildPath,
@@ -170,12 +173,11 @@ class _MapViewState extends State<MapView>
         setState(() {});
       });
 
-    checkLocationPermission(context).then((value) {
+    checkLocationPermission(context).then((value) async {
       if (value) {
         positionController = PositionController(setState);
       }
     });
-
 
     super.initState();
   }
@@ -226,7 +228,7 @@ class _MapViewState extends State<MapView>
                           myLocationEnabled: true,
                           zoomControlsEnabled: false,
                           indoorViewEnabled: true,
-                          onMapCreated: (GoogleMapController controller) {
+                          onMapCreated: (GoogleMapController controller) async {
                             mapController = controller;
                           },
                           onCameraMoveStarted: () {

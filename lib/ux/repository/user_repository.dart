@@ -7,7 +7,6 @@ import 'package:chance_app/ux/model/me_user.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart' show sha256;
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -62,9 +61,6 @@ class UserRepository {
                   deviceId: map["deviceId"],
                 );
                 await HiveCRUD().addUser(meUser);
-                await FirebaseMessaging.instance.getToken().then((token) {
-                  patchUserData(token: token);
-                });
               } else {
                 error = jsonDecode(value.body)["message"]
                     .toString()
@@ -455,9 +451,6 @@ class UserRepository {
                     deviceId: map["deviceId"],
                   );
                   await HiveCRUD().addUser(meUser);
-                  await FirebaseMessaging.instance.getToken().then((token) {
-                    patchUserData(token: token);
-                  });
                   error = false;
                 } else {
                   Fluttertoast.showToast(
