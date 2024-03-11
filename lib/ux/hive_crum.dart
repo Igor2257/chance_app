@@ -6,7 +6,9 @@ import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/product_model.dart';
 import 'package:chance_app/ux/model/settings.dart';
+import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:chance_app/ux/model/task_model.dart';
+import 'package:hive/hive.dart';
 
 class HiveCRUM {
   List<TaskModel> get myTasks =>
@@ -21,6 +23,9 @@ class HiveCRUM {
   List<ProductModel> get myItems =>
       itemsBox?.values.cast<ProductModel>().toList() ?? List.empty();
 
+  List<SosContactModel> get myContacts =>
+      groupBox?.values.cast<SosContactModel>().toList() ?? List.empty();
+
   MeUser? get user =>
       userBox!.get('user') != null ? userBox!.get('user') as MeUser : null;
   Settings setting = settingsBox != null
@@ -30,6 +35,17 @@ class HiveCRUM {
       : const Settings();
   Future addMedicine(MedicineModel medicineModel) async {
     await medicineBox!.put(medicineModel.id, medicineModel);
+  }
+
+  Box<SosContactModel>? get groupBox =>
+      Hive.box<SosContactModel>('sosContactsModel');
+
+  Future addContact(SosGroupModel contactModel) async {
+    await groupBox?.put(contactModel.id, contactModel as SosContactModel);
+  }
+
+  Future removeLocalContact(String id) async {
+    await groupBox?.delete(id);
   }
 
   Future updateLocalMedicine(MedicineModel medicineModel) async {
@@ -78,11 +94,12 @@ class HiveCRUM {
       await tasksBox!.put(taskModel.id, taskModel);
     }
   }
+
   Future setIsSentInLocalMedicine(bool isSentToDB,
       {String? id, MedicineModel? medicineModel}) async {
     if (id != null) {
       MedicineModel medicineModel =
-      HiveCRUM().myMedicines.firstWhere((element) => element.id == id);
+          HiveCRUM().myMedicines.firstWhere((element) => element.id == id);
       medicineModel = medicineModel.copyWith(isSentToDB: isSentToDB);
       await medicineBox!.put(medicineModel.id, medicineModel);
     }

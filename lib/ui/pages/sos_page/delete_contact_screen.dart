@@ -13,7 +13,7 @@ class DeleteContactsPage extends StatefulWidget {
 }
 
 class _DeleteContactsPageState extends State<DeleteContactsPage> {
-  List<SosContactModel> selectedContacts = [];
+  List<String> selectedIds = [];
   bool isButtonEnable = false;
   late bool isEdit;
   SosContactsBloc get _sosContactsBloc {
@@ -47,13 +47,14 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
                 physics: const NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.only(bottom: 29),
                 itemBuilder: (context, index) {
-                  SosContactModel contactModel =
-                      _sosContactsBloc.contacts[index];
+                  SosGroupModel contactModel = _sosContactsBloc.contacts[index];
                   return ContainerButtonWithCheckbox(
                       contactModel: contactModel,
-                      text: contactModel.name,
-                      isSelected: selectedContacts.contains(
-                        contactModel,
+                      text: contactModel.name.isNotEmpty
+                          ? contactModel.name
+                          : contactModel.contacts[0].name,
+                      isSelected: selectedIds.contains(
+                        contactModel.id,
                       ),
                       isEdit: isEdit,
                       onChanged: (value) {
@@ -83,7 +84,7 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
                       onPressed: () {
                         if (isButtonEnable) {
                           _sosContactsBloc.add(
-                            DeleteContact(contacts: selectedContacts),
+                            DeleteContact(ids: selectedIds),
                           );
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               "/sos", (route) => false);
@@ -111,19 +112,19 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
     );
   }
 
-  void handleCheckboxChange(bool? value, SosContactModel contact) {
+  void handleCheckboxChange(bool? value, SosGroupModel contact) {
     setState(() {
       if (value != false) {
-        selectedContacts.add(contact);
+        selectedIds.add(contact.id);
       } else {
-        selectedContacts.remove(contact);
+        selectedIds.remove(contact.id);
       }
-      isButtonEnable = selectedContacts.isNotEmpty;
+      isButtonEnable = selectedIds.isNotEmpty;
     });
   }
 
   void _deleteSelectedContacts() {
-    selectedContacts.clear();
+    selectedIds.clear();
     Navigator.of(context).pop();
   }
 }
@@ -133,7 +134,7 @@ class ContainerButtonWithCheckbox extends StatefulWidget {
   final bool isSelected;
   final bool isEdit;
   final ValueChanged<bool?>? onChanged;
-  final SosContactModel contactModel;
+  final SosGroupModel contactModel;
 
   const ContainerButtonWithCheckbox({
     super.key,

@@ -74,7 +74,10 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
                         );
 
                         _sosContactsBloc.add(EditContact(
-                            oldContact: oldContact, newContact: newContact));
+                            oldContact:
+                                SosGroupModel(name: "name", contacts: []),
+                            newContact:
+                                SosGroupModel(name: "name", contacts: [])));
 
                         Navigator.of(context)
                             .pushNamedAndRemoveUntil("/sos", (route) => false);

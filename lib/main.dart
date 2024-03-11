@@ -53,6 +53,7 @@ import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/product_model.dart';
 import 'package:chance_app/ux/model/settings.dart';
+import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository/tasks_repository.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
@@ -146,10 +147,9 @@ class MyApp extends StatefulWidget {
 
   final String route;
   static void restartApp(BuildContext context) {
-    context
-        .findAncestorStateOfType<MyAppState>()!
-        .restartApp();
+    context.findAncestorStateOfType<MyAppState>()!.restartApp();
   }
+
   @override
   State<MyApp> createState() => MyAppState();
 }
@@ -177,6 +177,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     Fluttertoast.showToast(
         msg: AppLocalizations.instance.translate("languageHaveChanged"));
   }
+
   @override
   void initState() {
     super.initState();
@@ -677,6 +678,8 @@ Box<MedicineModel>? medicineBox;
 Box<PickResult>? savedAddressesBox;
 Box<Settings>? settingsBox;
 Box<ProductModel>? itemsBox;
+Box<SosContactModel>? contactBox;
+Box<SosGroupModel>? groupBox;
 
 Future<bool> initHiveBoxes() async {
   final documentsDirectory = await getApplicationDocumentsDirectory();
@@ -709,6 +712,8 @@ Future<bool> initHiveBoxes() async {
     medicineBox = await Hive.openBox<MedicineModel>("myMedicines");
     savedAddressesBox = await Hive.openBox<PickResult>("savedAddresses");
     itemsBox = await Hive.openBox<ProductModel>("items");
+    contactBox = await Hive.openBox<SosContactModel>("sosContactModel");
+    groupBox = await Hive.openBox<SosGroupModel>("sosGroupModel");
     await Hive.openBox<Settings>("settings").then((value) async {
       settingsBox = value;
       Settings setting = settingsBox != null

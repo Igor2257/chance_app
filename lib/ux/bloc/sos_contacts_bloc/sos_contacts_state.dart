@@ -1,11 +1,11 @@
 part of 'sos_contacts_bloc.dart';
 
 class SosContactsState {
-  List<SosContactModel> contacts;
+  List<SosGroupModel> contacts;
 
   SosContactsState({this.contacts = const []});
 
-  SosContactsState copyWith({required List<SosContactModel> contacts}) {
+  SosContactsState copyWith({required List<SosGroupModel> contacts}) {
     return SosContactsState(
       contacts: contacts,
     );
