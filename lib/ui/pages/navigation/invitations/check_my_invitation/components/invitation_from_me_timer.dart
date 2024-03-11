@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/bloc/navigation_bloc/invitation_bloc/invitation_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,7 +47,7 @@ class _InvitationFromMeTimerState extends State<InvitationFromMeTimer> {
                 height: 40,
                 child: Center(
                   child: Text(
-                    "Оновити${secondsLeft != 0 ? " через $secondsLeft" : ""}",
+                    "${AppLocalizations.instance.translate("update")}${secondsLeft != 0 ? " ${AppLocalizations.instance.translate("through").toLowerCase()} $secondsLeft" : ""}",
                     style: TextStyle(
                         fontSize: 20, color: secondsLeft != 0 ? darkNeutral600 : primary700),
                   ),

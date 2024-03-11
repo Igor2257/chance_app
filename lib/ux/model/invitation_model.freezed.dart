@@ -23,17 +23,17 @@ mixin _$InvitationModel {
   @HiveField(0)
   String get id => throw _privateConstructorUsedError;
   @HiveField(1)
-  String get email => throw _privateConstructorUsedError;
+  String get toUserEmail => throw _privateConstructorUsedError;
   @HiveField(2)
-  DateTime? get sentDate => throw _privateConstructorUsedError;
+  String get toUserName => throw _privateConstructorUsedError;
   @HiveField(3)
-  String get fromUserId => throw _privateConstructorUsedError;
+  DateTime? get sentDate => throw _privateConstructorUsedError;
   @HiveField(4)
-  String get toUserId => throw _privateConstructorUsedError;
+  String get fromUserId => throw _privateConstructorUsedError;
   @HiveField(5)
-  InvitationStatus get invitationStatus => throw _privateConstructorUsedError;
+  String get toUserId => throw _privateConstructorUsedError;
   @HiveField(6)
-  String get fromUserName => throw _privateConstructorUsedError;
+  InvitationStatus get invitationStatus => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -49,12 +49,12 @@ abstract class $InvitationModelCopyWith<$Res> {
   @useResult
   $Res call(
       {@HiveField(0) String id,
-      @HiveField(1) String email,
-      @HiveField(2) DateTime? sentDate,
-      @HiveField(3) String fromUserId,
-      @HiveField(4) String toUserId,
-      @HiveField(5) InvitationStatus invitationStatus,
-      @HiveField(6) String fromUserName});
+      @HiveField(1) String toUserEmail,
+      @HiveField(2) String toUserName,
+      @HiveField(3) DateTime? sentDate,
+      @HiveField(4) String fromUserId,
+      @HiveField(5) String toUserId,
+      @HiveField(6) InvitationStatus invitationStatus});
 }
 
 /// @nodoc
@@ -71,21 +71,25 @@ class _$InvitationModelCopyWithImpl<$Res, $Val extends InvitationModel>
   @override
   $Res call({
     Object? id = null,
-    Object? email = null,
+    Object? toUserEmail = null,
+    Object? toUserName = null,
     Object? sentDate = freezed,
     Object? fromUserId = null,
     Object? toUserId = null,
     Object? invitationStatus = null,
-    Object? fromUserName = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
+      toUserEmail: null == toUserEmail
+          ? _value.toUserEmail
+          : toUserEmail // ignore: cast_nullable_to_non_nullable
+              as String,
+      toUserName: null == toUserName
+          ? _value.toUserName
+          : toUserName // ignore: cast_nullable_to_non_nullable
               as String,
       sentDate: freezed == sentDate
           ? _value.sentDate
@@ -103,10 +107,6 @@ class _$InvitationModelCopyWithImpl<$Res, $Val extends InvitationModel>
           ? _value.invitationStatus
           : invitationStatus // ignore: cast_nullable_to_non_nullable
               as InvitationStatus,
-      fromUserName: null == fromUserName
-          ? _value.fromUserName
-          : fromUserName // ignore: cast_nullable_to_non_nullable
-              as String,
     ) as $Val);
   }
 }
@@ -121,12 +121,12 @@ abstract class _$$InvitationModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {@HiveField(0) String id,
-      @HiveField(1) String email,
-      @HiveField(2) DateTime? sentDate,
-      @HiveField(3) String fromUserId,
-      @HiveField(4) String toUserId,
-      @HiveField(5) InvitationStatus invitationStatus,
-      @HiveField(6) String fromUserName});
+      @HiveField(1) String toUserEmail,
+      @HiveField(2) String toUserName,
+      @HiveField(3) DateTime? sentDate,
+      @HiveField(4) String fromUserId,
+      @HiveField(5) String toUserId,
+      @HiveField(6) InvitationStatus invitationStatus});
 }
 
 /// @nodoc
@@ -141,21 +141,25 @@ class __$$InvitationModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? email = null,
+    Object? toUserEmail = null,
+    Object? toUserName = null,
     Object? sentDate = freezed,
     Object? fromUserId = null,
     Object? toUserId = null,
     Object? invitationStatus = null,
-    Object? fromUserName = null,
   }) {
     return _then(_$InvitationModelImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
+      toUserEmail: null == toUserEmail
+          ? _value.toUserEmail
+          : toUserEmail // ignore: cast_nullable_to_non_nullable
+              as String,
+      toUserName: null == toUserName
+          ? _value.toUserName
+          : toUserName // ignore: cast_nullable_to_non_nullable
               as String,
       sentDate: freezed == sentDate
           ? _value.sentDate
@@ -173,10 +177,6 @@ class __$$InvitationModelImplCopyWithImpl<$Res>
           ? _value.invitationStatus
           : invitationStatus // ignore: cast_nullable_to_non_nullable
               as InvitationStatus,
-      fromUserName: null == fromUserName
-          ? _value.fromUserName
-          : fromUserName // ignore: cast_nullable_to_non_nullable
-              as String,
     ));
   }
 }
@@ -186,12 +186,12 @@ class __$$InvitationModelImplCopyWithImpl<$Res>
 class _$InvitationModelImpl implements _InvitationModel {
   const _$InvitationModelImpl(
       {@HiveField(0) this.id = "",
-      @HiveField(1) this.email = "",
-      @HiveField(2) this.sentDate = null,
-      @HiveField(3) this.fromUserId = "",
-      @HiveField(4) this.toUserId = "",
-      @HiveField(5) this.invitationStatus = InvitationStatus.pending,
-      @HiveField(6) this.fromUserName = ""});
+      @HiveField(1) this.toUserEmail = "",
+      @HiveField(2) this.toUserName = "",
+      @HiveField(3) this.sentDate = null,
+      @HiveField(4) this.fromUserId = "",
+      @HiveField(5) this.toUserId = "",
+      @HiveField(6) this.invitationStatus = InvitationStatus.pending});
 
   factory _$InvitationModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$InvitationModelImplFromJson(json);
@@ -203,31 +203,31 @@ class _$InvitationModelImpl implements _InvitationModel {
   @override
   @JsonKey()
   @HiveField(1)
-  final String email;
+  final String toUserEmail;
   @override
   @JsonKey()
   @HiveField(2)
-  final DateTime? sentDate;
+  final String toUserName;
   @override
   @JsonKey()
   @HiveField(3)
-  final String fromUserId;
+  final DateTime? sentDate;
   @override
   @JsonKey()
   @HiveField(4)
-  final String toUserId;
+  final String fromUserId;
   @override
   @JsonKey()
   @HiveField(5)
-  final InvitationStatus invitationStatus;
+  final String toUserId;
   @override
   @JsonKey()
   @HiveField(6)
-  final String fromUserName;
+  final InvitationStatus invitationStatus;
 
   @override
   String toString() {
-    return 'InvitationModel(id: $id, email: $email, sentDate: $sentDate, fromUserId: $fromUserId, toUserId: $toUserId, invitationStatus: $invitationStatus, fromUserName: $fromUserName)';
+    return 'InvitationModel(id: $id, toUserEmail: $toUserEmail, toUserName: $toUserName, sentDate: $sentDate, fromUserId: $fromUserId, toUserId: $toUserId, invitationStatus: $invitationStatus)';
   }
 
   @override
@@ -236,7 +236,10 @@ class _$InvitationModelImpl implements _InvitationModel {
         (other.runtimeType == runtimeType &&
             other is _$InvitationModelImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.email, email) || other.email == email) &&
+            (identical(other.toUserEmail, toUserEmail) ||
+                other.toUserEmail == toUserEmail) &&
+            (identical(other.toUserName, toUserName) ||
+                other.toUserName == toUserName) &&
             (identical(other.sentDate, sentDate) ||
                 other.sentDate == sentDate) &&
             (identical(other.fromUserId, fromUserId) ||
@@ -244,15 +247,13 @@ class _$InvitationModelImpl implements _InvitationModel {
             (identical(other.toUserId, toUserId) ||
                 other.toUserId == toUserId) &&
             (identical(other.invitationStatus, invitationStatus) ||
-                other.invitationStatus == invitationStatus) &&
-            (identical(other.fromUserName, fromUserName) ||
-                other.fromUserName == fromUserName));
+                other.invitationStatus == invitationStatus));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, email, sentDate, fromUserId,
-      toUserId, invitationStatus, fromUserName);
+  int get hashCode => Object.hash(runtimeType, id, toUserEmail, toUserName,
+      sentDate, fromUserId, toUserId, invitationStatus);
 
   @JsonKey(ignore: true)
   @override
@@ -271,13 +272,14 @@ class _$InvitationModelImpl implements _InvitationModel {
 
 abstract class _InvitationModel implements InvitationModel {
   const factory _InvitationModel(
-      {@HiveField(0) final String id,
-      @HiveField(1) final String email,
-      @HiveField(2) final DateTime? sentDate,
-      @HiveField(3) final String fromUserId,
-      @HiveField(4) final String toUserId,
-      @HiveField(5) final InvitationStatus invitationStatus,
-      @HiveField(6) final String fromUserName}) = _$InvitationModelImpl;
+          {@HiveField(0) final String id,
+          @HiveField(1) final String toUserEmail,
+          @HiveField(2) final String toUserName,
+          @HiveField(3) final DateTime? sentDate,
+          @HiveField(4) final String fromUserId,
+          @HiveField(5) final String toUserId,
+          @HiveField(6) final InvitationStatus invitationStatus}) =
+      _$InvitationModelImpl;
 
   factory _InvitationModel.fromJson(Map<String, dynamic> json) =
       _$InvitationModelImpl.fromJson;
@@ -287,22 +289,22 @@ abstract class _InvitationModel implements InvitationModel {
   String get id;
   @override
   @HiveField(1)
-  String get email;
+  String get toUserEmail;
   @override
   @HiveField(2)
-  DateTime? get sentDate;
+  String get toUserName;
   @override
   @HiveField(3)
-  String get fromUserId;
+  DateTime? get sentDate;
   @override
   @HiveField(4)
-  String get toUserId;
+  String get fromUserId;
   @override
   @HiveField(5)
-  InvitationStatus get invitationStatus;
+  String get toUserId;
   @override
   @HiveField(6)
-  String get fromUserName;
+  InvitationStatus get invitationStatus;
   @override
   @JsonKey(ignore: true)
   _$$InvitationModelImplCopyWith<_$InvitationModelImpl> get copyWith =>

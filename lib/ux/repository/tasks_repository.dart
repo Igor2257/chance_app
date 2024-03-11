@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ux/hive_crum.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -14,15 +14,15 @@ class TasksRepository {
 
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       list = List.from(
-          HiveCRUM().myTasks.where((element) => element.isRemoved == false));
+          HiveCRUD().myTasks.where((element) => element.isRemoved == false));
     } else {
       if ((forcePush != null && forcePush) || !checkIsAnyTasksNotSent()) {
         await loadTasks().then((value) async {
-          await HiveCRUM().clearTasks().whenComplete(() {
+          await HiveCRUD().clearTasks().whenComplete(() {
             list = value;
 
             for (var task in list) {
-              HiveCRUM().addTask(task);
+              HiveCRUD().addTask(task);
             }
           });
         });
@@ -84,7 +84,7 @@ class TasksRepository {
       //    msg: "Немає підключення до інтернету",
       //    toastLength: Toast.LENGTH_LONG);
       //error = "Немає підключення до інтернету";
-      if (isDone != null) await HiveCRUM().setIsDoneInLocalTask(id, isDone);
+      if (isDone != null) await HiveCRUD().setIsDoneInLocalTask(id, isDone);
     } else {
       try {
         var url = Uri.parse('$apiUrl/task/$id');
@@ -109,7 +109,7 @@ class TasksRepository {
                 .replaceAll("]", "");
             Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
           } else {
-            await HiveCRUM().setIsSentInLocalTask(id: id, true);
+            await HiveCRUD().setIsSentInLocalTask(id: id, true);
           }
         });
       } catch (error) {
@@ -124,7 +124,7 @@ class TasksRepository {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       error = "Немає підключення до інтернету";
-      await HiveCRUM().addTask(taskModel);
+      await HiveCRUD().addTask(taskModel);
     } else {
       try {
         var url = Uri.parse('$apiUrl/task');
@@ -151,8 +151,8 @@ class TasksRepository {
                 .replaceAll("[", "")
                 .replaceAll("]", "");
           } else {
-            await HiveCRUM().addTask(taskModel).whenComplete(() async {
-              await HiveCRUM().setIsSentInLocalTask(true, taskModel: taskModel);
+            await HiveCRUD().addTask(taskModel).whenComplete(() async {
+              await HiveCRUD().setIsSentInLocalTask(true, taskModel: taskModel);
             });
           }
         });
@@ -173,7 +173,7 @@ class TasksRepository {
       //    msg: "Немає підключення до інтернету",
       //    toastLength: Toast.LENGTH_LONG);
       //error = "Немає підключення до інтернету";
-      HiveCRUM().removeLocalTask(taskId);
+      HiveCRUD().removeLocalTask(taskId);
     } else {
       try {
         var url = Uri.parse('$apiUrl/task/$taskId');
@@ -205,11 +205,11 @@ class TasksRepository {
       //    msg: "Немає підключення до інтернету",
       //    toastLength: Toast.LENGTH_LONG);
       //error = "Немає підключення до інтернету";
-      for (var task in HiveCRUM().myTasks) {
-        HiveCRUM().removeLocalTask(task.id);
+      for (var task in HiveCRUD().myTasks) {
+        HiveCRUD().removeLocalTask(task.id);
       }
     } else {
-      for (var task in HiveCRUM().myTasks) {
+      for (var task in HiveCRUD().myTasks) {
         try {
           var url = Uri.parse('$apiUrl/task/${task.id}');
           final cookie = await UserRepository().getCookie();
@@ -237,7 +237,7 @@ class TasksRepository {
   Future<bool> sendAllLocalTasksData() async {
     List<TaskModel> dbTasks = await loadTasks(),
         localTasks =
-        List.from(HiveCRUM().myTasks.where((element) => element.isSentToDB == false));
+        List.from(HiveCRUD().myTasks.where((element) => element.isSentToDB == false));
     for (int i = 0; i < localTasks.length; i++) {
       if (dbTasks.any((element) => element.id == localTasks[i].id)) {
         if (localTasks[i].isRemoved) {
@@ -257,7 +257,7 @@ class TasksRepository {
     return true;
   }
   bool checkIsAnyTasksNotSent() {
-    List<TaskModel> myTasks=List.from(HiveCRUM().myTasks);
+    List<TaskModel> myTasks=List.from(HiveCRUD().myTasks);
     return myTasks.isNotEmpty
         ? myTasks.any((element) => element.isSentToDB == false)
         : false;

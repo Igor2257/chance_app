@@ -9,9 +9,7 @@ class CustomBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Padding(
+    return  Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
         child: SeparatedList(
           axis: Axis.horizontal,
@@ -47,7 +45,7 @@ class CustomBottomSheet extends StatelessWidget {
               ),
           ],
         ),
-      ),
+
     );
   }
 }

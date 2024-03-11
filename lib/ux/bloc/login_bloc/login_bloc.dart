@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/sign_in_up/log_in/input_login_layout.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
@@ -76,20 +77,20 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   String? validateEmail(String text) {
     if (text.trim().isEmpty) {
-      return 'Невірний формат електронної пошти';
+      return AppLocalizations.instance.translate("invalidEmailFormat");
     }
 
     if (!RegExp(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b',
             caseSensitive: false)
         .hasMatch(text)) {
-      return 'Невірний формат електронної пошти';
+      return AppLocalizations.instance.translate("invalidEmailFormat");
     }
     if (text.trim().isNotEmpty &&
         text.trim().length > 4 &&
         (text.contains(".ru", text.length - 4) ||
             text.contains(".by", text.length - 4) ||
             text.contains(".рф", text.length - 4))) {
-      return 'Невірний формат електронної пошти';
+      return AppLocalizations.instance.translate("invalidEmailFormat");
     }
     return null;
   }
@@ -99,10 +100,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if (text.trim().length <= 14) {
         return null;
       } else {
-        return "Пароль має бути менше 14 символів";
+        return AppLocalizations.instance
+            .translate("passwordMustBeLessThan14Characters");
       }
     } else {
-      return 'Пароль має бути 8 або більше символів';
+      return AppLocalizations.instance
+          .translate("passwordMustBeLessThan14Characters");
     }
   }
 }

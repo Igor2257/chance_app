@@ -103,56 +103,54 @@ class PickResultAdapter extends TypeAdapter<PickResult> {
 
 _$PickResultImpl _$$PickResultImplFromJson(Map<String, dynamic> json) =>
     _$PickResultImpl(
-      placeId: json['placeId'] as String? ?? null,
+      placeId: json['place_id'] as String? ??DateTime.now().toString(),
       geometry: json['geometry'] == null
           ? null
           : Geometry.fromJson(json['geometry'] as Map<String, dynamic>),
-      formattedAddress: json['formattedAddress'] as String? ?? null,
+      formattedAddress: json['formatted_address'] as String?,
       types:
-          (json['types'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-              null,
-      addressComponents: (json['addressComponents'] as List<dynamic>?)
-              ?.map((e) => AddressComponent.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          null,
-      adrAddress: json['adrAddress'] as String? ?? null,
-      formattedPhoneNumber: json['formattedPhoneNumber'] as String? ?? null,
-      id: json['id'] as String,
-      reference: json['reference'] as String? ?? null,
-      icon: json['icon'] as String? ?? null,
-      name: json['name'] as String? ?? null,
+          (json['types'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      addressComponents: (json['address_components'] as List<dynamic>?)
+              ?.map((e) => e as AddressComponent)
+              .toList(),
+      adrAddress: json['adr_address'] as String?,
+      formattedPhoneNumber: json['formatted_phone_number'] as String?,
+      id: json['id'] as String? ??DateTime.now().toString(),
+      reference: json['reference'] as String?,
+      icon: json['icon'] as String?,
+      name: json['name'] as String?,
       internationalPhoneNumber:
-          json['internationalPhoneNumber'] as String? ?? null,
-      rating: json['rating'] as num? ?? null,
-      scope: json['scope'] as String? ?? null,
-      url: json['url'] as String? ?? null,
-      vicinity: json['vicinity'] as String? ?? null,
-      utcOffset: json['utcOffset'] as num? ?? null,
-      website: json['website'] as String? ?? null,
+          json['international_phone_number'] as String?,
+      rating: json['rating'] as num?,
+      scope: json['scope'] as String?,
+      url: json['url'] as String?,
+      vicinity: json['vicinity'] as String?,
+      utcOffset: json['utc_offset'] as num?,
+      website: json['website'] as String?,
       star: json['star'] as bool? ?? false,
-      isRecentlySearched: json['isRecentlySearched'] as bool? ?? true,
+      isRecentlySearched: json['is_recently_searched'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$$PickResultImplToJson(_$PickResultImpl instance) =>
     <String, dynamic>{
-      'placeId': instance.placeId,
+      'place_id': instance.placeId,
       'geometry': instance.geometry,
-      'formattedAddress': instance.formattedAddress,
+      'formatted_address': instance.formattedAddress,
       'types': instance.types,
-      'addressComponents': instance.addressComponents,
-      'adrAddress': instance.adrAddress,
-      'formattedPhoneNumber': instance.formattedPhoneNumber,
+      'address_components': instance.addressComponents,
+      'adr_address': instance.adrAddress,
+      'formatted_phone_number': instance.formattedPhoneNumber,
       'id': instance.id,
       'reference': instance.reference,
       'icon': instance.icon,
       'name': instance.name,
-      'internationalPhoneNumber': instance.internationalPhoneNumber,
+      'international_phone_number': instance.internationalPhoneNumber,
       'rating': instance.rating,
       'scope': instance.scope,
       'url': instance.url,
       'vicinity': instance.vicinity,
-      'utcOffset': instance.utcOffset,
+      'utc_offset': instance.utcOffset,
       'website': instance.website,
       'star': instance.star,
-      'isRecentlySearched': instance.isRecentlySearched,
+      'is_recently_searched': instance.isRecentlySearched,
     };

@@ -1,4 +1,5 @@
 import 'package:chance_app/resources/app_icons.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 
 enum Reminders {
   tasks,
@@ -16,9 +17,9 @@ enum Reminders {
   String toLocalizedString() {
     switch (this) {
       case Reminders.tasks:
-        return "Завдання";
+        return AppLocalizations.instance.translate("tasks");
       case Reminders.medicine:
-        return "Медикамент";
+        return AppLocalizations.instance.translate("medicine");
     }
   }
 }

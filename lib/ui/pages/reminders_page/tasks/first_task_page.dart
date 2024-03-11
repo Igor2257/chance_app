@@ -1,10 +1,10 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/input_reminders_layout.dart';
 import 'package:chance_app/ux/bloc/add_task_bloc/add_task_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository/tasks_repository.dart';
-import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -39,7 +39,7 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
         children: [
           InputRemindersLayout(
             textEditingController: nameTextEditingController,
-            title: 'Введіть завдання',
+            title: AppLocalizations.instance.translate("enterTheTask"),
             subTitle: '',
             saveData: (String value) {
               BlocProvider.of<AddTaskBloc>(context)
@@ -103,7 +103,8 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
                                             height: 40,
                                           ),
                                           Text(
-                                            "Завдання додано",
+                                            AppLocalizations.instance
+                                                .translate("taskAdded"),
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 fontSize: 24,
@@ -194,7 +195,7 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
                                 taskModel.date!.day == now.day &&
                                 taskModel.date!.month == now.month &&
                                 taskModel.date!.year == now.year)
-                        ? "Сьогодні"
+                        ? AppLocalizations.instance.translate("today")
                         : "${taskModel.date!.day.toString().padLeft(2, "0")}.${taskModel.date!.month.toString().padLeft(2, "0")}.${taskModel.date!.year}",
                     style: TextStyle(fontSize: 14, color: primaryText),
                   ),

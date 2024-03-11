@@ -1,8 +1,8 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository/tasks_repository.dart';
-import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,7 +45,7 @@ class _TasksForTodayState extends State<TasksForToday> {
           surfaceTintColor: Colors.transparent,
           centerTitle: true,
           title: Text(
-            "Завдання на сьогодні",
+            AppLocalizations.instance.translate("tasksForToday"),
             style: TextStyle(fontSize: 22, color: primaryText),
           ),
           leading: CloseButton(
@@ -69,7 +69,8 @@ class _TasksForTodayState extends State<TasksForToday> {
           child: Column(
             children: [
               Text(
-                "Не забутьте відмітити завдання як виконане",
+                AppLocalizations.instance
+                    .translate("doNotForgetToMarkTheTaskAsCompleted"),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 22,
@@ -116,7 +117,8 @@ class _TasksForTodayState extends State<TasksForToday> {
                                             width: 10,
                                           ),
                                           Text(
-                                            "Виконано",
+                                            AppLocalizations.instance
+                                                .translate("done"),
                                             style: TextStyle(
                                                 fontSize: 24,
                                                 color: primaryText),
@@ -196,7 +198,13 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                               height: 40,
                                                             ),
                                                             Text(
-                                                              "Завдання виконано",textAlign: TextAlign.center,
+                                                              AppLocalizations
+                                                                  .instance
+                                                                  .translate(
+                                                                      "taskCompleted"),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
                                                               style: TextStyle(
                                                                   fontSize: 24,
                                                                   color:
@@ -236,8 +244,10 @@ class _TasksForTodayState extends State<TasksForToday> {
                                       ),
                                       Text(
                                         task.isDone
-                                            ? "Не виконано"
-                                            : "Виконано",
+                                            ? AppLocalizations.instance
+                                                .translate("notDone")
+                                            : AppLocalizations.instance
+                                                .translate("done"),
                                         style: TextStyle(
                                             fontSize: 16, color: primary50),
                                       ),
@@ -269,7 +279,10 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                                       .min,
                                                               children: [
                                                                 Text(
-                                                                  "Ви впевнені, що хочете видалити завдання?",textAlign: TextAlign.center,
+                                                                  "${AppLocalizations.instance.translate("areYouSureYouWantToDeleteTheTask")}?",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
                                                                   style: TextStyle(
                                                                       color:
                                                                           primaryText,
@@ -289,7 +302,11 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                                         },
                                                                         child:
                                                                             Text(
-                                                                          "Скасувати",textAlign: TextAlign.center,
+                                                                              AppLocalizations
+                                                                              .instance
+                                                                              .translate("cancel"),
+                                                                          textAlign:
+                                                                              TextAlign.center,
                                                                           style: TextStyle(
                                                                               fontSize: 16,
                                                                               color: primary700,
@@ -325,7 +342,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                                                             height: 40,
                                                                                           ),
                                                                                           Text(
-                                                                                            "Завдання видалено",
+                                                                                            AppLocalizations.instance.translate("taskDeleted"),
                                                                                             textAlign: TextAlign.center,
                                                                                             style: TextStyle(fontSize: 24, color: primaryText),
                                                                                           ),
@@ -343,7 +360,11 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                                         },
                                                                         child:
                                                                             Text(
-                                                                          "Видалити",textAlign: TextAlign.center,
+                                                                              AppLocalizations
+                                                                              .instance
+                                                                              .translate("delete"),
+                                                                          textAlign:
+                                                                              TextAlign.center,
                                                                           style: TextStyle(
                                                                               fontSize: 16,
                                                                               color: primary700,
@@ -375,7 +396,8 @@ class _TasksForTodayState extends State<TasksForToday> {
                                         height: 10,
                                       ),
                                       Text(
-                                        "Видалити",
+                                        AppLocalizations.instance
+                                            .translate("delete"),
                                         style: TextStyle(
                                             fontSize: 16, color: primary50),
                                       ),

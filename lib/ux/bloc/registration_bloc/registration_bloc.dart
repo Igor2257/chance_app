@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/input_register_layout.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/registration_page.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
@@ -233,8 +234,8 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
                   return true;
                 } else {
                   Fluttertoast.showToast(
-                      msg:
-                          "Вам необхідно надати дозвіл на обробку персольних даних");
+                      msg: AppLocalizations.instance.translate(
+                          "youNeedToGivePermissionForTheProcessingOfPersonalData"));
                   state.pageController!.animateToPage(2,
                       duration: const Duration(milliseconds: 500),
                       curve: Curves.easeInOut);
@@ -297,68 +298,69 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   String? validateFirstName(String text) {
     if (text.trim().isEmpty) {
-      return 'Прізвище порожнє';
+      return AppLocalizations.instance.translate("surnameIsEmpty");
     }
     if (text.trim().length < 2) {
-      return 'Прізвище повинно мати не менше 2 символів';
+      return AppLocalizations.instance
+          .translate("surnameMustHaveAtLeast2Characters");
     }
 
     if (text.trim().length > 50) {
-      return 'Прізвище повинно бути не більше 50 символів';
+      return AppLocalizations.instance
+          .translate("surnameMustNotExceed50Characters");
     }
     RegExp regex = RegExp(r"^[a-zA-Zа-яА-ЯІіЇїЄєҐґ\s\'-]+$");
     if (!regex.hasMatch(text)) {
-      return 'Недопустимі символи. Введіть латиницю, кирилицю, пробіл, апостроф і/або дефіс';
+      return AppLocalizations.instance.translate("invalidCharacters");
     }
     return null;
   }
 
   String? validateLastName(String text) {
     if (text.trim().isEmpty) {
-      return 'Ім`я порожнє';
+      return AppLocalizations.instance.translate("nameIsEmpty");
     }
 
     if (text.trim().length < 2) {
-      return 'Ім’я повинно мати не менше 2 символів';
+      return AppLocalizations.instance
+          .translate("nameMustHaveAtLeast2Characters");
     }
 
     if (text.trim().length > 30) {
-      return 'Ім’я повинно бути не більше 30 символів';
+      return AppLocalizations.instance
+          .translate("nameMustNotExceed30Characters");
     }
     RegExp regex = RegExp(r"^[a-zA-Zа-яА-ЯІіЇїЄєҐґ\s\'-]+$");
     if (!regex.hasMatch(text)) {
-      return 'Недопустимі символи. Введіть латиницю, кирилицю, пробіл, апостроф і/або дефіс';
+      return AppLocalizations.instance.translate("invalidCharacters");
     }
 
     return null;
   }
 
   String? validatePhone(String text) {
-    if (text.isEmpty) {
-      return 'Невірний формат номеру телефону';
-    }
     if (!RegExp(r'^\+380\d{9}$').hasMatch(text)) {
-      return 'Невірний формат номеру телефону';
+      return AppLocalizations.instance.translate("invalidPhoneNumberFormat");
     }
     return null;
   }
 
   String? validateEmail(String text) {
     if (text.trim().isEmpty) {
-      return 'Невірний формат електронної пошти';
+      return AppLocalizations.instance.translate("invalidEmailFormat");
     }
 
     if (!RegExp(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b',
             caseSensitive: false)
         .hasMatch(text)) {
-      return 'Невірний формат електронної пошти';
+      return AppLocalizations.instance.translate("invalidEmailFormat");
     }
     if (text.trim().isNotEmpty &&
         text.trim().length > 4 &&
         (text.contains(".ru", text.length - 4) ||
             text.contains(".by", text.length - 4) ||
             text.contains(".рф", text.length - 4))) {
-      return 'Невірний формат електронної пошти';
+      return AppLocalizations.instance.translate("invalidEmailFormat");
     }
     return null;
   }
@@ -368,10 +370,12 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       if (text.trim().length <= 14) {
         return null;
       } else {
-        return "Пароль має бути менше 14 символів";
+        return AppLocalizations.instance
+            .translate("passwordMustBeLessThan14Characters");
       }
     } else {
-      return 'Пароль має бути 8 або більше символів';
+      return AppLocalizations.instance
+          .translate("passwordMustBe8OrMoreCharacters");
     }
   }
 
@@ -381,13 +385,15 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         if (state.passwordFirst == text) {
           return null;
         } else {
-          return "Паролі не співпадають";
+          return AppLocalizations.instance.translate("passwordsDoNotMatch");
         }
       } else {
-        return "Пароль має бути менше 14 символів";
+        return AppLocalizations.instance
+            .translate("passwordMustBeLessThan14Characters");
       }
     } else {
-      return 'Пароль має бути 8 або більше символів';
+      return AppLocalizations.instance
+          .translate("passwordMustBe8OrMoreCharacters");
     }
   }
 }

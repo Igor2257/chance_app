@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/navigation/invitations/check_my_invitation/components/invitation_for_me.dart';
 import 'package:chance_app/ui/pages/navigation/invitations/check_my_invitation/components/invitation_from_me.dart';
 import 'package:chance_app/ux/bloc/navigation_bloc/invitation_bloc/invitation_bloc.dart';
@@ -17,8 +18,8 @@ class CheckMyInvitation extends StatefulWidget {
 
 class _CheckMyInvitationState extends State<CheckMyInvitation> {
   final tabs = {
-    InvitationParts.forMe: "Для мене",
-    InvitationParts.fromMe: "Від мене",
+    InvitationParts.forMe: AppLocalizations.instance.translate("forMe"),
+    InvitationParts.fromMe: AppLocalizations.instance.translate("fromMe"),
   };
   var _selectedTab = InvitationParts.forMe;
 
@@ -37,7 +38,7 @@ class _CheckMyInvitationState extends State<CheckMyInvitation> {
       appBar: AppBar(
           centerTitle: true,
           title: Text(
-            "Запрошення",
+            AppLocalizations.instance.translate("invitation"),
             style: TextStyle(
               fontSize: 22,
               color: primaryText,

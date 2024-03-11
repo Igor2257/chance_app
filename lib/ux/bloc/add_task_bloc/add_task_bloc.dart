@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/calendar.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/custom_bottom_sheet_notification_picker.dart';
-import 'package:chance_app/ux/hive_crum.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:flutter/material.dart';
 
@@ -59,7 +60,7 @@ class AddTaskBloc extends Bloc<AddTaskEvent, AddTaskState> {
     int daysInMonth = DateTime(year, month + 1, 0).day;
     DateTime? selectedDate = state.selectedDate;
     List<TaskModel> myTasks = List.from(
-        HiveCRUM().myTasks.where((element) => element.isRemoved == false));
+        HiveCRUD().myTasks.where((element) => element.isRemoved == false));
 
     for (int i = 1; i <= daysInMonth; i++) {
       DateTime date = DateTime(year, month, i);
@@ -136,7 +137,7 @@ class AddTaskBloc extends Bloc<AddTaskEvent, AddTaskState> {
     int day = now.day;
     int daysInMonth = DateTime(year, month + 1, 0).day;
     List<TaskModel> myTasks = List.from(
-        HiveCRUM().myTasks.where((element) => element.isRemoved == false));
+        HiveCRUD().myTasks.where((element) => element.isRemoved == false));
 
     for (int i = 1; i <= daysInMonth; i++) {
       DateTime date = DateTime(year, month, i);

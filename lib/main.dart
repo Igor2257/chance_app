@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:chance_app/firebase_options.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
-import 'package:chance_app/ui/pages/add_medicine_page/add_medicine_page.dart';
+import 'package:chance_app/ui/pages/doctor_appointment/doctor_appointment.dart';
+import 'package:chance_app/ui/pages/job_search/job_search.dart';
 import 'package:chance_app/ui/pages/main_page/main_page.dart';
 import 'package:chance_app/ui/pages/menu/menu_page.dart';
 import 'package:chance_app/ui/pages/menu/pages/my_information.dart';
@@ -11,6 +12,7 @@ import 'package:chance_app/ui/pages/menu/pages/select_language.dart';
 import 'package:chance_app/ui/pages/navigation/add_ward/add_ward.dart';
 import 'package:chance_app/ui/pages/navigation/invitations/check_my_invitation/check_my_invitation.dart';
 import 'package:chance_app/ui/pages/navigation/invitations/enter_accept_code/enter_accept_code.dart';
+import 'package:chance_app/ui/pages/navigation/my_wards/my_wards.dart';
 import 'package:chance_app/ui/pages/navigation/navigation_page/navigation_page.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/address_component.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/bounds.dart';
@@ -20,6 +22,7 @@ import 'package:chance_app/ui/pages/navigation/place_picker/src/models/location.
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ui/pages/onboarding/onboarding_page.dart';
 import 'package:chance_app/ui/pages/onboarding/onboarding_tutorial.dart';
+import 'package:chance_app/ui/pages/reminders_page/add_medicine_page/add_medicine_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/calendar_task_page.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/tasks_for_today.dart';
@@ -47,7 +50,7 @@ import 'package:chance_app/ux/enum/instruction.dart';
 import 'package:chance_app/ux/enum/medicine_type.dart';
 import 'package:chance_app/ux/enum/periodicity.dart';
 import 'package:chance_app/ux/helpers/ad_helper.dart';
-import 'package:chance_app/ux/hive_crum.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/internet_connection_stream.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
@@ -56,6 +59,7 @@ import 'package:chance_app/ux/model/settings.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository/tasks_repository.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -115,10 +119,11 @@ Future<void> main() async {
   initializeTimeZones();
   setLocalLocation(getLocation(currentTimeZone));
 
-  await initHiveBoxes().then((value) async {
-    if ((!HiveCRUM().setting.blockAd)) {
-      unawaited(MobileAds.instance.initialize());
+  await initHiveBoxes().whenComplete(() async {
+    if ((!HiveCRUD().setting.blockAd)) {
+      await MobileAds.instance.initialize();
     }
+  }).whenComplete(() async {
     UserRepository repository = UserRepository();
     if (await repository.isUserEnteredEarlier()) {
       await repository.getUser().then((user) async {
@@ -159,7 +164,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   bool isBannerLoad = false;
   BannerAd? bannerAd;
   late InternetConnectionStream internetConnectionStream;
-  final Settings settings = HiveCRUM().setting;
+  final Settings settings = HiveCRUD().setting;
+
   void restartApp() {
     setState(() {
       key = UniqueKey();
@@ -201,9 +207,10 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     }
   }
 
-  initAd() {
+  initAd() async {
     if (bannerAd != null) {
       bannerAd!.dispose();
+      isBannerLoad = false;
     }
     bannerAd = BannerAd(
         size: AdSize.banner,
@@ -219,47 +226,49 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
             ad.dispose();
           },
         ),
-        request: const AdRequest());
-    bannerAd!.load();
-    print("object");
+        request: const AdRequest())
+      ..load();
+    setState(() {});
   }
 
   checkIfDocsAreAvailable() async {
-    List<ProductModel> items = List.of(HiveCRUM().myItems);
-    if (items.isNotEmpty) {
-      List<ProductModel> newItems = [];
-      for (int i = 0; i < items.length; i++) {
-        if (items[i].validity != null) {
-          if (items[i].id == "adblocker") {
+    if (await Connectivity().checkConnectivity() == ConnectivityResult.none) {
+      List<ProductModel> items = List.of(HiveCRUD().myItems);
+      if (items.isNotEmpty) {
+        List<ProductModel> newItems = [];
+        for (int i = 0; i < items.length; i++) {
+          if (items[i].validity != null) {
+            if (items[i].id == "adblocker") {
+              if (items[i].validity!.isAfter(DateTime.now())) {
+                adRemove(true);
+              } else {
+                adRemove(false);
+              }
+            }
+
             if (items[i].validity!.isAfter(DateTime.now())) {
-              adRemove(true);
-            } else {
-              adRemove(false);
+              newItems.add(items[i]);
             }
           }
-
-          if (items[i].validity!.isAfter(DateTime.now())) {
-            newItems.add(items[i]);
-          }
         }
-      }
-      if (newItems != items) {
-        HiveCRUM().rewriteItems(newItems);
+        if (newItems != items) {
+          HiveCRUD().rewriteItems(newItems);
+        }
       }
     }
   }
 
   adRemove(bool value) async {
-    Settings settings = HiveCRUM().setting;
+    Settings settings = HiveCRUD().setting;
     if (value) {
       settings = settings.copyWith(blockAd: true);
-      HiveCRUM().updateSettings(settings);
+      HiveCRUD().updateSettings(settings);
       if (bannerAd != null) {
         bannerAd!.dispose();
       }
     } else {
       settings = settings.copyWith(blockAd: false);
-      HiveCRUM().updateSettings(settings);
+      HiveCRUD().updateSettings(settings);
       initAd();
     }
     setState(() {});
@@ -268,405 +277,389 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) => RegistrationBloc(),
-          ),
-          BlocProvider(
-            create: (context) => LoginBloc(),
-          ),
-          BlocProvider(
-            create: (context) => RemindersBloc(),
-          ),
-          BlocProvider(
-            create: (context) => SosContactsBloc(),
-          ),
-          BlocProvider(
-            create: (context) => NavigationBloc(),
-          ),
-          BlocProvider(
-            create: (context) => AddWardBloc(),
-          ),
-          BlocProvider(
-            create: (context) => AddTaskBloc(),
-          ),
-          BlocProvider(
-            create: (context) => InvitationBloc(),
-          ),
-        ],
+    return Directionality(
+        textDirection: TextDirection.ltr,
         child: Builder(builder: (context) {
           return MediaQuery(
-              data: MediaQuery.of(context)
-                  .copyWith(textScaler: TextScaler.noScaling),
-              child: Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: FGBGNotifier(
-                      onEvent: (event) {
-                        if (FGBGType.background == event ||
-                            AppLifecycleState.inactive.name == event.name ||
-                            AppLifecycleState.paused.name == event.name) {
-                          internetConnectionStream.pause();
-                        } else if (FGBGType.foreground == event ||
-                            AppLifecycleState.resumed.name == event.name) {
-                          internetConnectionStream.resume();
-                        }
-                        setState(() {});
-                      },
-                      child: Stack(
-                        children: [
-                          Column(
-                            children: [
-                              Expanded(
-                                child: KeyedSubtree(
-                                  key: key,
-                                  child: SizedBox(
-                                    width: size.width,
-                                    height: size.height,
-                                    child: MaterialApp(
-                                      debugShowCheckedModeBanner: false,
-                                      theme: ThemeData(
-                                          scaffoldBackgroundColor: beigeBG,
-                                          dialogBackgroundColor: beigeBG,
-                                          dialogTheme: DialogTheme(
-                                              backgroundColor: beigeBG,
-                                              surfaceTintColor: beigeBG),
-                                          colorScheme: ColorScheme.fromSeed(
-                                              seedColor: primary400),
-                                          useMaterial3: true,
-                                          popupMenuTheme: PopupMenuThemeData(
-                                              color: beigeTransparent,
-                                              surfaceTintColor:
-                                                  beigeTransparent)),
-                                      supportedLocales: const [
-                                        Locale('en'),
-                                        Locale('uk'),
-                                        Locale('ru'),
-                                      ],
-                                      localizationsDelegates: const [
-                                        MyLocalizationsDelegate(),
-                                        GlobalWidgetsLocalizations.delegate,
-                                        GlobalCupertinoLocalizations.delegate,
-                                        GlobalMaterialLocalizations.delegate,
-                                      ],
-                                      initialRoute: widget.route,
-                                      routes: {
-                                        "/": (context) => const MainPage(),
-                                        "/signinup": (context) =>
-                                            const SignInUpPage(),
-                                        "/registration": (context) =>
-                                            const RegistrationPage(),
-                                        "/login": (context) =>
-                                            const LoginPage(),
-                                        "/enter_code": (context) =>
-                                            const EnterCodeForRegister(),
-                                        "/reminders": (context) =>
-                                            const RemindersPage(),
-                                        "/date_picker_for_tasks": (context) =>
-                                            const CalendarTaskPage(),
-                                        "/add_medicine": (context) =>
-                                            BlocProvider(
-                                              create: (context) =>
-                                                  AddMedicineBloc(),
-                                              child: const AddMedicinePage(),
-                                            ),
-                                        "/reset_password": (context) =>
-                                            const ResetPassword(),
-                                        "/tasks_for_today": (context) =>
-                                            const TasksForToday(),
-                                        "/menu": (context) => const MenuPage(),
-                                        "/sos": (context) =>
-                                            const MainPageSos(),
-                                        "/add_contact": (context) =>
-                                            const AddContactScreen(),
-                                        "/add_group": (context) =>
-                                            const AddGroupScreen(),
-                                        "/onboarding_page": (context) =>
-                                            const OnboardingPage(),
-                                        "/onboarding_tutorial": (context) =>
-                                            const OnboardingTutorial(),
-                                        "/delete_contact_sos": (context) =>
-                                            const DeleteContactsPage(),
-                                        "/my_information": (context) =>
-                                            const MyInformation(),
-                                        "/replace_contact_sos": (context) =>
-                                            const ReplaceContactSosScreen(),
-                                        "/navigation_page": (context) =>
-                                            const NavigationPage(),
-                                        "/add_ward": (context) =>
-                                            const AddWard(),
-                                        "/check_my_invitation": (context) =>
-                                            const CheckMyInvitation(),
-                                        "/enter_accept_code": (context) =>
-                                            const EnterAcceptCode(),
-                                        "/choose_language": (context) =>
-                                            const ChooseLanguage(),
-                                      },
-                                      localeResolutionCallback:
-                                          (locale, supportedLocales) {
-                                        for (Locale supportedLocale
-                                            in supportedLocales) {
-                                          if (supportedLocale.languageCode ==
-                                                  locale?.languageCode ||
-                                              supportedLocale.countryCode ==
-                                                  locale?.countryCode) {
-                                            return supportedLocale;
-                                          }
-                                        }
-
-                                        return supportedLocales.first;
-                                      },
-                                    ),
+            data: MediaQuery.of(context)
+                .copyWith(textScaler: TextScaler.noScaling),
+            child: FGBGNotifier(
+              onEvent: (event) {
+                if (FGBGType.background == event ||
+                    AppLifecycleState.inactive.name == event.name ||
+                    AppLifecycleState.paused.name == event.name) {
+                  internetConnectionStream.pause();
+                } else if (FGBGType.foreground == event ||
+                    AppLifecycleState.resumed.name == event.name) {
+                  internetConnectionStream.resume();
+                }
+                setState(() {});
+              },
+              child: Stack(
+                children: [
+                  SizedBox(
+                    width: size.width,
+                    height: size.height,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: KeyedSubtree(
+                            key: key,
+                            child: SizedBox(
+                              width: size.width,
+                              height: size.height,
+                              child: MultiBlocProvider(
+                                providers: [
+                                  BlocProvider(
+                                    create: (context) => RegistrationBloc(),
                                   ),
+                                  BlocProvider(
+                                    create: (context) => LoginBloc(),
+                                  ),
+                                  BlocProvider(
+                                    create: (context) => RemindersBloc(),
+                                  ),
+                                  BlocProvider(
+                                    create: (context) => SosContactsBloc(),
+                                  ),
+                                  BlocProvider(
+                                    create: (context) => NavigationBloc(),
+                                  ),
+                                  BlocProvider(
+                                    create: (context) => AddWardBloc(),
+                                  ),
+                                  BlocProvider(
+                                    create: (context) => AddTaskBloc(),
+                                  ),
+                                  BlocProvider(
+                                    create: (context) => InvitationBloc(),
+                                  ),
+                                ],
+                                child: MaterialApp(
+                                  debugShowCheckedModeBanner: false,
+                                  theme: ThemeData(
+                                      scaffoldBackgroundColor: beigeBG,
+                                      dialogBackgroundColor: beigeBG,
+                                      dialogTheme: DialogTheme(
+                                          backgroundColor: beigeBG,
+                                          surfaceTintColor: beigeBG),
+                                      colorScheme: ColorScheme.fromSeed(
+                                          seedColor: primary400),
+                                      useMaterial3: true,
+                                      popupMenuTheme: PopupMenuThemeData(
+                                          color: beigeTransparent,
+                                          surfaceTintColor: beigeTransparent)),
+                                  supportedLocales: const [
+                                    Locale('en'),
+                                    Locale('uk'),
+                                    Locale('ru'),
+                                  ],
+                                  localizationsDelegates: const [
+                                    MyLocalizationsDelegate(),
+                                    GlobalWidgetsLocalizations.delegate,
+                                    GlobalCupertinoLocalizations.delegate,
+                                    GlobalMaterialLocalizations.delegate,
+                                  ],
+                                  initialRoute: widget.route,
+                                  routes: {
+                                    "/": (context) => const MainPage(),
+                                    "/signinup": (context) =>
+                                        const SignInUpPage(),
+                                    "/registration": (context) =>
+                                        const RegistrationPage(),
+                                    "/login": (context) => const LoginPage(),
+                                    "/enter_code": (context) =>
+                                        const EnterCodeForRegister(),
+                                    "/reminders": (context) =>
+                                        const RemindersPage(),
+                                    "/date_picker_for_tasks": (context) =>
+                                        const CalendarTaskPage(),
+                                    "/add_medicine": (context) => BlocProvider(
+                                          create: (context) =>
+                                              AddMedicineBloc(),
+                                          child: AddMedicinePage(),
+                                        ),
+                                    "/reset_password": (context) =>
+                                        const ResetPassword(),
+                                    "/tasks_for_today": (context) =>
+                                        const TasksForToday(),
+                                    "/menu": (context) => const MenuPage(),
+                                    "/sos": (context) => const MainPageSos(),
+                                    "/add_contact": (context) =>
+                                        const AddContactScreen(),
+                                    "/add_group": (context) =>
+                                        const AddGroupScreen(),
+                                    "/onboarding_page": (context) =>
+                                        const OnboardingPage(),
+                                    "/onboarding_tutorial": (context) =>
+                                        const OnboardingTutorial(),
+                                    "/delete_contact_sos": (context) =>
+                                        const DeleteContactsPage(),
+                                    "/my_information": (context) =>
+                                        const MyInformation(),
+                                    "/replace_contact_sos": (context) =>
+                                        const ReplaceContactSosScreen(),
+                                    "/navigation_page": (context) =>
+                                        const NavigationPage(),
+                                    "/add_ward": (context) => const AddWard(),
+                                    "/check_my_invitation": (context) =>
+                                        const CheckMyInvitation(),
+                                    "/enter_accept_code": (context) =>
+                                        const EnterAcceptCode(),
+                                    "/choose_language": (context) =>
+                                        const ChooseLanguage(),
+                                    "/my_wards": (context) => const MyWards(),
+                                    "/doctor_appointment": (context) =>
+                                        const DoctorAppointment(),
+                                    "/job_search": (context) =>
+                                        const JobSearch(),
+                                  },
+                                  localeResolutionCallback:
+                                      (locale, supportedLocales) {
+                                    for (Locale supportedLocale
+                                        in supportedLocales) {
+                                      if (supportedLocale.languageCode ==
+                                              locale?.languageCode ||
+                                          supportedLocale.countryCode ==
+                                              locale?.countryCode) {
+                                        return supportedLocale;
+                                      }
+                                    }
+
+                                    return supportedLocales.first;
+                                  },
                                 ),
                               ),
-                              if (InternetConnectionStream
-                                  .showInternetConnection)
-                                Container(
-                                  color: beigeBG,
-                                  child: SafeArea(
-                                      top: false,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            color: InternetConnectionStream
-                                                    .isUserHaveInternetConnection
-                                                ? green
-                                                : darkNeutral1000),
-                                        height: 24,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              InternetConnectionStream
-                                                      .isUserHaveInternetConnection
-                                                  ? Icons.wifi
-                                                  : Icons.wifi_off,
-                                              color: primary50,
-                                            ),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text(
-                                              InternetConnectionStream
-                                                      .isUserHaveInternetConnection
-                                                  ? AppLocalizations.instance
-                                                      .translate(
-                                                          "connectionRestored")
-                                                  : AppLocalizations.instance
-                                                      .translate(
-                                                          "noConnection"),
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: primary50),
-                                            ),
-                                          ],
-                                        ),
-                                      )),
-                                ),
-                              if (settings.blockAd == false &&
-                                  isBannerLoad &&
-                                  bannerAd != null)
-                                Container(
-                                    width: size.width,
-                                    color: beigeBG,
-                                    child: SafeArea(
-                                        top: false,
-                                        child: Center(
-                                          child: SizedBox(
-                                            height: bannerAd!.size.height
-                                                .toDouble(),
-                                            child: AdWidget(
-                                              ad: bannerAd!,
-                                            ),
-                                          ),
-                                        ))),
-                            ],
+                            ),
                           ),
-                          if (InternetConnectionStream.isUserHaveOfflineData)
-                            Container(
-                                color: Colors.black38,
-                                child: Center(
-                                  child: Container(
-                                    width: size.width,
-                                    decoration: BoxDecoration(
-                                        color: beige100,
-                                        borderRadius:
-                                            BorderRadius.circular(16)),
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 16, horizontal: 16),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 16, horizontal: 24),
-                                          child: Column(
-                                            children: [
-                                              SvgPicture.asset(
-                                                "assets/icons/tasks_big.svg",
-                                                color: beige500,
-                                              ),
-                                              Text(
-                                                AppLocalizations.instance
-                                                    .translate("tasks"),
-                                                style: TextStyle(
-                                                    fontSize: 24,
-                                                    color: primaryText),
-                                              ),
-                                              const SizedBox(
-                                                height: 30,
-                                              ),
-                                              Text(
-                                                AppLocalizations.instance.translate(
-                                                    "uHaveNotSynchronizedDataWithServer"),
-                                                textAlign: TextAlign.justify,
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: primaryText),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.all(4),
-                                          height: 120,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(16),
-                                              color: darkNeutral800),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () async {
-                                                  await TasksRepository()
-                                                      .sendAllLocalTasksData()
-                                                      .then((value) {
-                                                    if (value) {
-                                                      internetConnectionStream
-                                                          .changeUserOfflineData(
-                                                              false);
-                                                    }
-                                                  });
-                                                },
-                                                child: SizedBox(
-                                                  width:
-                                                      (size.width / 2.1) - 50,
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Container(
-                                                        height: 56,
-                                                        width: 56,
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        90),
-                                                            color: primary300),
-                                                        child: Center(
-                                                          child: Icon(
-                                                            Icons.upload,
-                                                            color: primaryText,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Expanded(
-                                                        child: Text(
-                                                          AppLocalizations
-                                                              .instance
-                                                              .translate(
-                                                                  "sendMyDataOnServer"),
-                                                          maxLines: 2,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: TextStyle(
-                                                              color: primary50,
-                                                              fontSize: 16),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              GestureDetector(
-                                                onTap: () async {
-                                                  await TasksRepository()
-                                                      .updateLocalTasks()
-                                                      .whenComplete(() {
-                                                    internetConnectionStream
-                                                        .changeUserOfflineData(
-                                                            false);
-                                                  });
-                                                },
-                                                child: SizedBox(
-                                                  width:
-                                                      (size.width / 2.1) - 50,
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Container(
-                                                        height: 56,
-                                                        width: 56,
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        90),
-                                                            border: Border.all(
-                                                                color:
-                                                                    primary300)),
-                                                        child: Center(
-                                                          child: Icon(
-                                                            Icons.download,
-                                                            color: primary50,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Expanded(
-                                                        child: Text(
-                                                          AppLocalizations
-                                                              .instance
-                                                              .translate(
-                                                                  "synchronizeDataWithServer"),
-                                                          maxLines: 2,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: TextStyle(
-                                                              color: primary50,
-                                                              fontSize: 16),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                        ),
+                        if (InternetConnectionStream.showInternetConnection)
+                          Container(
+                            color: beigeBG,
+                            child: SafeArea(
+                                top: false,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: InternetConnectionStream
+                                              .isUserHaveInternetConnection
+                                          ? green
+                                          : darkNeutral1000),
+                                  height: 24,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        InternetConnectionStream
+                                                .isUserHaveInternetConnection
+                                            ? Icons.wifi
+                                            : Icons.wifi_off,
+                                        color: primary50,
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        InternetConnectionStream
+                                                .isUserHaveInternetConnection
+                                            ? AppLocalizations.instance
+                                                .translate("connectionRestored")
+                                            : AppLocalizations.instance
+                                                .translate("noConnection"),
+                                        style: TextStyle(
+                                            fontSize: 16, color: primary50),
+                                      ),
+                                    ],
                                   ),
                                 )),
-                        ],
-                      ))));
+                          ),
+                        if (settings.blockAd == false &&
+                            isBannerLoad &&
+                            bannerAd != null)
+                          Container(
+                              width: size.width,
+                              constraints: BoxConstraints(
+                                maxHeight: bannerAd!.size.height.toDouble(),
+                              ),
+                              color: beigeBG,
+                              child: SafeArea(
+                                  top: false,
+                                  child: Center(
+                                    child: AdWidget(
+                                      ad: bannerAd!,
+                                    ),
+                                  ))),
+                      ],
+                    ),
+                  ),
+                  if (InternetConnectionStream.isUserHaveOfflineData)
+                    Container(
+                        color: Colors.black38,
+                        child: Center(
+                          child: Container(
+                            width: size.width,
+                            decoration: BoxDecoration(
+                                color: beige100,
+                                borderRadius: BorderRadius.circular(16)),
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 16, horizontal: 16),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 16, horizontal: 24),
+                                  child: Column(
+                                    children: [
+                                      SvgPicture.asset(
+                                        "assets/icons/tasks_big.svg",
+                                        color: beige500,
+                                      ),
+                                      Text(
+                                        AppLocalizations.instance
+                                            .translate("tasks"),
+                                        style: TextStyle(
+                                            fontSize: 24, color: primaryText),
+                                      ),
+                                      const SizedBox(
+                                        height: 30,
+                                      ),
+                                      Text(
+                                        AppLocalizations.instance.translate(
+                                            "uHaveNotSynchronizedDataWithServer"),
+                                        textAlign: TextAlign.justify,
+                                        style: TextStyle(
+                                            fontSize: 16, color: primaryText),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.all(4),
+                                  height: 120,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      color: darkNeutral800),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () async {
+                                          await TasksRepository()
+                                              .sendAllLocalTasksData()
+                                              .then((value) {
+                                            if (value) {
+                                              internetConnectionStream
+                                                  .changeUserOfflineData(false);
+                                            }
+                                          });
+                                        },
+                                        child: SizedBox(
+                                          width: (size.width / 2.1) - 50,
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                height: 56,
+                                                width: 56,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            90),
+                                                    color: primary300),
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons.upload,
+                                                    color: primaryText,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  AppLocalizations.instance
+                                                      .translate(
+                                                          "sendMyDataOnServer"),
+                                                  maxLines: 2,
+                                                  textAlign: TextAlign.center,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      color: primary50,
+                                                      fontSize: 16),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () async {
+                                          await TasksRepository()
+                                              .updateLocalTasks()
+                                              .whenComplete(() {
+                                            internetConnectionStream
+                                                .changeUserOfflineData(false);
+                                          });
+                                        },
+                                        child: SizedBox(
+                                          width: (size.width / 2.1) - 50,
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                height: 56,
+                                                width: 56,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            90),
+                                                    border: Border.all(
+                                                        color: primary300)),
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons.download,
+                                                    color: primary50,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  AppLocalizations.instance
+                                                      .translate(
+                                                          "synchronizeDataWithServer"),
+                                                  maxLines: 2,
+                                                  textAlign: TextAlign.center,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      color: primary50,
+                                                      fontSize: 16),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        )),
+                ],
+              ),
+            ),
+          );
         }));
   }
 }
@@ -717,7 +710,7 @@ Future<bool> initHiveBoxes() async {
               : const Settings()
           : const Settings();
       if (setting.firstEnter == null) {
-        HiveCRUM().updateSettings(Settings(firstEnter: DateTime.now()));
+        HiveCRUD().updateSettings(Settings(firstEnter: DateTime.now()));
       }
     });
     return true;

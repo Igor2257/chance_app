@@ -1,10 +1,10 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/navigation/invitations/check_my_invitation/components/invitation_for_me_timer.dart';
 import 'package:chance_app/ux/bloc/navigation_bloc/invitation_bloc/invitation_bloc.dart';
 import 'package:chance_app/ux/enum/invitation_status.dart';
 import 'package:chance_app/ux/model/invitation_model.dart';
 import 'package:chance_app/ux/repository/invitation_repository.dart';
-import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,7 +37,7 @@ class InvitationForMe extends StatelessWidget {
                 children: [
                   const Icon(Icons.wifi_off),
                   Text(
-                    "Немає доступу до інтернету",
+                    AppLocalizations.instance.translate("noInternetConnection"),
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 20, color: primaryText),
                   ),
@@ -52,7 +52,7 @@ class InvitationForMe extends StatelessWidget {
                 children: [
                   SvgPicture.asset("assets/icons/box_open.svg"),
                   Text(
-                    "У вас не має запрошень",
+                    AppLocalizations.instance.translate("youHaveNoInvitations"),
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 20, color: primaryText),
                   ),
@@ -81,7 +81,7 @@ class InvitationForMe extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  invitationForMe.email,
+                                  invitationForMe.toUserEmail,
                                   style: TextStyle(
                                       fontSize: 16, color: primaryText),
                                   maxLines: 1,
@@ -102,9 +102,18 @@ class InvitationForMe extends StatelessWidget {
                               ]),
                         ),
                         IconButton(
-                            onPressed: () {
-                              Navigator.of(context)
-                                  .pushNamed("/enter_accept_code");
+                            onPressed: () async {
+                              await InvitationRepository()
+                                  .acceptInvitation(invitationForMe.id,
+                                      InvitationStatus.canceled)
+                                  .then((value) {
+                                if (value == null) {
+                                  BlocProvider.of<InvitationBloc>(context)
+                                      .add(LoadInvitationsForMe());
+                                } else {
+                                  Fluttertoast.showToast(msg: value);
+                                }
+                              });
                             },
                             icon: Icon(
                               Icons.done,
@@ -113,8 +122,7 @@ class InvitationForMe extends StatelessWidget {
                         IconButton(
                             onPressed: () async {
                               await InvitationRepository()
-                                  .changeStatus(invitationForMe.id,
-                                      InvitationStatus.canceled)
+                                  .rejectInvitation(invitationForMe.id)
                                   .then((value) {
                                 if (value == null) {
                                   BlocProvider.of<InvitationBloc>(context)

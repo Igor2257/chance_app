@@ -1,6 +1,7 @@
 import 'package:bottom_picker/resources/context_extension.dart';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/bloc/add_task_bloc/add_task_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,91 +57,98 @@ class _CustomBottomSheetNotificationPickerState
   Widget build(BuildContext context) {
     return BlocBuilder<AddTaskBloc, AddTaskState>(
         builder: (context, state) {
-      NotificationsBefore notificationsBefore = state.newNotificationsBefore;
+          NotificationsBefore notificationsBefore = state.newNotificationsBefore;
       final List<String> notifications = state.notifications;
 
-      return Column(
-        children: [
-          Text(
-            "Нагадування",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 24, color: primaryText),
-          ),
-          ListView.builder(
-              padding: const EdgeInsets.all(16),
-              shrinkWrap: true,
-              itemCount: NotificationsBefore.values.length,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, position) {
-                bool isSelected =
-                    notificationsBefore == NotificationsBefore.values[position];
-                return RoundedButton(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    height: 48,
-                    border: Border.all(color: darkNeutral800),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    onPress: () {
-                      BlocProvider.of<AddTaskBloc>(context).add(
-                          SelectNotificationBefore(
-                              notificationsBefore:
-                                  NotificationsBefore.values[position],
-                              session: session));
-                    },
-                    color: isSelected ? darkNeutral600 : Colors.transparent,
-                    child: Row(
-                      children: [
-                        Text(
-                          notifications[position],
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: isSelected ? primary50 : primaryText,fontWeight: FontWeight.w500
-                          ),
-                        ),
-                        const Spacer(),
-                        if (isSelected)
-                          Icon(
-                            Icons.done,
-                            color: primary50,
-                          )
-                      ],
-                    ));
-              }),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+      return SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Flex(
+            direction: Axis.vertical,
             children: [
-              GestureDetector(
-                onTap: () {
-                  BlocProvider.of<AddTaskBloc>(context)
-                      .add(CancelNotificationBefore(session: session));
-                  Navigator.of(context).pop();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(
-                    "Скасувати",
-                    style: TextStyle(fontSize: 22, color: primary700),
+              Text(
+                AppLocalizations.instance.translate("reminder"),
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 24, color: primaryText),
+              ),
+              ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  shrinkWrap: true,
+                  itemCount: NotificationsBefore.values.length,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, position) {
+                    bool isSelected = notificationsBefore ==
+                        NotificationsBefore.values[position];
+                    return RoundedButton(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        height: 48,
+                        border: Border.all(color: darkNeutral800),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        onPress: () {
+                          BlocProvider.of<AddTaskBloc>(context).add(
+                              SelectNotificationBefore(
+                                  notificationsBefore:
+                                      NotificationsBefore.values[position],
+                                  session: session));
+                        },
+                        color: isSelected ? darkNeutral600 : Colors.transparent,
+                        child: Row(
+                          children: [
+                            Text(
+                              notifications[position],
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: isSelected ? primary50 : primaryText,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            const Spacer(),
+                            if (isSelected)
+                              Icon(
+                                Icons.done,
+                                color: primary50,
+                              )
+                          ],
+                        ));
+                  }),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      BlocProvider.of<AddTaskBloc>(context)
+                          .add(CancelNotificationBefore(session: session));
+                      Navigator.of(context).pop();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        AppLocalizations.instance.translate("cancel"),
+                        style: TextStyle(fontSize: 22, color: primary700),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(
-                width: 24,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(
-                    "OK",
-                    style: TextStyle(fontSize: 22, color: primary700),
+                  const SizedBox(
+                    width: 24,
                   ),
-                ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        "OK",
+                        style: TextStyle(fontSize: 22, color: primary700),
+                      ),
+                    ),
+                  ),
+                ],
               ),
+              const SizedBox(height: 20,),
             ],
           ),
-          const Spacer(),
-        ],
+        ),
       );
     });
   }

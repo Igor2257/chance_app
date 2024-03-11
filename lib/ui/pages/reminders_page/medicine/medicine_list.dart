@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/medicine/medicine_item.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:cupertino_listview/cupertino_listview.dart';
@@ -64,12 +65,12 @@ class MedicineList extends StatelessWidget {
   }
 
   Widget _emptyListPlaceholder() {
-    return const Padding(
-      padding: EdgeInsets.all(16),
+    return  Padding(
+      padding: const EdgeInsets.all(16),
       child: Text(
-        "Додайте нагадування про прийом ліків",
+        AppLocalizations.instance.translate("addMedicationReminders"),
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 24),
+        style: const TextStyle(fontSize: 24),
       ),
     );
   }

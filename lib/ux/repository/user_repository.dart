@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ux/hive_crum.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart' show sha256;
@@ -61,7 +61,7 @@ class UserRepository {
                   isConfirmed: map["isConfirmed"],
                   deviceId: map["deviceId"],
                 );
-                await HiveCRUM().addUser(meUser);
+                await HiveCRUD().addUser(meUser);
                 await FirebaseMessaging.instance.getToken().then((token) {
                   patchUserData(token: token);
                 });
@@ -378,8 +378,9 @@ class UserRepository {
                 isGoogle: map["isGoogle"],
                 isConfirmed: map["isConfirmed"],
                 deviceId: map["deviceId"],
-              );HiveCRUM();
-              await HiveCRUM().addUser(meUser!);
+              );
+              HiveCRUD();
+              await HiveCRUD().addUser(meUser!);
               return meUser;
             } else {
               String error = jsonDecode(value.body)["message"]
@@ -400,6 +401,7 @@ class UserRepository {
   }
 
   Future<bool> getIdTokenFromAuthCode() async {
+    bool error = true;
     final GoogleSignInAccount? googleUser =
         await GoogleSignIn(signInOption: SignInOption.standard).signIn();
 
@@ -414,11 +416,75 @@ class UserRepository {
     );
 
     // Once signed in, return the UserCredential
-    await FirebaseAuth.instance.signInWithCredential(credential).then((value) {
-      //print("value.credential?.accessToken ${value.credential?.accessToken}");
+    await FirebaseAuth.instance
+        .signInWithCredential(credential)
+        .then((value) async {
+      try {
+        String? token = await value.user!.getIdToken();
+        if (await (Connectivity().checkConnectivity()) ==
+            ConnectivityResult.none) {
+          Fluttertoast.showToast(
+              msg: "Немає підключення до інтернету",
+              toastLength: Toast.LENGTH_LONG);
+        } else {
+          var url = Uri.parse('$apiUrl/auth/google/$token');
+          await http.post(url, headers: <String, String>{
+            'Content-Type': 'application/json',
+          }).then((value) async {
+            final cookie = _parseCookieFromLogin(value);
+
+            if (value.statusCode > 199 && value.statusCode < 300) {
+              var url = Uri.parse('$apiUrl/auth/me');
+              await http.get(
+                url,
+                headers: <String, String>{
+                  'Content-Type': 'application/json',
+                  if (cookie != null) 'Cookie': cookie,
+                },
+              ).then((value) async {
+                if (value.statusCode > 199 && value.statusCode < 300) {
+                  Map<String, dynamic> map = jsonDecode(value.body);
+                  MeUser meUser = MeUser(
+                    id: map["_id"],
+                    email: map["email"],
+                    name: map["name"],
+                    lastName: map["lastName"],
+                    phone: map["phone"],
+                    isGoogle: map["isGoogle"],
+                    isConfirmed: map["isConfirmed"],
+                    deviceId: map["deviceId"],
+                  );
+                  await HiveCRUD().addUser(meUser);
+                  await FirebaseMessaging.instance.getToken().then((token) {
+                    patchUserData(token: token);
+                  });
+                  error = false;
+                } else {
+                  Fluttertoast.showToast(
+                      msg: jsonDecode(value.body)["message"]
+                          .toString()
+                          .replaceAll("[", "")
+                          .replaceAll("]", ""),
+                      toastLength: Toast.LENGTH_LONG);
+                }
+              });
+            } else {
+              Fluttertoast.showToast(
+                  msg: jsonDecode(value.body)["message"]
+                      .toString()
+                      .replaceAll("[", "")
+                      .replaceAll("]", ""),
+                  toastLength: Toast.LENGTH_LONG);
+            }
+          });
+        }
+      } catch (e) {
+        Fluttertoast.showToast(
+            msg: e.toString(), toastLength: Toast.LENGTH_LONG);
+      }
     });
 
-    return true;
+    return error;
   }
 
   Future<String?> logout() async {
@@ -438,7 +504,7 @@ class UserRepository {
         }).then((value) async {
           if (value.statusCode > 199 && value.statusCode < 300) {
             await deleteCookie();
-            await HiveCRUM().removeUser();
+            await HiveCRUD().removeUser();
           }
         });
       } catch (error) {

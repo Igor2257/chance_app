@@ -1,3 +1,4 @@
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/model/hive_type_id.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -17,11 +18,11 @@ enum Periodicity {
   String toLocalizedString() {
     switch (this) {
       case Periodicity.everyDay:
-        return "Щодня";
+        return AppLocalizations.instance.translate("daily");
       // case Periodicity.inADay:
-      //   return "Кожні 2 дні";
+    //   return "Кожні 2 дні";
       case Periodicity.certainDays:
-        return "Певні дні тижня";
+        return AppLocalizations.instance.translate("certainDaysOfTheWeek");
     }
   }
 }

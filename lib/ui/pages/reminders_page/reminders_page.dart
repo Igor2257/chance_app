@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/add_medicine_page/components/medicine_added_bottom_sheet.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
+import 'package:chance_app/ui/pages/reminders_page/add_medicine_page/components/medicine_added_bottom_sheet.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/calendar.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/custom_bottom_sheet.dart';
 import 'package:chance_app/ui/pages/reminders_page/medicine/medicine_list.dart';
@@ -32,6 +33,7 @@ class _RemindersPageState extends State<RemindersPage> {
       backgroundColor: beige100,
       enableDrag: true,
       showDragHandle: true,
+      useSafeArea: true,
       builder: (_) => const CustomBottomSheet(),
     );
 
@@ -42,7 +44,7 @@ class _RemindersPageState extends State<RemindersPage> {
             backgroundColor: beige100,
             (_) => const TasksSheets(),
           );
-
+          break;
         case Reminders.medicine:
           var addMedicine = true;
           do {
@@ -63,6 +65,7 @@ class _RemindersPageState extends State<RemindersPage> {
             }
             addMedicine = false;
           } while (addMedicine);
+          break;
       }
     }
   }
@@ -88,7 +91,7 @@ class _RemindersPageState extends State<RemindersPage> {
         centerTitle: true,
         scrolledUnderElevation: 0,
         titleTextStyle: TextStyle(fontSize: 22, color: primaryText),
-        title: const Text("Нагадування"),
+        title: Text(AppLocalizations.instance.translate("reminder")),
         leading: BackButton(
           onPressed: () {
             Navigator.of(context).pushNamed("/");
@@ -159,7 +162,7 @@ class _RemindersPageState extends State<RemindersPage> {
                   ),
                 ),
                 icon: const Icon(Icons.add),
-                label: const Text("Додати"),
+                label: Text(AppLocalizations.instance.translate("add")),
               ),
             ),
           ],
@@ -169,9 +172,9 @@ class _RemindersPageState extends State<RemindersPage> {
   }
 
   Widget _tabSwitcher() {
-    const tabs = {
-      Reminders.medicine: "Запрошення для мене",
-      Reminders.tasks: "Запрошення від мене",
+    final tabs = {
+      Reminders.medicine: AppLocalizations.instance.translate("myMedicines"),
+      Reminders.tasks: AppLocalizations.instance.translate("myTasks"),
     };
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -188,15 +191,20 @@ class _RemindersPageState extends State<RemindersPage> {
         }),
         children: {
           for (final tab in tabs.keys)
-            tab: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              child: Text(
-                tabs[tab]!,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: (_selectedTab == tab)
-                      ? Colors.white
-                      : const Color(0xff57524C),
+            tab: SizedBox(
+              width: MediaQuery.of(context).size.width / 2,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                child: Text(
+                  tabs[tab]!,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: (_selectedTab == tab)
+                        ? Colors.white
+                        : const Color(0xff57524C),
+                  ),
                 ),
               ),
             ),

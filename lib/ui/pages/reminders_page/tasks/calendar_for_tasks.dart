@@ -1,7 +1,7 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/calendar.dart';
 import 'package:chance_app/ux/bloc/add_task_bloc/add_task_bloc.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -63,9 +63,11 @@ final DateTime now=DateTime.now();
                       width: size.width / 8,
                       height: 26,
                       child: Text(
-                        "ПН",
+                        AppLocalizations.instance.translate("mon").toUpperCase(),
                         style: TextStyle(
-                            color: primaryText, fontSize: 16, letterSpacing: 0.15),
+                            color: primaryText,
+                            fontSize: 16,
+                            letterSpacing: 0.15),
                       ),
                     ),
                     Container(
@@ -73,9 +75,11 @@ final DateTime now=DateTime.now();
                       width: size.width / 8,
                       height: 26,
                       child: Text(
-                        "ВТ",
+                        AppLocalizations.instance.translate("tue").toUpperCase(),
                         style: TextStyle(
-                            color: primaryText, fontSize: 16, letterSpacing: 0.15),
+                            color: primaryText,
+                            fontSize: 16,
+                            letterSpacing: 0.15),
                       ),
                     ),
                     Container(
@@ -83,9 +87,11 @@ final DateTime now=DateTime.now();
                       width: size.width / 8,
                       height: 26,
                       child: Text(
-                        "СР",
+                        AppLocalizations.instance.translate("wed").toUpperCase(),
                         style: TextStyle(
-                            color: primaryText, fontSize: 16, letterSpacing: 0.15),
+                            color: primaryText,
+                            fontSize: 16,
+                            letterSpacing: 0.15),
                       ),
                     ),
                     Container(
@@ -93,9 +99,11 @@ final DateTime now=DateTime.now();
                       width: size.width / 8,
                       height: 26,
                       child: Text(
-                        "ЧТ",
+                        AppLocalizations.instance.translate("thu").toUpperCase(),
                         style: TextStyle(
-                            color: primaryText, fontSize: 16, letterSpacing: 0.15),
+                            color: primaryText,
+                            fontSize: 16,
+                            letterSpacing: 0.15),
                       ),
                     ),
                     Container(
@@ -103,9 +111,11 @@ final DateTime now=DateTime.now();
                       width: size.width / 8,
                       height: 26,
                       child: Text(
-                        "ПТ",
+                        AppLocalizations.instance.translate("fri").toUpperCase(),
                         style: TextStyle(
-                            color: primaryText, fontSize: 16, letterSpacing: 0.15),
+                            color: primaryText,
+                            fontSize: 16,
+                            letterSpacing: 0.15),
                       ),
                     ),
                     Container(
@@ -113,9 +123,11 @@ final DateTime now=DateTime.now();
                       width: size.width / 8,
                       height: 26,
                       child: Text(
-                        "СБ",
+                        AppLocalizations.instance.translate("sat").toUpperCase(),
                         style: TextStyle(
-                            color: primaryText, fontSize: 16, letterSpacing: 0.15),
+                            color: primaryText,
+                            fontSize: 16,
+                            letterSpacing: 0.15),
                       ),
                     ),
                     Container(
@@ -123,9 +135,11 @@ final DateTime now=DateTime.now();
                       width: size.width / 8,
                       height: 26,
                       child: Text(
-                        "НД",
+                        AppLocalizations.instance.translate("sun").toUpperCase(),
                         style: TextStyle(
-                            color: primaryText, fontSize: 16, letterSpacing: 0.15),
+                            color: primaryText,
+                            fontSize: 16,
+                            letterSpacing: 0.15),
                       ),
                     ),
                   ],
@@ -199,23 +213,21 @@ final DateTime now=DateTime.now();
   }
 
   int getCount(String weekday) {
-    switch (weekday) {
-      case 'ПН':
-        return 0;
-      case 'ВТ':
-        return 1;
-      case 'СР':
-        return 2;
-      case 'ЧТ':
-        return 3;
-      case 'ПТ':
-        return 4;
-      case 'СБ':
-        return 5;
-      case 'НД':
-        return 6;
-      default:
-        return 0;
+    if (weekday == AppLocalizations.instance.translate("mon")) {
+      return 0;
+    } else if (weekday == AppLocalizations.instance.translate("tue")) {
+      return 1;
+    } else if (weekday == AppLocalizations.instance.translate("wed")) {
+      return 2;
+    } else if (weekday == AppLocalizations.instance.translate("thu")) {
+      return 3;
+    } else if (weekday == AppLocalizations.instance.translate("fri")) {
+      return 4;
+    } else if (weekday == AppLocalizations.instance.translate("sat")) {
+      return 5;
+    } else if (weekday == AppLocalizations.instance.translate("sun")) {
+      return 6;
     }
+    return 0;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/model/hive_type_id.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -17,11 +18,11 @@ enum DayPeriodicity {
   String toLocalizedString() {
     switch (this) {
       case DayPeriodicity.once:
-        return "Раз на день";
+        return AppLocalizations.instance.translate("onceDay");
       case DayPeriodicity.twice:
-        return "Двічі на день";
+        return AppLocalizations.instance.translate("twoTimesDay");
       case DayPeriodicity.other:
-        return "Частіше";
+        return AppLocalizations.instance.translate("onceDay");
     }
   }
 }

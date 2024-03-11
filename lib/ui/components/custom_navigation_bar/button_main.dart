@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -17,7 +18,7 @@ class ButtonMain extends StatelessWidget {
             color: primary200,
           ),
           Text(
-            "Головна",
+            AppLocalizations.instance.translate("main"),
             style: TextStyle(fontSize: 16, color: primary200),
           )
         ],

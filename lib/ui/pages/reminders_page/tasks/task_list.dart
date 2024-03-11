@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/task_item.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/model/task_model.dart';
@@ -32,7 +33,7 @@ class TaskList extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  "Сьогодні", // TODO: show correct day
+                  AppLocalizations.instance.translate("today"), // TODO: show correct day
                   style: TextStyle(fontSize: 28, color: primaryText),
                 ),
               ),
@@ -41,7 +42,7 @@ class TaskList extends StatelessWidget {
                   Navigator.of(context).pushNamed("/tasks_for_today");
                 },
                 child: Text(
-                  "Всі завдання",
+                  AppLocalizations.instance.translate("allTasks"),
                   style: TextStyle(
                     fontSize: 16,
                     color: primary700,
@@ -67,12 +68,12 @@ class TaskList extends StatelessWidget {
   }
 
   Widget _emptyListPlaceholder() {
-    return const Padding(
-      padding: EdgeInsets.all(16),
+    return  Padding(
+      padding: const EdgeInsets.all(16),
       child: Text(
-        "Додайте завдання",
+        AppLocalizations.instance.translate("addTask"),
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 24),
+        style: const TextStyle(fontSize: 24),
       ),
     );
   }

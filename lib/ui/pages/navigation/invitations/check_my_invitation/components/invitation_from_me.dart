@@ -1,10 +1,10 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/navigation/invitations/check_my_invitation/components/invitation_from_me_timer.dart';
 import 'package:chance_app/ux/bloc/navigation_bloc/invitation_bloc/invitation_bloc.dart';
 import 'package:chance_app/ux/enum/invitation_status.dart';
 import 'package:chance_app/ux/model/invitation_model.dart';
 import 'package:chance_app/ux/repository/invitation_repository.dart';
-import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,7 +35,7 @@ class InvitationFromMe extends StatelessWidget {
               children: [
                 const Icon(Icons.wifi_off),
                 Text(
-                  "Немає доступу до інтернету",
+                  AppLocalizations.instance.translate("noInternetConnection"),
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 20, color: primaryText),
                 ),
@@ -49,7 +49,7 @@ class InvitationFromMe extends StatelessWidget {
               children: [
                 SvgPicture.asset("assets/icons/box_open.svg"),
                 Text(
-                  "Ви нікого не запросили",
+                  AppLocalizations.instance.translate("youDidNotInviteAnyone"),
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 20, color: primaryText),
                 ),
@@ -78,7 +78,7 @@ class InvitationFromMe extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                             Text(
-                              invitationFromMe.email,
+                              invitationFromMe.toUserEmail,
                               style:
                                   TextStyle(fontSize: 16, color: primaryText),
                               maxLines: 1,

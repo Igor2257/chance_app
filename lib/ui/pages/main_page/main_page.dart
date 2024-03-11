@@ -4,8 +4,8 @@ import 'package:chance_app/ui/components/logo_name.dart';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/components/sos_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/repository/tasks_repository.dart';
-import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -53,9 +53,9 @@ class _MainPageState extends State<MainPage> {
 
   _loadFCM() async {
     if (!kIsWeb) {
-      _androidNotificationChannel = const AndroidNotificationChannel(
+      _androidNotificationChannel =  AndroidNotificationChannel(
         "myTasks",
-        'Завдання',
+        AppLocalizations.instance.translate("tasks"),
         importance: Importance.high,
         enableVibration: true,
         playSound: true,
@@ -105,7 +105,7 @@ class _MainPageState extends State<MainPage> {
                                 color: beige500,
                               ),
                               Text(
-                                "Завдання",textAlign: TextAlign.center,
+                                AppLocalizations.instance.translate("tasks"),textAlign: TextAlign.center,
                                 style:
                                     TextStyle(fontSize: 16, color: primaryText),
                               ),
@@ -153,7 +153,7 @@ class _MainPageState extends State<MainPage> {
                                         height: 10,
                                       ),
                                       Text(
-                                        "Пропустити",textAlign: TextAlign.center,
+                                        AppLocalizations.instance.translate("miss"),textAlign: TextAlign.center,
                                         style: TextStyle(
                                             color: primary50, fontSize: 16),
                                       ),
@@ -201,7 +201,7 @@ class _MainPageState extends State<MainPage> {
                                         height: 10,
                                       ),
                                       Text(
-                                        "Виконано",textAlign: TextAlign.center,
+                                        AppLocalizations.instance.translate("done"),textAlign: TextAlign.center,
                                         style: TextStyle(
                                             color: primary50, fontSize: 16),
                                       ),
@@ -219,7 +219,7 @@ class _MainPageState extends State<MainPage> {
           });
       flutterLocalNotificationsPlugin.show(
           DateTime.now().millisecondsSinceEpoch ~/ 1000,
-          remoteMessage.data["type"] == "task" ? "Завдання" : "",
+          remoteMessage.data["type"] == "task" ? AppLocalizations.instance.translate("tasks") : "",
           remoteMessage.data["message"].toString(),
           NotificationDetails(
             iOS: const DarwinNotificationDetails(),
@@ -267,7 +267,7 @@ class _MainPageState extends State<MainPage> {
                       width: 44,
                     ),
                     text: Text(
-                      "Нагадування",
+                      AppLocalizations.instance.translate("reminder"),
                       style: TextStyle(color: primaryText),
                     ),
                     width: cardWidth,
@@ -283,7 +283,7 @@ class _MainPageState extends State<MainPage> {
                       width: 45,
                     ),
                     text: Text(
-                      "Навігація",
+                      AppLocalizations.instance.translate("navigation"),
                       style: TextStyle(color: primaryText),
                     ),
                     width: cardWidth,
@@ -307,7 +307,7 @@ class _MainPageState extends State<MainPage> {
                       width: 44,
                     ),
                     text: Text(
-                      "Спілкування",
+                      AppLocalizations.instance.translate("communication"),
                       style: TextStyle(color: primaryText),
                     ),
                     width: cardWidth,
@@ -321,12 +321,14 @@ class _MainPageState extends State<MainPage> {
                       width: 44,
                     ),
                     text: Text(
-                      "Запис до лікаря",
+                      AppLocalizations.instance.translate("appointmentWithDoctor"),
                       style: TextStyle(color: primaryText),
                     ),
                     width: cardWidth,
                     margin: const EdgeInsets.only(bottom: 8, top: 8, left: 8),
-                    onPress: () {},
+                    onPress: () {
+                      Navigator.of(context).pushNamed("/doctor_appointment");
+                    },
                   ),
                 ],
               ),
@@ -337,12 +339,14 @@ class _MainPageState extends State<MainPage> {
                   width: 44,
                 ),
                 text: Text(
-                  "Пошук роботи",
+                  AppLocalizations.instance.translate("jobSearch"),
                   style: TextStyle(color: primaryText),
                 ),
                 width: cardWidth,
                 margin: const EdgeInsets.only(bottom: 8, top: 8),
-                onPress: () {},
+                onPress: () {
+                  Navigator.of(context).pushNamed("/job_search");
+                },
               ),
               const Spacer(),
               const Spacer(),
@@ -366,12 +370,12 @@ class _MainPageState extends State<MainPage> {
               builder: (context) {
                 return AlertDialog(
                   title: Text(
-                    "Дозвольте застосунку використовувати розташування",
+                    AppLocalizations.instance.translate("allowTheAppToUseTheLocation"),
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 24, color: primaryText),
                   ),
                   content: Text(
-                    "Щоб програма працювала корректно, вам потрібно дозволити використовувати цей дозвіл",
+                    AppLocalizations.instance.translate("forTheAppToWorkCorrectlyYouNeedToAllowThisPermissionToBeUsed"),
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16, color: primaryText),
                   ),
@@ -388,7 +392,7 @@ class _MainPageState extends State<MainPage> {
                       },
                       color: primary1000,
                       child: Text(
-                        "Перейти",
+                        AppLocalizations.instance.translate("goTo"),
                         style: TextStyle(color: primary50),
                       ),
                     ),

@@ -2,12 +2,11 @@ import 'dart:async';
 
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/calendar.dart';
-import 'package:chance_app/ux/hive_crum.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository/medicine_repository.dart';
 import 'package:chance_app/ux/repository/tasks_repository.dart';
-import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -162,7 +161,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     DateTime selectedDate = DateTime(dates[index]["year"],
         dates[index]["month"], int.parse(dates[index]["number"]));
     List<TaskModel> myTasks = List.from(
-        HiveCRUM().myTasks.where((element) => element.isRemoved == false));
+        HiveCRUD().myTasks.where((element) => element.isRemoved == false));
 
     myTasks = myTasks
         .where((element) => DateUtils.isSameDay(element.date, selectedDate))
@@ -173,7 +172,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         week: week,
         days: dates,
         selectedDate: selectedDate,
-        myMedicines: List.from(HiveCRUM().myMedicines.where((element) =>
+        myMedicines: List.from(HiveCRUD().myMedicines.where((element) =>
             element.hasRemindersAt(now) && element.isRemoved == false))));
   }
 
@@ -204,7 +203,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     int daysInMonth = DateTime(year, month + 1, 0).day;
     DateTime? selectedDate = state.selectedDate;
     List<TaskModel> myTasks = List.from(
-        HiveCRUM().myTasks.where((element) => element.isRemoved == false));
+        HiveCRUD().myTasks.where((element) => element.isRemoved == false));
 
     for (int i = 1; i <= daysInMonth; i++) {
       DateTime date = DateTime(year, month, i);
@@ -296,7 +295,8 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
   FutureOr<void> _onLoadTasksForToday(
       LoadTasksForToday event, Emitter<RemindersState> emit) {
     DateTime now = event.datetime;
-    List<TaskModel> myTasks = List.from(HiveCRUM().myTasks
+    List<TaskModel> myTasks = List.from(HiveCRUD()
+        .myTasks
         .where((element) =>
             DateUtils.isSameDay(element.date, now) &&
             element.isRemoved == false)

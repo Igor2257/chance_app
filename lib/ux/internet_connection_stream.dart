@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:chance_app/ux/repository/tasks_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 

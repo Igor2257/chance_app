@@ -54,14 +54,14 @@ _$AddressComponentImpl _$$AddressComponentImplFromJson(
         Map<String, dynamic> json) =>
     _$AddressComponentImpl(
       types: (json['types'] as List<dynamic>).map((e) => e as String).toList(),
-      longName: json['longName'] as String,
-      shortName: json['shortName'] as String,
+      longName: json['long_name'] as String,
+      shortName: json['short_name'] as String,
     );
 
 Map<String, dynamic> _$$AddressComponentImplToJson(
         _$AddressComponentImpl instance) =>
     <String, dynamic>{
       'types': instance.types,
-      'longName': instance.longName,
-      'shortName': instance.shortName,
+      'long_name': instance.longName,
+      'short_name': instance.shortName,
     };

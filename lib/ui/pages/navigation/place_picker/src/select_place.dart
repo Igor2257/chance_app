@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/navigation/navigation_page/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/controllers/autocomplete_search_controller.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/providers/place_provider.dart';
@@ -11,7 +12,7 @@ import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_resu
     as mypick;
 import 'package:chance_app/ui/pages/navigation/place_picker/src/place_picker.dart';
 import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
-import 'package:chance_app/ux/hive_crum.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/position_controller.dart';
 import 'package:flutter/material.dart';
@@ -43,11 +44,11 @@ class _SelectPlaceState extends State<SelectPlace> {
   SearchBarController searchBarController = SearchBarController();
   List<Map<String, dynamic>> predictionForList = [];
   List<Prediction> predictionForTap = [];
-  List<mypick.PickResult> savedAddresses = HiveCRUM()
+  List<mypick.PickResult> savedAddresses = HiveCRUD()
       .savedAddresses
       .where((element) => element.isRecentlySearched == true)
       .toList();
-  MeUser meUser = HiveCRUM().user!;
+  MeUser meUser = HiveCRUD().user!;
 
   @override
   void initState() {
@@ -137,10 +138,13 @@ class _SelectPlaceState extends State<SelectPlace> {
                                         child: AutoCompleteSearch(
                                           appBarKey: appBarKey,
                                           searchBarController:
-                                              searchBarController,
+                                          searchBarController,
                                           sessionToken: provider!.sessionToken,
-                                          hintText: "Пошук",
-                                          searchingText: "Пошук...",
+                                          hintText: AppLocalizations.instance
+                                              .translate("search"),
+                                          searchingText:
+                                          "${AppLocalizations.instance
+                                              .translate("search")}...",
                                           onPicked: (prediction) {
                                             //if (mounted) {
                                             //  _pickPrediction(prediction);
@@ -148,13 +152,14 @@ class _SelectPlaceState extends State<SelectPlace> {
                                           },
                                           prediction: (predictions) {
                                             predictionForList = predictions
-                                                .map((e) => {
-                                                      "id": e.id,
-                                                      "description":
-                                                          e.description,
-                                                      "distanceMeters":
-                                                          e.distanceMeters,
-                                                    })
+                                                .map((e) =>
+                                            {
+                                              "id": e.id,
+                                              "description":
+                                              e.description,
+                                              "distanceMeters":
+                                              e.distanceMeters,
+                                            })
                                                 .toList();
                                             predictionForTap = predictions;
                                             setState(() {});
@@ -190,18 +195,23 @@ class _SelectPlaceState extends State<SelectPlace> {
                                             break;
                                           case PickResultFor.second:
                                             BlocProvider.of<NavigationBloc>(
-                                                    context)
+                                                context)
                                                 .add(UpdateSecondPickResult(
-                                                secondPickResult: mypick.PickResult(
-                                                        id: "me",
-                                                        formattedAddress: "Я",
-                                                        geometry: mygeometry.Geometry(
-                                                            location: mylocation
-                                                                .Location(
-                                                                    lat: position
-                                                                        .latitude,
-                                                                    lng: position
-                                                                        .longitude)))));
+                                                secondPickResult: mypick
+                                                    .PickResult(
+                                                    id: "me",
+                                                    formattedAddress:
+                                                    AppLocalizations
+                                                        .instance
+                                                        .translate("i"),
+                                                    geometry: mygeometry
+                                                        .Geometry(
+                                                        location: mylocation
+                                                            .Location(
+                                                            lat: position
+                                                                .latitude,
+                                                            lng: position
+                                                                .longitude)))));
                                         }
 
                                         Navigator.of(context).pop();
@@ -221,7 +231,8 @@ class _SelectPlaceState extends State<SelectPlace> {
                                             width: 10,
                                           ),
                                           Text(
-                                            "Використовувати моє місцезнаходження",
+                                            AppLocalizations.instance
+                                                .translate("useMyLocation"),
                                             style: TextStyle(
                                                 fontSize: 14,
                                                 color: primaryText),
@@ -257,17 +268,19 @@ class _SelectPlaceState extends State<SelectPlace> {
                                                     break;
                                                   case PickResultFor.second:
                                                     BlocProvider.of<
-                                                                NavigationBloc>(
-                                                            context)
-                                                        .add(UpdateSecondPickResult(
+                                                        NavigationBloc>(
+                                                        context)
+                                                        .add(
+                                                        UpdateSecondPickResult(
                                                             secondPickResult:
-                                                                result));
+                                                            result));
                                                     break;
                                                 }
-                                                await HiveCRUM().addSavedAddresses(result)
+                                                await HiveCRUD()
+                                                    .addSavedAddresses(result)
                                                     .whenComplete(() =>
-                                                        Navigator.of(context)
-                                                            .pop());
+                                                    Navigator.of(context)
+                                                        .pop());
                                               },
                                               initialPosition: LatLng(
                                                   position.latitude,
@@ -296,7 +309,8 @@ class _SelectPlaceState extends State<SelectPlace> {
                                             width: 10,
                                           ),
                                           Text(
-                                            "Обрати на мапі",
+                                            AppLocalizations.instance
+                                                .translate("selectOnTheMap"),
                                             style: TextStyle(
                                                 fontSize: 14,
                                                 color: primaryText),
@@ -324,9 +338,11 @@ class _SelectPlaceState extends State<SelectPlace> {
                                 children: [
                                   Text(
                                     predictionForTap.isNotEmpty &&
-                                            predictionForList.isNotEmpty
-                                        ? "Схожі на ваш запит"
-                                        : "Недавні",
+                                        predictionForList.isNotEmpty
+                                        ? AppLocalizations.instance
+                                        .translate("similarToYourQuery")
+                                        : AppLocalizations.instance
+                                        .translate("recent"),
                                     style: TextStyle(
                                         fontSize: 18,
                                         color: primaryText,
@@ -465,7 +481,7 @@ class _SelectPlaceState extends State<SelectPlace> {
           break;
       }
       selectedPlace = selectedPlace.copyWith(isRecentlySearched: true);
-      await HiveCRUM().addSavedAddresses(selectedPlace);
+      await HiveCRUD().addSavedAddresses(selectedPlace);
     }
     setState(() {
 

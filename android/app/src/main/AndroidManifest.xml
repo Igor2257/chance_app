@@ -90,7 +90,7 @@
         </receiver>
 
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDmTTd3yiTiyosQb_CYX2Ync20v-xiynYg"/>
+            android:value="AIzaSyCGSSsubNAFEwc0A3A9fKoGhhttog_LDzY"/>
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-8751007823546645~8164548943"/>

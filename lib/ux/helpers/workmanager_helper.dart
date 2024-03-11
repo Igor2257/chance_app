@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:chance_app/main.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/enum/instruction.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:flutter/material.dart';
@@ -117,10 +118,11 @@ Future<void> _callbackDispatcher() async {
           for (final medicine in medicineBox!.values) {
             if (!medicine.hasRemindersAt(today)) continue;
 
-            const androidNotificationsChannel = AndroidNotificationChannel(
+            final androidNotificationsChannel = AndroidNotificationChannel(
               "myMedicines",
-              "Прийом ліків",
-              description: "Нагадування про прийом ліків",
+              AppLocalizations.instance.translate("takingMedication"),
+              description:
+                  AppLocalizations.instance.translate("medicationReminder"),
               importance: Importance.max,
               playSound: true,
               enableVibration: true,
@@ -138,7 +140,7 @@ Future<void> _callbackDispatcher() async {
               final reminderText = [
                 count,
                 medicine.type.toDoseString(count).toLowerCase(),
-                "сьогодні о",
+                AppLocalizations.instance.translate("todayAt").toLowerCase(),
                 timeText,
               ].join(' ');
 
@@ -157,7 +159,10 @@ Future<void> _callbackDispatcher() async {
                 (Platform.isIOS && !shouldShowInstruction)
                     ? null
                     : [
-                        if (Platform.isIOS) "Прийняти" else reminderText,
+                        if (Platform.isIOS)
+                          AppLocalizations.instance.translate("accept")
+                        else
+                          reminderText,
                         if (shouldShowInstruction)
                           instruction.toLocalizedString().toLowerCase(),
                       ].join(' '),

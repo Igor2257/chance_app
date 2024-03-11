@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/date_element.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:flutter/material.dart';
@@ -79,88 +80,102 @@ class CalendarView extends StatelessWidget {
                       children: [
                         Container(
                           alignment: Alignment.bottomCenter,
-                          width: size.width / 8,
-                          height: 26,
-                          child: Text(
-                            "ПН",
-                            style: TextStyle(
-                                color: beige0,
-                                fontSize: 16,
-                                letterSpacing: 0.15),
+                            width: size.width / 8,
+                            height: 26,
+                            child: Text(
+                              AppLocalizations.instance
+                                  .translate("mon")
+                                  .toUpperCase(),
+                              style: TextStyle(
+                                  color: beige0,
+                                  fontSize: 16,
+                                  letterSpacing: 0.15),
+                            ),
                           ),
-                        ),
                         Container(
                           alignment: Alignment.bottomCenter,
-                          width: size.width / 8,
-                          height: 26,
-                          child: Text(
-                            "ВТ",
-                            style: TextStyle(
-                                color: beige0,
-                                fontSize: 16,
-                                letterSpacing: 0.15),
+                            width: size.width / 8,
+                            height: 26,
+                            child: Text(
+                              AppLocalizations.instance
+                                  .translate("tue")
+                                  .toUpperCase(),
+                              style: TextStyle(
+                                  color: beige0,
+                                  fontSize: 16,
+                                  letterSpacing: 0.15),
+                            ),
                           ),
-                        ),
                         Container(
                           alignment: Alignment.bottomCenter,
-                          width: size.width / 8,
-                          height: 26,
-                          child: Text(
-                            "СР",
-                            style: TextStyle(
-                                color: beige0,
-                                fontSize: 16,
-                                letterSpacing: 0.15),
+                            width: size.width / 8,
+                            height: 26,
+                            child: Text(
+                              AppLocalizations.instance
+                                  .translate("wed")
+                                  .toUpperCase(),
+                              style: TextStyle(
+                                  color: beige0,
+                                  fontSize: 16,
+                                  letterSpacing: 0.15),
+                            ),
                           ),
-                        ),
                         Container(
                           alignment: Alignment.bottomCenter,
-                          width: size.width / 8,
-                          height: 26,
-                          child: Text(
-                            "ЧТ",
-                            style: TextStyle(
-                                color: beige0,
-                                fontSize: 16,
-                                letterSpacing: 0.15),
+                            width: size.width / 8,
+                            height: 26,
+                            child: Text(
+                              AppLocalizations.instance
+                                  .translate("thu")
+                                  .toUpperCase(),
+                              style: TextStyle(
+                                  color: beige0,
+                                  fontSize: 16,
+                                  letterSpacing: 0.15),
+                            ),
                           ),
-                        ),
                         Container(
                           alignment: Alignment.bottomCenter,
-                          width: size.width / 8,
-                          height: 26,
-                          child: Text(
-                            "ПТ",
-                            style: TextStyle(
-                                color: beige0,
-                                fontSize: 16,
-                                letterSpacing: 0.15),
+                            width: size.width / 8,
+                            height: 26,
+                            child: Text(
+                              AppLocalizations.instance
+                                  .translate("fri")
+                                  .toUpperCase(),
+                              style: TextStyle(
+                                  color: beige0,
+                                  fontSize: 16,
+                                  letterSpacing: 0.15),
+                            ),
                           ),
-                        ),
                         Container(
                           alignment: Alignment.bottomCenter,
-                          width: size.width / 8,
-                          height: 26,
-                          child: Text(
-                            "СБ",
-                            style: TextStyle(
-                                color: beige0,
-                                fontSize: 16,
-                                letterSpacing: 0.15),
+                            width: size.width / 8,
+                            height: 26,
+                            child: Text(
+                              AppLocalizations.instance
+                                  .translate("sat")
+                                  .toUpperCase(),
+                              style: TextStyle(
+                                  color: beige0,
+                                  fontSize: 16,
+                                  letterSpacing: 0.15),
+                            ),
                           ),
-                        ),
                         Container(
                           alignment: Alignment.bottomCenter,
-                          width: size.width / 8,
-                          height: 26,
-                          child: Text(
-                            "НД",
-                            style: TextStyle(
-                                color: beige0,
-                                fontSize: 16,
-                                letterSpacing: 0.15),
+                            width: size.width / 8,
+                            height: 26,
+                            child: Text(
+                              AppLocalizations.instance
+                                  .translate("sun")
+                                  .toUpperCase(),
+                              style: TextStyle(
+                                  color: beige0,
+                                  fontSize: 16,
+                                  letterSpacing: 0.15),
+                            ),
                           ),
-                        ),
                       ],
                     ),
                     Divider(
@@ -249,23 +264,21 @@ class CalendarView extends StatelessWidget {
   }
 
   int getCount(String weekday) {
-    switch (weekday) {
-      case 'ПН':
-        return 0;
-      case 'ВТ':
-        return 1;
-      case 'СР':
-        return 2;
-      case 'ЧТ':
-        return 3;
-      case 'ПТ':
-        return 4;
-      case 'СБ':
-        return 5;
-      case 'НД':
-        return 6;
-      default:
-        return 0;
+    if (weekday == AppLocalizations.instance.translate("mon")) {
+      return 0;
+    } else if (weekday == AppLocalizations.instance.translate("tue")) {
+      return 1;
+    } else if (weekday == AppLocalizations.instance.translate("wed")) {
+      return 2;
+    } else if (weekday == AppLocalizations.instance.translate("thu")) {
+      return 3;
+    } else if (weekday == AppLocalizations.instance.translate("fri")) {
+      return 4;
+    } else if (weekday == AppLocalizations.instance.translate("sat")) {
+      return 5;
+    } else if (weekday == AppLocalizations.instance.translate("sun")) {
+      return 6;
     }
+    return 0;
   }
 }

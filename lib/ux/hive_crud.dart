@@ -8,7 +8,7 @@ import 'package:chance_app/ux/model/product_model.dart';
 import 'package:chance_app/ux/model/settings.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 
-class HiveCRUM {
+class HiveCRUD {
   List<TaskModel> get myTasks =>
       tasksBox?.values.cast<TaskModel>().toList() ?? List.empty();
 
@@ -82,7 +82,7 @@ class HiveCRUM {
       {String? id, MedicineModel? medicineModel}) async {
     if (id != null) {
       MedicineModel medicineModel =
-      HiveCRUM().myMedicines.firstWhere((element) => element.id == id);
+      myMedicines.firstWhere((element) => element.id == id);
       medicineModel = medicineModel.copyWith(isSentToDB: isSentToDB);
       await medicineBox!.put(medicineModel.id, medicineModel);
     }

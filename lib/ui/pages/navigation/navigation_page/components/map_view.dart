@@ -1,11 +1,12 @@
 import 'package:bottom_picker/resources/context_extension.dart';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/navigation/navigation_page/components/build_route_bottom_sheet.dart';
 import 'package:chance_app/ui/pages/navigation/navigation_page/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/navigation_page/components/saved_addresses_component.dart';
 import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
-import 'package:chance_app/ux/hive_crum.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/position_controller.dart';
 import 'package:flutter/cupertino.dart';
@@ -56,11 +57,13 @@ class _MapViewState extends State<MapView>
                     onPopInvoked: (value) {},
                     child: AlertDialog(
                       title: Text(
-                        "Дозвольте застосунку використовувати розташування",
+                        AppLocalizations.instance
+                            .translate("allowTheAppToUseTheLocation"),
                         style: TextStyle(fontSize: 24, color: primaryText),
                       ),
                       content: Text(
-                        "Щоб програма працювала корректно, вам потрібно дозволити використовувати цей дозвіл",
+                        AppLocalizations.instance.translate(
+                            "forTheAppToWorkCorrectlyYouNeedToAllowThisPermissionToBeUsed"),
                         style: TextStyle(fontSize: 16, color: primaryText),
                       ),
                       actions: [
@@ -76,7 +79,7 @@ class _MapViewState extends State<MapView>
                           },
                           color: primary1000,
                           child: Text(
-                            "Перейти",
+                            AppLocalizations.instance.translate("goTo"),
                             style: TextStyle(color: primary50),
                           ),
                         ),
@@ -102,7 +105,7 @@ class _MapViewState extends State<MapView>
     super.dispose();
   }
 
-  MeUser meUser = HiveCRUM().user!;
+  MeUser meUser = HiveCRUD().user!;
 
   @override
   void initState() {
@@ -270,6 +273,14 @@ class _MapViewState extends State<MapView>
                                 width: 70,
                                 height: 70,
                                 decoration: BoxDecoration(
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        blurRadius: 6,
+                                        color: Colors.black26,
+                                        offset: Offset(0, 0),
+                                        spreadRadius: 2,
+                                        blurStyle: BlurStyle.normal)
+                                  ],
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(90)),
                                   color: beigeTransparent,
@@ -309,6 +320,14 @@ class _MapViewState extends State<MapView>
                                 width: 70,
                                 height: 70,
                                 decoration: BoxDecoration(
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        blurRadius: 6,
+                                        color: Colors.black26,
+                                        offset: Offset(0, 0),
+                                        spreadRadius: 2,
+                                        blurStyle: BlurStyle.normal)
+                                  ],
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(90)),
                                   color: beigeTransparent,
@@ -340,7 +359,8 @@ class _MapViewState extends State<MapView>
                             GestureDetector(
                               onTap: () async {
                                 meUser = meUser.copyWith(mapType: 0);
-                                await HiveCRUM().updateUser(meUser)
+                                await HiveCRUD()
+                                    .updateUser(meUser)
                                     .whenComplete(() => setState(() {}));
                               },
                               onTapDown: (TapDownDetails details) {
@@ -359,6 +379,14 @@ class _MapViewState extends State<MapView>
                                   width: size.width / 10,
                                   height: size.width / 10,
                                   decoration: BoxDecoration(
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          blurRadius: 6,
+                                          color: Colors.black26,
+                                          offset: Offset(0, 0),
+                                          spreadRadius: 2,
+                                          blurStyle: BlurStyle.normal)
+                                    ],
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(90)),
                                     color: meUser.mapType == 0
@@ -377,7 +405,8 @@ class _MapViewState extends State<MapView>
                             GestureDetector(
                               onTap: () async {
                                 meUser = meUser.copyWith(mapType: 1);
-                                await HiveCRUM().updateUser(meUser)
+                                await HiveCRUD()
+                                    .updateUser(meUser)
                                     .whenComplete(() => setState(() {}));
                               },
                               onTapDown: (TapDownDetails details) {
@@ -396,6 +425,14 @@ class _MapViewState extends State<MapView>
                                   width: size.width / 10,
                                   height: size.width / 10,
                                   decoration: BoxDecoration(
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          blurRadius: 6,
+                                          color: Colors.black26,
+                                          offset: Offset(0, 0),
+                                          spreadRadius: 2,
+                                          blurStyle: BlurStyle.normal)
+                                    ],
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(90)),
                                     color: meUser.mapType == 1
@@ -412,7 +449,8 @@ class _MapViewState extends State<MapView>
                             GestureDetector(
                               onTap: () async {
                                 meUser = meUser.copyWith(mapType: 2);
-                                await HiveCRUM().updateUser(meUser)
+                                await HiveCRUD()
+                                    .updateUser(meUser)
                                     .whenComplete(() => setState(() {}));
                               },
                               onTapDown: (TapDownDetails details) {
@@ -431,6 +469,14 @@ class _MapViewState extends State<MapView>
                                   width: size.width / 10,
                                   height: size.width / 10,
                                   decoration: BoxDecoration(
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          blurRadius: 6,
+                                          color: Colors.black26,
+                                          offset: Offset(0, 0),
+                                          spreadRadius: 2,
+                                          blurStyle: BlurStyle.normal)
+                                    ],
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(90)),
                                     color: meUser.mapType == 2

@@ -12,7 +12,7 @@ class LanguageCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4),
+        margin: const EdgeInsets.symmetric(vertical: 4),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
               color: primary50,

@@ -188,25 +188,21 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
     this.provider.searchTerm = controller.text;
 
     PlaceProvider provider = PlaceProvider.of(context, listen: false);
-
     if (controller.text.isEmpty) {
       provider.debounceTimer?.cancel();
       _searchPlace(controller.text);
       return;
     }
-
     if (controller.text.trim() == this.provider.prevSearchTerm.trim()) {
       provider.debounceTimer?.cancel();
       return;
     }
-
     if (!(widget.autocompleteOnTrailingWhitespace != null &&
             widget.autocompleteOnTrailingWhitespace!) &&
         controller.text.substring(controller.text.length - 1) == " ") {
       provider.debounceTimer?.cancel();
       return;
     }
-
     if (provider.debounceTimer?.isActive ?? false) {
       provider.debounceTimer!.cancel();
     }
@@ -227,9 +223,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
     provider.prevSearchTerm = searchTerm;
 
     _clearOverlay();
-
     if (searchTerm.isEmpty) return;
-
     _performAutoCompleteSearch(searchTerm);
   }
 
@@ -246,19 +240,18 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
     PlaceProvider provider = PlaceProvider.of(context, listen: false);
 
     if (searchTerm.isNotEmpty) {
-      final PlacesAutocompleteResponse response =
-      await provider.places.autocomplete(
-        searchTerm,
-        sessionToken: widget.sessionToken,
-        location: provider.currentPosition == null
-            ? null
-            : Location(
-            lat: provider.currentPosition!.latitude,
-            lng: provider.currentPosition!.longitude),
-        radius: widget.autocompleteRadius,
-        region: "UA",
-      );
-
+      final PlacesAutocompleteResponse response = await provider.places
+          .autocomplete(
+            searchTerm,
+            sessionToken: widget.sessionToken,
+            location: provider.currentPosition == null
+                ? null
+                : Location(
+                    lat: provider.currentPosition!.latitude,
+                    lng: provider.currentPosition!.longitude),
+            radius: widget.autocompleteRadius,
+            region: "UA",
+          );
       if (response.errorMessage?.isNotEmpty == true ||
           response.status == "REQUEST_DENIED") {
         if (widget.onSearchFailed != null) {

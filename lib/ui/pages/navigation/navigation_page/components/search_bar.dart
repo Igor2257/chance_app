@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/navigation/navigation_page/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/controllers/autocomplete_search_controller.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/providers/place_provider.dart';
@@ -7,7 +8,7 @@ import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_resu
 import 'package:chance_app/ui/pages/navigation/place_picker/src/place_picker.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/select_place.dart';
 import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
-import 'package:chance_app/ux/hive_crum.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,17 +21,33 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 enum MenuItems {
-  add(id: 0, name: "Додати підопічного"),
-  checkInvitation(id: 1, name: "Запрошення");
+  add,
+  checkInvitation,
+  myWards,
+}
 
-  final int id;
-  final String name;
-
-  factory MenuItems.fromId(int id) {
-    return values.firstWhere((e) => e.id == id);
+extension MenuItemDetails on MenuItems {
+  int get id {
+    switch (this) {
+      case MenuItems.add:
+        return 0;
+      case MenuItems.checkInvitation:
+        return 1;
+      case MenuItems.myWards:
+        return 2;
+    }
   }
 
-  const MenuItems({required this.id, required this.name});
+  String get name {
+    switch (this) {
+      case MenuItems.add:
+        return AppLocalizations.instance.translate("addWard");
+      case MenuItems.checkInvitation:
+        return AppLocalizations.instance.translate("invitation");
+      case MenuItems.myWards:
+        return AppLocalizations.instance.translate("myWards");
+    }
+  }
 }
 
 class CustomSearchBar extends StatefulWidget {
@@ -48,13 +65,13 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
   late final Future<PlaceProvider> _futureProvider;
   PlaceProvider? provider;
   SearchBarController searchBarController = SearchBarController();
-  MeUser meUser = HiveCRUM().user!;
+  MeUser meUser = HiveCRUD().user!;
   List<Map<String, dynamic>> predictionsForMapView = [];
   List<Prediction> predictionsForTapMapView = [];
   bool isPredictionsShow = false;
   TextEditingController textEditingController = TextEditingController();
   FocusNode focusNode = FocusNode();
-  List<PickResult> savedAddresses = HiveCRUM()
+  List<PickResult> savedAddresses = HiveCRUD()
       .savedAddresses
       .where((element) => element.isRecentlySearched == true)
       .toList();
@@ -130,8 +147,10 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                 appBarKey: widget.appBarKey,
                                 searchBarController: searchBarController,
                                 sessionToken: provider!.sessionToken,
-                                hintText: "Пошук",
-                                searchingText: "Пошук...",
+                                hintText: AppLocalizations.instance
+                                    .translate("search"),
+                                searchingText:
+                                    "${AppLocalizations.instance.translate("search")}...",
                                 focusNode: focusNode,
                                 onPicked: (prediction) {
                                   //if (mounted) {
@@ -158,6 +177,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                           })
                                       .toList();
                                   predictionsForTapMapView = predictions;
+                                  print(predictionsForTapMapView);
                                   setState(() {});
                                 },
                               ),
@@ -175,56 +195,60 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                       await Navigator.of(context)
                                           .pushNamed("/add_ward")
                                           .then((result) {
-                                        if (result is bool && result) {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  title: Column(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.done,
-                                                        color: primaryText,
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 24,
-                                                      ),
-                                                      Text(
-                                                        "Код надіслано",
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                            color: primaryText,
-                                                            fontSize: 20),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  content: const Text(
-                                                    "Встановіть застосунок Chance app  на телефоні підопічного та введіть в меню надісланий код",
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                  actions: [
-                                                    TextButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                        child: Text(
-                                                          "OK",
-                                                          style: TextStyle(
-                                                              fontSize: 16,
-                                                              color:
-                                                                  primary700),
-                                                        )),
-                                                  ],
-                                                );
-                                              });
-                                        }
+                                        //if (result is bool && result) {
+                                        //  showDialog(
+                                        //      context: context,
+                                        //      builder: (context) {
+                                        //        return AlertDialog(
+                                        //          title: Column(
+                                        //            children: [
+                                        //              Icon(
+                                        //                Icons.done,
+                                        //                color: primaryText,
+                                        //              ),
+                                        //              const SizedBox(
+                                        //                height: 24,
+                                        //              ),
+                                        //              Text(
+                                        //                AppLocalizations.instance.translate("search")"Код надіслано",
+                                        //                textAlign:
+                                        //                    TextAlign.center,
+                                        //                style: TextStyle(
+                                        //                    color: primaryText,
+                                        //                    fontSize: 20),
+                                        //              ),
+                                        //            ],
+                                        //          ),
+                                        //          content: const Text(
+                                        //            AppLocalizations.instance.translate("search")"Встановіть застосунок Chance app на телефоні підопічного та введіть в меню надісланий код",
+                                        //            textAlign: TextAlign.center,
+                                        //          ),
+                                        //          actions: [
+                                        //            TextButton(
+                                        //                onPressed: () {
+                                        //                  Navigator.of(context)
+                                        //                      .pop();
+                                        //                },
+                                        //                child: Text(
+                                        //                  "OK",
+                                        //                  style: TextStyle(
+                                        //                      fontSize: 16,
+                                        //                      color:
+                                        //                          primary700),
+                                        //                )),
+                                        //          ],
+                                        //        );
+                                        //      });
+                                        //}
                                       });
                                       break;
                                     case MenuItems.checkInvitation:
                                       Navigator.of(context)
                                           .pushNamed("/check_my_invitation");
+                                      break;
+                                    case MenuItems.myWards:
+                                      await Navigator.of(context)
+                                          .pushNamed("/my_wards");
                                       break;
                                   }
                                 },
@@ -309,7 +333,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                                             18));
                                                   }));
 
-                                          await HiveCRUM()
+                                          await HiveCRUD()
                                               .addSavedAddresses(value)
                                               .whenComplete(() {
                                             mapController!.animateCamera(

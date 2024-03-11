@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ux/hive_crum.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -13,17 +13,17 @@ class MedicineRepository {
     List<MedicineModel> medicines = [];
 
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      medicines = List.from(HiveCRUM()
+      medicines = List.from(HiveCRUD()
           .myMedicines
           .where((element) => element.isRemoved == false));
     } else {
       if ((forcePush != null && forcePush) || !checkIsAnyMedicinesNotSent()) {
         await loadMedicines().then((value) async {
-          await HiveCRUM().clearMedicines().whenComplete(() {
+          await HiveCRUD().clearMedicines().whenComplete(() {
             medicines = value;
 
             for (var medicine in medicines) {
-              HiveCRUM().addMedicine(medicine);
+              HiveCRUD().addMedicine(medicine);
             }
           });
         });
@@ -77,7 +77,7 @@ class MedicineRepository {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       error = "Немає підключення до інтернету";
-      await HiveCRUM().addMedicine(medicineModel);
+      await HiveCRUD().addMedicine(medicineModel);
     } else {
       try {
         var url = Uri.parse('$apiUrl/medicine');
@@ -101,10 +101,10 @@ class MedicineRepository {
                 .replaceAll("[", "")
                 .replaceAll("]", "");
           } else {
-            await await HiveCRUM()
+            await await HiveCRUD()
                 .addMedicine(medicineModel)
                 .whenComplete(() async {
-              await HiveCRUM()
+              await HiveCRUD()
                   .setIsSentInLocalMedicine(true, medicineModel: medicineModel);
             });
           }
@@ -126,7 +126,7 @@ class MedicineRepository {
       //    msg: "Немає підключення до інтернету",
       //    toastLength: Toast.LENGTH_LONG);
       //error = "Немає підключення до інтернету";
-      await HiveCRUM().updateLocalMedicine(medicineModel);
+      await HiveCRUD().updateLocalMedicine(medicineModel);
     } else {
       try {
         var url = Uri.parse('$apiUrl/medicine/${medicineModel.id}');
@@ -149,7 +149,7 @@ class MedicineRepository {
                 .replaceAll("]", "");
             Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
           } else {
-            await HiveCRUM()
+            await HiveCRUD()
                 .setIsSentInLocalMedicine(medicineModel: medicineModel, true);
           }
         });
@@ -168,7 +168,7 @@ class MedicineRepository {
       //    msg: "Немає підключення до інтернету",
       //    toastLength: Toast.LENGTH_LONG);
       //error = "Немає підключення до інтернету";
-      HiveCRUM().removeLocalMedicine(medicineId);
+      HiveCRUD().removeLocalMedicine(medicineId);
     } else {
       try {
         var url = Uri.parse('$apiUrl/medicine/$medicineId');
@@ -194,7 +194,7 @@ class MedicineRepository {
   }
 
   bool checkIsAnyMedicinesNotSent() {
-    List<MedicineModel> myTasks = List.from(HiveCRUM().myMedicines);
+    List<MedicineModel> myTasks = List.from(HiveCRUD().myMedicines);
     return myTasks.isNotEmpty
         ? myTasks.any((element) => element.isSentToDB == false)
         : false;

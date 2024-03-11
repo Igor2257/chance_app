@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/select_place.dart';
 import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +60,7 @@ class _BuildRouteBottomSheetState extends State<BuildRouteBottomSheet> {
                     Expanded(
                         child: Text(
                       state.firstPickResult?.formattedAddress ??
-                          "Додати пункт відправлення",
+                          AppLocalizations.instance.translate("addDeparturePoint"),
                       style: TextStyle(color: primaryText, fontSize: 16),
                       maxLines: 5,
                     )),
@@ -98,7 +99,7 @@ class _BuildRouteBottomSheetState extends State<BuildRouteBottomSheet> {
                     Expanded(
                         child: Text(
                       state.secondPickResult?.formattedAddress ??
-                          "Додати пункт відправлення",
+                          AppLocalizations.instance.translate("addDeparturePoint"),
                       style: TextStyle(color: primaryText, fontSize: 16),
                       maxLines: 5,
                     )),
@@ -115,7 +116,7 @@ class _BuildRouteBottomSheetState extends State<BuildRouteBottomSheet> {
                     Navigator.of(context).pop();
                   } else {
                     Fluttertoast.showToast(
-                        msg: "Оберіть іншу кінцеву точку",
+                        msg: AppLocalizations.instance.translate("chooseDifferentEndpoint"),
                         toastLength: Toast.LENGTH_LONG);
                   }
                 },
@@ -124,7 +125,7 @@ class _BuildRouteBottomSheetState extends State<BuildRouteBottomSheet> {
                     ? primary1000
                     : darkNeutral400,
                 child: Text(
-                  "Побудувати маршрут",
+                  AppLocalizations.instance.translate("buildRoute"),
                   style: TextStyle(color: primary50, fontSize: 16),
                 )),
           ],
