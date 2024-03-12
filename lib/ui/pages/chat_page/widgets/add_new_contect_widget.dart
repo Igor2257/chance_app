@@ -7,7 +7,7 @@ class AddNewContactWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: _onAddNewContactBtnTap,
+      onTap: () => _onAddNewContactBtnTap(context),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -33,5 +33,6 @@ class AddNewContactWidget extends StatelessWidget {
     );
   }
 
-  void _onAddNewContactBtnTap() {}
+  void _onAddNewContactBtnTap(BuildContext context) =>
+      Navigator.of(context).pushNamed('/add_contact');
 }

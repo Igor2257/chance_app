@@ -50,7 +50,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
             centerTitle: true,
             actions: [
               TextButton(
-                onPressed: isEmpty ? null : () {},
+                onPressed: isEmpty ? null : () => _openCreateGroupPage(context),
                 child: Text(
                   'Далі',
                   style: TextStyle(
@@ -183,13 +183,17 @@ class _NewGroupPageState extends State<NewGroupPage> {
     }
   }
 
-  void _onSearchTap(BuildContext context) {
-    Navigator.of(context).pushNamed(
+  Future<void> _onSearchTap(BuildContext context) async {
+    SelectCubit cubit = context.read<SelectCubit>();
+    final result = await Navigator.of(context).pushNamed(
       '/search_group',
-      arguments: SearchGroupPageParameters(
-        _testUsers,
-        context.read<SelectCubit>(),
-      ),
-    );
+      arguments: SearchGroupPageParameters(_testUsers, cubit.state),
+    ) as List<ChatUserModel>?;
+    if (result != null) {
+      cubit.addAll(result);
+    }
   }
+
+  void _openCreateGroupPage(BuildContext context) => Navigator.of(context)
+      .pushNamed('/create_group', arguments: context.read<SelectCubit>().state);
 }

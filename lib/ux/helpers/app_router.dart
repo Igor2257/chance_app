@@ -1,6 +1,7 @@
 import 'package:chance_app/ui/pages/chat_page/blocs/search_cubit/search_cubit.dart';
 import 'package:chance_app/ui/pages/chat_page/blocs/select_cubit/select_cubit.dart';
 import 'package:chance_app/ui/pages/chat_page/chat_page.dart';
+import 'package:chance_app/ui/pages/chat_page/create_group_page.dart';
 import 'package:chance_app/ui/pages/main_page/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -210,10 +211,19 @@ class AppRouter {
           settings: settings,
           builder: (_) => MultiBlocProvider(
             providers: [
-              BlocProvider(create: (_) => SearchCubit(args.list)),
-              BlocProvider.value(value: params.cubit),
+              BlocProvider(create: (_) => SearchCubit(params.allUsers)),
+              BlocProvider(
+                create: (_) => SelectCubit(list: params.selectedUsers),
+              ),
             ],
-            child: SearchGroupPage(list: args.list),
+            child: SearchGroupPage(list: params.allUsers),
+          ),
+        );
+      case "/create_group":
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => CreateGroupPage(
+            selectedUsers: args as List<ChatUserModel>,
           ),
         );
       default:

@@ -1,16 +1,18 @@
+import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/chat_page/blocs/search_cubit/search_cubit.dart';
 import 'package:chance_app/ui/pages/chat_page/blocs/select_cubit/select_cubit.dart';
+import 'package:chance_app/ui/pages/chat_page/widgets/chat_search_field.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/user_checkbox_tile.dart';
 import 'package:chance_app/ux/model/chat_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchGroupPageParameters {
-  const SearchGroupPageParameters(this.list, this.cubit);
+  const SearchGroupPageParameters(this.allUsers, this.selectedUsers);
 
-  final List<ChatUserModel> list;
-  final SelectCubit cubit;
+  final List<ChatUserModel> allUsers;
+  final List<ChatUserModel> selectedUsers;
 }
 
 class SearchGroupPage extends StatefulWidget {
@@ -23,8 +25,6 @@ class SearchGroupPage extends StatefulWidget {
 }
 
 class _SearchGroupPageState extends State<SearchGroupPage> {
-  final TextEditingController _controller = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -34,41 +34,8 @@ class _SearchGroupPageState extends State<SearchGroupPage> {
           automaticallyImplyLeading: false,
           title: Row(
             children: [
-              Flexible(
-                child: TextField(
-                  controller: _controller,
-                  autofocus: true,
-                  keyboardType: TextInputType.name,
-                  textInputAction: TextInputAction.search,
-                  textCapitalization: TextCapitalization.words,
-                  onChanged: context.read<SearchCubit>().search,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16,
-                    height: 24 / 16,
-                    color: darkNeutral800,
-                    letterSpacing: 0.5,
-                  ),
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.symmetric(vertical: 4.0),
-                    isDense: true,
-                    suffixIconConstraints: const BoxConstraints(
-                      maxWidth: 18.0,
-                      maxHeight: 18.0,
-                    ),
-                    suffixIcon: IconButton(
-                      iconSize: 18,
-                      padding: EdgeInsets.zero,
-                      onPressed: () => _onClearBtnTap(context),
-                      icon: const Icon(Icons.close),
-                    ),
-                    border: const UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFFD9D9D9),
-                      ),
-                    ),
-                  ),
-                ),
+              const Flexible(
+                child: ChatSearchField(),
               ),
               const SizedBox(width: 16.0),
               TextButton(
@@ -118,6 +85,28 @@ class _SearchGroupPageState extends State<SearchGroupPage> {
             );
           },
         ),
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.fromLTRB(
+            16.0,
+            16.0,
+            16.0,
+            16.0 + MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: RoundedButton(
+            color: primary1000,
+            child: Text(
+              'Додати',
+              style: TextStyle(
+                fontSize: 16,
+                height: 24 / 16,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.15,
+                color: beige0,
+              ),
+            ),
+            onPress: () => _onAddBtnTap(context),
+          ),
+        ),
       ),
     );
   }
@@ -142,7 +131,6 @@ class _SearchGroupPageState extends State<SearchGroupPage> {
         const SizedBox(height: 8.0),
         BlocBuilder<SelectCubit, List<ChatUserModel>>(
           builder: (context, selected) {
-
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
@@ -182,12 +170,6 @@ class _SearchGroupPageState extends State<SearchGroupPage> {
     return map;
   }
 
-  void _onClearBtnTap(BuildContext context) {
-    _unFocus(context);
-    _controller.clear();
-    context.read<SearchCubit>().clear();
-  }
-
   void _unFocus(BuildContext context) => FocusScope.of(context).unfocus();
 
   void _onCloseSearchPage(BuildContext context) => Navigator.of(context).pop();
@@ -200,4 +182,7 @@ class _SearchGroupPageState extends State<SearchGroupPage> {
       cubit.add(user);
     }
   }
+
+  void _onAddBtnTap(BuildContext context) =>
+      Navigator.of(context).pop(context.read<SelectCubit>().state);
 }

@@ -39,7 +39,7 @@ class ChatBubbleWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              isMine?"Я":'Олег',
+              isMine ? "Я" : 'Олег',
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 14,
