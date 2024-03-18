@@ -85,6 +85,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                               phone: phoneController.text,
                             )
                           ]),
+                          isGroup: false,
                         ),
                       );
 

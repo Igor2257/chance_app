@@ -13,7 +13,8 @@ class DeleteContactsPage extends StatefulWidget {
 }
 
 class _DeleteContactsPageState extends State<DeleteContactsPage> {
-  List<String> selectedIds = [];
+  List<SosGroupModel> selectedModels = [];
+
   bool isButtonEnable = false;
   late bool isEdit;
 
@@ -29,8 +30,8 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
       appBar: AppBar(
         title: Text(
           isEdit == true
-              ? AppLocalizations.instance.translate("createAGroup")
-              : AppLocalizations.instance.translate("tOchange"),
+              ? AppLocalizations.instance.translate("deleteContact")
+              : AppLocalizations.instance.translate("toChange"),
         ),
       ),
       body: Padding(
@@ -53,8 +54,8 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
                       text: contactModel.name.isNotEmpty
                           ? contactModel.name
                           : contactModel.contacts[0].name,
-                      isSelected: selectedIds.contains(
-                        contactModel.id,
+                      isSelected: selectedModels.contains(
+                        contactModel,
                       ),
                       isEdit: isEdit,
                       onChanged: (value) {
@@ -83,9 +84,16 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
                       ),
                       onPressed: () {
                         if (isButtonEnable) {
-                          BlocProvider.of<SosContactsBloc>(context).add(
-                            DeleteContact(ids: selectedIds),
-                          );
+                          if (selectedModels[0].name.isNotEmpty) {
+                            BlocProvider.of<SosContactsBloc>(context).add(
+                              DeleteGroup(ids: [selectedModels[0].id]),
+                            );
+                          } else {
+                            BlocProvider.of<SosContactsBloc>(context).add(
+                              DeleteContact(ids: [selectedModels[0].id]),
+                            );
+                          }
+
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               "/sos", (route) => false);
                         }
@@ -94,7 +102,7 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 44, vertical: 10),
                         child: Text(
-                          'Видалити',
+                          AppLocalizations.instance.translate("delete"),
                           style: TextStyle(
                             color: primary50,
                             fontSize: 16,
@@ -115,16 +123,16 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
   void handleCheckboxChange(bool? value, SosGroupModel contact) {
     setState(() {
       if (value != false) {
-        selectedIds.add(contact.id);
+        selectedModels.add(contact);
       } else {
-        selectedIds.remove(contact.id);
+        selectedModels.remove(contact);
       }
-      isButtonEnable = selectedIds.isNotEmpty;
+      isButtonEnable = selectedModels.isNotEmpty;
     });
   }
 
   void _deleteSelectedContacts() {
-    selectedIds.clear();
+    selectedModels.clear();
     Navigator.of(context).pop();
   }
 }

@@ -103,19 +103,19 @@
   "letsStart": "Let's start",
   "buyAdblocker": "Buy ad blocker",
   "logOut": "Log out",
-  "addedContact": "Added contact",
+  "addContact": "Add contact",
   "saveTheGroup": "Save the group",
   "deletingContacts": "Deleting contacts",
   "editingContact": "Editing contact",
   "createAGroup": "Create a group",
   "deleteContact": "Delete contact",
-  "tOchange": "To change",
+  "toChange": "To change",
   "editContacts": "Edit contacts",
-  "added": "Added",
   "contact": "Contact",
   "group": "Group",
   "saveTheContact": "Save the contact",
   "createAContact": "Create a contact",
+  "delete": "Delete",
 
 
 

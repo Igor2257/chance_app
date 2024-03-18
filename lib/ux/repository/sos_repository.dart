@@ -37,19 +37,54 @@ class SosRepository {
         String bodyString = response.body;
         Map<String, dynamic> data = json.decode(bodyString);
         List<dynamic> contactList = data['contacts'];
+        List<dynamic> groupsList = data['groups'];
 
         if (contactList.isNotEmpty) {
-          for (int i = 0; i < contactList.length; i++) {
-            Map<String, dynamic> groupData = contactList[i];
-            String groupId = groupData["_id"];
-            String contactName = groupData["contacts"][0]["name"];
-            String contactPhone = groupData["contacts"][0]["phone"];
-            String contactId = groupData["contacts"][0]["_id"];
+          for (var contactItem in contactList) {
+            String groupNameToAdd = '';
+            String groupIdToAdd = "";
 
-            contacts.add(SosGroupModel(id: groupId, name: "", contacts: [
-              SosContactModel(
-                  name: contactName, phone: contactPhone, id: contactId)
-            ]));
+            if (groupsList.isNotEmpty) {
+              for (var groupItem in groupsList) {
+                if (groupItem["_id"] == contactItem["group"]) {
+                  groupNameToAdd = groupItem["name"];
+                }
+              }
+            }
+
+            if (groupsList.isNotEmpty) {
+              for (var groupItem in groupsList) {
+                if (groupItem["_id"] == contactItem["group"]) {
+                  groupIdToAdd = groupItem["_id"];
+                }
+              }
+            }
+
+            List<SosContactModel> contactsToModel = [];
+            List<dynamic> sosContacts = contactItem["contacts"];
+            if (sosContacts.isNotEmpty) {
+              for (var sosContact in sosContacts) {
+                String contactName = sosContact["name"];
+                String contactPhone = sosContact["phone"];
+                String contactId = sosContact["_id"];
+
+                contactsToModel.add(SosContactModel(
+                  name: contactName,
+                  phone: contactPhone,
+                  id: contactId,
+                ));
+              }
+            }
+
+            contacts.add(
+              SosGroupModel(
+                id: groupNameToAdd.isNotEmpty
+                    ? groupIdToAdd
+                    : contactItem["_id"],
+                contacts: contactsToModel,
+                name: groupNameToAdd,
+              ),
+            );
           }
         } else {
           Fluttertoast.showToast(
@@ -73,51 +108,10 @@ class SosRepository {
     return contacts;
   }
 
-  Future<String?> updateContact({
-    String? name,
-    String? phone,
-    String? groupName,
-    required String id,
-  }) async {
-    String? error;
-    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
-          toastLength: Toast.LENGTH_LONG);
-      error = "Немає підключення до інтернету";
-    } else {
-      try {
-        var url = Uri.parse('$apiUrl/sos/$id');
-        final cookie = await UserRepository().getCookie();
-        await http
-            .patch(url,
-                headers: <String, String>{
-                  'Content-Type': 'application/json',
-                  'Cookie': cookie.toString(),
-                },
-                body: jsonEncode({
-                  if (name != null) "name": name,
-                  if (phone != null) "phone": phone,
-                  if (groupName != null) "groupName": groupName,
-                }))
-            .then((value) async {
-          if (!(value.statusCode > 199 && value.statusCode < 300)) {
-            error = jsonDecode(value.body)["message"]
-                .toString()
-                .replaceAll("[", "")
-                .replaceAll("]", "");
-            Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
-          } else {}
-        });
-      } catch (error) {
-        Fluttertoast.showToast(
-            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
-      }
-    }
-    return error;
-  }
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  Future<SosGroupModel?> saveContact(SosGroupModel contactModel) async {
+  Future<SosGroupModel?> saveContact(SosGroupModel contactModel,
+      {String? groupId}) async {
     String? error;
     SosGroupModel? groupModel;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
@@ -126,13 +120,16 @@ class SosRepository {
           msg: "Немає підключення до інтернету",
           toastLength: Toast.LENGTH_LONG);
     }
-    String? group;
+
     try {
       var url = Uri.parse('$apiUrl/sos');
       final cookie = await UserRepository().getCookie();
 
       List<Map<String, String>> contactsData = contactModel.contacts
-          .map((e) => {"name": e.name, "phone": e.phone})
+          .map((e) => {
+                "name": e.name,
+                "phone": e.phone,
+              })
           .toList();
 
       var response = await http.post(
@@ -142,10 +139,11 @@ class SosRepository {
           'Cookie': cookie.toString(),
         },
         body: jsonEncode({
-          "group": group,
+          "group": groupId ?? "",
           "contacts": contactsData,
         }),
       );
+      // print("groupId: $groupId");
 
       if (response.statusCode > 199 && response.statusCode < 300) {
         String bodyString = response.body;
@@ -161,10 +159,84 @@ class SosRepository {
             String contactId = groupData["_id"];
             groupModel = SosGroupModel(name: "", contacts: [
               SosContactModel(
-                  name: contactName, phone: contactPhone, id: contactId)
+                  name: contactName,
+                  phone: contactPhone,
+                  id: contactId,
+                  groupName: "group_name_here")
             ]);
           }
         }
+        // await HiveCRUM().addContact(contactModel);
+      } else {
+        error = jsonDecode(response.body)["message"]
+            .toString()
+            .replaceAll("[", "")
+            .replaceAll("]", "");
+      }
+    } catch (e) {
+      error = e.toString();
+    }
+
+    if (error != null) {
+      Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+    }
+
+    return groupModel;
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+
+  Future<SosContactModel?> editContact(SosContactModel contactModel) async {
+    String? error;
+    SosContactModel? groupModel;
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      // await HiveCRUM().addContact(contactModel);
+      Fluttertoast.showToast(
+          msg: "Немає підключення до інтернету",
+          toastLength: Toast.LENGTH_LONG);
+    }
+
+    try {
+      var url = Uri.parse('$apiUrl/sos/${contactModel.id}');
+      final cookie = await UserRepository().getCookie();
+
+      var response = await http.patch(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Cookie': cookie.toString(),
+        },
+        body: jsonEncode({
+          "group": contactModel.groupName,
+          "contacts": [
+            {"name": contactModel.name, "phone": contactModel.phone}
+          ]
+        }),
+      );
+      // print("groupId: $groupId");
+
+      if (response.statusCode > 199 && response.statusCode < 300) {
+        String bodyString = response.body;
+        Map<String, dynamic> data = json.decode(bodyString);
+        List<dynamic> contactList = data['contacts'];
+
+        // if (contactList.isNotEmpty) {
+
+        //   for (int i = 0; i < contactList.length; i++) {
+        //     Map<String, dynamic> groupData = contactList[i];
+        //     // String groupId = groupData["_id"];
+        //     String contactName = groupData["name"];
+        //     String contactPhone = groupData["phone"];
+        //     String contactId = groupData["_id"];
+        //     groupModel = SosGroupModel(name: "", contacts: [
+        //       SosContactModel(
+        //           name: contactName,
+        //           phone: contactPhone,
+        //           id: contactId,
+        //           groupName: "group_name_here")
+        //     ]);
+        //   }
+        // }
         // await HiveCRUM().addContact(contactModel);
       } else {
         error = jsonDecode(response.body)["message"]
@@ -190,7 +262,7 @@ class SosRepository {
           msg: "Немає підключення до інтернету",
           toastLength: Toast.LENGTH_LONG);
       error = "Немає підключення до інтернету";
-      HiveCRUM().removeLocalContact(contactId);
+      // HiveCRUM().removeLocalContact(contactId);
     } else {
       try {
         var url = Uri.parse('$apiUrl/sos/$contactId');
@@ -213,5 +285,82 @@ class SosRepository {
       }
     }
     return error;
+  }
+
+  Future<String?> removeGroup(String groupId) async {
+    String? error;
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      Fluttertoast.showToast(
+          msg: "Немає підключення до інтернету",
+          toastLength: Toast.LENGTH_LONG);
+      error = "Немає підключення до інтернету";
+      // HiveCRUM().removeLocalContact(contactId);
+    } else {
+      try {
+        var url = Uri.parse('$apiUrl/sos/group/$groupId');
+        final cookie = await UserRepository().getCookie();
+        await http.delete(url, headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Cookie': cookie.toString(),
+        }).then((value) {
+          if (!(value.statusCode > 199 && value.statusCode < 300)) {
+            error = jsonDecode(value.body)["message"]
+                .toString()
+                .replaceAll("[", "")
+                .replaceAll("]", "");
+            Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+          } else {}
+        });
+      } catch (error) {
+        Fluttertoast.showToast(
+            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+      }
+    }
+    return error;
+  }
+
+  Future<String?> addGroupName({
+    required String name,
+  }) async {
+    String? error;
+    String? groupId;
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      Fluttertoast.showToast(
+          msg: "Немає підключення до інтернету",
+          toastLength: Toast.LENGTH_LONG);
+      error = "Немає підключення до інтернету";
+    } else {
+      try {
+        var url = Uri.parse('$apiUrl/sos/group');
+        final cookie = await UserRepository().getCookie();
+        await http
+            .post(url,
+                headers: <String, String>{
+                  'Content-Type': 'application/json',
+                  'Cookie': cookie.toString(),
+                },
+                body: jsonEncode({
+                  "name": name,
+                }))
+            .then((value) async {
+          if (!(value.statusCode > 199 && value.statusCode < 300)) {
+            error = jsonDecode(value.body)["message"]
+                .toString()
+                .replaceAll("[", "")
+                .replaceAll("]", "");
+            Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+          } else {
+            String bodyString = value.body;
+            Map<String, dynamic> data = json.decode(bodyString);
+
+            groupId = data["_id"];
+          }
+        });
+      } catch (error) {
+        Fluttertoast.showToast(
+            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+      }
+    }
+    return groupId;
   }
 }

@@ -103,19 +103,19 @@
   "letsStart": "Начнем",
   "buyAdblocker": "Приобрести блокировщик рекламы",
   "logOut": "Выйти из учетной записи",
-  "addedContact": "Добавить контакт",
+  "addContact": "Добавить контакт",
   "saveTheGroup": "Сохранить группу",
   "deletingContacts": "Удаление контактов",
-  "tOchange": "Изменить",
+  "toChange": "Изменить",
   "editingContact": "Редактирование контакта",
   "createAGroup": "Создать группу",
   "deleteContact": "Удалить контакт",
   "editContacts": "Изменить контакты",
-  "added": "Добавить",
   "contact": "Контакт",
   "group": "Группу",
   "saveTheContact": "Сохранить контакт",
   "createAContact": "Создать контакт",
+  "delete": "Удалить",
 
 
 

@@ -10,9 +10,11 @@ part 'sos_contacts_event.dart';
 part 'sos_contacts_state.dart';
 
 class SosContactsBloc extends Bloc<SosContactsEvent, SosContactsState> {
+  List<SosGroupModel> list = [];
   SosContactsBloc() : super(SosContactsState()) {
     on<SaveContact>(_onSaveContact);
     on<DeleteContact>(_onDeleteContact);
+    on<DeleteGroup>(_onDeleteGroup);
     on<EditContact>(_onEditContact);
     on<LoadSosContactsEvent>(_onLoadContacts);
   }
@@ -22,6 +24,7 @@ class SosContactsBloc extends Bloc<SosContactsEvent, SosContactsState> {
     try {
       await SosRepository().loadContacts().then((value) {
         if (value != null) {
+          list = value;
           emit(state.copyWith(contacts: value));
         }
       });
@@ -31,38 +34,39 @@ class SosContactsBloc extends Bloc<SosContactsEvent, SosContactsState> {
   }
 
   FutureOr<void> _onSaveContact(
-      SaveContact event, Emitter<SosContactsState> emit) async {
-    await SosRepository().saveContact(event.contactModel).then((value) {
-      if (value != null) {
-        List<SosGroupModel> list = state.contacts;
-        list.add(event.contactModel);
-        emit(state.copyWith(contacts: list));
-      }
-    });
+      SaveContact event, Emitter<SosContactsState> emit) {
+    list.add(event.contactModel);
+    emit(state.copyWith(contacts: list));
+    if (event.isGroup) {
+      SosRepository().addGroupName(name: event.contactModel.name).then((value) {
+        SosRepository().saveContact(event.contactModel, groupId: value);
+      });
+    } else {
+      SosRepository().saveContact(event.contactModel);
+    }
   }
 
   FutureOr<void> _onDeleteContact(
-      DeleteContact event, Emitter<SosContactsState> emit) async {
-    await SosRepository().removeContact(event.ids.first).then((value) {
-      if (value == null) {
-        List<SosGroupModel> list = state.contacts;
-        list.removeWhere(
-            (element) => element.contacts[0].id == event.ids.first);
-        emit(state.copyWith(contacts: list));
-      }
-    });
+      DeleteContact event, Emitter<SosContactsState> emit) {
+    list.removeWhere((element) => element.contacts[0].id == event.ids.first);
+    emit(state.copyWith(contacts: list));
+    SosRepository().removeContact(event.ids.first);
+  }
+
+  FutureOr<void> _onDeleteGroup(
+      DeleteGroup event, Emitter<SosContactsState> emit) {
+    list.removeWhere((element) => element.id == event.ids.first);
+    emit(state.copyWith(contacts: list));
+    SosRepository().removeGroup(event.ids.first);
   }
 
   FutureOr<void> _onEditContact(
       EditContact event, Emitter<SosContactsState> emit) async {
-    List<SosGroupModel> contacts = state.contacts;
-    final index = contacts.indexOf(event.oldContact);
-
-    if (index != -1) {
-      contacts[index] = event.newContact;
-      emit(state.copyWith(contacts: contacts));
-      print('Contact edited: $event.oldContact -> $event.newContact');
-    }
+    final index = list
+        .indexWhere((groupContact) => groupContact.id == event.contactModel.id);
+    list[index] = event.contactModel;
+    emit(state.copyWith(contacts: list));
+    SosRepository().editContact(event.contactModel.contacts[0]);
   }
 
   loadContacts() {}

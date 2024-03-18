@@ -5,8 +5,9 @@ abstract class SosContactsEvent {}
 
 class SaveContact extends SosContactsEvent {
   final SosGroupModel contactModel;
+  final bool isGroup;
 
-  SaveContact({required this.contactModel});
+  SaveContact({required this.contactModel, required this.isGroup});
 }
 
 class DeleteContact extends SosContactsEvent {
@@ -15,11 +16,16 @@ class DeleteContact extends SosContactsEvent {
   DeleteContact({required this.ids});
 }
 
-class EditContact extends SosContactsEvent {
-  final SosGroupModel oldContact;
-  final SosGroupModel newContact;
+class DeleteGroup extends SosContactsEvent {
+  final List<String> ids;
 
-  EditContact({required this.oldContact, required this.newContact});
+  DeleteGroup({required this.ids});
+}
+
+class EditContact extends SosContactsEvent {
+  final SosGroupModel contactModel;
+
+  EditContact({required this.contactModel});
 }
 
 class LoadSosContactsEvent extends SosContactsEvent {}
