@@ -35,8 +35,8 @@ class NavigationRepository {
     try {
       await Supabase.instance.client
           .from("ward_location")
-          .update({"latitude": latitude, "longitude": longitude}).isFilter(
-              "myEmail", HiveCRUD().user!.email);
+          .update({"latitude": latitude, "longitude": longitude}).match(
+          {"myEmail": HiveCRUD().user!.email});
     } catch (e) {
       error = e.toString();
     }

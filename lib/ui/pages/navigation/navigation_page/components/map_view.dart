@@ -12,7 +12,6 @@ import 'package:chance_app/ux/position_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -103,7 +102,6 @@ class _MapViewState extends State<MapView>
     _controllerTerrainMap.dispose();
     _controllerHybridMap.dispose();
     _controllerBuildPath.dispose();
-    positionController.cancel();
     if(mapController!=null) {
       mapController!.dispose();
       mapController=null;
@@ -206,30 +204,18 @@ class _MapViewState extends State<MapView>
             mapController!.animateCamera(CameraUpdate.newLatLngZoom(
                 LatLng(position.latitude, position.longitude), 18));
           }
-          return FGBGNotifier(
-              onEvent: (event) {
-                if (FGBGType.background == event ||
-                    AppLifecycleState.inactive.name == event.name ||
-                    AppLifecycleState.paused.name == event.name) {
-                  positionController.paused();
-                } else if (FGBGType.foreground == event ||
-                    AppLifecycleState.resumed.name == event.name) {
-                  positionController.resume();
-                }
-                setState(() {});
-              },
-              child: SizedBox(
-                  width: size.width,
-                  height: size.height,
-                  child: Stack(children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: BlocBuilder<NavigationBloc, NavigationState>(
-                          builder: (context, state) {
-                        return GoogleMap(
-                            polylines: state.polylines,
-                            mapType: meUser.mapType == 0
-                                ? MapType.normal
+          return SizedBox(
+              width: size.width,
+              height: size.height,
+              child: Stack(children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: BlocBuilder<NavigationBloc, NavigationState>(
+                      builder: (context, state) {
+                    return GoogleMap(
+                        polylines: state.polylines,
+                        mapType: meUser.mapType == 0
+                            ? MapType.normal
                                 : meUser.mapType == 1
                                     ? MapType.terrain
                                     : MapType.hybrid,
@@ -497,17 +483,17 @@ class _MapViewState extends State<MapView>
                                           ? primary400
                                           : beigeTransparent,
                                     ),
-                                    child: Icon(Icons.satellite_alt,
-                                        color: meUser.mapType == 2
-                                            ? beigeTransparent
-                                            : primaryText),
-                                  ),
-                                ),
+                                child: Icon(Icons.satellite_alt,
+                                    color: meUser.mapType == 2
+                                        ? beigeTransparent
+                                        : primaryText),
                               ),
-                            ],
+                            ),
                           ),
-                        )),
-                  ])));
+                        ],
+                      ),
+                    )),
+              ]));
         },
       );
     }

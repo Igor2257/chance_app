@@ -19,7 +19,7 @@ class InvitationRepository {
             .select()
             .eq("toUserEmail", email)
             .eq("fromUserId", userId)
-            .then((value) async {print(value);
+            .then((value) async {
           if (value.toString() == "[]") {
             final model = InvitationModel(
               id: DateTime.now().microsecondsSinceEpoch.toString(),

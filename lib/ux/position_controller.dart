@@ -95,15 +95,11 @@ class PositionController {
     );
   }
 
-  void paused() {
-    positionStream!.pause();
-  }
+
 
   void resume() {
     positionStream!.resume();
   }
 
-  void cancel() {
-    positionStream!.cancel();
-  }
+
 }
