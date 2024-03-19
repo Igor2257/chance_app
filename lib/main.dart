@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:chance_app/firebase_options.dart';
+import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/doctor_appointment/doctor_appointment.dart';
@@ -13,6 +14,7 @@ import 'package:chance_app/ui/pages/navigation/add_ward/add_ward.dart';
 import 'package:chance_app/ui/pages/navigation/invitations/check_my_invitation/check_my_invitation.dart';
 import 'package:chance_app/ui/pages/navigation/invitations/enter_accept_code/enter_accept_code.dart';
 import 'package:chance_app/ui/pages/navigation/my_wards/my_wards.dart';
+import 'package:chance_app/ui/pages/navigation/navigation_page/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/navigation_page/navigation_page.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/address_component.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/bounds.dart';
@@ -58,6 +60,7 @@ import 'package:chance_app/ux/model/product_model.dart';
 import 'package:chance_app/ux/model/settings.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:chance_app/ux/model/task_model.dart';
+import 'package:chance_app/ux/position_controller.dart';
 import 'package:chance_app/ux/repository/tasks_repository.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -74,6 +77,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -136,24 +140,24 @@ Future<void> main() async {
     }
   }).whenComplete(() async {
     UserRepository repository = UserRepository();
+    String route = "/onboarding_page";
     if (await repository.isUserEnteredEarlier()) {
       await repository.getUser().then((user) async {
-        String route = "/signinup";
+        route = "/signinup";
         if (user != null) {
           route = "/";
-          runApp(MyApp(route));
         } else {
           await repository.getCookie().then((value) {
             if (value != null) {
               route = "/";
             }
-            runApp(MyApp(route));
           });
         }
       });
     } else {
-      runApp(const MyApp("/onboarding_page"));
+      route = "/onboarding_page";
     }
+    runApp(MyApp(route));
   });
 }
 
@@ -247,6 +251,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     } catch (e) {
       FlutterError("Error ${e.toString()}");
     }
+    loadGPSFunction();
   }
 
   @override
@@ -707,6 +712,69 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
             ),
           );
         }));
+  }
+
+  void loadGPSFunction() {
+    if (HiveCRUD().setting.isAppShouldSentLocation) {}
+    checkLocationPermission(context).then((value) async {
+      if (value) {
+        positionController = PositionController(setState);
+      }
+    });
+  }
+
+  Future<bool> checkLocationPermission(BuildContext context) async {
+    bool isOkay = false;
+    await Permission.location.request().then((status) async {
+      if (status != PermissionStatus.denied &&
+          status != PermissionStatus.permanentlyDenied) {
+        isOkay = true;
+      }
+      if (!isOkay) {
+        if (mounted) {
+          await showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) {
+                return PopScope(
+                    canPop: false,
+                    onPopInvoked: (value) {},
+                    child: AlertDialog(
+                      title: Text(
+                        AppLocalizations.instance
+                            .translate("allowTheAppToUseTheLocation"),
+                        style: TextStyle(fontSize: 24, color: primaryText),
+                      ),
+                      content: Text(
+                        AppLocalizations.instance.translate(
+                            "forTheAppToWorkCorrectlyYouNeedToAllowThisPermissionToBeUsed"),
+                        style: TextStyle(fontSize: 16, color: primaryText),
+                      ),
+                      actions: [
+                        RoundedButton(
+                          onPress: () async {
+                            await Geolocator.openAppSettings().whenComplete(() {
+                              if (mounted) {
+                                Navigator.of(context).pop();
+                              }
+                            });
+
+                            return true;
+                          },
+                          color: primary1000,
+                          child: Text(
+                            AppLocalizations.instance.translate("goTo"),
+                            style: TextStyle(color: primary50),
+                          ),
+                        ),
+                      ],
+                    ));
+              });
+        }
+      }
+    });
+
+    return isOkay;
   }
 }
 

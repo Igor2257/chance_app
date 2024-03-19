@@ -43,6 +43,7 @@ class _MapViewState extends State<MapView>
   Future<bool> checkLocationPermission(BuildContext context) async {
     bool isOkay = false;
     await Permission.location.request().then((status) async {
+      print("status $status");
       if (status != PermissionStatus.denied &&
           status != PermissionStatus.permanentlyDenied) {
         isOkay = true;
@@ -176,8 +177,10 @@ class _MapViewState extends State<MapView>
       });
 
     checkLocationPermission(context).then((value) async {
-      if (value) {
-        positionController = PositionController(setState);
+      if (PositionController.myPosition == null) {
+        if (value) {
+          positionController = PositionController(setState);
+        }
       }
     });
 

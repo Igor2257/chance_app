@@ -1,6 +1,7 @@
 import 'package:chance_app/ux/enum/invitation_status.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/invitation_model.dart';
+import 'package:chance_app/ux/model/settings.dart';
 import 'package:chance_app/ux/model/ward_location_model.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -14,12 +15,12 @@ class InvitationRepository {
       try {
         final userId = HiveCRUD().user!.id;
         await Supabase.instance.client
-            .from("")
+            .from("invitations")
             .select()
             .eq("toUserEmail", email)
             .eq("fromUserId", userId)
-            .then((value) async {
-          if (value.toString() == "null") {
+            .then((value) async {print(value);
+          if (value.toString() == "[]") {
             final model = InvitationModel(
               id: DateTime.now().microsecondsSinceEpoch.toString(),
               toUserEmail: email,
@@ -119,27 +120,28 @@ class InvitationRepository {
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       error = "Немає підключення до інтернету";
     } else {
-      try {
-        await Supabase.instance.client
-            .from("invitations")
-            .update({"invitationStatus": InvitationStatus.accepted.name})
-            .eq("id", invitationModel.id)
-            .then((value) async {
-              if (value.toString() == "null") {
-                await Supabase.instance.client.from("ward_location").insert(
-                    WardLocationModel(
-                            id: invitationModel.id,
-                            myEmail: invitationModel.toUserEmail,
-                            myName: invitationModel.toUserName,
-                            latitude: 0,
-                            longitude: 0,
-                            toUserId: invitationModel.fromUserId)
-                        .toJson());
-              }
-            });
-      } catch (e) {
-        error = e.toString();
-      }
+      await Supabase.instance.client
+          .from("invitations")
+          .update({"invitationStatus": InvitationStatus.accepted.name})
+          .eq("id", invitationModel.id)
+          .then((value) async {
+        if (value.toString() == "null") {
+          final crud = HiveCRUD();
+          Settings settings = crud.setting;
+          settings = settings.copyWith(isAppShouldSentLocation: true);
+          await crud.updateSettings(settings).then((value) async {
+            await Supabase.instance.client.from("ward_location").insert(
+                WardLocationModel(
+                    id: invitationModel.id,
+                    myEmail: invitationModel.toUserEmail,
+                    myName: invitationModel.toUserName,
+                    latitude: 0,
+                    longitude: 0,
+                    toUserId: invitationModel.fromUserId)
+                    .toJson());
+          });
+        }
+      });
     }
 
     return error;

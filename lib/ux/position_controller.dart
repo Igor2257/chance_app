@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:chance_app/ux/repository/navigation_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
@@ -9,9 +10,9 @@ import 'package:geolocator/geolocator.dart';
 class PositionController {
   StreamSubscription<Position>? positionStream;
   Position? _myPreviousPosition;
-  late Function(VoidCallback fn) setState;
+  late Function(VoidCallback fn) _setState;
   static ValueNotifier<Position>? myPosition;
-  final List<String> fakeMessages = [
+  final List<String> _fakeMessages = [
     'Раз збрехавши, хто тобі повірить?',
     'Хіба порядній людині пристало брехати?',
     'Брехати – значить визнавати перевагу того, кому ви брешете.',
@@ -23,52 +24,60 @@ class PositionController {
     'Хто хоче брехати з користю, повинен брехати рідко.'
   ];
 
-  PositionController(void Function(VoidCallback fn) this.setState) {
-    positionStream = Geolocator.getPositionStream(
-            locationSettings: LocationSettings(
-                accuracy: Platform.isAndroid
-                    ? LocationAccuracy.high
-                    : LocationAccuracy.best,
-                distanceFilter: 5))
-        .listen((Position? position) async {
-      if (kDebugMode) {
-        print("position: $position");
-      }
-      try {
-        if (position != null) {
-          if (_myPreviousPosition != null) {
-            double distMoved = Geolocator.distanceBetween(
-                position.latitude,
-                position.longitude,
-                _myPreviousPosition!.latitude,
-                _myPreviousPosition!.longitude);
-            if (distMoved <= 5) {
-              return;
+  PositionController(void Function(VoidCallback fn) this._setState) {
+    print("object");
+    Geolocator.getCurrentPosition().then((value) {
+      print("value $value");
+      final stream = Geolocator.getPositionStream(
+          locationSettings: LocationSettings(
+              accuracy: Platform.isAndroid
+                  ? LocationAccuracy.high
+                  : LocationAccuracy.best,
+              distanceFilter: 5));
+      print("object1");
+      positionStream = stream.listen((Position? position) async {
+        if (kDebugMode) {
+          print("position: $position");
+        }
+        try {
+          if (position != null) {
+            if (_myPreviousPosition != null) {
+              double distMoved = Geolocator.distanceBetween(
+                  position.latitude,
+                  position.longitude,
+                  _myPreviousPosition!.latitude,
+                  _myPreviousPosition!.longitude);
+              if (distMoved <= 5) {
+                return;
+              }
             }
+
+            _setState(() {
+              _myPreviousPosition = position;
+              if (myPosition != null) {
+                myPosition!.value = position;
+              } else {
+                myPosition = ValueNotifier<Position>(position);
+              }
+            });
+            await NavigationRepository()
+                .sendMyLocation(position.latitude, position.longitude);
           }
+        } catch (e) {
+          if (e.toString() == 'isMocked') {
+            Random random = Random();
+            int randomNumber = random.nextInt(_fakeMessages.length);
+            var msg = _fakeMessages[randomNumber];
 
-          setState(() {
-            _myPreviousPosition = position;
-            if (myPosition != null) {
-              myPosition!.value=position;
-            } else {
-              myPosition = ValueNotifier<Position>(position);
-            }
-          });
+            Fluttertoast.showToast(msg: msg);
+          } else {
+            Fluttertoast.showToast(msg: e.toString());
+          }
         }
-      } catch (e) {
-        if (e.toString() == 'isMocked') {
-          Random random = Random();
-          int randomNumber = random.nextInt(fakeMessages.length);
-          var msg = fakeMessages[randomNumber];
-
-          Fluttertoast.showToast(msg: msg);
-        } else {
-          Fluttertoast.showToast(msg: e.toString());
-        }
-      }
-    })
-      ..resume();
+      });
+      print("object2");
+      resume();
+    });
   }
 
   Position addFake(Position position) {

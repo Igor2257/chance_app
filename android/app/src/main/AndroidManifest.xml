@@ -106,5 +106,6 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-8751007823546645~8164548943"/>
+        <meta-data android:name="flutter_launcher_name" android:value="GPS Settings" />
     </application>
 </manifest>

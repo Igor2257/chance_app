@@ -16,6 +16,7 @@ class Settings with _$Settings {
     @HiveField(3) @Default(false) bool? isNotificationEnable,
     @HiveField(4) @Default(null) String? language,
     @HiveField(5) @Default(null) String? languageCode,
+    @HiveField(6) @Default(false) bool isAppShouldSentLocation,
   }) = _Settings;
 
   factory Settings.fromJson(Map<String, dynamic> json) => _$SettingsFromJson(json);

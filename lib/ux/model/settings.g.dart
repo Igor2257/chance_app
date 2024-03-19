@@ -23,13 +23,14 @@ class SettingsAdapter extends TypeAdapter<Settings> {
       isNotificationEnable: fields[3] as bool?,
       language: fields[4] as String?,
       languageCode: fields[5] as String?,
+      isAppShouldSentLocation: fields[6] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, Settings obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.blockAd)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class SettingsAdapter extends TypeAdapter<Settings> {
       ..writeByte(4)
       ..write(obj.language)
       ..writeByte(5)
-      ..write(obj.languageCode);
+      ..write(obj.languageCode)
+      ..writeByte(6)
+      ..write(obj.isAppShouldSentLocation);
   }
 
   @override
@@ -67,8 +70,10 @@ _$SettingsImpl _$$SettingsImplFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['firstEnter'] as String),
       isNotificationEnable: json['isNotificationEnable'] as bool? ?? false,
-      language: json['language'] as String?,
-      languageCode: json['languageCode'] as String?,
+      language: json['language'] as String? ?? null,
+      languageCode: json['languageCode'] as String? ?? null,
+      isAppShouldSentLocation:
+          json['isAppShouldSentLocation'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$SettingsImplToJson(_$SettingsImpl instance) =>
@@ -79,4 +84,5 @@ Map<String, dynamic> _$$SettingsImplToJson(_$SettingsImpl instance) =>
       'isNotificationEnable': instance.isNotificationEnable,
       'language': instance.language,
       'languageCode': instance.languageCode,
+      'isAppShouldSentLocation': instance.isAppShouldSentLocation,
     };

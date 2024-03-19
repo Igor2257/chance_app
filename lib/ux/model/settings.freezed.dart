@@ -32,6 +32,8 @@ mixin _$Settings {
   String? get language => throw _privateConstructorUsedError;
   @HiveField(5)
   String? get languageCode => throw _privateConstructorUsedError;
+  @HiveField(6)
+  bool get isAppShouldSentLocation => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -50,7 +52,8 @@ abstract class $SettingsCopyWith<$Res> {
       @HiveField(2) DateTime? firstEnter,
       @HiveField(3) bool? isNotificationEnable,
       @HiveField(4) String? language,
-      @HiveField(5) String? languageCode});
+      @HiveField(5) String? languageCode,
+      @HiveField(6) bool isAppShouldSentLocation});
 }
 
 /// @nodoc
@@ -72,6 +75,7 @@ class _$SettingsCopyWithImpl<$Res, $Val extends Settings>
     Object? isNotificationEnable = freezed,
     Object? language = freezed,
     Object? languageCode = freezed,
+    Object? isAppShouldSentLocation = null,
   }) {
     return _then(_value.copyWith(
       blockAd: null == blockAd
@@ -98,6 +102,10 @@ class _$SettingsCopyWithImpl<$Res, $Val extends Settings>
           ? _value.languageCode
           : languageCode // ignore: cast_nullable_to_non_nullable
               as String?,
+      isAppShouldSentLocation: null == isAppShouldSentLocation
+          ? _value.isAppShouldSentLocation
+          : isAppShouldSentLocation // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -116,7 +124,8 @@ abstract class _$$SettingsImplCopyWith<$Res>
       @HiveField(2) DateTime? firstEnter,
       @HiveField(3) bool? isNotificationEnable,
       @HiveField(4) String? language,
-      @HiveField(5) String? languageCode});
+      @HiveField(5) String? languageCode,
+      @HiveField(6) bool isAppShouldSentLocation});
 }
 
 /// @nodoc
@@ -136,6 +145,7 @@ class __$$SettingsImplCopyWithImpl<$Res>
     Object? isNotificationEnable = freezed,
     Object? language = freezed,
     Object? languageCode = freezed,
+    Object? isAppShouldSentLocation = null,
   }) {
     return _then(_$SettingsImpl(
       blockAd: null == blockAd
@@ -162,6 +172,10 @@ class __$$SettingsImplCopyWithImpl<$Res>
           ? _value.languageCode
           : languageCode // ignore: cast_nullable_to_non_nullable
               as String?,
+      isAppShouldSentLocation: null == isAppShouldSentLocation
+          ? _value.isAppShouldSentLocation
+          : isAppShouldSentLocation // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -175,7 +189,8 @@ class _$SettingsImpl implements _Settings {
       @HiveField(2) this.firstEnter = null,
       @HiveField(3) this.isNotificationEnable = false,
       @HiveField(4) this.language = null,
-      @HiveField(5) this.languageCode = null});
+      @HiveField(5) this.languageCode = null,
+      @HiveField(6) this.isAppShouldSentLocation = false});
 
   factory _$SettingsImpl.fromJson(Map<String, dynamic> json) =>
       _$$SettingsImplFromJson(json);
@@ -204,10 +219,14 @@ class _$SettingsImpl implements _Settings {
   @JsonKey()
   @HiveField(5)
   final String? languageCode;
+  @override
+  @JsonKey()
+  @HiveField(6)
+  final bool isAppShouldSentLocation;
 
   @override
   String toString() {
-    return 'Settings(blockAd: $blockAd, soundsOn: $soundsOn, firstEnter: $firstEnter, isNotificationEnable: $isNotificationEnable, language: $language, languageCode: $languageCode)';
+    return 'Settings(blockAd: $blockAd, soundsOn: $soundsOn, firstEnter: $firstEnter, isNotificationEnable: $isNotificationEnable, language: $language, languageCode: $languageCode, isAppShouldSentLocation: $isAppShouldSentLocation)';
   }
 
   @override
@@ -225,13 +244,16 @@ class _$SettingsImpl implements _Settings {
             (identical(other.language, language) ||
                 other.language == language) &&
             (identical(other.languageCode, languageCode) ||
-                other.languageCode == languageCode));
+                other.languageCode == languageCode) &&
+            (identical(
+                    other.isAppShouldSentLocation, isAppShouldSentLocation) ||
+                other.isAppShouldSentLocation == isAppShouldSentLocation));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, blockAd, soundsOn, firstEnter,
-      isNotificationEnable, language, languageCode);
+      isNotificationEnable, language, languageCode, isAppShouldSentLocation);
 
   @JsonKey(ignore: true)
   @override
@@ -254,7 +276,8 @@ abstract class _Settings implements Settings {
       @HiveField(2) final DateTime? firstEnter,
       @HiveField(3) final bool? isNotificationEnable,
       @HiveField(4) final String? language,
-      @HiveField(5) final String? languageCode}) = _$SettingsImpl;
+      @HiveField(5) final String? languageCode,
+      @HiveField(6) final bool isAppShouldSentLocation}) = _$SettingsImpl;
 
   factory _Settings.fromJson(Map<String, dynamic> json) =
       _$SettingsImpl.fromJson;
@@ -277,6 +300,9 @@ abstract class _Settings implements Settings {
   @override
   @HiveField(5)
   String? get languageCode;
+  @override
+  @HiveField(6)
+  bool get isAppShouldSentLocation;
   @override
   @JsonKey(ignore: true)
   _$$SettingsImplCopyWith<_$SettingsImpl> get copyWith =>
