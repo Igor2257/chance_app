@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
+import 'package:chance_app/ui/pages/sos_page/edit_group_screen_sos.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
@@ -50,20 +51,22 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
                 itemBuilder: (context, index) {
                   SosGroupModel contactModel = contacts[index];
                   return ContainerButtonWithCheckbox(
-                      contactModel: contactModel,
-                      text: contactModel.name.isNotEmpty
-                          ? contactModel.name
-                          : contactModel.contacts[0].name,
-                      isSelected: selectedModels.contains(
+                    contactModel: contactModel,
+                    text: contactModel.name.isNotEmpty
+                        ? contactModel.name
+                        : contactModel.contacts[0].name,
+                    isSelected: selectedModels.contains(
+                      contactModel,
+                    ),
+                    isEdit: isEdit,
+                    onChanged: (value) {
+                      handleCheckboxChange(
+                        value,
                         contactModel,
-                      ),
-                      isEdit: isEdit,
-                      onChanged: (value) {
-                        handleCheckboxChange(
-                          value,
-                          contactModel,
-                        );
-                      });
+                      );
+                    },
+                    isGroup: contactModel.name.isNotEmpty ? true : false,
+                  );
                 },
               ),
             )),
@@ -130,17 +133,13 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
       isButtonEnable = selectedModels.isNotEmpty;
     });
   }
-
-  void _deleteSelectedContacts() {
-    selectedModels.clear();
-    Navigator.of(context).pop();
-  }
 }
 
 class ContainerButtonWithCheckbox extends StatefulWidget {
   final String text;
   final bool isSelected;
   final bool isEdit;
+  final bool isGroup;
   final ValueChanged<bool?>? onChanged;
   final SosGroupModel contactModel;
 
@@ -150,6 +149,7 @@ class ContainerButtonWithCheckbox extends StatefulWidget {
     required this.isSelected,
     required this.isEdit,
     required this.contactModel,
+    required this.isGroup,
     this.onChanged,
   });
 
@@ -166,9 +166,17 @@ class _ContainerButtonWithCheckboxState
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (widget.isEdit == false) {
+        if (widget.isEdit == false && widget.isGroup == false) {
           Navigator.pushNamed(context, "/replace_contact_sos",
               arguments: widget.contactModel);
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  EditGroupScreenSos(groupModel: widget.contactModel),
+            ),
+          );
         }
       },
       child: Container(

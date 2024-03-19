@@ -30,7 +30,8 @@ import 'package:chance_app/ui/pages/sign_in_up/registration/registration_page.da
 import 'package:chance_app/ui/pages/sign_in_up/sign_in_up_page.dart';
 import 'package:chance_app/ui/pages/sos_page/add_contact_screen.dart';
 import 'package:chance_app/ui/pages/sos_page/add_group_screen.dart';
-import 'package:chance_app/ui/pages/sos_page/delete_contact_screen.dart';
+import 'package:chance_app/ui/pages/sos_page/delete_contact_sos.dart';
+import 'package:chance_app/ui/pages/sos_page/edit_group_screen_sos.dart';
 import 'package:chance_app/ui/pages/sos_page/main_page_sos.dart';
 import 'package:chance_app/ui/pages/sos_page/replace_contact_sos.dart';
 import 'package:chance_app/ux/bloc/add_medicine_bloc/add_medicine_bloc.dart';
@@ -402,6 +403,11 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                             const EnterAcceptCode(),
                                         "/choose_language": (context) =>
                                             const ChooseLanguage(),
+                                        "/edit_group_screen_sos": (context) =>
+                                            const EditGroupScreenSos(
+                                              groupModel: SosGroupModel(
+                                                  name: "name", contacts: []),
+                                            ),
                                       },
                                       localeResolutionCallback:
                                           (locale, supportedLocales) {

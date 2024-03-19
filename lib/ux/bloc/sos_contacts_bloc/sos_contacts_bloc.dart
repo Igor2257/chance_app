@@ -66,7 +66,16 @@ class SosContactsBloc extends Bloc<SosContactsEvent, SosContactsState> {
         .indexWhere((groupContact) => groupContact.id == event.contactModel.id);
     list[index] = event.contactModel;
     emit(state.copyWith(contacts: list));
-    SosRepository().editContact(event.contactModel.contacts[0]);
+
+    if (event.contactModel.name.isNotEmpty) {
+      SosRepository().editGroup(event.contactModel);
+      for (var contact in event.contactModel.contacts) {
+        SosRepository().editContact(event.contactModel, contact);
+      }
+    } else {
+      SosRepository()
+          .editContact(event.contactModel, event.contactModel.contacts[0]);
+    }
   }
 
   loadContacts() {}

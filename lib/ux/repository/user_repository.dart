@@ -22,71 +22,65 @@ class UserRepository {
           toastLength: Toast.LENGTH_LONG);
       error = "Немає підключення до інтернету";
     } else {
-      try {
-        var url = Uri.parse('$apiUrl/auth/login');
-        var salt = 'UVocjgjgXg8P7zIsC93kKlRU8sPbTBhsAMFLnLUPDRYFIWAk';
-        var saltedPassword = salt + password;
-        var bytes = utf8.encode(saltedPassword);
-        var hash = sha256.convert(bytes);
-        await http
-            .post(
-          url,
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-          },
-          body: jsonEncode(
-              {"password": hash.toString().substring(0, 13), "email": email}),
-        )
-            .then((value) async {
-          final cookie = _parseCookieFromLogin(value);
+      var url = Uri.parse('$apiUrl/auth/login');
+      var salt = 'UVocjgjgXg8P7zIsC93kKlRU8sPbTBhsAMFLnLUPDRYFIWAk';
+      var saltedPassword = salt + password;
+      var bytes = utf8.encode(saltedPassword);
+      var hash = sha256.convert(bytes);
+      await http
+          .post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(
+            {"password": "Password!", "email": "evmaliyov@gmail.com"}),
+      )
+          .then((value) async {
+        final cookie = _parseCookieFromLogin(value);
 
-          if (value.statusCode > 199 && value.statusCode < 300) {
-            var url = Uri.parse('$apiUrl/auth/me');
-            await http.get(
-              url,
-              headers: <String, String>{
-                'Content-Type': 'application/json',
-                if (cookie != null) 'Cookie': cookie,
-              },
-            ).then((value) async {
-              if (value.statusCode > 199 && value.statusCode < 300) {
-                Map<String, dynamic> map = jsonDecode(value.body);
-                MeUser meUser = MeUser(
-                  id: map["_id"],
-                  email: map["email"],
-                  name: map["name"],
-                  lastName: map["lastName"],
-                  phone: map["phone"],
-                  isGoogle: map["isGoogle"],
-                  isConfirmed: map["isConfirmed"],
-                  deviceId: map["deviceId"],
-                );
-                await HiveCRUM().addUser(meUser);
-                await FirebaseMessaging.instance.getToken().then((token) {
-                  patchUserData(token: token);
-                });
-              } else {
-                error = jsonDecode(value.body)["message"]
-                    .toString()
-                    .replaceAll("[", "")
-                    .replaceAll("]", "");
-                Fluttertoast.showToast(
-                    msg: error!, toastLength: Toast.LENGTH_LONG);
-              }
-            });
-          } else {
-            error = jsonDecode(value.body)["message"]
-                .toString()
-                .replaceAll("[", "")
-                .replaceAll("]", "");
-            Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
-          }
-        });
-      } catch (errors) {
-        error = errors.toString();
-        Fluttertoast.showToast(
-            msg: errors.toString(), toastLength: Toast.LENGTH_LONG);
-      }
+        if (value.statusCode > 199 && value.statusCode < 300) {
+          var url = Uri.parse('$apiUrl/auth/me');
+          await http.get(
+            url,
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+              if (cookie != null) 'Cookie': cookie,
+            },
+          ).then((value) async {
+            if (value.statusCode > 199 && value.statusCode < 300) {
+              Map<String, dynamic> map = jsonDecode(value.body);
+              MeUser meUser = MeUser(
+                id: map["_id"],
+                email: map["email"],
+                name: map["name"],
+                lastName: map["lastName"],
+                phone: map["phone"],
+                isGoogle: map["isGoogle"],
+                isConfirmed: map["isConfirmed"],
+                deviceId: map["deviceId"] ?? "",
+              );
+              await HiveCRUM().addUser(meUser);
+              await FirebaseMessaging.instance.getToken().then((token) {
+                patchUserData(token: token);
+              });
+            } else {
+              error = jsonDecode(value.body)["message"]
+                  .toString()
+                  .replaceAll("[", "")
+                  .replaceAll("]", "");
+              Fluttertoast.showToast(
+                  msg: error!, toastLength: Toast.LENGTH_LONG);
+            }
+          });
+        } else {
+          error = jsonDecode(value.body)["message"]
+              .toString()
+              .replaceAll("[", "")
+              .replaceAll("]", "");
+          Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+        }
+      });
     }
     return error;
   }
@@ -347,8 +341,6 @@ class UserRepository {
     return error;
   }
 
-
-
   Future<MeUser?> getUser() async {
     MeUser? meUser;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
@@ -378,7 +370,8 @@ class UserRepository {
                 isGoogle: map["isGoogle"],
                 isConfirmed: map["isConfirmed"],
                 deviceId: map["deviceId"],
-              );HiveCRUM();
+              );
+              HiveCRUM();
               await HiveCRUM().addUser(meUser!);
               return meUser;
             } else {

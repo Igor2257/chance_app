@@ -6,30 +6,38 @@ import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AddGroupScreen extends StatefulWidget {
-  const AddGroupScreen({super.key});
+class EditGroupScreenSos extends StatefulWidget {
+  final SosGroupModel groupModel;
+
+  const EditGroupScreenSos({super.key, required this.groupModel});
 
   @override
-  State<AddGroupScreen> createState() => _AddGroupScreenState();
+  State<EditGroupScreenSos> createState() => _EditGroupScreenSosState();
 }
 
-class _AddGroupScreenState extends State<AddGroupScreen> {
+class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
+  late TextEditingController groupNameController;
+  late TextEditingController nameController;
+  late TextEditingController phoneController;
+  late List<ContactItem> contacts;
+
   SosContactsBloc get _sosContactsBloc {
     return BlocProvider.of<SosContactsBloc>(context);
   }
 
-  final TextEditingController groupNameController = TextEditingController();
-  final List<ContactItem> contacts = [];
-
   @override
   void initState() {
     super.initState();
+    groupNameController = TextEditingController(text: widget.groupModel.name);
+    contacts = widget.groupModel.contacts.map((contact) {
+      return ContactItem(
+        name: contact.name,
+        phone: contact.phone,
+      );
+    }).toList();
 
-    initContacts();
-  }
-
-  void initContacts() {
-    contacts.add(ContactItem());
+    nameController = TextEditingController();
+    phoneController = TextEditingController();
   }
 
   @override
@@ -37,7 +45,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.instance.translate("createAGroup"),
+          AppLocalizations.instance.translate("editGroup"),
           style: const TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 22,
@@ -102,30 +110,34 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                         const SizedBox(
                           height: 18,
                         ),
-                      ],
-                    ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        contacts.add(ContactItem());
-                      });
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.add),
-                        const SizedBox(width: 8),
-                        Text(
-                          AppLocalizations.instance.translate("addContact"),
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: primary800,
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              contacts.removeAt(index);
+                            });
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.remove),
+                              const SizedBox(width: 8),
+                              Text(
+                                AppLocalizations.instance
+                                    .translate("deleteContact"),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: primary800,
+                                ),
+                              ),
+                            ],
                           ),
+                        ),
+                        const SizedBox(
+                          height: 18,
                         ),
                       ],
                     ),
-                  ),
                   const SizedBox(
                     height: 18,
                   ),
@@ -136,37 +148,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                       height: 48,
                       child: ElevatedButton(
                         onPressed: () {
-                          List<SosContactModel> contactModels = [];
-
-                          for (int index = 0;
-                              index < contacts.length;
-                              index++) {
-                            String name = contacts[index].nameController.text;
-                            String phone = contacts[index].phoneController.text;
-
-                            SosContactModel contactModel = SosContactModel(
-                              name: name,
-                              phone: phone,
-                              groupName: groupNameController.text,
-                            );
-
-                            contactModels.add(contactModel);
-                          }
-
-                          SosGroupModel sosGroupModel = SosGroupModel(
-                            name: groupNameController.text,
-                            contacts: contactModels,
-                          );
-
-                          _sosContactsBloc.add(
-                            SaveContact(
-                              contactModel: sosGroupModel,
-                              isGroup: true,
-                            ),
-                          );
-
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              "/sos", (route) => false);
+                          saveChanges();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: primary1000,
@@ -175,7 +157,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                           ),
                         ),
                         child: Text(
-                          AppLocalizations.instance.translate("saveTheGroup"),
+                          AppLocalizations.instance.translate("saveChanges"),
                           style: TextStyle(
                             color: primary50,
                             fontWeight: FontWeight.w500,
@@ -193,9 +175,44 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
       ),
     );
   }
+
+  void saveChanges() {
+    List<SosContactModel> updatedContacts = [];
+
+    for (int index = 0; index < contacts.length; index++) {
+      var contact = contacts[index];
+      updatedContacts.add(
+        SosContactModel(
+          name: contact.nameController.text,
+          phone: contact.phoneController.text,
+          id: widget.groupModel.contacts[0].id,
+        ),
+      );
+    }
+
+    SosGroupModel updatedGroup = SosGroupModel(
+      id: widget.groupModel.id,
+      name: groupNameController.text,
+      contacts: updatedContacts,
+    );
+
+    _sosContactsBloc.add(
+      // DeleteContact(
+      // ids: [updatedContacts[0].id])
+      EditContact(
+        contactModel: updatedGroup,
+      ),
+    );
+
+    Navigator.of(context).pop();
+  }
 }
 
 class ContactItem {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController nameController;
+  final TextEditingController phoneController;
+
+  ContactItem({String? name, String? phone})
+      : nameController = TextEditingController(text: name),
+        phoneController = TextEditingController(text: phone);
 }
