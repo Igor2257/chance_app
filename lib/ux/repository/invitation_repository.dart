@@ -1,6 +1,7 @@
 import 'package:chance_app/ux/enum/invitation_status.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/invitation_model.dart';
+import 'package:chance_app/ux/model/ward_location_model.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -113,15 +114,29 @@ class InvitationRepository {
     return invitations;
   }
 
-  Future<String?> acceptInvitation(
-      String id, InvitationStatus invitationStatus) async {
+  Future<String?> acceptInvitation(InvitationModel invitationModel) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       error = "Немає підключення до інтернету";
     } else {
       try {
-        await Supabase.instance.client.from("invitations").update(
-            {"invitationStatus": InvitationStatus.accepted.name}).eq("id", id);
+        await Supabase.instance.client
+            .from("invitations")
+            .update({"invitationStatus": InvitationStatus.accepted.name})
+            .eq("id", invitationModel.id)
+            .then((value) async {
+              if (value.toString() == "null") {
+                await Supabase.instance.client.from("ward_location").insert(
+                    WardLocationModel(
+                            id: invitationModel.id,
+                            myEmail: invitationModel.toUserEmail,
+                            myName: invitationModel.toUserName,
+                            latitude: 0,
+                            longitude: 0,
+                            toUserId: invitationModel.fromUserId)
+                        .toJson());
+              }
+            });
       } catch (e) {
         error = e.toString();
       }

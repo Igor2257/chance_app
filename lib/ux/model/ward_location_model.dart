@@ -11,8 +11,8 @@ part 'ward_location_model.g.dart';
 class WardLocationModel with _$WardLocationModel {
   const factory WardLocationModel({
     @HiveField(0) required String id,
-    @HiveField(1) required String wardId,
-    @HiveField(2) required String wardName,
+    @HiveField(1) required String myEmail,
+    @HiveField(2) required String myName,
     @HiveField(3) required double latitude,
     @HiveField(4) required double longitude,
     @HiveField(5) required String toUserId,

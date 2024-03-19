@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:chance_app/ux/enum/invitation_status.dart';
 import 'package:chance_app/ux/model/invitation_model.dart';
 import 'package:chance_app/ux/repository/invitation_repository.dart';
 import 'package:meta/meta.dart';

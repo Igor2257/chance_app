@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ux/hive_crum.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -178,7 +177,7 @@ class SosRepository {
     }
 
     if (error != null) {
-      Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+      Fluttertoast.showToast(msg: error, toastLength: Toast.LENGTH_LONG);
     }
 
     return groupModel;
@@ -249,7 +248,7 @@ class SosRepository {
     }
 
     if (error != null) {
-      Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+      Fluttertoast.showToast(msg: error, toastLength: Toast.LENGTH_LONG);
     }
 
     return groupModel;

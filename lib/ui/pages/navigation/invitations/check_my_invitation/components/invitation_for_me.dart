@@ -104,8 +104,7 @@ class InvitationForMe extends StatelessWidget {
                         IconButton(
                             onPressed: () async {
                               await InvitationRepository()
-                                  .acceptInvitation(invitationForMe.id,
-                                      InvitationStatus.canceled)
+                                  .acceptInvitation(invitationForMe)
                                   .then((value) {
                                 if (value == null) {
                                   BlocProvider.of<InvitationBloc>(context)

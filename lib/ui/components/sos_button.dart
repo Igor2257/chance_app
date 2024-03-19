@@ -1,6 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
-import 'package:chance_app/ux/repository/sos_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
