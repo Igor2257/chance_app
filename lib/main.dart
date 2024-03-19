@@ -16,12 +16,6 @@ import 'package:chance_app/ui/pages/navigation/invitations/enter_accept_code/ent
 import 'package:chance_app/ui/pages/navigation/my_wards/my_wards.dart';
 import 'package:chance_app/ui/pages/navigation/navigation_page/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/navigation_page/navigation_page.dart';
-import 'package:chance_app/ui/pages/navigation/place_picker/src/models/address_component.dart';
-import 'package:chance_app/ui/pages/navigation/place_picker/src/models/bounds.dart';
-import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geocoding_result.dart';
-import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geometry.dart';
-import 'package:chance_app/ui/pages/navigation/place_picker/src/models/location.dart';
-import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ui/pages/onboarding/onboarding_page.dart';
 import 'package:chance_app/ui/pages/onboarding/onboarding_tutorial.dart';
 import 'package:chance_app/ui/pages/reminders_page/add_medicine_page/add_medicine_page.dart';
@@ -47,15 +41,11 @@ import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
-import 'package:chance_app/ux/enum/day_periodicity.dart';
-import 'package:chance_app/ux/enum/instruction.dart';
-import 'package:chance_app/ux/enum/medicine_type.dart';
-import 'package:chance_app/ux/enum/periodicity.dart';
 import 'package:chance_app/ux/helpers/ad_helper.dart';
+import 'package:chance_app/ux/helpers/background_service_helper.dart';
+import 'package:chance_app/ux/helpers/reminders_helper.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/internet_connection_stream.dart';
-import 'package:chance_app/ux/model/me_user.dart';
-import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/product_model.dart';
 import 'package:chance_app/ux/model/settings.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
@@ -72,18 +62,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timezone/data/latest_all.dart';
@@ -120,23 +106,13 @@ Future<void> main() async {
     }
   });
 
-  // Local notifications plugin setup
-  await FlutterLocalNotificationsPlugin().initialize(
-    const InitializationSettings(
-      android: AndroidInitializationSettings(kDefaultAndroidIcon),
-      iOS: DarwinInitializationSettings(),
-    ),
-  );
-  await Permission.notification.request();
+  await HiveCRUD().initialize().then((value) async {
+    await Permission.notification.request();
+    await RemindersHelper.initialize();
+    await BackgroundServiceHelper.initialize();
 
-  // Timezone setup, is required by scheduler
-  final currentTimeZone = await FlutterTimezone.getLocalTimezone();
-  initializeTimeZones();
-  setLocalLocation(getLocation(currentTimeZone));
-
-  await initHiveBoxes().whenComplete(() async {
     if ((!HiveCRUD().setting.blockAd)) {
-      await MobileAds.instance.initialize();
+      unawaited(MobileAds.instance.initialize());
     }
   }).whenComplete(() async {
     UserRepository repository = UserRepository();
@@ -542,171 +518,6 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                       ],
                     ),
                   ),
-                  if (InternetConnectionStream.isUserHaveOfflineData)
-                    Container(
-                        color: Colors.black38,
-                        child: Center(
-                          child: Container(
-                            width: size.width,
-                            decoration: BoxDecoration(
-                                color: beige100,
-                                borderRadius: BorderRadius.circular(16)),
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 16, horizontal: 16),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 16, horizontal: 24),
-                                  child: Column(
-                                    children: [
-                                      SvgPicture.asset(
-                                        "assets/icons/tasks_big.svg",
-                                        color: beige500,
-                                      ),
-                                      Text(
-                                        AppLocalizations.instance
-                                            .translate("tasks"),
-                                        style: TextStyle(
-                                            fontSize: 24, color: primaryText),
-                                      ),
-                                      const SizedBox(
-                                        height: 30,
-                                      ),
-                                      Text(
-                                        AppLocalizations.instance.translate(
-                                            "uHaveNotSynchronizedDataWithServer"),
-                                        textAlign: TextAlign.justify,
-                                        style: TextStyle(
-                                            fontSize: 16, color: primaryText),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.all(4),
-                                  height: 120,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(16),
-                                      color: darkNeutral800),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () async {
-                                          await TasksRepository()
-                                              .sendAllLocalTasksData()
-                                              .then((value) {
-                                            if (value) {
-                                              internetConnectionStream
-                                                  .changeUserOfflineData(false);
-                                            }
-                                          });
-                                        },
-                                        child: SizedBox(
-                                          width: (size.width / 2.1) - 50,
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Container(
-                                                height: 56,
-                                                width: 56,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            90),
-                                                    color: primary300),
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons.upload,
-                                                    color: primaryText,
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              Expanded(
-                                                child: Text(
-                                                  AppLocalizations.instance
-                                                      .translate(
-                                                          "sendMyDataOnServer"),
-                                                  maxLines: 2,
-                                                  textAlign: TextAlign.center,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      color: primary50,
-                                                      fontSize: 16),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () async {
-                                          await TasksRepository()
-                                              .updateLocalTasks()
-                                              .whenComplete(() {
-                                            internetConnectionStream
-                                                .changeUserOfflineData(false);
-                                          });
-                                        },
-                                        child: SizedBox(
-                                          width: (size.width / 2.1) - 50,
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Container(
-                                                height: 56,
-                                                width: 56,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            90),
-                                                    border: Border.all(
-                                                        color: primary300)),
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons.download,
-                                                    color: primary50,
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              Expanded(
-                                                child: Text(
-                                                  AppLocalizations.instance
-                                                      .translate(
-                                                          "synchronizeDataWithServer"),
-                                                  maxLines: 2,
-                                                  textAlign: TextAlign.center,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      color: primary50,
-                                                      fontSize: 16),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        )),
                 ],
               ),
             ),
@@ -775,64 +586,5 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     });
 
     return isOkay;
-  }
-}
-
-Box<MeUser>? userBox;
-Box<TaskModel>? tasksBox;
-Box<MedicineModel>? medicineBox;
-Box<PickResult>? savedAddressesBox;
-Box<Settings>? settingsBox;
-Box<ProductModel>? itemsBox;
-Box<SosContactModel>? contactBox;
-Box<SosGroupModel>? groupBox;
-
-Future<bool> initHiveBoxes() async {
-  final documentsDirectory = await getApplicationDocumentsDirectory();
-  Hive.init(documentsDirectory.path);
-  //await Repository().deleteCookie();
-  //await Hive.deleteBoxFromDisk('user');
-  //await Hive.deleteBoxFromDisk('myTasks');
-  //await Hive.deleteBoxFromDisk('savedAddresses');
-  //await Hive.deleteBoxFromDisk('myMedicines');
-  //await Hive.deleteBoxFromDisk('settings');
-  //await Hive.deleteBoxFromDisk('items');
-  Hive.registerAdapter(MeUserAdapter());
-  Hive.registerAdapter(TaskModelAdapter());
-  Hive.registerAdapter(MedicineModelAdapter());
-  Hive.registerAdapter(LocationAdapter());
-  Hive.registerAdapter(GeocodingResultAdapter());
-  Hive.registerAdapter(GeometryAdapter());
-  Hive.registerAdapter(AddressComponentAdapter());
-  Hive.registerAdapter(BoundsAdapter());
-  Hive.registerAdapter(PickResultAdapter());
-  Hive.registerAdapter(DayPeriodicityAdapter());
-  Hive.registerAdapter(InstructionAdapter());
-  Hive.registerAdapter(MedicineTypeAdapter());
-  Hive.registerAdapter(PeriodicityAdapter());
-  Hive.registerAdapter(SettingsAdapter());
-  Hive.registerAdapter(ProductModelAdapter());
-  try {
-    userBox = await Hive.openBox<MeUser>("user");
-    tasksBox = await Hive.openBox<TaskModel>("myTasks");
-    medicineBox = await Hive.openBox<MedicineModel>("myMedicines");
-    savedAddressesBox = await Hive.openBox<PickResult>("savedAddresses");
-    itemsBox = await Hive.openBox<ProductModel>("items");
-    contactBox = await Hive.openBox<SosContactModel>("sosContactModel");
-    groupBox = await Hive.openBox<SosGroupModel>("sosGroupModel");
-    await Hive.openBox<Settings>("settings").then((value) async {
-      settingsBox = value;
-      Settings setting = settingsBox != null
-          ? settingsBox!.get('settings') != null
-              ? settingsBox!.get('settings') as Settings
-              : const Settings()
-          : const Settings();
-      if (setting.firstEnter == null) {
-        HiveCRUD().updateSettings(Settings(firstEnter: DateTime.now()));
-      }
-    });
-    return true;
-  } catch (_) {
-    return false;
   }
 }

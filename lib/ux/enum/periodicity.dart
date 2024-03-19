@@ -10,17 +10,17 @@ part 'periodicity.g.dart';
 enum Periodicity {
   @HiveField(0)
   everyDay,
-  // @HiveField(1)
-  // inADay,
+  @HiveField(1)
+  inADay,
   @HiveField(2)
   certainDays;
 
   String toLocalizedString() {
     switch (this) {
       case Periodicity.everyDay:
-        return AppLocalizations.instance.translate("daily");
-      // case Periodicity.inADay:
-    //   return "Кожні 2 дні";
+        return "Щодня";
+      case Periodicity.inADay:
+        return "Кожні 2 дні";
       case Periodicity.certainDays:
         return AppLocalizations.instance.translate("certainDaysOfTheWeek");
     }

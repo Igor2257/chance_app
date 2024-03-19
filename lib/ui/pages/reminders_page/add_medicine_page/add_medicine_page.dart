@@ -13,7 +13,7 @@ import 'package:chance_app/ui/pages/reminders_page/add_medicine_page/components/
 import 'package:chance_app/ui/pages/reminders_page/add_medicine_page/components/dose_count_picker.dart';
 import 'package:chance_app/ui/pages/reminders_page/add_medicine_page/components/dose_text.dart';
 import 'package:chance_app/ux/bloc/add_medicine_bloc/add_medicine_bloc.dart';
-
+import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 // import 'package:chance_app/ux/enum/day_periodicity.dart';
 import 'package:chance_app/ux/enum/instruction.dart';
 import 'package:chance_app/ux/enum/medicine_type.dart';
@@ -22,7 +22,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 abstract class AddMedicineStep {
   static const addName = "addName";
@@ -38,7 +37,7 @@ abstract class AddMedicineStep {
 }
 
 class AddMedicinePage extends StatefulWidget {
-  AddMedicinePage({super.key});
+  const AddMedicinePage({super.key});
 
   @override
   State<AddMedicinePage> createState() => _AddMedicinePageState();
@@ -68,10 +67,8 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
     return BlocListener<AddMedicineBloc, AddMedicineState>(
       listener: (context, state) {
         if (state.medicine != null) {
-          Navigator.of(context).pop(state.medicine);
-        } else if (state.errorMessage != null) {
-          Fluttertoast.showToast(
-              msg: AppLocalizations.instance.translate("smthWentWrong"));
+          context.read<RemindersBloc>().add(AddMedicine(state.medicine!));
+          Navigator.of(context).pop();
         }
       },
       child: Scaffold(
@@ -98,7 +95,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
   }
 
   Widget _addNamePage() {
-    final border = UnderlineInputBorder(
+    const border = UnderlineInputBorder(
       borderSide: BorderSide(color: beige200),
     );
     return AddMedicinePageScaffold(
@@ -119,7 +116,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             placeholder:
                 AppLocalizations.instance.translate("enterTheNameOfTheDrug"),
-            placeholderStyle: TextStyle(color: beige800),
+            placeholderStyle: const TextStyle(color: beige800),
             clearButtonMode: OverlayVisibilityMode.always,
             onTapOutside: (_) => FocusScope.of(context).unfocus(),
           ),
@@ -138,11 +135,11 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                 context.read<AddMedicineBloc>().add(SetName(name));
                 _navigator.pushNamed(AddMedicineStep.addType);
               },
-              style: TextStyle(fontSize: 16, color: primary50),
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                suffixIcon: const CupertinoListTileChevron(),
-                suffixIconConstraints: const BoxConstraints(),
+              style: const TextStyle(fontSize: 16, color: primary50),
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                suffixIcon: CupertinoListTileChevron(),
+                suffixIconConstraints: BoxConstraints(),
                 iconColor: primary50,
                 enabledBorder: border,
                 focusedBorder: border,
@@ -262,7 +259,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
             children: [
               Text(
                 AppLocalizations.instance.translate("chooseTheDaysOfTheWeek"),
-                style: TextStyle(fontSize: 22, color: primary100),
+                style: const TextStyle(fontSize: 22, color: primary100),
               ),
               Expanded(
                 child: Center(
@@ -281,10 +278,10 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                             color: isSelected ? primary100 : Colors.transparent,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
-                              side: BorderSide(color: darkNeutral800),
+                              side: const BorderSide(color: darkNeutral800),
                             ),
-                            textStyle:
-                                TextStyle(fontSize: 22, color: primary800),
+                            textStyle: const TextStyle(
+                                fontSize: 22, color: primary800),
                             clipBehavior: Clip.hardEdge,
                             child: InkWell(
                               onTap: () {
@@ -340,7 +337,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                   onDateChanged: (DateTime date) {
                     selectedDate = date;
                   },
-                  textStyle: TextStyle(fontSize: 28, color: primary800),
+                  textStyle: const TextStyle(fontSize: 28, color: primary800),
                 ),
               ),
             ),
@@ -453,12 +450,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   child: Text(
-                                    [
-                                      doseTime.hour.toString().padLeft(2, "0"),
-                                      doseTime.minute
-                                          .toString()
-                                          .padLeft(2, "0"),
-                                    ].join(':'),
+                                    doseTime.format(context),
                                     style: const TextStyle(
                                       fontSize: 22,
                                       color: Color(0xFF212833),
@@ -569,7 +561,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                       else ...[
                         Text(AppLocalizations.instance
                             .translate("instructionsAttached")),
-                        Icon(
+                        const Icon(
                           Icons.check,
                           color: primary50,
                         ),

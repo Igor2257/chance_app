@@ -15,6 +15,8 @@ class PeriodicityAdapter extends TypeAdapter<Periodicity> {
     switch (reader.readByte()) {
       case 0:
         return Periodicity.everyDay;
+      case 1:
+        return Periodicity.inADay;
       case 2:
         return Periodicity.certainDays;
       default:
@@ -27,6 +29,9 @@ class PeriodicityAdapter extends TypeAdapter<Periodicity> {
     switch (obj) {
       case Periodicity.everyDay:
         writer.writeByte(0);
+        break;
+      case Periodicity.inADay:
+        writer.writeByte(1);
         break;
       case Periodicity.certainDays:
         writer.writeByte(2);

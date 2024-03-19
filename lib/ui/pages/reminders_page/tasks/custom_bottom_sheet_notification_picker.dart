@@ -12,7 +12,24 @@ enum NotificationsBefore {
   fiveMinute,
   thirtyMinute,
   oneHour,
-  oneDay
+  oneDay;
+
+  int? get minutesCount {
+    switch (this) {
+      case NotificationsBefore.no:
+        return null;
+      case NotificationsBefore.atTime:
+        return 0;
+      case NotificationsBefore.fiveMinute:
+        return 5;
+      case NotificationsBefore.thirtyMinute:
+        return 30;
+      case NotificationsBefore.oneHour:
+        return Duration.minutesPerHour;
+      case NotificationsBefore.oneDay:
+        return Duration.minutesPerDay;
+    }
+  }
 }
 
 class CustomBottomSheetNotificationPicker extends StatefulWidget {

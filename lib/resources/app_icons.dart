@@ -4,6 +4,7 @@ class AppIcons {
   static const String addInstruction = 'assets/icons/add_instruction.svg';
   static const String alarmIcon = 'assets/icons/alarm_icon.svg';
   static const String apple = 'assets/icons/apple.svg';
+  static const String boxOpen = 'assets/icons/box_open.svg';
   static const String calendar = 'assets/icons/calendar.svg';
   static const String calendarOpen = 'assets/icons/calendar_open.svg';
   static const String checkboxChecked = 'assets/icons/checkbox_checked.svg';
@@ -20,4 +21,5 @@ class AppIcons {
   static const String pillsSmall = 'assets/icons/pills_small.svg';
   static const String tasksBig = 'assets/icons/tasks_big.svg';
   static const String tasksSmall = 'assets/icons/tasks_small.svg';
+  static const String trash = 'assets/icons/trash.svg';
 }

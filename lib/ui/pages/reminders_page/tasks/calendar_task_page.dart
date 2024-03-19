@@ -9,11 +9,10 @@ import 'package:chance_app/ui/pages/reminders_page/tasks/custom_bottom_sheet_not
 import 'package:chance_app/ux/bloc/add_task_bloc/add_task_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/model/task_model.dart';
-import 'package:chance_app/ux/repository/tasks_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:uuid/uuid.dart';
 
 class CalendarTaskPage extends StatefulWidget {
   const CalendarTaskPage({super.key});
@@ -33,8 +32,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return BlocBuilder<AddTaskBloc, AddTaskState>(
-        builder: (context, state) {
+    return BlocBuilder<AddTaskBloc, AddTaskState>(builder: (context, state) {
       DateTime? deadlineForTask = state.newDeadlineForTask;
       return Scaffold(
         appBar: AppBar(
@@ -56,7 +54,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                   : Icons.arrow_back_ios)),
           actions: [
             IconButton(
-                onPressed: ()async {
+                onPressed: () async {
                   DateTime now = DateTime.now();
                   String name = state.taskTitle;
                   if (name.trim().isNotEmpty) {
@@ -78,80 +76,15 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                     }
 
                     TaskModel taskModel = TaskModel(
+                      id: const Uuid().v1(),
+                      updatedAt: DateTime.now(),
                       message: name,
                       date: date,
-                      //notificationsBefore: state.oldNotificationsBefore.name,
+                      remindBefore: state.oldNotificationsBefore.minutesCount,
                     );
 
-
-                    await TasksRepository().saveTask(taskModel).then((value) {
-
-                      showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (context) {
-                            return SizedBox(
-                                height: 160,
-                                width: MediaQuery.of(context).size.width,
-                                child: AlertDialog(
-                                  backgroundColor: beigeBG,
-                                  content: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 24, vertical: 16),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        const Icon(Icons.done),
-                                        const SizedBox(
-                                          height: 40,
-                                        ),
-                                        Text(
-                                          AppLocalizations.instance
-                                              .translate("taskAdded"),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 24, color: primaryText),
-                                        ),
-                                        Text(
-                                          "”${taskModel.message}”",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 16, color: primaryText),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  actions: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.of(context).pop(true);
-
-                                        BlocProvider.of<RemindersBloc>(context)
-                                            .add(SaveTask(taskModel: taskModel));
-                                        BlocProvider.of<AddTaskBloc>(context).add(ClearState());
-
-                                      },
-                                      child: SizedBox(
-                                        height: 44,
-                                        child: Text(
-                                          "OK",
-                                          style: TextStyle(
-                                              fontSize: 20, color: primary500),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ));
-                          }).whenComplete(() {
-                        BlocProvider.of<RemindersBloc>(context)
-                            .add(LoadData());
-                        Navigator.of(context).pop();
-                      });
-                    });
-                  } else {
-                    Fluttertoast.showToast(
-                        msg: AppLocalizations.instance
-                            .translate("theNameMustContainAtLeast2Characters"));
+                    BlocProvider.of<RemindersBloc>(context)
+                        .add(AddTask(taskModel));
                   }
                 },
                 icon: Icon(
@@ -223,7 +156,8 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                   ),
                   RoundedButton(
                       onPress: () {
-                        const CustomBottomSheetNotificationPicker().show(context);
+                        const CustomBottomSheetNotificationPicker()
+                            .show(context);
                       },
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       height: 48,

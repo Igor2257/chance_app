@@ -109,15 +109,16 @@ class _MainPageState extends State<MainPage> {
                               GestureDetector(
                                 onTap: () async {
                                   try {
-                                    await TasksRepository()
-                                        .updateTask(
-                                        id: 'remoteMessage.data["id"].toString()',
-                                          isDone: true)
-                                        .then((value) {
-                                      if (value == null) {
-                                        Navigator.of(context).pop();
-                                      }
-                                    });
+                                    // await TasksRepository()
+                                    //     .updateTask(
+                                    //         id: remoteMessage.data["id"]
+                                    //             .toString(),
+                                    //         isDone: true)
+                                    //     .then((value) {
+                                    //   if (value == null) {
+                                    //     Navigator.of(context).pop();
+                                    //   }
+                                    // });
                                   } catch (e) {
                                     Fluttertoast.showToast(msg: e.toString());
                                   }

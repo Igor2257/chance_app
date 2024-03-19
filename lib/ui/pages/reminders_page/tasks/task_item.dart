@@ -1,6 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ux/model/task_model.dart';
-import 'package:flutter/cupertino.dart' show CupertinoListTile;
 import 'package:flutter/material.dart';
 
 class TaskItem extends StatelessWidget {
@@ -15,11 +14,12 @@ class TaskItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoListTile(
+    final now = DateTime.now();
+    final hasActiveReminder = task.reminderTime?.isAfter(now) ?? false;
+    return ListTile(
       onTap: onTap,
-      backgroundColor: primary50,
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 28),
-      leadingToTitle: 4,
+      tileColor: primary50,
+      horizontalTitleGap: 4,
       leading: Icon(
         task.isDone ? Icons.check_box_outlined : Icons.check_box_outline_blank,
         size: 28,
@@ -36,19 +36,34 @@ class TaskItem extends StatelessWidget {
               task.isDone ? TextDecoration.lineThrough : TextDecoration.none,
         ),
       ),
-      additionalInfo: Text(
-        [
-          task.date!.hour.toString().padLeft(2, "0"),
-          task.date!.minute.toString().padLeft(2, "0"),
-        ].join(":"),
+      trailing: Text.rich(
+        TextSpan(
+          text: [
+            task.date.hour.toString().padLeft(2, "0"),
+            task.date.minute.toString().padLeft(2, "0"),
+          ].join(":"),
+          children: [
+            if (hasActiveReminder)
+              WidgetSpan(
+                alignment: PlaceholderAlignment.middle,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 4),
+                  child: Icon(
+                    Icons.alarm,
+                    color: task.isDone ? darkNeutral400 : primaryText,
+                  ),
+                ),
+              ),
+          ],
+        ),
         style: TextStyle(
           fontSize: 16,
-          color: task.isDone ? darkNeutral400 : primaryText,
+          color: task.isDone
+              ? darkNeutral400
+              : task.date.isBefore(now)
+                  ? red900
+                  : primaryText,
         ),
-      ),
-      trailing: Icon(
-        Icons.alarm,
-        color: task.isDone ? darkNeutral400 : primaryText,
       ),
     );
   }

@@ -1,12 +1,16 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/medicine_added_bottom_sheet.dart';
+import 'package:chance_app/ui/pages/reminders_page/components/medicine_status_updated_dialog.dart';
+import 'package:chance_app/ui/pages/reminders_page/components/task_status_updated_dialog.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
-import 'package:chance_app/ui/pages/reminders_page/add_medicine_page/components/medicine_added_bottom_sheet.dart';
-import 'package:chance_app/ui/pages/reminders_page/components/calendar.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/custom_bottom_sheet.dart';
+import 'package:chance_app/ui/pages/reminders_page/components/expandable_calendar.dart';
+import 'package:chance_app/ui/pages/reminders_page/components/success_dialog.dart';
 import 'package:chance_app/ui/pages/reminders_page/medicine/medicine_list.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/task_list.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/tasks_sheets.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
+import 'package:chance_app/ux/enum/reminder_action_result.dart';
 import 'package:chance_app/ux/enum/reminders.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/task_model.dart';
@@ -31,49 +35,25 @@ class _RemindersPageState extends State<RemindersPage> {
     final selectedReminders = await showModalBottomSheet<Reminders>(
       context: context,
       backgroundColor: beige100,
-      enableDrag: true,
       showDragHandle: true,
-      useSafeArea: true,
-      builder: (_) => const CustomBottomSheet(),
+      builder: (context) => const CustomBottomSheet(),
     );
-
-    if (selectedReminders != null) {
-      switch (selectedReminders) {
-        case Reminders.tasks:
-          _scaffoldKey.currentState?.showBottomSheet(
-            backgroundColor: beige100,
-            (_) => const TasksSheets(),
-          );
-          break;
-        case Reminders.medicine:
-          var addMedicine = true;
-          do {
-            if (!mounted) break;
-            final result =
-                await Navigator.of(context).pushNamed("/add_medicine");
-            if (result is MedicineModel && mounted) {
-              BlocProvider.of<RemindersBloc>(context)
-                  .add(SaveMedicine(medicineModel: result));
-              final addMore = await showModalBottomSheet<bool>(
-                context: context,
-                backgroundColor: beige100,
-                enableDrag: true,
-                showDragHandle: true,
-                builder: (_) => MedicineAddedBottomSheet(result),
-              );
-              if (addMore ?? false) continue;
-            }
-            addMedicine = false;
-          } while (addMedicine);
-          break;
-      }
+    if (selectedReminders == null) return;
+    switch (selectedReminders) {
+      case Reminders.tasks:
+        _scaffoldKey.currentState?.showBottomSheet(
+          backgroundColor: beige100,
+          (_) => const TasksSheets(),
+        );
+      case Reminders.medicine:
+        if (mounted) Navigator.of(context).pushNamed("/add_medicine");
     }
   }
 
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<RemindersBloc>(context).add(LoadData());
+    context.read<RemindersBloc>().add(const LoadData());
   }
 
   @override
@@ -84,89 +64,168 @@ class _RemindersPageState extends State<RemindersPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: beigeBG,
-      appBar: AppBar(
-        centerTitle: true,
-        scrolledUnderElevation: 0,
-        titleTextStyle: TextStyle(fontSize: 22, color: primaryText),
-        title: Text(AppLocalizations.instance.translate("reminder")),
-        leading: BackButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed("/");
-          },
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.more_vert),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        bottom: false,
-        child: Stack(
-          fit: StackFit.expand,
-          alignment: Alignment.center,
-          children: [
-            BlocSelector<RemindersBloc, RemindersState, bool>(
-              selector: (state) => state.isLoading,
-              builder: (context, isLoading) {
-                return Visibility(
-                  visible: !isLoading,
-                  replacement: CupertinoActivityIndicator(
-                    color: primary500,
-                    radius: 50,
-                  ),
-                  child: Column(
-                    children: [
-                      CalendarView(),
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: _tabSwitcher(),
-                      ),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 125),
-                            child: _itemsList(),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+    return BlocListener<RemindersBloc, RemindersState>(
+      listener: (context, state) async {
+        if (state is TaskAdded) {
+          await showDialog<void>(
+            context: context,
+            builder: (context) => SuccessDialog(
+              title: const Text("Завдання додано"),
+              subtitle: Text('"${state.task.message}"'),
             ),
-            Positioned(
-              right: _padding.right + 10,
-              bottom: _padding.bottom + 10,
-              child: ElevatedButton.icon(
-                onPressed: _onAddButtonPressed,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primary1000,
-                  foregroundColor: primary50,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 12,
-                  ),
-                  minimumSize: const Size.square(36),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    letterSpacing: 0.15,
-                  ),
-                ),
-                icon: const Icon(Icons.add),
-                label: Text(AppLocalizations.instance.translate("add")),
-              ),
+          );
+        } else if (state is TaskDone) {
+          await showDialog<void>(
+            context: context,
+            builder: (context) => SuccessDialog(
+              title: const Text("Завдання виконано"),
+              subtitle: Text('"${state.task.message}"'),
+            ),
+          );
+        } else if (state is TaskPostponed) {
+          await showDialog<void>(
+            context: context,
+            builder: (context) => TaskStatusUpdatedDialog(
+              state.task,
+              status: ReminderState.rescheduled,
+              bottom: Text("Відкладено на ${state.value.inMinutes}хв"),
+            ),
+          );
+        } else if (state is TaskDeleted) {
+          await showDialog<void>(
+            context: context,
+            builder: (context) => SuccessDialog(
+              title: const Text("Завдання видалено"),
+              subtitle: Text('"${state.task.message}"'),
+            ),
+          );
+        } else if (state is MedicineAdded) {
+          final addMore = await showModalBottomSheet<bool>(
+            context: context,
+            backgroundColor: beige100,
+            showDragHandle: true,
+            builder: (context) => MedicineAddedBottomSheet(state.medicine),
+          );
+          if ((addMore ?? false) && context.mounted) {
+            Navigator.of(context).pushNamed("/add_medicine");
+          }
+        } else if (state is MedicineDone) {
+          await showDialog<void>(
+            context: context,
+            builder: (context) => MedicineStatusUpdatedDialog(
+              state.medicine,
+              doseTime: state.at,
+              status: ReminderState.done,
+              bottom: const Text("Прийнято"),
+            ),
+          );
+        } else if (state is MedicinePostponed) {
+          await showDialog<void>(
+            context: context,
+            builder: (context) => MedicineStatusUpdatedDialog(
+              state.medicine,
+              doseTime: state.doseTime,
+              status: ReminderState.rescheduled,
+              bottom: Text("Відкладено на ${state.value.inMinutes}хв"),
+            ),
+          );
+        } else if (state is MedicineDeleted) {
+          await showDialog<void>(
+            context: context,
+            builder: (context) => SuccessDialog(
+              title: Text("${state.medicine.name} видалено"),
+            ),
+          );
+        }
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: beigeBG,
+        appBar: AppBar(
+          centerTitle: true,
+          scrolledUnderElevation: 0,
+          titleTextStyle: const TextStyle(fontSize: 22, color: primaryText),
+          title: const Text("Нагадування"),
+          leading: BackButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed("/");
+            },
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.more_vert),
             ),
           ],
         ),
+        body: SafeArea(
+          bottom: false,
+          child: Stack(
+            fit: StackFit.expand,
+            alignment: Alignment.center,
+            children: [
+              BlocSelector<RemindersBloc, RemindersState, bool>(
+                selector: (state) => state is RemindersLoading,
+                builder: (context, isLoading) {
+                  return Visibility(
+                    visible: !isLoading,
+                    replacement: const CupertinoActivityIndicator(
+                      color: primary500,
+                      radius: 50,
+                    ),
+                    child: Column(
+                      children: [
+                        _calendarView(),
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: _tabSwitcher(),
+                        ),
+                        Expanded(child: _tabViews()),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              Positioned(
+                right: _padding.right + 10,
+                bottom: _padding.bottom + 10,
+                child: ElevatedButton.icon(
+                  onPressed: _onAddButtonPressed,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primary1000,
+                    foregroundColor: primary50,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 12,
+                    ),
+                    minimumSize: const Size.square(36),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      letterSpacing: 0.15,
+                    ),
+                  ),
+                  icon: const Icon(Icons.add),
+                  label: const Text("Додати"),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _calendarView() {
+    return BlocBuilder<RemindersBloc, RemindersState>(
+      builder: (context, state) => ExpandableCalendar(
+        tasks: state.tasks,
+        selectedDay: state.selectedDay,
+        onDaySelect: (dayDate) {
+          context.read<RemindersBloc>().add(SelectDay(dayDate));
+        },
       ),
     );
   }
@@ -213,17 +272,35 @@ class _RemindersPageState extends State<RemindersPage> {
     );
   }
 
-  Widget _itemsList() {
+  Widget _tabViews() {
+    return BlocSelector<RemindersBloc, RemindersState, DateTime>(
+      selector: (state) => state.selectedDay,
+      builder: (context, selectedDay) => AnimatedSwitcher(
+        duration: const Duration(milliseconds: 100),
+        child: Align(
+          key: ValueKey(selectedDay),
+          alignment: Alignment.topCenter,
+          child: _itemList(selectedDay),
+        ),
+      ),
+    );
+  }
+
+  Widget _itemList(DateTime dayDate) {
     switch (_selectedTab) {
       case Reminders.medicine:
         return BlocSelector<RemindersBloc, RemindersState, List<MedicineModel>>(
-          selector: (state) => state.myMedicines,
-          builder: (context, items) => MedicineList(items),
+          selector: (state) => state.medicines,
+          builder: (context, medicines) {
+            return MedicineList(medicines, dayDate: dayDate);
+          },
         );
       case Reminders.tasks:
         return BlocSelector<RemindersBloc, RemindersState, List<TaskModel>>(
-          selector: (state) => state.myTasks,
-          builder: (context, items) => TaskList(items),
+          selector: (state) => state.tasks,
+          builder: (context, tasks) {
+            return TaskList(tasks, dayDate: dayDate);
+          },
         );
     }
   }

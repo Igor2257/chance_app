@@ -90,7 +90,7 @@ class _DoseCountPickerState extends State<DoseCountPicker> {
                         : Colors.transparent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
-                      side: BorderSide(color: darkNeutral800),
+                      side: const BorderSide(color: darkNeutral800),
                     ),
                     textStyle: TextStyle(
                       fontSize: 22,

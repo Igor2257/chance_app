@@ -1,202 +1,189 @@
-import 'dart:convert';
-
-import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ux/api/api_client.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart' show DateUtils;
+import 'package:hive_flutter/hive_flutter.dart';
 
 class MedicineRepository {
-  Future<List<MedicineModel>> updateLocalMedicines({bool? forcePush}) async {
-    List<MedicineModel> medicines = [];
+  final _apiClient = const ApiClient();
+  final _userRepository = UserRepository();
+  final Box<MedicineModel> _storage = medicineBox;
 
-    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      medicines = List.from(HiveCRUD()
-          .myMedicines
-          .where((element) => element.isRemoved == false));
-    } else {
-      if ((forcePush != null && forcePush) || !checkIsAnyMedicinesNotSent()) {
-        await loadMedicines().then((value) async {
-          await HiveCRUD().clearMedicines().whenComplete(() {
-            medicines = value;
-
-            for (var medicine in medicines) {
-              HiveCRUD().addMedicine(medicine);
-            }
-          });
-        });
-      }
-    }
-    return medicines;
+  List<MedicineModel> getLocalMedicines() {
+    return _storage.values.where((e) => !e.isRemoved).toList();
   }
 
-  Future<List<MedicineModel>> loadMedicines() async {
-    List<MedicineModel> medicines = [];
-    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
-          toastLength: Toast.LENGTH_LONG);
-    } else {
-      try {
-        var url = Uri.parse('$apiUrl/medicine');
-        final cookie = await UserRepository().getCookie();
-        await http.get(
-          url,
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Cookie': cookie.toString(),
-          },
-        ).then((value) {
-          if (value.statusCode > 199 && value.statusCode < 300) {
-            List<dynamic> list = jsonDecode(value.body);
-
-            for (int i = 0; i < list.length; i++) {
-              MedicineModel medicine = MedicineModel.fromJson(list[i]);
-              medicine = medicine.copyWith(isSentToDB: true);
-              medicines.add(medicine);
-            }
-          } else {
-            String error = jsonDecode(value.body)["message"]
-                .toString()
-                .replaceAll("[", "")
-                .replaceAll("]", "");
-            Fluttertoast.showToast(msg: error, toastLength: Toast.LENGTH_LONG);
-          }
-        });
-      } catch (error) {
-        Fluttertoast.showToast(
-            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+  Future<Set<String>> syncMedicines() async {
+    final cookie = await _userRepository.getCookie();
+    final fetchedItems = await _apiClient.fetchMedicines(
+      cookie: cookie.toString(),
+    );
+    if (fetchedItems == null) return {}; // There is nothing to sync
+    // Sync map is a Map of item IDs and pairs of local and remote items
+    final result = <String>{};
+    final syncMap = <String, ({MedicineModel? local, MedicineModel? remote})>{
+      for (final item in fetchedItems) item.id: (local: null, remote: item),
+    };
+    for (final item in _storage.values) {
+      syncMap[item.id] = (local: item, remote: syncMap[item.id]?.remote);
+    }
+    // Start to sync the items
+    for (final item in syncMap.values) {
+      final local = item.local;
+      final remote = item.remote;
+      if (local == null) {
+        await _storage.putMedicine(remote!); // Save remote item
+      } else if (remote == null) {
+        if (!local.isRemoved) {
+          final item = await _apiClient.postMedicine(
+            local,
+            cookie: cookie.toString(),
+          );
+          if (item == null) continue;
+          await _storage.putMedicine(item);
+        }
+        await _storage.deleteMedicine(local); // Delete permanently
+        result.add(local.id);
+      } else if (local.isRemoved) {
+        final deleted = await _apiClient.deleteMedicine(
+          remote,
+          cookie: cookie.toString(),
+        );
+        if (!deleted) continue;
+        await _storage.deleteMedicine(local);
+        result.add(local.id);
+      } else if (local.updatedAt.isBefore(remote.updatedAt)) {
+        await _storage.putMedicine(remote);
+        result.add(local.id);
+      } else if (local.updatedAt.isAfter(remote.updatedAt)) {
+        await _apiClient.patchMedicine(local, cookie: cookie.toString());
       }
     }
-    return medicines;
+    return result;
   }
 
-  Future<String?> saveMedicine(MedicineModel medicineModel) async {
-    String? error;
-    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error = "Немає підключення до інтернету";
-      await HiveCRUD().addMedicine(medicineModel);
+  Future<MedicineModel> addMedicine(MedicineModel medicine) async {
+    final cookie = await _userRepository.getCookie();
+    final model = await _apiClient.postMedicine(
+      medicine,
+      cookie: cookie.toString(),
+    );
+    medicine = model ?? medicine.copyWith(updatedAt: DateTime.now());
+    await _storage.putMedicine(medicine);
+    return medicine;
+  }
+
+  Future<MedicineModel> updateMedicine(MedicineModel medicine) async {
+    final cookie = await _userRepository.getCookie();
+    final model = await _apiClient.patchMedicine(
+      medicine,
+      cookie: cookie.toString(),
+    );
+    medicine = model ?? medicine.copyWith(updatedAt: DateTime.now());
+    await _storage.putMedicine(medicine);
+    return medicine;
+  }
+
+  Future<bool> removeMedicine(MedicineModel medicine) async {
+    final cookie = await _userRepository.getCookie();
+    final deleted = await _apiClient.deleteMedicine(
+      medicine,
+      cookie: cookie.toString(),
+    );
+    if (deleted) {
+      await _storage.deleteMedicine(medicine);
     } else {
-      try {
-        var url = Uri.parse('$apiUrl/medicine');
-        final cookie = await UserRepository().getCookie();
-        String date = medicineModel.startDate.toUtc().toString();
-        Map<String, dynamic> map = medicineModel.toJson();
-        map["startDate"] = date;
-        await http
-            .post(
-          url,
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Cookie': cookie.toString(),
-          },
-          body: jsonEncode(map),
-        )
-            .then((value) async {
-          if (!(value.statusCode > 199 && value.statusCode < 300)) {
-            error = jsonDecode(value.body)["message"]
-                .toString()
-                .replaceAll("[", "")
-                .replaceAll("]", "");
-          } else {
-            await await HiveCRUD()
-                .addMedicine(medicineModel)
-                .whenComplete(() async {
-              await HiveCRUD()
-                  .setIsSentInLocalMedicine(true, medicineModel: medicineModel);
-            });
-          }
-        });
-      } catch (e) {
-        error = error.toString();
-      }
+      medicine = medicine.copyWith(isRemoved: true);
+      await _storage.putMedicine(medicine);
     }
-    if (error != null) {
-      Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
-    }
-    return error;
+    return deleted;
   }
 
-  Future<String?> updateMedicine(MedicineModel medicineModel) async {
-    String? error;
-    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      //Fluttertoast.showToast(
-      //    msg: "Немає підключення до інтернету",
-      //    toastLength: Toast.LENGTH_LONG);
-      //error = "Немає підключення до інтернету";
-      await HiveCRUD().updateLocalMedicine(medicineModel);
-    } else {
-      try {
-        var url = Uri.parse('$apiUrl/medicine/${medicineModel.id}');
-        final cookie = await UserRepository().getCookie();
-        String? newDate = medicineModel.startDate.toUtc().toString();
-        Map<String, dynamic> map = medicineModel.toJson();
-        map["startDate"] = newDate;
-        await http
-            .patch(url,
-                headers: <String, String>{
-                  'Content-Type': 'application/json',
-                  'Cookie': cookie.toString(),
-                },
-                body: jsonEncode(map))
-            .then((value) async {
-          if (!(value.statusCode > 199 && value.statusCode < 300)) {
-            error = jsonDecode(value.body)["message"]
-                .toString()
-                .replaceAll("[", "")
-                .replaceAll("]", "");
-            Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
-          } else {
-            await HiveCRUD()
-                .setIsSentInLocalMedicine(medicineModel: medicineModel, true);
-          }
-        });
-      } catch (error) {
-        Fluttertoast.showToast(
-            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
-      }
+  Future<void> deleteAllMedicines() => _storage.clear();
+}
+
+extension _MedicineStorage on Box<MedicineModel> {
+  Future<void> putMedicine(MedicineModel item) => put(item.id, item);
+  Future<void> deleteMedicine(MedicineModel item) => delete(item.id);
+}
+
+extension _MedicineClient on ApiClient {
+  Future<List<MedicineModel>?> fetchMedicines({required String cookie}) async {
+    try {
+      final items = await get("/medicine", cookie: cookie) as List<dynamic>;
+      return items.cast<Map<String, dynamic>>().map(_modelFromJson).toList();
+    } catch (_) {
+      return null;
     }
-    return error;
   }
 
-  Future<String?> removeMedicine(String medicineId) async {
-    String? error;
-    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      //Fluttertoast.showToast(
-      //    msg: "Немає підключення до інтернету",
-      //    toastLength: Toast.LENGTH_LONG);
-      //error = "Немає підключення до інтернету";
-      HiveCRUD().removeLocalMedicine(medicineId);
-    } else {
-      try {
-        var url = Uri.parse('$apiUrl/medicine/$medicineId');
-        final cookie = await UserRepository().getCookie();
-        await http.delete(url, headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Cookie': cookie.toString(),
-        }).then((value) {
-          if (!(value.statusCode > 199 && value.statusCode < 300)) {
-            error = jsonDecode(value.body)["message"]
-                .toString()
-                .replaceAll("[", "")
-                .replaceAll("]", "");
-            Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
-          }
-        });
-      } catch (error) {
-        Fluttertoast.showToast(
-            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
-      }
+  Future<MedicineModel?> postMedicine(
+    MedicineModel medicine, {
+    required String cookie,
+  }) async {
+    try {
+      final json = await post(
+        "/medicine",
+        cookie: cookie,
+        json: _modelToJson(medicine),
+      ) as Map<String, dynamic>;
+      return _modelFromJson(json);
+    } catch (_) {
+      return null;
     }
-    return error;
   }
 
-  bool checkIsAnyMedicinesNotSent() {
-    List<MedicineModel> myTasks = List.from(HiveCRUD().myMedicines);
-    return myTasks.isNotEmpty
-        ? myTasks.any((element) => element.isSentToDB == false)
-        : false;
+  Future<MedicineModel?> patchMedicine(
+    MedicineModel medicine, {
+    required String cookie,
+  }) async {
+    try {
+      final json = await patch(
+        "/medicine/${medicine.id}",
+        cookie: cookie.toString(),
+        json: _modelToJson(medicine),
+      ) as Map<String, dynamic>;
+      return _modelFromJson(json);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<bool> deleteMedicine(
+    MedicineModel medicine, {
+    required String cookie,
+  }) async {
+    try {
+      await delete(
+        "/medicine/${medicine.id}",
+        cookie: cookie.toString(),
+      );
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Map<String, dynamic> _modelToJson(MedicineModel medicine) {
+    return {
+      "name": medicine.name,
+      "type": medicine.type.name,
+      "periodicity": medicine.periodicity.name,
+      "startDate": medicine.startDate.toUtc().toIso8601String(),
+      "weekdays": medicine.weekdays,
+      "doses": medicine.doses.map((k, e) => MapEntry(k.toString(), e)),
+      "instruction": medicine.instruction.name,
+      "doneAt":
+          medicine.doneAt.map((e) => e.toUtc().toIso8601String()).toList(),
+      "rescheduledOn": medicine.rescheduledOn
+          .map((key, value) => MapEntry(key.toUtc().toIso8601String(), value)),
+    };
+  }
+
+  MedicineModel _modelFromJson(Map<String, dynamic> json) {
+    return MedicineModel.fromJson(json).copyWith(
+      startDate: DateUtils.dateOnly(DateTime.parse(json["startDate"])),
+    );
   }
 }

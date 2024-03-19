@@ -18,7 +18,7 @@ class MedicineModelAdapter extends TypeAdapter<MedicineModel> {
     };
     return MedicineModel(
       id: fields[0] as String,
-      reminderIds: (fields[1] as List).cast<int>(),
+      updatedAt: fields[1] as DateTime,
       name: fields[2] as String,
       type: fields[3] as MedicineType,
       periodicity: fields[4] as Periodicity,
@@ -27,20 +27,19 @@ class MedicineModelAdapter extends TypeAdapter<MedicineModel> {
       doses: (fields[7] as Map).cast<int, int>(),
       instruction: fields[8] as Instruction,
       doneAt: (fields[9] as List).cast<DateTime>(),
-      userId: fields[11] as String,
-      isSentToDB: fields[12] as bool,
-      isRemoved: fields[13] as bool,
+      rescheduledOn: (fields[10] as Map).cast<DateTime, int>(),
+      isRemoved: fields[11] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, MedicineModel obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.reminderIds)
+      ..write(obj.updatedAt)
       ..writeByte(2)
       ..write(obj.name)
       ..writeByte(3)
@@ -57,11 +56,9 @@ class MedicineModelAdapter extends TypeAdapter<MedicineModel> {
       ..write(obj.instruction)
       ..writeByte(9)
       ..write(obj.doneAt)
+      ..writeByte(10)
+      ..write(obj.rescheduledOn)
       ..writeByte(11)
-      ..write(obj.userId)
-      ..writeByte(12)
-      ..write(obj.isSentToDB)
-      ..writeByte(13)
       ..write(obj.isRemoved);
   }
 
@@ -82,13 +79,12 @@ class MedicineModelAdapter extends TypeAdapter<MedicineModel> {
 
 _$MedicineModelImpl _$$MedicineModelImplFromJson(Map<String, dynamic> json) =>
     _$MedicineModelImpl(
-      id: json['id'] as String? ?? "",
-      reminderIds:
-          (json['reminderIds'] as List<dynamic>).map((e) => e as int).toList(),
+      id: json['_id'] as String,
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
       name: json['name'] as String,
       type: $enumDecode(_$MedicineTypeEnumMap, json['type']),
       periodicity: $enumDecode(_$PeriodicityEnumMap, json['periodicity']),
-      startDate: DateTime.parse(json['startDate'] as String),
+      startDate: const DateConverter().fromJson(json['startDate'] as String),
       weekdays:
           (json['weekdays'] as List<dynamic>?)?.map((e) => e as int).toList() ??
               const [],
@@ -102,25 +98,27 @@ _$MedicineModelImpl _$$MedicineModelImplFromJson(Map<String, dynamic> json) =>
               ?.map((e) => DateTime.parse(e as String))
               .toList() ??
           const [],
-      userId: json['userId'] as String? ?? "",
-      isSentToDB: json['isSentToDB'] as bool? ?? false,
+      rescheduledOn: (json['rescheduledOn'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(DateTime.parse(k), e as int),
+          ) ??
+          const {},
       isRemoved: json['isRemoved'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$MedicineModelImplToJson(_$MedicineModelImpl instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'reminderIds': instance.reminderIds,
+      '_id': instance.id,
+      'updatedAt': instance.updatedAt.toIso8601String(),
       'name': instance.name,
       'type': _$MedicineTypeEnumMap[instance.type]!,
       'periodicity': _$PeriodicityEnumMap[instance.periodicity]!,
-      'startDate': instance.startDate.toIso8601String(),
+      'startDate': const DateConverter().toJson(instance.startDate),
       'weekdays': instance.weekdays,
       'doses': instance.doses.map((k, e) => MapEntry(k.toString(), e)),
       'instruction': _$InstructionEnumMap[instance.instruction]!,
       'doneAt': instance.doneAt.map((e) => e.toIso8601String()).toList(),
-      'userId': instance.userId,
-      'isSentToDB': instance.isSentToDB,
+      'rescheduledOn': instance.rescheduledOn
+          .map((k, e) => MapEntry(k.toIso8601String(), e)),
       'isRemoved': instance.isRemoved,
     };
 
@@ -135,6 +133,7 @@ const _$MedicineTypeEnumMap = {
 
 const _$PeriodicityEnumMap = {
   Periodicity.everyDay: 'everyDay',
+  Periodicity.inADay: 'inADay',
   Periodicity.certainDays: 'certainDays',
 };
 

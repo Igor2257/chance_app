@@ -77,14 +77,14 @@ enum MedicineType {
       case MedicineType.pill:
         return (count == 1)
             ? "Таблетка"
-            : (count < 5)
+            : (count > 0 && count < 5)
                 ? "Таблетки"
                 : "Таблеток";
 
       case MedicineType.injection:
         return (count == 1)
             ? "Ін’єкція"
-            : (count < 5)
+            : (count > 0 && count < 5)
                 ? "Ін’єкції"
                 : "Ін’єкцій";
 
@@ -96,7 +96,7 @@ enum MedicineType {
       case MedicineType.other:
         return (count == 1)
             ? "Доза"
-            : (count < 5)
+            : (count > 0 && count < 5)
                 ? "Дози"
                 : "Доз";
     }

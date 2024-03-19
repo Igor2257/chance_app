@@ -1,7 +1,15 @@
 import 'dart:async';
 
-import 'package:chance_app/main.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/address_component.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/bounds.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geocoding_result.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geometry.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/location.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
+import 'package:chance_app/ux/enum/day_periodicity.dart';
+import 'package:chance_app/ux/enum/instruction.dart';
+import 'package:chance_app/ux/enum/medicine_type.dart';
+import 'package:chance_app/ux/enum/periodicity.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/product_model.dart';
@@ -10,154 +18,198 @@ import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:hive/hive.dart';
 
+import 'package:path_provider/path_provider.dart';
+
+late final Box<MeUser> userBox;
+late final Box<TaskModel> tasksBox;
+late final Box<MedicineModel> medicineBox;
+late final Box<PickResult> addressesBox;
+late final Box<Settings> settingsBox;
+late final Box<ProductModel> itemsBox;
+late final Box<SosContactModel> groupBox;
+
 class HiveCRUD {
-  List<TaskModel> get myTasks =>
-      tasksBox?.values.cast<TaskModel>().toList() ?? List.empty();
+  HiveCRUD._();
 
-  List<PickResult> get savedAddresses =>
-      savedAddressesBox?.values.cast<PickResult>().toList() ?? List.empty();
+  factory HiveCRUD() => instance;
 
-  List<MedicineModel> get myMedicines =>
-      medicineBox?.values.cast<MedicineModel>().toList() ?? List.empty();
+  static final HiveCRUD instance = HiveCRUD._();
+  var _initialized = false;
 
-  List<ProductModel> get myItems =>
-      itemsBox?.values.cast<ProductModel>().toList() ?? List.empty();
+  bool get isInitialized => _initialized;
 
-  List<SosContactModel> get myContacts =>
-      groupBox?.values.cast<SosContactModel>().toList() ?? List.empty();
+  List<TaskModel> get myTasks => List.unmodifiable(tasksBox.values);
 
-  MeUser? get user =>
-      userBox!.get('user') != null ? userBox!.get('user') as MeUser : null;
-  Settings setting = settingsBox != null
-      ? settingsBox!.get('settings') != null
-          ? settingsBox!.get('settings') as Settings
-          : const Settings()
-      : const Settings();
+  List<MedicineModel> get myMedicines => List.unmodifiable(medicineBox.values);
 
-  Future addMedicine(MedicineModel medicineModel) async {
-    await medicineBox!.put(medicineModel.id, medicineModel);
-  }
+  List<PickResult> get savedAddresses => List.unmodifiable(addressesBox.values);
 
-  Box<SosContactModel>? get groupBox =>
-      Hive.box<SosContactModel>('sosContactsModel');
+  List<ProductModel> get myItems => List.unmodifiable(itemsBox.values);
+
+  List<SosContactModel> get myContacts => List.unmodifiable(groupBox.values);
+
+  MeUser? get user => userBox.get('user');
+
+  Settings get setting => settingsBox.get('settings') ?? const Settings();
 
   Future addContact(SosGroupModel contactModel) async {
-    await groupBox?.put(contactModel.id, contactModel as SosContactModel);
+    await groupBox.put(contactModel.id, contactModel as SosContactModel);
   }
 
   Future removeLocalContact(String id) async {
-    await groupBox?.delete(id);
+    await groupBox.delete(id);
   }
 
-  Future updateLocalMedicine(MedicineModel medicineModel) async {
-    await medicineBox!.put(medicineModel.id, medicineModel);
-  }
+  Future<bool> initialize() async {
+    final documentsDirectory = await getApplicationDocumentsDirectory();
+    Hive.init(documentsDirectory.path);
+    //await Repository().deleteCookie();
+    //await Hive.deleteBoxFromDisk('user');
+    //await Hive.deleteBoxFromDisk('myTasks');
+    //await Hive.deleteBoxFromDisk('savedAddresses');
+    //await Hive.deleteBoxFromDisk('myMedicines');
+    //await Hive.deleteBoxFromDisk('settings');
+    //await Hive.deleteBoxFromDisk('items');
+    // models
+    Hive.registerAdapter(MeUserAdapter());
+    Hive.registerAdapter(MedicineModelAdapter());
+    Hive.registerAdapter(ProductModelAdapter());
+    Hive.registerAdapter(SettingsAdapter());
+    Hive.registerAdapter(SosContactModelAdapter());
+    Hive.registerAdapter(TaskModelAdapter());
+    Hive.registerAdapter(AddressComponentAdapter());
+    Hive.registerAdapter(BoundsAdapter());
+    Hive.registerAdapter(GeocodingResultAdapter());
+    Hive.registerAdapter(GeometryAdapter());
+    Hive.registerAdapter(LocationAdapter());
+    Hive.registerAdapter(PickResultAdapter());
+    // enums
+    Hive.registerAdapter(DayPeriodicityAdapter());
+    Hive.registerAdapter(InstructionAdapter());
+    Hive.registerAdapter(MedicineTypeAdapter());
+    Hive.registerAdapter(PeriodicityAdapter());
 
-  Future removeLocalMedicine(String id) async {
-    await medicineBox!.delete(id);
-  }
-
-  Future updateSettings(Settings settings) async {
-    await settingsBox!.put("settings", settings);
-  }
-
-  Future removeSettings(String id) async {
-    await settingsBox!.delete(id);
-  }
-
-  Future clearTasks() async {
-    await tasksBox!.clear();
-  }
-
-  Future clearMedicines() async {
-    await medicineBox!.clear();
-  }
-
-  Future addTask(TaskModel taskModel) async {
-    await tasksBox!.put(taskModel.id, taskModel);
-  }
-
-  Future setIsDoneInLocalTask(String id, bool isDone) async {
-    TaskModel taskModel = myTasks.firstWhere((element) => element.id == id);
-    taskModel = taskModel.copyWith(isDone: isDone, isSentToDB: false);
-    await tasksBox!.put(taskModel.id, taskModel);
-  }
-
-  Future setIsSentInLocalTask(bool isSentToDB,
-      {String? id, TaskModel? taskModel}) async {
-    if (id != null) {
-      TaskModel taskModel = myTasks.firstWhere((element) => element.id == id);
-      taskModel = taskModel.copyWith(isSentToDB: isSentToDB);
-      await tasksBox!.put(taskModel.id, taskModel);
+    try {
+      userBox = await Hive.openBox("user");
+      tasksBox = await Hive.openBox("myTasks");
+      medicineBox = await Hive.openBox("myMedicines");
+      addressesBox = await Hive.openBox("savedAddresses");
+      itemsBox = await Hive.openBox("items");
+      settingsBox = await Hive.openBox("settings");
+      groupBox = await Hive.openBox("sosContactsModel");
+      final setting = settingsBox.get('settings') ?? const Settings();
+      if (setting.firstEnter == null) {
+        updateSettings(Settings(firstEnter: DateTime.now()));
+      }
+      _initialized = true;
+    } catch (_) {
+      _initialized = false;
     }
-    if (taskModel != null) {
-      taskModel = taskModel.copyWith(isSentToDB: isSentToDB);
-      await tasksBox!.put(taskModel.id, taskModel);
+
+    return _initialized;
+  }
+
+  Future<void> addMedicine(MedicineModel medicineModel) async {
+    await medicineBox.put(medicineModel.id, medicineModel);
+  }
+
+  Future<void> updateLocalMedicine(MedicineModel medicineModel) async {
+    await medicineBox.put(medicineModel.id, medicineModel);
+  }
+
+  Future<void> removeLocalMedicine(
+    MedicineModel medicineModel, {
+    bool permanently = false,
+  }) async {
+    if (permanently) {
+      await medicineBox.delete(medicineModel.id);
+    } else {
+      await medicineBox.put(
+        medicineModel.id,
+        medicineModel.copyWith(isRemoved: true, updatedAt: DateTime.now()),
+      );
     }
   }
 
-  Future setIsSentInLocalMedicine(bool isSentToDB,
-      {String? id, MedicineModel? medicineModel}) async {
-    if (id != null) {
-      MedicineModel medicineModel =
-          myMedicines.firstWhere((element) => element.id == id);
+  Future<void> updateSettings(Settings settings) async {
+    await settingsBox.put("settings", settings);
+  }
 
-      medicineModel = medicineModel.copyWith(isSentToDB: isSentToDB);
-      await medicineBox!.put(medicineModel.id, medicineModel);
+  Future<void> removeSettings(String id) async {
+    await settingsBox.delete(id);
+  }
+
+  Future<void> clearTasks() async {
+    await tasksBox.clear();
+  }
+
+  Future<void> clearMedicines() async {
+    await medicineBox.clear();
+  }
+
+  Future<void> addTask(TaskModel taskModel) async {
+    await tasksBox.put(taskModel.id, taskModel);
+  }
+
+  Future<void> updateLocalTask(TaskModel taskModel) async {
+    await tasksBox.put(taskModel.id, taskModel);
+  }
+
+  Future<void> removeLocalTask(
+    TaskModel taskModel, {
+    bool permanently = false,
+  }) async {
+    if (permanently) {
+      await tasksBox.delete(taskModel.id);
+    } else {
+      await tasksBox.put(
+        taskModel.id,
+        taskModel.copyWith(isRemoved: true, updatedAt: DateTime.now()),
+      );
     }
-    if (medicineModel != null) {
-      medicineModel = medicineModel.copyWith(isSentToDB: isSentToDB);
-      await medicineBox!.put(medicineModel.id, medicineModel);
-    }
   }
 
-  Future removeLocalTask(String id) async {
-    TaskModel taskModel = myTasks.firstWhere((element) => element.id == id);
-    taskModel = taskModel.copyWith(isRemoved: true, isSentToDB: false);
-    await tasksBox!.put(taskModel.id, taskModel);
+  Future<void> addUser(MeUser meUser) async {
+    await userBox.put("user", meUser);
   }
 
-  Future addUser(MeUser meUser) async {
-    await userBox!.put("user", meUser);
+  Future<void> updateUser(MeUser meUser) async {
+    await userBox.put("user", meUser);
   }
 
-  Future updateUser(MeUser meUser) async {
-    await userBox!.put("user", meUser);
+  Future<void> removeUser() async {
+    await userBox.delete("user");
   }
 
-  Future removeUser() async {
-    await userBox!.delete("user");
-  }
-
-  Future addSavedAddresses(PickResult savedAddress) async {
+  Future<void> addSavedAddresses(PickResult savedAddress) async {
     if (savedAddresses
         .any((element) => element.placeId == savedAddress.placeId)) {
       return;
     }
 
-    await savedAddressesBox!.put(savedAddress.placeId, savedAddress);
+    await addressesBox.put(savedAddress.placeId, savedAddress);
   }
 
-  Future updateSavedAddresses(PickResult savedAddresses) async {
-    await savedAddressesBox!.put(savedAddresses.placeId, savedAddresses);
+  Future<void> updateSavedAddresses(PickResult savedAddresses) async {
+    await addressesBox.put(savedAddresses.placeId, savedAddresses);
   }
 
-  Future removeSavedAddresses(int id) async {
-    await savedAddressesBox!.delete(id);
+  Future<void> removeSavedAddresses(int id) async {
+    await addressesBox.delete(id);
   }
 
-  Future addItem(ProductModel productModel) async {
-    await itemsBox!.put(productModel.id, productModel);
+  Future<void> addItem(ProductModel productModel) async {
+    await itemsBox.put(productModel.id, productModel);
   }
 
-  Future removeItem(String id) async {
-    await itemsBox!.delete(id);
+  Future<void> removeItem(String id) async {
+    await itemsBox.delete(id);
   }
 
-  Future rewriteItems(List<ProductModel> items) async {
-    await itemsBox!.clear().whenComplete(() {
+  Future<void> rewriteItems(List<ProductModel> items) async {
+    await itemsBox.clear().whenComplete(() {
       for (var item in items) {
-        unawaited(itemsBox!.put(item.id, item));
+        unawaited(itemsBox.put(item.id, item));
       }
     });
   }

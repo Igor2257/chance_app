@@ -1,15 +1,11 @@
-import 'dart:io';
-
 import 'package:chance_app/ux/enum/instruction.dart';
 import 'package:chance_app/ux/enum/medicine_type.dart';
 import 'package:chance_app/ux/enum/periodicity.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:timezone/timezone.dart';
+import 'package:uuid/uuid.dart';
 
 part 'add_medicine_event.dart';
 part 'add_medicine_state.dart';
@@ -103,156 +99,27 @@ class AddMedicineBloc extends Bloc<AddMedicineEvent, AddMedicineState> {
     emit(state.copyWith(instruction: event.instruction));
   }
 
-  Future<void> _onSaveMedicine(
-      SaveMedicine event, Emitter<AddMedicineState> emit) async {
-    emit(state.copyWith(isSaving: true));
-
-    const androidNotificationsChannel = AndroidNotificationChannel(
-      "myMedicines",
-      "Прийом ліків",
-      description: "Нагадування про прийом ліків",
-      importance: Importance.max,
-      playSound: true,
-      enableVibration: true,
+  void _onSaveMedicine(SaveMedicine event, Emitter<AddMedicineState> emit) {
+    if (state.type == null) throw ArgumentError("null", "type");
+    if (state.periodicity == null) throw ArgumentError("null", "periodicity");
+    if (state.startDate == null) throw ArgumentError("null", "startDate");
+    emit(
+      state.copyWith(
+        medicine: MedicineModel(
+          id: const Uuid().v1(),
+          updatedAt: DateTime.now(),
+          name: state.name,
+          type: state.type!,
+          periodicity: state.periodicity!,
+          startDate: state.startDate!,
+          weekdays: state.weekdays.toList(),
+          doses: {
+            for (final time in state.doses.keys)
+              time.toTimeOffset(): state.doses[time]!,
+          },
+          instruction: state.instruction ?? Instruction.noMatter,
+        ),
+      ),
     );
-
-    // Android specific settings
-    if (Platform.isAndroid) {
-      final androidPlugin = FlutterLocalNotificationsPlugin()
-          .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>();
-
-      await androidPlugin
-          ?.createNotificationChannel(androidNotificationsChannel);
-    }
-
-    // iOS specific settings
-    if (Platform.isIOS) await Permission.criticalAlerts.request();
-
-    final startDate = state.startDate!;
-    final List<DateTime> reminderDays;
-
-    // Calculate days for reminder setup
-    switch (state.periodicity!) {
-      case Periodicity.everyDay:
-        reminderDays = List.generate(
-          DateTime.daysPerWeek,
-          (i) => DateTime(
-            startDate.year,
-            startDate.month,
-            startDate.day + i,
-          ),
-        );
-
-      // case Periodicity.inADay:
-      //   reminderDays = List.generate(
-      //     DateTime.daysPerWeek,
-      //     (i) => DateTime(
-      //       startDate.year,
-      //       startDate.month,
-      //       startDate.day + i * 2,
-      //     ),
-      //   );
-
-      case Periodicity.certainDays:
-        reminderDays = [
-          for (final weekday in state.weekdays)
-            DateTime(
-              startDate.year,
-              startDate.month,
-              startDate.day +
-                  (14 - startDate.weekday + weekday) % DateTime.daysPerWeek,
-            ),
-        ];
-    }
-
-    final instruction = state.instruction ?? Instruction.noMatter;
-    final shouldShowInstruction = instruction != Instruction.noMatter;
-    final notificationIds = <int>{};
-    var idCounter = 0;
-
-    try {
-      for (final time in state.doses.keys) {
-        final timeText = [
-          time.hour.toString().padLeft(2, "0"),
-          time.minute.toString().padLeft(2, "0"),
-        ].join(':');
-
-        for (final day in reminderDays) {
-          final notificationId = state.hashCode + idCounter;
-          final scheduledTime = TZDateTime(
-            local,
-            day.year,
-            day.month,
-            day.day,
-            time.hour,
-            time.minute,
-          );
-          final count = state.doses[time]!;
-          final reminderText = [
-            count,
-            state.type!.toDoseString(count).toLowerCase(),
-            "сьогодні о",
-            timeText,
-          ].join(' ');
-
-          debugPrint("Scheduled $notificationId at $scheduledTime");
-
-          // Medicine reminder setup
-          await FlutterLocalNotificationsPlugin().zonedSchedule(
-            notificationId, // Must be a unique value
-            state.name,
-            (Platform.isIOS && !shouldShowInstruction)
-                ? null
-                : [
-                    if (Platform.isIOS) "Прийняти" else reminderText,
-                    if (shouldShowInstruction)
-                      instruction.toLocalizedString().toLowerCase(),
-                  ].join(' '),
-            scheduledTime,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                androidNotificationsChannel.id,
-                androidNotificationsChannel.name,
-                // icon: state.type!.androidIconAsset,
-                importance: Importance.max,
-                priority: Priority.max,
-                colorized: true,
-              ),
-              iOS: DarwinNotificationDetails(
-                subtitle: reminderText,
-                interruptionLevel: InterruptionLevel.critical,
-              ),
-            ),
-            uiLocalNotificationDateInterpretation:
-                UILocalNotificationDateInterpretation.wallClockTime,
-            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-            matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
-          );
-
-          notificationIds.add(notificationId); // Save current Id
-          idCounter++;
-        }
-      }
-
-      // Create a model to save in local DB
-      final model = MedicineModel(
-        reminderIds: notificationIds.toList(),
-        name: state.name,
-        type: state.type!,
-        periodicity: state.periodicity!,
-        startDate: state.startDate!,
-        weekdays: state.weekdays.toList(),
-        doses: {
-          for (final time in state.doses.keys)
-            time.toTimeOffset(): state.doses[time]!,
-        },
-        instruction: state.instruction ?? Instruction.noMatter,
-      );
-
-      emit(state.copyWith(isSaving: false, medicine: model));
-    } on Exception catch (e) {
-      emit(state.copyWith(isSaving: false, errorMessage: e.toString()));
-    }
   }
 }

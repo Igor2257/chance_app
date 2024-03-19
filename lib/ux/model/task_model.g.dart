@@ -18,29 +18,32 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
     };
     return TaskModel(
       id: fields[0] as String,
-      message: fields[1] as String,
-      date: fields[2] as DateTime?,
-      isDone: fields[3] as bool,
-      isSentToDB: fields[6] as bool,
-      isRemoved: fields[7] as bool,
+      updatedAt: fields[1] as DateTime,
+      message: fields[2] as String,
+      date: fields[3] as DateTime,
+      isDone: fields[4] as bool,
+      remindBefore: fields[5] as int?,
+      isRemoved: fields[6] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, TaskModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.message)
+      ..write(obj.updatedAt)
       ..writeByte(2)
-      ..write(obj.date)
+      ..write(obj.message)
       ..writeByte(3)
+      ..write(obj.date)
+      ..writeByte(4)
       ..write(obj.isDone)
+      ..writeByte(5)
+      ..write(obj.remindBefore)
       ..writeByte(6)
-      ..write(obj.isSentToDB)
-      ..writeByte(7)
       ..write(obj.isRemoved);
   }
 
@@ -61,21 +64,22 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
 
 _$TaskModelImpl _$$TaskModelImplFromJson(Map<String, dynamic> json) =>
     _$TaskModelImpl(
-      id: json['id'] as String? ?? "",
-      message: json['message'] as String? ?? "",
-      date:
-          json['date'] == null ? null : DateTime.parse(json['date'] as String),
+      id: json['_id'] as String,
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      message: json['message'] as String,
+      date: DateTime.parse(json['date'] as String),
       isDone: json['isDone'] as bool? ?? false,
-      isSentToDB: json['isSentToDB'] as bool? ?? false,
+      remindBefore: json['remindBefore'] as int?,
       isRemoved: json['isRemoved'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$TaskModelImplToJson(_$TaskModelImpl instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      '_id': instance.id,
+      'updatedAt': instance.updatedAt.toIso8601String(),
       'message': instance.message,
-      'date': instance.date?.toIso8601String(),
+      'date': instance.date.toIso8601String(),
       'isDone': instance.isDone,
-      'isSentToDB': instance.isSentToDB,
+      'remindBefore': instance.remindBefore,
       'isRemoved': instance.isRemoved,
     };
