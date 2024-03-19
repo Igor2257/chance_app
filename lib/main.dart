@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:chance_app/firebase_options.dart';
 import 'package:chance_app/ui/components/rounded_button.dart';
@@ -63,7 +64,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
@@ -72,8 +72,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:timezone/data/latest_all.dart';
-import 'package:timezone/timezone.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -86,7 +84,9 @@ Future<void> main() async {
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   final GoogleMapsFlutterPlatform platform = GoogleMapsFlutterPlatform.instance;
   // Default to Hybrid Composition for the example.
-  (platform as GoogleMapsFlutterAndroid).useAndroidViewSurface = true;
+  if (Platform.isAndroid) {
+    (platform as GoogleMapsFlutterAndroid).useAndroidViewSurface = true;
+  }
   initializeMapRenderer();
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   PlatformDispatcher.instance.onError = (error, stack) {
@@ -149,10 +149,12 @@ Future<AndroidMapRenderer?> initializeMapRenderer() async {
   _initializedRendererCompleter = completer;
 
   final GoogleMapsFlutterPlatform platform = GoogleMapsFlutterPlatform.instance;
-  unawaited((platform as GoogleMapsFlutterAndroid)
-      .initializeWithRenderer(AndroidMapRenderer.latest)
-      .then((AndroidMapRenderer initializedRenderer) =>
-          completer.complete(initializedRenderer)));
+  if (Platform.isAndroid) {
+    unawaited((platform as GoogleMapsFlutterAndroid)
+        .initializeWithRenderer(AndroidMapRenderer.latest)
+        .then((AndroidMapRenderer initializedRenderer) =>
+            completer.complete(initializedRenderer)));
+  }
 
   return completer.future;
 }
@@ -440,6 +442,12 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                         const DoctorAppointment(),
                                     "/job_search": (context) =>
                                         const JobSearch(),
+                                  },
+                                  builder: (context, child) {
+                                    final locale =
+                                        Localizations.localeOf(context);
+                                    Jiffy.setLocale(locale.toLanguageTag());
+                                    return child!;
                                   },
                                   localeResolutionCallback:
                                       (locale, supportedLocales) {
