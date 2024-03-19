@@ -16,8 +16,7 @@ class InvitationModel with _$InvitationModel {
     @HiveField(2) @Default("") String toUserName,
     @HiveField(3) @Default(null) DateTime? sentDate,
     @HiveField(4) @Default("") String fromUserId,
-    @HiveField(5) @Default("") String toUserId,
-    @HiveField(6) @Default(InvitationStatus.pending) InvitationStatus invitationStatus,
+    @HiveField(5) @Default(InvitationStatus.pending) InvitationStatus invitationStatus,
   }) = _InvitationModel;
 
   factory InvitationModel.fromJson(Map<String, dynamic> json) =>

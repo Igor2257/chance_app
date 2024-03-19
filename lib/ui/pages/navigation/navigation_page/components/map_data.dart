@@ -26,9 +26,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 bool isNotTapedOnMyLocationButton = false;
 GoogleMapController? mapController;
 
-String googleAPIKey = Platform.isIOS
-    ? "AIzaSyDxsvs4Lj8D2Xa7qzBnME7rAAkCM48XUQc"
-    : "AIzaSyCGSSsubNAFEwc0A3A9fKoGhhttog_LDzY";
+String googleAPIKey = "AIzaSyB5JF5kDfQurzWIzGa8JSINevwpxLFHrIM";
 
 late PositionController positionController;
 

@@ -22,6 +22,7 @@ class AddTaskBloc extends Bloc<AddTaskEvent, AddTaskState> {
     on<CancelNotificationBefore>(_onCancelNotificationBefore);
     on<CancelAllDataNotificationBefore>(_onCancelAllDataNotificationBefore);
     on<LoadDataForSelectDateForTasks>(_onLoadDataForSelectDateForTasks);
+    on<ClearState>(_onClearState);
   }
   bool checkIfDayHasTask(
       List<TaskModel> myTasks, int day, int month, int year) {
@@ -165,5 +166,9 @@ class AddTaskBloc extends Bloc<AddTaskEvent, AddTaskState> {
       newSelectedDateForTasks: DateTime.now(),
       dateForSwipingForTasks: DateTime.now(),
     ));
+  }
+
+  FutureOr<void> _onClearState(ClearState event, Emitter<AddTaskState> emit) {
+    emit(state.clear());
   }
 }

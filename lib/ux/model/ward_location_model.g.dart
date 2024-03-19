@@ -22,13 +22,14 @@ class WardLocationModelAdapter extends TypeAdapter<WardLocationModel> {
       wardName: fields[2] as String,
       latitude: fields[3] as double,
       longitude: fields[4] as double,
+      toUserId: fields[5] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, WardLocationModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class WardLocationModelAdapter extends TypeAdapter<WardLocationModel> {
       ..writeByte(3)
       ..write(obj.latitude)
       ..writeByte(4)
-      ..write(obj.longitude);
+      ..write(obj.longitude)
+      ..writeByte(5)
+      ..write(obj.toUserId);
   }
 
   @override
@@ -64,6 +67,7 @@ _$WardLocationModelImpl _$$WardLocationModelImplFromJson(
       wardName: json['wardName'] as String,
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
+      toUserId: json['toUserId'] as String,
     );
 
 Map<String, dynamic> _$$WardLocationModelImplToJson(
@@ -74,4 +78,5 @@ Map<String, dynamic> _$$WardLocationModelImplToJson(
       'wardName': instance.wardName,
       'latitude': instance.latitude,
       'longitude': instance.longitude,
+      'toUserId': instance.toUserId,
     };

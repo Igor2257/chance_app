@@ -60,7 +60,7 @@ import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository/tasks_repository.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -80,12 +80,17 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timezone/data/latest_all.dart';
 import 'package:timezone/timezone.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Supabase.initialize(
+      url: "https://tnvxszbqdurbkpnvjvgz.supabase.co",
+      anonKey:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudnhzemJxZHVyYmtwbnZqdmd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA4NDU5NjUsImV4cCI6MjAyNjQyMTk2NX0.I_Tf2UAA5Qo05EOSR2HXkv9yMun2NyixOZtCyr3OvoA");
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   final GoogleMapsFlutterPlatform platform = GoogleMapsFlutterPlatform.instance;
@@ -102,7 +107,7 @@ Future<void> main() async {
   };
 
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
-  FirebaseAuth.instance.idTokenChanges().listen((User? user) {
+  auth.FirebaseAuth.instance.idTokenChanges().listen((auth.User? user) {
     if (user == null) {
       print('User is currently signed out!');
     } else {
@@ -268,7 +273,6 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
         ),
         request: const AdRequest())
       ..load();
-    setState(() {});
   }
 
   checkIfDocsAreAvailable() async {
@@ -298,20 +302,21 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     }
   }
 
-  adRemove(bool value) async {
+  adRemove(bool value) {
     Settings settings = HiveCRUD().setting;
-    if (value) {
-      settings = settings.copyWith(blockAd: true);
-      HiveCRUD().updateSettings(settings);
-      if (bannerAd != null) {
-        bannerAd!.dispose();
+    setState(() {
+      if (value) {
+        settings = settings.copyWith(blockAd: true);
+        HiveCRUD().updateSettings(settings);
+        if (bannerAd != null) {
+          bannerAd!.dispose();
+        }
+      } else {
+        settings = settings.copyWith(blockAd: false);
+        HiveCRUD().updateSettings(settings);
+        initAd();
       }
-    } else {
-      settings = settings.copyWith(blockAd: false);
-      HiveCRUD().updateSettings(settings);
-      initAd();
-    }
-    setState(() {});
+    });
   }
 
   @override

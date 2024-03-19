@@ -43,14 +43,14 @@ class RemindersState {
     );
   }
 
-  RemindersState clear() {
+  RemindersState clear({bool? isLoading}) {
     return RemindersState(
       days: const [],
       week: const [],
       isCalendarOpened: false,
       myTasks: HiveCRUD().myTasks,
       myMedicines: HiveCRUD().myMedicines,
-      isLoading: true,
+      isLoading: isLoading??true,
       selectedDate: DateTime.now(),
       dateForSwiping: DateTime.now(),
     );

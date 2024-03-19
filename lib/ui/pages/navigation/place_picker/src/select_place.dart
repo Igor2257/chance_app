@@ -15,6 +15,7 @@ import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/position_controller.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_google_maps_webservices/places.dart';
@@ -77,416 +78,419 @@ class _SelectPlaceState extends State<SelectPlace> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<PlaceProvider>(
-        future: _futureProvider,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasData) {
-            provider = snapshot.data;
-            return MultiProvider(
-                providers: [
-                  ChangeNotifierProvider<PlaceProvider>.value(value: provider!),
-                ],
-                child: Scaffold(
-                  key: appBarKey,
-                  body: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: kToolbarHeight,
-                        ),
-                        Column(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                  color: beigeBG,
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          color: darkNeutral600, width: 0.1))),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        border:
-                                            Border.all(color: darkNeutral600)),
-                                    child: Row(children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: SizedBox(
-                                          height: 44,
-                                          width: 44,
-                                          child: Center(
-                                            child: Icon(
-                                              Icons.arrow_back,
-                                              color: primaryText,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Expanded(
-                                          child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 16),
-                                        child: AutoCompleteSearch(
-                                          appBarKey: appBarKey,
-                                          searchBarController:
-                                          searchBarController,
-                                          sessionToken: provider!.sessionToken,
-                                          hintText: AppLocalizations.instance
-                                              .translate("search"),
-                                          searchingText:
-                                          "${AppLocalizations.instance
-                                              .translate("search")}...",
-                                          onPicked: (prediction) {
-                                            //if (mounted) {
-                                            //  _pickPrediction(prediction);
-                                            //}
-                                          },
-                                          prediction: (predictions) {
-                                            predictionForList = predictions
-                                                .map((e) =>
-                                            {
-                                              "id": e.id,
-                                              "description":
-                                              e.description,
-                                              "distanceMeters":
-                                              e.distanceMeters,
-                                            })
-                                                .toList();
-                                            predictionForTap = predictions;
-                                            setState(() {});
-                                          },
-                                        ),
-                                      ))
-                                    ]),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Position? position =
-                                          PositionController.myPosition;
-
-                                      if (position != null) {
-                                        switch (widget.pickResultFor) {
-                                          case PickResultFor.first:
-                                            BlocProvider.of<NavigationBloc>(
-                                                    context)
-                                                .add(UpdateFirstPickResult(
-                                                firstPickResult: mypick.PickResult(
-                                                        id: "me",
-                                                        formattedAddress: "Я",
-                                                        geometry: mygeometry.Geometry(
-                                                            location: mylocation
-                                                                .Location(
-                                                                    lat: position
-                                                                        .latitude,
-                                                                    lng: position
-                                                                        .longitude)))));
-                                            break;
-                                          case PickResultFor.second:
-                                            BlocProvider.of<NavigationBloc>(
-                                                context)
-                                                .add(UpdateSecondPickResult(
-                                                secondPickResult: mypick
-                                                    .PickResult(
-                                                    id: "me",
-                                                    formattedAddress:
-                                                    AppLocalizations
-                                                        .instance
-                                                        .translate("i"),
-                                                    geometry: mygeometry
-                                                        .Geometry(
-                                                        location: mylocation
-                                                            .Location(
-                                                            lat: position
-                                                                .latitude,
-                                                            lng: position
-                                                                .longitude)))));
-                                        }
-
-                                        Navigator.of(context).pop();
-                                      }
-                                    },
-                                    child: Container(
+    if (PositionController.myPosition != null) {
+      return ValueListenableBuilder<Position>(
+          valueListenable: PositionController.myPosition!,
+          builder: (context, position, _) {
+            return FutureBuilder<PlaceProvider>(
+                future: _futureProvider,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasData) {
+                    provider = snapshot.data;
+                    return MultiProvider(
+                        providers: [
+                          ChangeNotifierProvider<PlaceProvider>.value(
+                              value: provider!),
+                        ],
+                        child: Scaffold(
+                          key: appBarKey,
+                          body: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                const SizedBox(
+                                  height: kToolbarHeight,
+                                ),
+                                Column(
+                                  children: [
+                                    Container(
                                       padding: const EdgeInsets.all(16),
                                       decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(16),
-                                          border: Border.all(
-                                              color: darkNeutral600)),
-                                      child: Row(
+                                          color: beigeBG,
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  color: darkNeutral600, width: 0.1))),
+                                      child: Column(
                                         children: [
-                                          const Icon(Icons.my_location),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text(
-                                            AppLocalizations.instance
-                                                .translate("useMyLocation"),
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: primaryText),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Position? position =
-                                          PositionController.myPosition;
-
-                                      if (position != null) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => PlacePicker(
-                                              apiKey: googleAPIKey,
-                                              onPlacePicked: (result) async {
-                                                switch (widget.pickResultFor) {
-                                                  case PickResultFor.first:
-                                                    BlocProvider.of<
-                                                                NavigationBloc>(
-                                                            context)
-                                                        .add(
-                                                            UpdateFirstPickResult(
-                                                                firstPickResult:
-                                                                    result));
-                                                    break;
-                                                  case PickResultFor.second:
-                                                    BlocProvider.of<
-                                                        NavigationBloc>(
-                                                        context)
-                                                        .add(
-                                                        UpdateSecondPickResult(
-                                                            secondPickResult:
-                                                            result));
-                                                    break;
-                                                }
-                                                await HiveCRUD()
-                                                    .addSavedAddresses(result)
-                                                    .whenComplete(() =>
-                                                    Navigator.of(context)
-                                                        .pop());
-                                              },
-                                              initialPosition: LatLng(
-                                                  position.latitude,
-                                                  position.longitude),
-                                              useCurrentLocation: true,
-                                              resizeToAvoidBottomInset:
-                                                  false, // only works in page mode, less flickery, remove if wrong offsets
-                                            ),
-                                          ),
-                                        ).whenComplete(
-                                            () => Navigator.of(context).pop());
-                                      }
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.all(16),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(16),
-                                          border: Border.all(
-                                              color: darkNeutral600)),
-                                      child: Row(
-                                        children: [
-                                          const Icon(
-                                              Icons.location_on_outlined),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text(
-                                            AppLocalizations.instance
-                                                .translate("selectOnTheMap"),
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: primaryText),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              color: beigeTransparent,
-                              height: 10,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                  color: beigeBG,
-                                  border: Border(
-                                      top: BorderSide(
-                                          color: darkNeutral600, width: 0.1))),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    predictionForTap.isNotEmpty &&
-                                        predictionForList.isNotEmpty
-                                        ? AppLocalizations.instance
-                                        .translate("similarToYourQuery")
-                                        : AppLocalizations.instance
-                                        .translate("recent"),
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        color: primaryText,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: predictionForTap.isNotEmpty
-                                          ? predictionForTap.length
-                                          : savedAddresses.length,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      itemBuilder: (context, position) {
-                                        return GestureDetector(
-                                          onTap: () async {
-                                            if (predictionForTap.isNotEmpty) {
-                                              _pickPrediction(predictionForTap[
-                                                      position])
-                                                  .then((value) {
-                                                if (value) {
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(16),
+                                                border:
+                                                Border.all(color: darkNeutral600)),
+                                            child: Row(children: [
+                                              GestureDetector(
+                                                onTap: () {
                                                   Navigator.of(context).pop();
-                                                }
-                                              });
-                                            } else {
+                                                },
+                                                child: SizedBox(
+                                                  height: 44,
+                                                  width: 44,
+                                                  child: Center(
+                                                    child: Icon(
+                                                      Icons.arrow_back,
+                                                      color: primaryText,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Expanded(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.symmetric(
+                                                        horizontal: 16),
+                                                    child: AutoCompleteSearch(
+                                                      appBarKey: appBarKey,
+                                                      searchBarController:
+                                                      searchBarController,
+                                                      sessionToken: provider!.sessionToken,
+                                                      hintText: AppLocalizations.instance
+                                                          .translate("search"),
+                                                      searchingText:
+                                                      "${AppLocalizations.instance
+                                                          .translate("search")}...",
+                                                      onPicked: (prediction) {
+                                                        //if (mounted) {
+                                                        //  _pickPrediction(prediction);
+                                                        //}
+                                                      },
+                                                      prediction: (predictions) {
+                                                        predictionForList = predictions
+                                                            .map((e) =>
+                                                        {
+                                                          "id": e.id,
+                                                          "description":
+                                                          e.description,
+                                                          "distanceMeters":
+                                                          e.distanceMeters,
+                                                        })
+                                                            .toList();
+                                                        predictionForTap = predictions;
+                                                        setState(() {});
+                                                      },
+                                                    ),
+                                                  ))
+                                            ]),
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
                                               switch (widget.pickResultFor) {
                                                 case PickResultFor.first:
-                                                  BlocProvider.of<
-                                                              NavigationBloc>(
-                                                          context)
+                                                  BlocProvider.of<NavigationBloc>(
+                                                      context)
                                                       .add(UpdateFirstPickResult(
-                                                          firstPickResult:
-                                                              savedAddresses[
-                                                                  position]));
+                                                      firstPickResult: mypick.PickResult(
+                                                          id: "me",
+                                                          formattedAddress: "Я",
+                                                          geometry: mygeometry.Geometry(
+                                                              location: mylocation
+                                                                  .Location(
+                                                                  lat: position
+                                                                      .latitude,
+                                                                  lng: position
+                                                                      .longitude)))));
                                                   break;
                                                 case PickResultFor.second:
-                                                  BlocProvider.of<
-                                                              NavigationBloc>(
-                                                          context)
+                                                  BlocProvider.of<NavigationBloc>(
+                                                      context)
                                                       .add(UpdateSecondPickResult(
-                                                          secondPickResult:
-                                                              savedAddresses[
-                                                                  position]));
-                                                  break;
+                                                      secondPickResult: mypick
+                                                          .PickResult(
+                                                          id: "me",
+                                                          formattedAddress:
+                                                          AppLocalizations
+                                                              .instance
+                                                              .translate("i"),
+                                                          geometry: mygeometry
+                                                              .Geometry(
+                                                              location: mylocation
+                                                                  .Location(
+                                                                  lat: position
+                                                                      .latitude,
+                                                                  lng: position
+                                                                      .longitude)))));
                                               }
+
                                               Navigator.of(context).pop();
-                                            }
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 4),
-                                            decoration: BoxDecoration(
-                                                border: Border(
-                                                    bottom: BorderSide(
-                                                        color:
-                                                            darkNeutral600))),
-                                            child: Row(
-                                              children: [
-                                                Icon(predictionForList
-                                                        .isNotEmpty
-                                                    ? Icons.location_on_outlined
-                                                    : Icons.access_time),
-                                                const SizedBox(
-                                                  width: 20,
-                                                ),
-                                                Expanded(
-                                                    child: Text(
-                                                      predictionForList.isNotEmpty
-                                                      ? predictionForList[
-                                                                  position]
-                                                              ["description"]
-                                                          .toString()
-                                                      : savedAddresses[position]
-                                                              .formattedAddress ??
-                                                          "",
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: primaryText),
-                                                  maxLines: 5,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                )),
-                                              ],
+                                                                                        },
+                                            child: Container(
+                                              padding: const EdgeInsets.all(16),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                  BorderRadius.circular(16),
+                                                  border: Border.all(
+                                                      color: darkNeutral600)),
+                                              child: Row(
+                                                children: [
+                                                  const Icon(Icons.my_location),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Text(
+                                                    AppLocalizations.instance
+                                                        .translate("useMyLocation"),
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: primaryText),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                        );
-                                      })
-                                ],
-                              ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => PlacePicker(
+                                                    apiKey: googleAPIKey,
+                                                    onPlacePicked: (result) async {
+                                                      switch (widget.pickResultFor) {
+                                                        case PickResultFor.first:
+                                                          BlocProvider.of<
+                                                              NavigationBloc>(
+                                                              context)
+                                                              .add(
+                                                              UpdateFirstPickResult(
+                                                                  firstPickResult:
+                                                                  result));
+                                                          break;
+                                                        case PickResultFor.second:
+                                                          BlocProvider.of<
+                                                              NavigationBloc>(
+                                                              context)
+                                                              .add(
+                                                              UpdateSecondPickResult(
+                                                                  secondPickResult:
+                                                                  result));
+                                                          break;
+                                                      }
+                                                      await HiveCRUD()
+                                                          .addSavedAddresses(result)
+                                                          .whenComplete(() =>
+                                                          Navigator.of(context)
+                                                              .pop());
+                                                    },
+                                                    initialPosition: LatLng(
+                                                        position.latitude,
+                                                        position.longitude),
+                                                    useCurrentLocation: true,
+                                                    resizeToAvoidBottomInset:
+                                                    false, // only works in page mode, less flickery, remove if wrong offsets
+                                                  ),
+                                                ),
+                                              ).whenComplete(
+                                                      () => Navigator.of(context).pop());
+                                                                                        },
+                                            child: Container(
+                                              padding: const EdgeInsets.all(16),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                  BorderRadius.circular(16),
+                                                  border: Border.all(
+                                                      color: darkNeutral600)),
+                                              child: Row(
+                                                children: [
+                                                  const Icon(
+                                                      Icons.location_on_outlined),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Text(
+                                                    AppLocalizations.instance
+                                                        .translate("selectOnTheMap"),
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: primaryText),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      color: beigeTransparent,
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                          color: beigeBG,
+                                          border: Border(
+                                              top: BorderSide(
+                                                  color: darkNeutral600, width: 0.1))),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            predictionForTap.isNotEmpty &&
+                                                predictionForList.isNotEmpty
+                                                ? AppLocalizations.instance
+                                                .translate("similarToYourQuery")
+                                                : AppLocalizations.instance
+                                                .translate("recent"),
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                color: primaryText,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          ListView.builder(
+                                              shrinkWrap: true,
+                                              itemCount: predictionForTap.isNotEmpty
+                                                  ? predictionForTap.length
+                                                  : savedAddresses.length,
+                                              physics:
+                                              const NeverScrollableScrollPhysics(),
+                                              itemBuilder: (context, position) {
+                                                return GestureDetector(
+                                                  onTap: () async {
+                                                    if (predictionForTap.isNotEmpty) {
+                                                      _pickPrediction(predictionForTap[
+                                                      position])
+                                                          .then((value) {
+                                                        if (value) {
+                                                          Navigator.of(context).pop();
+                                                        }
+                                                      });
+                                                    } else {
+                                                      switch (widget.pickResultFor) {
+                                                        case PickResultFor.first:
+                                                          BlocProvider.of<
+                                                              NavigationBloc>(
+                                                              context)
+                                                              .add(UpdateFirstPickResult(
+                                                              firstPickResult:
+                                                              savedAddresses[
+                                                              position]));
+                                                          break;
+                                                        case PickResultFor.second:
+                                                          BlocProvider.of<
+                                                              NavigationBloc>(
+                                                              context)
+                                                              .add(UpdateSecondPickResult(
+                                                              secondPickResult:
+                                                              savedAddresses[
+                                                              position]));
+                                                          break;
+                                                      }
+                                                      Navigator.of(context).pop();
+                                                    }
+                                                  },
+                                                  child: Container(
+                                                    padding: const EdgeInsets.symmetric(
+                                                        vertical: 4),
+                                                    decoration: BoxDecoration(
+                                                        border: Border(
+                                                            bottom: BorderSide(
+                                                                color:
+                                                                darkNeutral600))),
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(predictionForList
+                                                            .isNotEmpty
+                                                            ? Icons.location_on_outlined
+                                                            : Icons.access_time),
+                                                        const SizedBox(
+                                                          width: 20,
+                                                        ),
+                                                        Expanded(
+                                                            child: Text(
+                                                              predictionForList.isNotEmpty
+                                                                  ? predictionForList[
+                                                              position]
+                                                              ["description"]
+                                                                  .toString()
+                                                                  : savedAddresses[position]
+                                                                  .formattedAddress ??
+                                                                  "",
+                                                              style: TextStyle(
+                                                                  fontSize: 16,
+                                                                  color: primaryText),
+                                                              maxLines: 5,
+                                                              overflow:
+                                                              TextOverflow.ellipsis,
+                                                            )),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              })
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ));
-          }
-          return const SizedBox();
-        });
-  }
-
-  Future<bool> _pickPrediction(Prediction prediction) async {
-    provider!.placeSearchingState = SearchingState.Searching;
-
-    final PlacesDetailsResponse response =
-        await provider!.places.getDetailsByPlaceId(
-      prediction.placeId!,
-      sessionToken: provider!.sessionToken,
-    );
-
-    if (response.errorMessage?.isNotEmpty == true ||
-        response.status == "REQUEST_DENIED") {
-      return false;
+                          ),
+                        ));
+                  }
+                  return const SizedBox();
+                });
+          });}
+      return Center(
+        child: CupertinoActivityIndicator(
+          animating: true,
+          radius: 10,
+          color: primaryText,
+        ),
+      );
     }
 
-    provider!.selectedPlace = getPickResult(response.result);
+    Future<bool> _pickPrediction(Prediction prediction) async {
+      provider!.placeSearchingState = SearchingState.Searching;
 
-    provider!.isAutoCompleteSearching = true;
+      final PlacesDetailsResponse response =
+      await provider!.places.getDetailsByPlaceId(
+        prediction.placeId!,
+        sessionToken: provider!.sessionToken,
+      );
 
-    await saveCoordinates(provider!.selectedPlace);
-
-    if (provider == null) return false;
-    provider!.placeSearchingState = SearchingState.Idle;
-    return true;
-  }
-
-  saveCoordinates(mypick.PickResult? selectedPlace) async {
-    if (selectedPlace != null) {
-      switch (widget.pickResultFor) {
-        case PickResultFor.first:
-          BlocProvider.of<NavigationBloc>(context)
-              .add(UpdateFirstPickResult(firstPickResult: selectedPlace));
-          break;
-        case PickResultFor.second:
-          BlocProvider.of<NavigationBloc>(context)
-              .add(UpdateSecondPickResult(secondPickResult: selectedPlace));
-          break;
+      if (response.errorMessage?.isNotEmpty == true ||
+          response.status == "REQUEST_DENIED") {
+        return false;
       }
-      selectedPlace = selectedPlace.copyWith(isRecentlySearched: true);
-      await HiveCRUD().addSavedAddresses(selectedPlace);
-    }
-    setState(() {
 
-    });
-  }
+      provider!.selectedPlace = getPickResult(response.result);
+
+      provider!.isAutoCompleteSearching = true;
+
+      await saveCoordinates(provider!.selectedPlace);
+
+      if (provider == null) return false;
+      provider!.placeSearchingState = SearchingState.Idle;
+      return true;
+    }
+
+    saveCoordinates(mypick.PickResult? selectedPlace) async {
+      if (selectedPlace != null) {
+        switch (widget.pickResultFor) {
+          case PickResultFor.first:
+            BlocProvider.of<NavigationBloc>(context)
+                .add(UpdateFirstPickResult(firstPickResult: selectedPlace));
+            break;
+          case PickResultFor.second:
+            BlocProvider.of<NavigationBloc>(context)
+                .add(UpdateSecondPickResult(secondPickResult: selectedPlace));
+            break;
+        }
+        selectedPlace = selectedPlace.copyWith(isRecentlySearched: true);
+        await HiveCRUD().addSavedAddresses(selectedPlace);
+      }
+      setState(() {
+
+      });
+    }
 
 
 }

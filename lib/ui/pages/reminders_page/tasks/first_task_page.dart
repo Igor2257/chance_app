@@ -81,7 +81,7 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
                         date: date,
                         //notificationsBefore: state.oldNotificationsBefore.name,
                       );
-                      BlocProvider.of<RemindersBloc>(context).add(SaveTask(taskModel: taskModel));
+
                       await TasksRepository().saveTask(taskModel).then((value) {
                         showDialog(
                             barrierDismissible: false,
@@ -123,6 +123,8 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
                                     actions: [
                                       GestureDetector(
                                         onTap: () {
+                                          BlocProvider.of<AddTaskBloc>(context).add(ClearState());
+                                          BlocProvider.of<RemindersBloc>(context).add(LoadData());
                                           Navigator.of(context).pop();
                                         },
                                         child: SizedBox(
@@ -170,12 +172,11 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
             onTap: () async {
               await Navigator.of(context)
                   .pushNamed("/date_picker_for_tasks")
-                  .then((value) {
-                if (value is bool) {
-                  nameTextEditingController.text = "";
-                  BlocProvider.of<AddTaskBloc>(context)
-                      .add(SaveTaskName(name: ""));
-                }
+                  .whenComplete(() {
+                nameTextEditingController.text = "";
+                BlocProvider.of<AddTaskBloc>(context)
+                    .add(SaveTaskName(name: ""));
+                Navigator.of(context).pop();
               });
             },
             child: Container(

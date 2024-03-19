@@ -8,9 +8,9 @@ import 'package:geolocator/geolocator.dart';
 
 class PositionController {
   StreamSubscription<Position>? positionStream;
-  static Position? myPosition;
   Position? _myPreviousPosition;
   late Function(VoidCallback fn) setState;
+  static ValueNotifier<Position>? myPosition;
   final List<String> fakeMessages = [
     'Раз збрехавши, хто тобі повірить?',
     'Хіба порядній людині пристало брехати?',
@@ -49,7 +49,11 @@ class PositionController {
 
           setState(() {
             _myPreviousPosition = position;
-            myPosition = position;
+            if (myPosition != null) {
+              myPosition!.value=position;
+            } else {
+              myPosition = ValueNotifier<Position>(position);
+            }
           });
         }
       } catch (e) {

@@ -35,7 +35,6 @@ if (keystorePropertiesFile.exists()) {
 }
 android {
     namespace "com.chance_app.chance_app"
-    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -59,10 +58,14 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 23
+        compileSdk 34
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
+    }
+    buildFeatures {
+        buildConfig true
     }
 
     signingConfigs {
@@ -92,6 +95,7 @@ dependencies {
     implementation 'androidx.window:window-java:1.2.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation platform('com.google.firebase:firebase-bom:32.7.2')
+    implementation 'com.google.android.gms:play-services-maps:18.2.0'
     implementation 'com.google.android.gms:play-services-ads:21.1.0'
 
     implementation "androidx.multidex:multidex:2.0.1"

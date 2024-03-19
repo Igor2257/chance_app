@@ -142,7 +142,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
       SelectedDate event, Emitter<RemindersState> emit) {
     List<Map<String, dynamic>> dates = state.days, week = state.week;
     Map<String, dynamic> date = event.selectedDate;
-    DateTime now = DateTime(date["year"], date["month"], date["day"]);
+    DateTime now = DateTime(date["year"], date["month"], int.parse(date["number"]));
     date["isSelected"] = true;
 
     int index = dates.indexWhere((e) => e["number"] == date["number"]);
@@ -349,7 +349,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
   FutureOr<void> _onSaveTask(SaveTask event, Emitter<RemindersState> emit) {
     List<TaskModel> tasks = List.from(state.myTasks);
     tasks.add(event.taskModel);
-    emit(state.clear());
+    emit(state.clear(isLoading: false));
   }
 
   FutureOr<void> _onSaveMedicine(

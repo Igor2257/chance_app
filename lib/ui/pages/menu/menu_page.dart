@@ -8,6 +8,7 @@ import 'package:chance_app/ux/model/product_model.dart';
 import 'package:chance_app/ux/repository/items_repository.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -102,7 +103,7 @@ class _MenuPageState extends State<MenuPage> {
                 findMatch(products[0], 0);
               },
                 padding: const EdgeInsets.all(16),
-                height: 70,
+                height: 0,
                 color: darkNeutral600,
                 child: Row(
                   children: [
@@ -180,27 +181,27 @@ class _MenuPageState extends State<MenuPage> {
                   ],
                 )),
             const Spacer(),
-            RoundedButton(
-                margin: const EdgeInsets.symmetric(vertical: 4),
-                onPress: () async {
-                  await UserRepository().logout().then((value) {
-                    if (value == null) {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          "/signinup", (route) => false);
-                    }
-                  });
-                },
-                color: primary1000,
-                child: Text(
-                  AppLocalizations.instance.translate("logOut"),
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: primary50,
-                      fontWeight: FontWeight.w500),
-                )),
-            const SizedBox(
-              height: 40,
+            SafeArea(
+              child: RoundedButton(
+                  margin: const EdgeInsets.symmetric(vertical: 4),
+                  onPress: () async {
+                    await UserRepository().logout().then((value) {
+                      if (value == null) {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            "/signinup", (route) => false);
+                      }
+                    });
+                  },
+                  color: primary1000,
+                  child: Text(
+                    AppLocalizations.instance.translate("logOut"),
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: primary50,
+                        fontWeight: FontWeight.w500),
+                  )),
             ),
+            
           ],
         ),
       ),

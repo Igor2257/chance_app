@@ -6,6 +6,7 @@ import 'package:chance_app/ux/bloc/navigation_bloc/add_ward/add_ward_bloc.dart';
 import 'package:chance_app/ux/repository/invitation_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AddWard extends StatefulWidget {
   const AddWard({super.key});
@@ -19,6 +20,21 @@ class _AddWardState extends State<AddWard> {
           TextEditingController(),
       emailTextEditingController = TextEditingController();
   final FocusNode nameFocusNode = FocusNode(), emailFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    BlocProvider.of<AddWardBloc>(context).add(ClearData());
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    emailTextEditingController.dispose();
+    nameTextEditingController.dispose();
+    nameFocusNode.dispose();
+    emailFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,16 +83,27 @@ class _AddWardState extends State<AddWard> {
               const Spacer(),
               RoundedButton(
                   onPress: () async {
-                    if ((state.errorEmail == null && state.errorName == null) ||
-                        ((state.errorEmail != null &&
-                                state.errorEmail!.isEmpty) &&
-                            (state.errorName != null &&
-                                state.errorName!.isEmpty))) {
+                    bool isError = state.errorEmail == null;
+                    if (!isError) {
+                      isError = state.errorName == null;
+                    }
+                    if (!isError) {
+                      isError = state.errorEmail!.trim().isNotEmpty;
+                    }
+                    if (!isError) {
+                      isError = state.errorName!.trim().isNotEmpty;
+                    }
+                    if (!isError) {
                       await InvitationRepository()
-                          .sendConfirmToWard(emailTextEditingController.text)
+                          .sendConfirmToWard(nameTextEditingController.text,
+                              emailTextEditingController.text)
                           .then((value) {
-                        if (value == null) {
+                        print(value);
+                        if (value == null || value == "null") {
                           Navigator.of(context).pop(true);
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: value, toastLength: Toast.LENGTH_LONG);
                         }
                       });
                     }

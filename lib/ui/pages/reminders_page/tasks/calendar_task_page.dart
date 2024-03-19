@@ -83,8 +83,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                       //notificationsBefore: state.oldNotificationsBefore.name,
                     );
 
-                    BlocProvider.of<RemindersBloc>(context)
-                        .add(SaveTask(taskModel: taskModel));
+
                     await TasksRepository().saveTask(taskModel).then((value) {
 
                       showDialog(
@@ -126,8 +125,10 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                                     GestureDetector(
                                       onTap: () {
                                         Navigator.of(context).pop(true);
+
                                         BlocProvider.of<RemindersBloc>(context)
-                                            .add(LoadData());
+                                            .add(SaveTask(taskModel: taskModel));
+                                        BlocProvider.of<AddTaskBloc>(context).add(ClearState());
 
                                       },
                                       child: SizedBox(
@@ -142,6 +143,8 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                                   ],
                                 ));
                           }).whenComplete(() {
+                        BlocProvider.of<RemindersBloc>(context)
+                            .add(LoadData());
                         Navigator.of(context).pop();
                       });
                     });

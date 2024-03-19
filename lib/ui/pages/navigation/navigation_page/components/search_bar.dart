@@ -184,6 +184,8 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                             ),
                             const Spacer(),
                             PopupMenuButton(
+                              color: darkNeutral800,
+                              surfaceTintColor: darkNeutral800,
                                 child: SvgPicture.asset(
                                   "assets/icons/dots_vertical.svg",
                                   width: 24,
@@ -256,7 +258,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                     MenuItems.values.map((e) {
                                       return PopupMenuItem(
                                         value: e,
-                                        child: Text(e.name),
+                                        child: Text(e.name,style: TextStyle(color: primary50,fontSize: 16),),
                                       );
                                     }).toList()),
                           ],

@@ -22,15 +22,14 @@ class InvitationModelAdapter extends TypeAdapter<InvitationModel> {
       toUserName: fields[2] as String,
       sentDate: fields[3] as DateTime?,
       fromUserId: fields[4] as String,
-      toUserId: fields[5] as String,
-      invitationStatus: fields[6] as InvitationStatus,
+      invitationStatus: fields[5] as InvitationStatus,
     );
   }
 
   @override
   void write(BinaryWriter writer, InvitationModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -42,8 +41,6 @@ class InvitationModelAdapter extends TypeAdapter<InvitationModel> {
       ..writeByte(4)
       ..write(obj.fromUserId)
       ..writeByte(5)
-      ..write(obj.toUserId)
-      ..writeByte(6)
       ..write(obj.invitationStatus);
   }
 
@@ -72,7 +69,6 @@ _$InvitationModelImpl _$$InvitationModelImplFromJson(
           ? null
           : DateTime.parse(json['sentDate'] as String),
       fromUserId: json['fromUserId'] as String? ?? "",
-      toUserId: json['toUserId'] as String? ?? "",
       invitationStatus: $enumDecodeNullable(
               _$InvitationStatusEnumMap, json['invitationStatus']) ??
           InvitationStatus.pending,
@@ -86,7 +82,6 @@ Map<String, dynamic> _$$InvitationModelImplToJson(
       'toUserName': instance.toUserName,
       'sentDate': instance.sentDate?.toIso8601String(),
       'fromUserId': instance.fromUserId,
-      'toUserId': instance.toUserId,
       'invitationStatus': _$InvitationStatusEnumMap[instance.invitationStatus]!,
     };
 

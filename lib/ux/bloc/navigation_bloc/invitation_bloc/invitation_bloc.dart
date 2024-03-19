@@ -27,24 +27,6 @@ class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
         error = value;
       }
     });
-    list.add(InvitationModel(
-      id: "0",
-      toUserEmail: "email@mail.com",
-      sentDate: DateTime.now(),
-      fromUserId: "cdscds",
-      toUserId: "dsccdscds",
-      invitationStatus: InvitationStatus.pending,
-      toUserName: "cddcsdcdsccdscdsd",
-    ));
-    list.add(InvitationModel(
-      id: "1",
-      toUserEmail: "email1@mail.com",
-      sentDate: DateTime.now(),
-      fromUserId: "dcsdcscdscs",
-      toUserId: "qwqssqsq",
-      invitationStatus: InvitationStatus.pending,
-      toUserName: "jkjkhhmh",
-    ));
     emit(state.copyWith(
         isLoading: false,
         errorInvitationsForMe: error,
@@ -63,24 +45,7 @@ class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
         error = value;
       }
     });
-    list.add(InvitationModel(
-      id: "0",
-      toUserEmail: "email@mail.com",
-      sentDate: DateTime.now(),
-      fromUserId: "cdscds",
-      toUserId: "dsccdscds",
-      invitationStatus: InvitationStatus.pending,
-      toUserName: "cddcsdcdsccdscdsd",
-    ));
-    list.add(InvitationModel(
-      id: "1",
-      toUserEmail: "email1@mail.com",
-      sentDate: DateTime.now(),
-      fromUserId: "dcsdcscdscs",
-      toUserId: "qwqssqsq",
-      invitationStatus: InvitationStatus.pending,
-      toUserName: "jkjkhhmh",
-    ));
+
     emit(state.copyWith(
         isLoading: false,
         errorInvitationsFromMe: error,

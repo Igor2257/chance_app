@@ -415,65 +415,60 @@ class UserRepository {
     await FirebaseAuth.instance
         .signInWithCredential(credential)
         .then((value) async {
-      try {
-        String? token = await value.user!.getIdToken();
-        if (await (Connectivity().checkConnectivity()) ==
-            ConnectivityResult.none) {
-          Fluttertoast.showToast(
-              msg: "Немає підключення до інтернету",
-              toastLength: Toast.LENGTH_LONG);
-        } else {
-          var url = Uri.parse('$apiUrl/auth/google/$token');
-          await http.post(url, headers: <String, String>{
-            'Content-Type': 'application/json',
-          }).then((value) async {
-            final cookie = _parseCookieFromLogin(value);
-
-            if (value.statusCode > 199 && value.statusCode < 300) {
-              var url = Uri.parse('$apiUrl/auth/me');
-              await http.get(
-                url,
-                headers: <String, String>{
-                  'Content-Type': 'application/json',
-                  if (cookie != null) 'Cookie': cookie,
-                },
-              ).then((value) async {
-                if (value.statusCode > 199 && value.statusCode < 300) {
-                  Map<String, dynamic> map = jsonDecode(value.body);
-                  MeUser meUser = MeUser(
-                    id: map["_id"],
-                    email: map["email"],
-                    name: map["name"],
-                    lastName: map["lastName"],
-                    phone: map["phone"],
-                    isGoogle: map["isGoogle"],
-                    isConfirmed: map["isConfirmed"],
-                    deviceId: map["deviceId"],
-                  );
-                  await HiveCRUD().addUser(meUser);
-                  error = false;
-                } else {
-                  Fluttertoast.showToast(
-                      msg: jsonDecode(value.body)["message"]
-                          .toString()
-                          .replaceAll("[", "")
-                          .replaceAll("]", ""),
-                      toastLength: Toast.LENGTH_LONG);
-                }
-              });
-            } else {
-              Fluttertoast.showToast(
-                  msg: jsonDecode(value.body)["message"]
-                      .toString()
-                      .replaceAll("[", "")
-                      .replaceAll("]", ""),
-                  toastLength: Toast.LENGTH_LONG);
-            }
-          });
-        }
-      } catch (e) {
+      String? token = await value.user!.getIdToken();
+      if (await (Connectivity().checkConnectivity()) ==
+          ConnectivityResult.none) {
         Fluttertoast.showToast(
-            msg: e.toString(), toastLength: Toast.LENGTH_LONG);
+            msg: "Немає підключення до інтернету",
+            toastLength: Toast.LENGTH_LONG);
+      } else {
+        var url = Uri.parse('$apiUrl/auth/google/$token');
+        await http.post(url, headers: <String, String>{
+          'Content-Type': 'application/json',
+        }).then((value) async {
+          final cookie = _parseCookieFromLogin(value);
+
+          if (value.statusCode > 199 && value.statusCode < 300) {
+            var url = Uri.parse('$apiUrl/auth/me');
+            await http.get(
+              url,
+              headers: <String, String>{
+                'Content-Type': 'application/json',
+                if (cookie != null) 'Cookie': cookie,
+              },
+            ).then((value) async {
+              if (value.statusCode > 199 && value.statusCode < 300) {
+                Map<String, dynamic> map = jsonDecode(value.body);
+                MeUser meUser = MeUser(
+                  id: map["_id"],
+                  email: map["email"],
+                  name: map["name"]??"",
+                  lastName: map["lastName"]??"",
+                  phone: map["phone"]??"",
+                  isGoogle: map["isGoogle"],
+                  isConfirmed: map["isConfirmed"],
+                  deviceId: map["deviceId"]??"",
+                );
+                await HiveCRUD().addUser(meUser);
+                error = false;
+              } else {
+                Fluttertoast.showToast(
+                    msg: jsonDecode(value.body)["message"]
+                        .toString()
+                        .replaceAll("[", "")
+                        .replaceAll("]", ""),
+                    toastLength: Toast.LENGTH_LONG);
+              }
+            });
+          } else {
+            Fluttertoast.showToast(
+                msg: jsonDecode(value.body)["message"]
+                    .toString()
+                    .replaceAll("[", "")
+                    .replaceAll("]", ""),
+                toastLength: Toast.LENGTH_LONG);
+          }
+        });
       }
     });
 
