@@ -21,17 +21,18 @@ TaskModel _$TaskModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$TaskModel {
   @HiveField(0)
+  @JsonKey(name: "_id")
   String get id => throw _privateConstructorUsedError;
   @HiveField(1)
-  String get message => throw _privateConstructorUsedError;
+  DateTime get updatedAt => throw _privateConstructorUsedError;
   @HiveField(2)
-  DateTime get date => throw _privateConstructorUsedError;
+  String get message => throw _privateConstructorUsedError;
   @HiveField(3)
-  int? get remindBeforeMinutes => throw _privateConstructorUsedError;
+  DateTime get date => throw _privateConstructorUsedError;
   @HiveField(4)
   bool get isDone => throw _privateConstructorUsedError;
   @HiveField(5)
-  bool get isSentToDB => throw _privateConstructorUsedError;
+  int? get remindBefore => throw _privateConstructorUsedError; // in minutes
   @HiveField(6)
   bool get isRemoved => throw _privateConstructorUsedError;
 
@@ -47,12 +48,12 @@ abstract class $TaskModelCopyWith<$Res> {
       _$TaskModelCopyWithImpl<$Res, TaskModel>;
   @useResult
   $Res call(
-      {@HiveField(0) String id,
-      @HiveField(1) String message,
-      @HiveField(2) DateTime date,
-      @HiveField(3) int? remindBeforeMinutes,
+      {@HiveField(0) @JsonKey(name: "_id") String id,
+      @HiveField(1) DateTime updatedAt,
+      @HiveField(2) String message,
+      @HiveField(3) DateTime date,
       @HiveField(4) bool isDone,
-      @HiveField(5) bool isSentToDB,
+      @HiveField(5) int? remindBefore,
       @HiveField(6) bool isRemoved});
 }
 
@@ -70,11 +71,11 @@ class _$TaskModelCopyWithImpl<$Res, $Val extends TaskModel>
   @override
   $Res call({
     Object? id = null,
+    Object? updatedAt = null,
     Object? message = null,
     Object? date = null,
-    Object? remindBeforeMinutes = freezed,
     Object? isDone = null,
-    Object? isSentToDB = null,
+    Object? remindBefore = freezed,
     Object? isRemoved = null,
   }) {
     return _then(_value.copyWith(
@@ -82,6 +83,10 @@ class _$TaskModelCopyWithImpl<$Res, $Val extends TaskModel>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      updatedAt: null == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       message: null == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -90,18 +95,14 @@ class _$TaskModelCopyWithImpl<$Res, $Val extends TaskModel>
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      remindBeforeMinutes: freezed == remindBeforeMinutes
-          ? _value.remindBeforeMinutes
-          : remindBeforeMinutes // ignore: cast_nullable_to_non_nullable
-              as int?,
       isDone: null == isDone
           ? _value.isDone
           : isDone // ignore: cast_nullable_to_non_nullable
               as bool,
-      isSentToDB: null == isSentToDB
-          ? _value.isSentToDB
-          : isSentToDB // ignore: cast_nullable_to_non_nullable
-              as bool,
+      remindBefore: freezed == remindBefore
+          ? _value.remindBefore
+          : remindBefore // ignore: cast_nullable_to_non_nullable
+              as int?,
       isRemoved: null == isRemoved
           ? _value.isRemoved
           : isRemoved // ignore: cast_nullable_to_non_nullable
@@ -119,12 +120,12 @@ abstract class _$$TaskModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@HiveField(0) String id,
-      @HiveField(1) String message,
-      @HiveField(2) DateTime date,
-      @HiveField(3) int? remindBeforeMinutes,
+      {@HiveField(0) @JsonKey(name: "_id") String id,
+      @HiveField(1) DateTime updatedAt,
+      @HiveField(2) String message,
+      @HiveField(3) DateTime date,
       @HiveField(4) bool isDone,
-      @HiveField(5) bool isSentToDB,
+      @HiveField(5) int? remindBefore,
       @HiveField(6) bool isRemoved});
 }
 
@@ -140,11 +141,11 @@ class __$$TaskModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? updatedAt = null,
     Object? message = null,
     Object? date = null,
-    Object? remindBeforeMinutes = freezed,
     Object? isDone = null,
-    Object? isSentToDB = null,
+    Object? remindBefore = freezed,
     Object? isRemoved = null,
   }) {
     return _then(_$TaskModelImpl(
@@ -152,6 +153,10 @@ class __$$TaskModelImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      updatedAt: null == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       message: null == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -160,18 +165,14 @@ class __$$TaskModelImplCopyWithImpl<$Res>
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      remindBeforeMinutes: freezed == remindBeforeMinutes
-          ? _value.remindBeforeMinutes
-          : remindBeforeMinutes // ignore: cast_nullable_to_non_nullable
-              as int?,
       isDone: null == isDone
           ? _value.isDone
           : isDone // ignore: cast_nullable_to_non_nullable
               as bool,
-      isSentToDB: null == isSentToDB
-          ? _value.isSentToDB
-          : isSentToDB // ignore: cast_nullable_to_non_nullable
-              as bool,
+      remindBefore: freezed == remindBefore
+          ? _value.remindBefore
+          : remindBefore // ignore: cast_nullable_to_non_nullable
+              as int?,
       isRemoved: null == isRemoved
           ? _value.isRemoved
           : isRemoved // ignore: cast_nullable_to_non_nullable
@@ -184,12 +185,12 @@ class __$$TaskModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$TaskModelImpl extends _TaskModel {
   const _$TaskModelImpl(
-      {@HiveField(0) required this.id,
-      @HiveField(1) required this.message,
-      @HiveField(2) required this.date,
-      @HiveField(3) this.remindBeforeMinutes,
+      {@HiveField(0) @JsonKey(name: "_id") required this.id,
+      @HiveField(1) required this.updatedAt,
+      @HiveField(2) required this.message,
+      @HiveField(3) required this.date,
       @HiveField(4) this.isDone = false,
-      @HiveField(5) this.isSentToDB = false,
+      @HiveField(5) this.remindBefore,
       @HiveField(6) this.isRemoved = false})
       : super._();
 
@@ -198,24 +199,25 @@ class _$TaskModelImpl extends _TaskModel {
 
   @override
   @HiveField(0)
+  @JsonKey(name: "_id")
   final String id;
   @override
   @HiveField(1)
-  final String message;
+  final DateTime updatedAt;
   @override
   @HiveField(2)
-  final DateTime date;
+  final String message;
   @override
   @HiveField(3)
-  final int? remindBeforeMinutes;
+  final DateTime date;
   @override
   @JsonKey()
   @HiveField(4)
   final bool isDone;
   @override
-  @JsonKey()
   @HiveField(5)
-  final bool isSentToDB;
+  final int? remindBefore;
+// in minutes
   @override
   @JsonKey()
   @HiveField(6)
@@ -223,7 +225,7 @@ class _$TaskModelImpl extends _TaskModel {
 
   @override
   String toString() {
-    return 'TaskModel(id: $id, message: $message, date: $date, remindBeforeMinutes: $remindBeforeMinutes, isDone: $isDone, isSentToDB: $isSentToDB, isRemoved: $isRemoved)';
+    return 'TaskModel(id: $id, updatedAt: $updatedAt, message: $message, date: $date, isDone: $isDone, remindBefore: $remindBefore, isRemoved: $isRemoved)';
   }
 
   @override
@@ -232,21 +234,21 @@ class _$TaskModelImpl extends _TaskModel {
         (other.runtimeType == runtimeType &&
             other is _$TaskModelImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
             (identical(other.message, message) || other.message == message) &&
             (identical(other.date, date) || other.date == date) &&
-            (identical(other.remindBeforeMinutes, remindBeforeMinutes) ||
-                other.remindBeforeMinutes == remindBeforeMinutes) &&
             (identical(other.isDone, isDone) || other.isDone == isDone) &&
-            (identical(other.isSentToDB, isSentToDB) ||
-                other.isSentToDB == isSentToDB) &&
+            (identical(other.remindBefore, remindBefore) ||
+                other.remindBefore == remindBefore) &&
             (identical(other.isRemoved, isRemoved) ||
                 other.isRemoved == isRemoved));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, message, date,
-      remindBeforeMinutes, isDone, isSentToDB, isRemoved);
+  int get hashCode => Object.hash(runtimeType, id, updatedAt, message, date,
+      isDone, remindBefore, isRemoved);
 
   @JsonKey(ignore: true)
   @override
@@ -264,12 +266,12 @@ class _$TaskModelImpl extends _TaskModel {
 
 abstract class _TaskModel extends TaskModel {
   const factory _TaskModel(
-      {@HiveField(0) required final String id,
-      @HiveField(1) required final String message,
-      @HiveField(2) required final DateTime date,
-      @HiveField(3) final int? remindBeforeMinutes,
+      {@HiveField(0) @JsonKey(name: "_id") required final String id,
+      @HiveField(1) required final DateTime updatedAt,
+      @HiveField(2) required final String message,
+      @HiveField(3) required final DateTime date,
       @HiveField(4) final bool isDone,
-      @HiveField(5) final bool isSentToDB,
+      @HiveField(5) final int? remindBefore,
       @HiveField(6) final bool isRemoved}) = _$TaskModelImpl;
   const _TaskModel._() : super._();
 
@@ -278,23 +280,24 @@ abstract class _TaskModel extends TaskModel {
 
   @override
   @HiveField(0)
+  @JsonKey(name: "_id")
   String get id;
   @override
   @HiveField(1)
-  String get message;
+  DateTime get updatedAt;
   @override
   @HiveField(2)
-  DateTime get date;
+  String get message;
   @override
   @HiveField(3)
-  int? get remindBeforeMinutes;
+  DateTime get date;
   @override
   @HiveField(4)
   bool get isDone;
   @override
   @HiveField(5)
-  bool get isSentToDB;
-  @override
+  int? get remindBefore;
+  @override // in minutes
   @HiveField(6)
   bool get isRemoved;
   @override

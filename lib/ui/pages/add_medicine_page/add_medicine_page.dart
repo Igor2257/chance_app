@@ -12,6 +12,7 @@ import 'package:chance_app/ui/pages/add_medicine_page/components/add_medicine_pa
 import 'package:chance_app/ui/pages/add_medicine_page/components/dose_count_picker.dart';
 import 'package:chance_app/ui/pages/add_medicine_page/components/dose_text.dart';
 import 'package:chance_app/ux/bloc/add_medicine_bloc/add_medicine_bloc.dart';
+import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 // import 'package:chance_app/ux/enum/day_periodicity.dart';
 import 'package:chance_app/ux/enum/instruction.dart';
 import 'package:chance_app/ux/enum/medicine_type.dart';
@@ -63,7 +64,10 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
   Widget build(BuildContext context) {
     return BlocListener<AddMedicineBloc, AddMedicineState>(
       listener: (context, state) {
-        if (state.medicine != null) Navigator.of(context).pop(state.medicine);
+        if (state.medicine != null) {
+          context.read<RemindersBloc>().add(AddMedicine(state.medicine!));
+          Navigator.of(context).pop();
+        }
       },
       child: Scaffold(
         body: Navigator(
@@ -89,7 +93,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
   }
 
   Widget _addNamePage() {
-    final border = UnderlineInputBorder(
+    const border = UnderlineInputBorder(
       borderSide: BorderSide(color: beige200),
     );
     return AddMedicinePageScaffold(
@@ -108,7 +112,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
             ),
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             placeholder: "Введіть назву препарату",
-            placeholderStyle: TextStyle(color: beige800),
+            placeholderStyle: const TextStyle(color: beige800),
             clearButtonMode: OverlayVisibilityMode.always,
             onTapOutside: (_) => FocusScope.of(context).unfocus(),
           ),
@@ -127,11 +131,11 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                 context.read<AddMedicineBloc>().add(SetName(name));
                 _navigator.pushNamed(AddMedicineStep.addType);
               },
-              style: TextStyle(fontSize: 16, color: primary50),
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                suffixIcon: const CupertinoListTileChevron(),
-                suffixIconConstraints: const BoxConstraints(),
+              style: const TextStyle(fontSize: 16, color: primary50),
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                suffixIcon: CupertinoListTileChevron(),
+                suffixIconConstraints: BoxConstraints(),
                 iconColor: primary50,
                 enabledBorder: border,
                 focusedBorder: border,
@@ -247,7 +251,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
         builder: (context, selectedDays) {
           return Column(
             children: [
-              Text(
+              const Text(
                 'Оберіть дні тижня',
                 style: TextStyle(fontSize: 22, color: primary100),
               ),
@@ -268,10 +272,10 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                             color: isSelected ? primary100 : Colors.transparent,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
-                              side: BorderSide(color: darkNeutral800),
+                              side: const BorderSide(color: darkNeutral800),
                             ),
-                            textStyle:
-                                TextStyle(fontSize: 22, color: primary800),
+                            textStyle: const TextStyle(
+                                fontSize: 22, color: primary800),
                             clipBehavior: Clip.hardEdge,
                             child: InkWell(
                               onTap: () {
@@ -326,7 +330,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                   onDateChanged: (DateTime date) {
                     selectedDate = date;
                   },
-                  textStyle: TextStyle(fontSize: 28, color: primary800),
+                  textStyle: const TextStyle(fontSize: 28, color: primary800),
                 ),
               ),
             ),
@@ -546,7 +550,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                         const Text("Додати інструкції?")
                       else ...[
                         const Text("Інструкції додані"),
-                        Icon(
+                        const Icon(
                           Icons.check,
                           color: primary50,
                         ),

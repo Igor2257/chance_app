@@ -4,15 +4,35 @@ import 'dart:math' show Random, pow;
 
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ux/enum/instruction.dart';
-import 'package:chance_app/ux/hive_crum.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/task_model.dart';
-import 'package:flutter/material.dart' show DateTimeRange, DateUtils, TimeOfDay;
+import 'package:flutter/material.dart' show DateTimeRange, DateUtils;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:timezone/data/latest_all.dart';
 import 'package:timezone/timezone.dart';
 
 abstract class RemindersHelper {
+  static late final Box<Map<dynamic, dynamic>> _configBox;
+
+  static Future<void> initialize() async {
+    _configBox = await Hive.openBox("reminders");
+    // Local notifications plugin setup
+    await FlutterLocalNotificationsPlugin().initialize(
+      const InitializationSettings(
+        android: AndroidInitializationSettings(kDefaultAndroidIcon),
+        iOS: DarwinInitializationSettings(),
+      ),
+    );
+    // Timezone setup, is required by scheduler
+    final currentTimeZone = await FlutterTimezone.getLocalTimezone();
+    initializeTimeZones();
+    setLocalLocation(getLocation(currentTimeZone));
+  }
+
   /// Requests required permissions.
   static Future<bool> requestPermissions() async {
     if (Platform.isAndroid) {
@@ -29,11 +49,9 @@ abstract class RemindersHelper {
 
   /// Registers new pending notification for the [task].
   static Future<void> addTaskReminder(TaskModel task) async {
-    final remindBeforeMinutes = task.remindBeforeMinutes;
-    if (remindBeforeMinutes == null) return;
-
-    final reminderOffset = Duration(minutes: remindBeforeMinutes);
-    final reminderTime = task.date.subtract(reminderOffset);
+    if (task.remindBefore == null) return; // There is no reminder required
+    final remindBefore = Duration(minutes: task.remindBefore!);
+    final reminderTime = task.date.subtract(remindBefore);
     if (reminderTime.isBefore(DateTime.now())) return;
 
     const notificationChannel = AndroidNotificationChannel(
@@ -43,47 +61,68 @@ abstract class RemindersHelper {
       enableLights: true,
       ledColor: primary400,
     );
-    final notificationConfig = _getNotificationConfig(task) ?? {};
+    final notificationConfig = _getNotificationConfig(task.id) ?? {};
     final notificationId = notificationConfig[task.date];
-    final timeText = [
-      task.date.hour.toString().padLeft(2, "0"),
-      task.date.minute.toString().padLeft(2, "0"),
-    ].join(':');
 
     // Task reminder setup
     final scheduledId = await _scheduleNotification(
       reminderTime,
       androidNotificationChannel: notificationChannel,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       id: notificationId,
       title: task.message,
-      body: "Сьогодні $timeText",
+      body: [
+        "Сьогодні",
+        Jiffy.parseFromDateTime(reminderTime).Hm,
+      ].join(" "),
     );
 
     if (scheduledId != notificationId) {
-      await _updateNotificationConfig(task, config: {task.date: scheduledId});
+      notificationConfig[task.date] = scheduledId;
+      await _updateNotificationConfig(task.id, config: notificationConfig);
     }
   }
 
   /// Cancels pending notification for the [task].
   static Future<void> cancelTaskReminder(TaskModel task) async {
-    final notificationConfig = _getNotificationConfig(task);
+    final notificationConfig = _getNotificationConfig(task.id);
     final notificationId = notificationConfig?[task.date];
     if (notificationId == null) return;
+
     await FlutterLocalNotificationsPlugin().cancel(notificationId);
-    await _deleteNotificationConfig(task);
+    await _deleteNotificationConfig(task.id);
+    _log('"${task.message}" reminder canceled');
+  }
+
+  /// Schedules pending notifications for the [medicine] in the [dateRange] range.
+  /// [DateTimeRange.end] day is included in scheduled range.
+  static Future<void> addMedicineReminders(
+    MedicineModel medicine, {
+    required DateTimeRange dateRange,
+  }) async {
+    final endDay = DateUtils.dateOnly(dateRange.end);
+    var dayDate = dateRange.start.isAfter(medicine.startDate)
+        ? DateUtils.dateOnly(dateRange.start)
+        : DateUtils.dateOnly(medicine.startDate);
+
+    while (!dayDate.isAfter(endDay)) {
+      for (final timeOffset in medicine.doses.keys) {
+        final duration = Duration(minutes: timeOffset);
+        await addMedicineReminder(medicine, doseTime: dayDate.add(duration));
+      }
+      dayDate = DateUtils.addDaysToDate(dayDate, 1);
+    }
   }
 
   /// Registers new pending notification for the [medicine] at the [dateTime].
   static Future<void> addMedicineReminder(
     MedicineModel medicine, {
-    required DateTime dateTime,
+    required DateTime doseTime,
   }) async {
-    if (dateTime.isBefore(DateTime.now())) return;
-    if (!medicine.hasReminderAt(dateTime)) return;
+    final doseCount = medicine.getDoseCountFor(doseTime);
+    if (doseCount == null) return;
 
-    // Check if the reminder was rescheduled
-    dateTime = medicine.rescheduledOn[dateTime] ?? dateTime;
+    final reminderTime = medicine.getActualDoseTime(doseTime);
+    if (reminderTime.isBefore(DateTime.now())) return;
 
     const notificationChannel = AndroidNotificationChannel(
       "medicines",
@@ -92,27 +131,20 @@ abstract class RemindersHelper {
       enableLights: true,
       ledColor: primary400,
     );
-    final notificationConfig = _getNotificationConfig(medicine) ?? {};
-    final notificationId = notificationConfig[dateTime];
-    final time = TimeOfDay.fromDateTime(dateTime);
-    final timeText = [
-      time.hour.toString().padLeft(2, "0"),
-      time.minute.toString().padLeft(2, "0"),
-    ].join(':');
-    final count = medicine.doses[time.toTimeOffset()]!;
+    final notificationConfig = _getNotificationConfig(medicine.id) ?? {};
+    final notificationId = notificationConfig[reminderTime];
     final reminderText = [
-      count,
-      medicine.type.toDoseString(count).toLowerCase(),
+      doseCount,
+      medicine.type.toDoseString(doseCount).toLowerCase(),
       "сьогодні о",
-      timeText,
+      Jiffy.parseFromDateTime(reminderTime).Hm,
     ].join(' ');
     final shouldShowInstruction = medicine.instruction != Instruction.noMatter;
 
     // Medicine reminder setup
     final scheduledId = await _scheduleNotification(
-      dateTime,
+      reminderTime,
       androidNotificationChannel: notificationChannel,
-      androidScheduleMode: AndroidScheduleMode.alarmClock,
       id: notificationId,
       title: medicine.name,
       body: (Platform.isIOS && !shouldShowInstruction)
@@ -126,87 +158,66 @@ abstract class RemindersHelper {
     );
 
     if (scheduledId != notificationId) {
-      notificationConfig[dateTime] = scheduledId;
-      await _updateNotificationConfig(medicine, config: notificationConfig);
-    }
-  }
-
-  /// Schedules pending notifications for the [medicine] in the [dateRange] range.
-  /// [DateTimeRange.end] day is included in scheduled range.
-  static Future<void> addMedicineReminders(
-    MedicineModel medicine, {
-    required DateTimeRange dateRange,
-  }) async {
-    if (dateRange.end.isBefore(medicine.startDate)) return;
-
-    final endDay = DateUtils.dateOnly(dateRange.end);
-    var dayDate = dateRange.start.isAfter(medicine.startDate)
-        ? DateUtils.dateOnly(dateRange.start)
-        : DateUtils.dateOnly(medicine.startDate);
-
-    while (!dayDate.isAfter(endDay)) {
-      for (final timeOffset in medicine.doses.keys) {
-        final time = timeOffset.toTimeOfDay();
-        await addMedicineReminder(
-          medicine,
-          dateTime: dayDate.copyWith(hour: time.hour, minute: time.minute),
-        );
-      }
-      dayDate = DateUtils.addDaysToDate(dayDate, 1);
+      notificationConfig[reminderTime] = scheduledId;
+      await _updateNotificationConfig(medicine.id, config: notificationConfig);
     }
   }
 
   /// Cancels pending notification for the [medicine] at the [dateTime].
   static Future<void> cancelMedicineReminder(
     MedicineModel medicine, {
-    required DateTime dateTime,
+    required DateTime doseTime,
   }) async {
-    final notificationConfig = _getNotificationConfig(medicine) ?? {};
-    final notificationId = notificationConfig.remove(dateTime);
+    final notificationConfig = _getNotificationConfig(medicine.id) ?? {};
+    final reminderTime = medicine.getActualDoseTime(doseTime);
+    final notificationId = notificationConfig.remove(reminderTime);
     if (notificationId == null) return;
+
     await FlutterLocalNotificationsPlugin().cancel(notificationId);
-    await _updateNotificationConfig(medicine, config: notificationConfig);
+    await _updateNotificationConfig(medicine.id, config: notificationConfig);
+    _log('"${medicine.name}" at $reminderTime canceled');
   }
 
   /// Cancels all pending notification for the [medicine].
   static Future<void> cancelMedicineReminders(MedicineModel medicine) async {
-    final notificationConfig = _getNotificationConfig(medicine);
+    final notificationConfig = _getNotificationConfig(medicine.id);
     final notificationIds = notificationConfig?.values ?? [];
     for (final notificationId in notificationIds) {
       await FlutterLocalNotificationsPlugin().cancel(notificationId);
     }
-    await _deleteNotificationConfig(medicine);
+    await _deleteNotificationConfig(medicine.id);
+    _log('"${medicine.name}" reminders canceled');
   }
 
   /// Cancels all pending notifications.
   static Future<void> cancelAll() async {
-    for (final config in notificationsBox.values) {
+    for (final config in _configBox.values) {
       for (final notificationId in config.values) {
         await FlutterLocalNotificationsPlugin().cancel(notificationId);
       }
     }
-    await notificationsBox.clear();
+    await _configBox.clear();
+    _log("All reminders canceled");
   }
 
-  static Map<DateTime, int>? _getNotificationConfig<T>(T model) {
-    return notificationsBox.get(model.hashCode);
+  static Map<DateTime, int>? _getNotificationConfig(String id) {
+    return _configBox.get(id)?.cast<DateTime, int>();
   }
 
-  static Future<void> _updateNotificationConfig<T>(
-    T model, {
+  static Future<void> _updateNotificationConfig(
+    String id, {
     required Map<DateTime, int> config,
   }) {
-    return notificationsBox.put(model.hashCode, config);
+    return _configBox.put(id, config);
   }
 
-  static Future<void> _deleteNotificationConfig<T>(T model) {
-    return notificationsBox.delete(model.hashCode);
+  static Future<void> _deleteNotificationConfig(String id) {
+    return _configBox.delete(id);
   }
 
   static Future<int> _scheduleNotification(
     DateTime dateTime, {
     required AndroidNotificationChannel androidNotificationChannel,
-    AndroidScheduleMode androidScheduleMode = AndroidScheduleMode.exact,
     int? id,
     String? title,
     String? body,
@@ -255,13 +266,15 @@ abstract class RemindersHelper {
       ),
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.wallClockTime,
-      androidScheduleMode: androidScheduleMode,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.dateAndTime,
       payload: payload,
     );
 
-    log('"$title" is scheduled on $dateTime', name: "Reminders");
+    _log('"$title" is scheduled on $dateTime');
 
     return notificationId;
   }
+
+  static void _log(String message) => log(message, name: "Reminders");
 }

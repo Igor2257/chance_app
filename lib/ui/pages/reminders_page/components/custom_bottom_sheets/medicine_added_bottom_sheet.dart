@@ -23,7 +23,7 @@ class MedicineAddedBottomSheet extends StatelessWidget {
           children: [
             SvgPicture.asset(
               medicine.type.svgIcon,
-              height: 64,
+              height: 33,
               color: beige500,
             ),
             const SizedBox(height: 8),
@@ -36,14 +36,14 @@ class MedicineAddedBottomSheet extends StatelessWidget {
             RoundedButton(
               onPress: () => Navigator.of(context).pop(true),
               color: primary1000,
-              child: Row(
+              child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     "Додати інший препарат",
                     style: TextStyle(color: primary50, fontSize: 16),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Icon(Icons.add, color: primary50),
                 ],
               ),

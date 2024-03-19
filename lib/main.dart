@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:developer' show log;
-import 'dart:ui' show DartPluginRegistrant;
 
 import 'package:chance_app/firebase_options.dart';
 import 'package:chance_app/ui/constans.dart';
@@ -39,12 +37,12 @@ import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/helpers/ad_helper.dart';
+import 'package:chance_app/ux/helpers/background_service_helper.dart';
 import 'package:chance_app/ux/helpers/reminders_helper.dart';
 import 'package:chance_app/ux/hive_crum.dart';
 import 'package:chance_app/ux/internet_connection_stream.dart';
 import 'package:chance_app/ux/model/product_model.dart';
 import 'package:chance_app/ux/model/settings.dart';
-import 'package:chance_app/ux/repository/tasks_repository.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -52,19 +50,14 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:timezone/data/latest_all.dart';
-import 'package:timezone/timezone.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -90,11 +83,11 @@ Future<void> main() async {
     }
   });
 
-  await Permission.notification.request();
-  await _initializeLocalNotifications();
-  await _initializeBackgroundService();
-
   await HiveCRUM().initialize().then((value) async {
+    await Permission.notification.request();
+    await RemindersHelper.initialize();
+    await BackgroundServiceHelper.initialize();
+
     if ((!HiveCRUM().setting.blockAd)) {
       unawaited(MobileAds.instance.initialize());
     }
@@ -118,63 +111,6 @@ Future<void> main() async {
       runApp(const MyApp("/onboarding_page"));
     }
   });
-}
-
-Future<void> _initializeLocalNotifications() async {
-  // Local notifications plugin setup
-  await FlutterLocalNotificationsPlugin().initialize(
-    const InitializationSettings(
-      android: AndroidInitializationSettings(kDefaultAndroidIcon),
-      iOS: DarwinInitializationSettings(),
-    ),
-  );
-
-  // Timezone setup, is required by scheduler
-  final currentTimeZone = await FlutterTimezone.getLocalTimezone();
-  initializeTimeZones();
-  setLocalLocation(getLocation(currentTimeZone));
-}
-
-Future<void> _initializeBackgroundService() async {
-  await FlutterBackgroundService().configure(
-    iosConfiguration: IosConfiguration(
-      onBackground: _onStartBackgroundService,
-      onForeground: _onStartBackgroundService,
-    ),
-    androidConfiguration: AndroidConfiguration(
-      onStart: _onStartBackgroundService,
-      isForegroundMode: false,
-    ),
-  );
-}
-
-@pragma('vm:entry-point')
-Future<bool> _onStartBackgroundService(ServiceInstance service) async {
-  DartPluginRegistrant.ensureInitialized();
-  const serviceName = "BackgroundService";
-
-  final hiveIsInitialized = await HiveCRUM().initialize();
-  await _initializeLocalNotifications();
-
-  log("Service is started", name: serviceName);
-
-  if (hiveIsInitialized) {
-    // Setup medicine reminders
-    for (final medicine in medicineBox.values) {
-      await RemindersHelper.addMedicineReminders(
-        medicine,
-        dateRange: DateTimeRange(
-          start: DateTime.now(),
-          end: DateUtils.addDaysToDate(DateTime.now(), kScheduleDays),
-        ),
-      );
-    }
-    log("Reminders are schedules", name: serviceName);
-
-    return true;
-  }
-
-  return false;
 }
 
 class MyApp extends StatefulWidget {
@@ -523,188 +459,6 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                         ))),
                             ],
                           ),
-                          if (InternetConnectionStream.isUserHaveOfflineData)
-                            Container(
-                                color: Colors.black38,
-                                child: Center(
-                                  child: Container(
-                                    width: size.width,
-                                    decoration: BoxDecoration(
-                                        color: beige100,
-                                        borderRadius:
-                                            BorderRadius.circular(16)),
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 16, horizontal: 16),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 16, horizontal: 24),
-                                          child: Column(
-                                            children: [
-                                              SvgPicture.asset(
-                                                "assets/icons/tasks_big.svg",
-                                                color: beige500,
-                                              ),
-                                              Text(
-                                                AppLocalizations.instance
-                                                    .translate("tasks"),
-                                                style: TextStyle(
-                                                    fontSize: 24,
-                                                    color: primaryText),
-                                              ),
-                                              const SizedBox(
-                                                height: 30,
-                                              ),
-                                              Text(
-                                                AppLocalizations.instance.translate(
-                                                    "uHaveNotSynchronizedDataWithServer"),
-                                                textAlign: TextAlign.justify,
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: primaryText),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.all(4),
-                                          height: 120,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(16),
-                                              color: darkNeutral800),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () async {
-                                                  await TasksRepository()
-                                                      .sendAllLocalTasksData()
-                                                      .then((value) {
-                                                    if (value) {
-                                                      internetConnectionStream
-                                                          .changeUserOfflineData(
-                                                              false);
-                                                    }
-                                                  });
-                                                },
-                                                child: SizedBox(
-                                                  width:
-                                                      (size.width / 2.1) - 50,
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Container(
-                                                        height: 56,
-                                                        width: 56,
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        90),
-                                                            color: primary300),
-                                                        child: Center(
-                                                          child: Icon(
-                                                            Icons.upload,
-                                                            color: primaryText,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Expanded(
-                                                        child: Text(
-                                                          AppLocalizations
-                                                              .instance
-                                                              .translate(
-                                                                  "sendMyDataOnServer"),
-                                                          maxLines: 2,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: TextStyle(
-                                                              color: primary50,
-                                                              fontSize: 16),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              GestureDetector(
-                                                onTap: () async {
-                                                  await TasksRepository()
-                                                      .updateLocalTasks()
-                                                      .whenComplete(() {
-                                                    internetConnectionStream
-                                                        .changeUserOfflineData(
-                                                            false);
-                                                  });
-                                                },
-                                                child: SizedBox(
-                                                  width:
-                                                      (size.width / 2.1) - 50,
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Container(
-                                                        height: 56,
-                                                        width: 56,
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        90),
-                                                            border: Border.all(
-                                                                color:
-                                                                    primary300)),
-                                                        child: Center(
-                                                          child: Icon(
-                                                            Icons.download,
-                                                            color: primary50,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Expanded(
-                                                        child: Text(
-                                                          AppLocalizations
-                                                              .instance
-                                                              .translate(
-                                                                  "synchronizeDataWithServer"),
-                                                          maxLines: 2,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: TextStyle(
-                                                              color: primary50,
-                                                              fontSize: 16),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                )),
                         ],
                       ))));
         }));

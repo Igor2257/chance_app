@@ -1,269 +1,189 @@
-import 'dart:convert';
+import 'dart:async';
 
-import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ux/api/api_client.dart';
 import 'package:chance_app/ux/hive_crum.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
+import 'package:hive/hive.dart';
 
 class TasksRepository {
+  final _apiClient = const ApiClient();
   final _userRepository = UserRepository();
+  final Box<TaskModel> _storage = tasksBox;
 
-  Future<List<TaskModel>> updateLocalTasks({bool? forcePush}) async {
-    List<TaskModel> list = [];
-
-    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      list = List.from(
-          HiveCRUM().myTasks.where((element) => element.isRemoved == false));
-    } else {
-      if ((forcePush != null && forcePush) || !checkIsAnyTasksNotSent()) {
-        await loadTasks().then((value) async {
-          await HiveCRUM().clearTasks().whenComplete(() {
-            list = value;
-
-            for (var task in list) {
-              HiveCRUM().addTask(task);
-            }
-          });
-        });
-      }
-    }
-    return list;
+  List<TaskModel> getLocalTasks() {
+    return _storage.values.where((e) => !e.isRemoved).toList();
   }
 
-  Future<List<TaskModel>> loadTasks() async {
-    List<TaskModel> tasks = [];
-    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
-          toastLength: Toast.LENGTH_LONG);
-    } else {
-      try {
-        var url = Uri.parse('$apiUrl/task');
-        final cookie = await _userRepository.getCookie();
-        await http.get(
-          url,
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Cookie': cookie.toString(),
-          },
-        ).then((value) {
-          if (value.statusCode > 199 && value.statusCode < 300) {
-            List<dynamic> list = jsonDecode(value.body);
-
-            for (int i = 0; i < list.length; i++) {
-              TaskModel taskModel = TaskModel(
-                  id: list[i]["_id"],
-                  message: list[i]["message"],
-                  date: DateTime.parse(list[i]["date"]).toLocal(),
-                  isDone: list[i]["isDone"],
-                  isSentToDB: true);
-              tasks.add(taskModel);
-            }
-          } else {
-            String error = jsonDecode(value.body)["message"]
-                .toString()
-                .replaceAll("[", "")
-                .replaceAll("]", "");
-            Fluttertoast.showToast(msg: error, toastLength: Toast.LENGTH_LONG);
-          }
-        });
-      } catch (error) {
-        Fluttertoast.showToast(
-            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+  Future<Set<String>> syncTasks() async {
+    final cookie = await _userRepository.getCookie();
+    final fetchedItems = await _apiClient.fetchTasks(cookie: cookie.toString());
+    if (fetchedItems == null) return {}; // There is nothing to sync
+    // Sync map is a Map of item IDs and pairs of local and remote items
+    final result = <String>{};
+    final syncMap = <String, ({TaskModel? local, TaskModel? remote})>{
+      for (final item in fetchedItems) item.id: (local: null, remote: item),
+    };
+    for (final item in _storage.values) {
+      syncMap[item.id] = (local: item, remote: syncMap[item.id]?.remote);
+    }
+    // Start to sync the items
+    for (final item in syncMap.values) {
+      final local = item.local;
+      final remote = item.remote;
+      if (local == null) {
+        await _storage.putTask(remote!); // Save remote item
+      } else if (remote == null) {
+        if (!local.isRemoved) {
+          final item = await _apiClient.postTask(
+            local,
+            cookie: cookie.toString(),
+          );
+          // if (item == null) continue; // TODO: fix later
+          if (item != null) await _storage.putTask(item);
+        }
+        await _storage.deleteTask(local); // Delete permanently
+        result.add(local.id);
+      } else if (local.isRemoved) {
+        final deleted = await _apiClient.deleteTask(
+          remote,
+          cookie: cookie.toString(),
+        );
+        if (!deleted) continue;
+        await _storage.deleteTask(local);
+        result.add(local.id);
+      } else if (local.updatedAt.isBefore(remote.updatedAt)) {
+        await _storage.putTask(remote);
+        result.add(local.id);
+      } else if (local.updatedAt.isAfter(remote.updatedAt)) {
+        await _apiClient.patchTask(local, cookie: cookie.toString());
       }
     }
-    return tasks;
-  }
-
-  Future<String?> updateTask(
-      {String? name, DateTime? date, bool? isDone, required String id}) async {
-    String? error;
-    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      //Fluttertoast.showToast(
-      //    msg: "Немає підключення до інтернету",
-      //    toastLength: Toast.LENGTH_LONG);
-      //error = "Немає підключення до інтернету";
-      if (isDone != null) await HiveCRUM().setIsDoneInLocalTask(id, isDone);
-    } else {
-      try {
-        var url = Uri.parse('$apiUrl/task/$id');
-        final cookie = await _userRepository.getCookie();
-        String? newDate = date?.toUtc().toString();
-        await http
-            .patch(url,
-                headers: <String, String>{
-                  'Content-Type': 'application/json',
-                  'Cookie': cookie.toString(),
-                },
-                body: jsonEncode({
-                  if (name != null) "message": name,
-                  if (newDate != null) "date": newDate,
-                  if (isDone != null) "isDone": isDone
-                }))
-            .then((value) async {
-          if (!(value.statusCode > 199 && value.statusCode < 300)) {
-            error = jsonDecode(value.body)["message"]
-                .toString()
-                .replaceAll("[", "")
-                .replaceAll("]", "");
-            Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
-          } else {
-            await HiveCRUM().setIsSentInLocalTask(id: id, true);
-          }
-        });
-      } catch (error) {
-        Fluttertoast.showToast(
-            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
-      }
-    }
-    return error;
-  }
-
-  Future<String?> saveTask(TaskModel taskModel) async {
-    String? error;
-    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error = "Немає підключення до інтернету";
-      await HiveCRUM().addTask(taskModel);
-    } else {
-      try {
-        var url = Uri.parse('$apiUrl/task');
-        final cookie = await _userRepository.getCookie();
-        String date = taskModel.date.toUtc().toString();
-
-        await http
-            .post(
-          url,
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Cookie': cookie.toString(),
-          },
-          body: jsonEncode({
-            "message": taskModel.message,
-            "date": date,
-            "isDone": taskModel.isDone,
-          }),
-        )
-            .then((value) async {
-          if (!(value.statusCode > 199 && value.statusCode < 300)) {
-            error = jsonDecode(value.body)["message"]
-                .toString()
-                .replaceAll("[", "")
-                .replaceAll("]", "");
-          } else {
-            await HiveCRUM().addTask(taskModel).whenComplete(() async {
-              await HiveCRUM().setIsSentInLocalTask(true, taskModel: taskModel);
-            });
-          }
-        });
-      } catch (e) {
-        error = error.toString();
-      }
-    }
-    if (error != null) {
-      Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
-    }
-    return error;
-  }
-
-  Future<String?> removeTask(TaskModel taskModel) async {
-    String? error;
-    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      //Fluttertoast.showToast(
-      //    msg: "Немає підключення до інтернету",
-      //    toastLength: Toast.LENGTH_LONG);
-      //error = "Немає підключення до інтернету";
-      HiveCRUM().removeLocalTask(taskModel);
-    } else {
-      try {
-        var url = Uri.parse('$apiUrl/task/${taskModel.id}');
-        final cookie = await _userRepository.getCookie();
-        await http.delete(url, headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Cookie': cookie.toString(),
-        }).then((value) {
-          if (!(value.statusCode > 199 && value.statusCode < 300)) {
-            error = jsonDecode(value.body)["message"]
-                .toString()
-                .replaceAll("[", "")
-                .replaceAll("]", "");
-            Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
-          }
-        });
-      } catch (error) {
-        Fluttertoast.showToast(
-            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
-      }
-    }
-    return error;
-  }
-
-  Future<String?> deleteAllTasks() async {
-    String? error;
-    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      //Fluttertoast.showToast(
-      //    msg: "Немає підключення до інтернету",
-      //    toastLength: Toast.LENGTH_LONG);
-      //error = "Немає підключення до інтернету";
-      for (var task in HiveCRUM().myTasks) {
-        HiveCRUM().removeLocalTask(task);
-      }
-    } else {
-      for (var task in HiveCRUM().myTasks) {
-        try {
-          var url = Uri.parse('$apiUrl/task/${task.id}');
-          final cookie = await _userRepository.getCookie();
-          await http.delete(url, headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Cookie': cookie.toString(),
-          }).then((value) {
-            if (!(value.statusCode > 199 && value.statusCode < 300)) {
-              error = jsonDecode(value.body)["message"]
-                  .toString()
-                  .replaceAll("[", "")
-                  .replaceAll("]", "");
-              Fluttertoast.showToast(
-                  msg: error!, toastLength: Toast.LENGTH_LONG);
-            }
-          });
-        } catch (error) {
-          Fluttertoast.showToast(
-              msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+    // TODO: fix later when POST method will return data
+    final newItems = await _apiClient.fetchTasks(cookie: cookie.toString());
+    if (newItems != null) {
+      for (final item in newItems) {
+        if (!_storage.values.contains(item)) {
+          await _storage.putTask(item);
+          result.add(item.id);
         }
       }
     }
-    return error;
+    return result;
   }
 
-  Future<bool> sendAllLocalTasksData() async {
-    List<TaskModel> dbTasks = await loadTasks(),
-        localTasks = List.from(
-            HiveCRUM().myTasks.where((element) => element.isSentToDB == false));
-    for (int i = 0; i < localTasks.length; i++) {
-      if (dbTasks.any((element) => element.id == localTasks[i].id)) {
-        if (localTasks[i].isRemoved) {
-          await removeTask(localTasks[i]);
-          continue;
-        }
-        await updateTask(id: localTasks[i].id);
-      } else {
-        if (localTasks[i].isRemoved) {
-          continue;
-        }
-        await saveTask(localTasks[i]);
-      }
+  Future<TaskModel> addTask(TaskModel task) async {
+    final cookie = await _userRepository.getCookie();
+    final model = await _apiClient.postTask(
+      task,
+      cookie: cookie.toString(),
+    );
+    task = model ?? task.copyWith(updatedAt: DateTime.now());
+    await _storage.putTask(task);
+    return task;
+  }
+
+  Future<TaskModel> updateTask(TaskModel task) async {
+    final cookie = await _userRepository.getCookie();
+    final model = await _apiClient.patchTask(
+      task,
+      cookie: cookie.toString(),
+    );
+    task = model ?? task.copyWith(updatedAt: DateTime.now());
+    await _storage.putTask(task);
+    return task;
+  }
+
+  Future<bool> removeTask(TaskModel task) async {
+    final cookie = await _userRepository.getCookie();
+    final deleted = await _apiClient.deleteTask(
+      task,
+      cookie: cookie.toString(),
+    );
+    if (deleted) {
+      await _storage.deleteTask(task);
+    } else {
+      task = task.copyWith(isRemoved: true);
+      await _storage.putTask(task);
     }
-    await updateLocalTasks(forcePush: true);
-
-    return true;
+    return deleted;
   }
 
-  bool checkIsAnyTasksNotSent() {
-    List<TaskModel> myTasks = List.from(HiveCRUM().myTasks);
-    return myTasks.isNotEmpty
-        ? myTasks.any((element) => element.isSentToDB == false)
-        : false;
+  Future<void> deleteAllTasks() => _storage.clear();
+}
+
+extension _TasksStorage on Box<TaskModel> {
+  Future<void> putTask(TaskModel item) => put(item.id, item);
+  Future<void> deleteTask(TaskModel item) => delete(item.id);
+}
+
+extension _TasksClient on ApiClient {
+  Future<List<TaskModel>?> fetchTasks({required String cookie}) async {
+    try {
+      final items = await get("/task", cookie: cookie) as List<dynamic>;
+      return items.cast<Map<String, dynamic>>().map(_modelFromJson).toList();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<TaskModel?> postTask(
+    TaskModel task, {
+    required String cookie,
+  }) async {
+    try {
+      final json = await post(
+        "/task",
+        cookie: cookie,
+        json: _modelToJson(task),
+      ) as Map<String, dynamic>;
+      return _modelFromJson(json);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<TaskModel?> patchTask(
+    TaskModel task, {
+    required String cookie,
+  }) async {
+    try {
+      final json = await patch(
+        "/task/${task.id}",
+        cookie: cookie.toString(),
+        json: _modelToJson(task),
+      ) as Map<String, dynamic>;
+      return _modelFromJson(json);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<bool> deleteTask(
+    TaskModel task, {
+    required String cookie,
+  }) async {
+    try {
+      await delete(
+        "/task/${task.id}",
+        cookie: cookie.toString(),
+      );
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Map<String, dynamic> _modelToJson(TaskModel task) {
+    return {
+      "message": task.message,
+      "date": task.date.toUtc().toIso8601String(),
+      "isDone": task.isDone,
+      "remindBefore": task.remindBefore,
+    };
+  }
+
+  TaskModel _modelFromJson(Map<String, dynamic> json) {
+    return TaskModel.fromJson(json);
   }
 }

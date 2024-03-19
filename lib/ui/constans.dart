@@ -44,8 +44,6 @@ const Color background = Color(0xffFFFDFC);
 
 const String kDefaultAndroidIcon = "ic_stat_onesignal_default";
 
-const int kScheduleDays = 10;
-
 String getWeekdayName(int weekday) {
   switch (weekday) {
     case DateTime.monday:

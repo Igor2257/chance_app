@@ -18,50 +18,47 @@ class MedicineModelAdapter extends TypeAdapter<MedicineModel> {
     };
     return MedicineModel(
       id: fields[0] as String,
-      name: fields[1] as String,
-      type: fields[2] as MedicineType,
-      periodicity: fields[3] as Periodicity,
-      startDate: fields[4] as DateTime,
-      weekdays: (fields[5] as List).cast<int>(),
-      doses: (fields[6] as Map).cast<int, int>(),
-      instruction: fields[7] as Instruction,
-      doneAt: (fields[8] as List).cast<DateTime>(),
-      rescheduledOn: (fields[9] as Map).cast<DateTime, DateTime>(),
-      userId: fields[10] as String,
-      isSentToDB: fields[11] as bool,
-      isRemoved: fields[12] as bool,
+      updatedAt: fields[1] as DateTime,
+      name: fields[2] as String,
+      type: fields[3] as MedicineType,
+      periodicity: fields[4] as Periodicity,
+      startDate: fields[5] as DateTime,
+      weekdays: (fields[6] as List).cast<int>(),
+      doses: (fields[7] as Map).cast<int, int>(),
+      instruction: fields[8] as Instruction,
+      doneAt: (fields[9] as List).cast<DateTime>(),
+      rescheduledOn: (fields[10] as Map).cast<DateTime, int>(),
+      isRemoved: fields[11] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, MedicineModel obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.name)
+      ..write(obj.updatedAt)
       ..writeByte(2)
-      ..write(obj.type)
+      ..write(obj.name)
       ..writeByte(3)
-      ..write(obj.periodicity)
+      ..write(obj.type)
       ..writeByte(4)
-      ..write(obj.startDate)
+      ..write(obj.periodicity)
       ..writeByte(5)
-      ..write(obj.weekdays)
+      ..write(obj.startDate)
       ..writeByte(6)
-      ..write(obj.doses)
+      ..write(obj.weekdays)
       ..writeByte(7)
-      ..write(obj.instruction)
+      ..write(obj.doses)
       ..writeByte(8)
-      ..write(obj.doneAt)
+      ..write(obj.instruction)
       ..writeByte(9)
-      ..write(obj.rescheduledOn)
+      ..write(obj.doneAt)
       ..writeByte(10)
-      ..write(obj.userId)
+      ..write(obj.rescheduledOn)
       ..writeByte(11)
-      ..write(obj.isSentToDB)
-      ..writeByte(12)
       ..write(obj.isRemoved);
   }
 
@@ -82,11 +79,12 @@ class MedicineModelAdapter extends TypeAdapter<MedicineModel> {
 
 _$MedicineModelImpl _$$MedicineModelImplFromJson(Map<String, dynamic> json) =>
     _$MedicineModelImpl(
-      id: json['id'] as String,
+      id: json['_id'] as String,
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
       name: json['name'] as String,
       type: $enumDecode(_$MedicineTypeEnumMap, json['type']),
       periodicity: $enumDecode(_$PeriodicityEnumMap, json['periodicity']),
-      startDate: DateTime.parse(json['startDate'] as String),
+      startDate: const DateConverter().fromJson(json['startDate'] as String),
       weekdays:
           (json['weekdays'] as List<dynamic>?)?.map((e) => e as int).toList() ??
               const [],
@@ -101,29 +99,26 @@ _$MedicineModelImpl _$$MedicineModelImplFromJson(Map<String, dynamic> json) =>
               .toList() ??
           const [],
       rescheduledOn: (json['rescheduledOn'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(DateTime.parse(k), DateTime.parse(e as String)),
+            (k, e) => MapEntry(DateTime.parse(k), e as int),
           ) ??
           const {},
-      userId: json['userId'] as String? ?? "",
-      isSentToDB: json['isSentToDB'] as bool? ?? false,
       isRemoved: json['isRemoved'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$MedicineModelImplToJson(_$MedicineModelImpl instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      '_id': instance.id,
+      'updatedAt': instance.updatedAt.toIso8601String(),
       'name': instance.name,
       'type': _$MedicineTypeEnumMap[instance.type]!,
       'periodicity': _$PeriodicityEnumMap[instance.periodicity]!,
-      'startDate': instance.startDate.toIso8601String(),
+      'startDate': const DateConverter().toJson(instance.startDate),
       'weekdays': instance.weekdays,
       'doses': instance.doses.map((k, e) => MapEntry(k.toString(), e)),
       'instruction': _$InstructionEnumMap[instance.instruction]!,
       'doneAt': instance.doneAt.map((e) => e.toIso8601String()).toList(),
       'rescheduledOn': instance.rescheduledOn
-          .map((k, e) => MapEntry(k.toIso8601String(), e.toIso8601String())),
-      'userId': instance.userId,
-      'isSentToDB': instance.isSentToDB,
+          .map((k, e) => MapEntry(k.toIso8601String(), e)),
       'isRemoved': instance.isRemoved,
     };
 

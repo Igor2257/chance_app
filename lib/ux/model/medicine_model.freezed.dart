@@ -21,34 +21,34 @@ MedicineModel _$MedicineModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$MedicineModel {
   @HiveField(0)
+  @JsonKey(name: "_id")
   String get id => throw _privateConstructorUsedError;
   @HiveField(1)
-  String get name => throw _privateConstructorUsedError;
+  DateTime get updatedAt => throw _privateConstructorUsedError;
   @HiveField(2)
-  MedicineType get type => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
   @HiveField(3)
-  Periodicity get periodicity => throw _privateConstructorUsedError;
+  MedicineType get type => throw _privateConstructorUsedError;
   @HiveField(4)
-  DateTime get startDate => throw _privateConstructorUsedError;
+  Periodicity get periodicity => throw _privateConstructorUsedError;
   @HiveField(5)
+  @DateConverter()
+  DateTime get startDate => throw _privateConstructorUsedError;
+  @HiveField(6)
   List<int> get weekdays =>
       throw _privateConstructorUsedError; // if Periodicity.certainDays
-  @HiveField(6)
-  Map<int, int> get doses =>
-      throw _privateConstructorUsedError; // minutes offset: count
   @HiveField(7)
-  Instruction get instruction => throw _privateConstructorUsedError;
+  Map<int, int> get doses =>
+      throw _privateConstructorUsedError; // offset in min.: dose count
   @HiveField(8)
+  Instruction get instruction => throw _privateConstructorUsedError;
+  @HiveField(9)
   List<DateTime> get doneAt =>
       throw _privateConstructorUsedError; // as it's a regular event
-  @HiveField(9)
-  Map<DateTime, DateTime> get rescheduledOn =>
-      throw _privateConstructorUsedError;
   @HiveField(10)
-  String get userId => throw _privateConstructorUsedError;
+  Map<DateTime, int> get rescheduledOn =>
+      throw _privateConstructorUsedError; // dose: min.
   @HiveField(11)
-  bool get isSentToDB => throw _privateConstructorUsedError;
-  @HiveField(12)
   bool get isRemoved => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -64,19 +64,18 @@ abstract class $MedicineModelCopyWith<$Res> {
       _$MedicineModelCopyWithImpl<$Res, MedicineModel>;
   @useResult
   $Res call(
-      {@HiveField(0) String id,
-      @HiveField(1) String name,
-      @HiveField(2) MedicineType type,
-      @HiveField(3) Periodicity periodicity,
-      @HiveField(4) DateTime startDate,
-      @HiveField(5) List<int> weekdays,
-      @HiveField(6) Map<int, int> doses,
-      @HiveField(7) Instruction instruction,
-      @HiveField(8) List<DateTime> doneAt,
-      @HiveField(9) Map<DateTime, DateTime> rescheduledOn,
-      @HiveField(10) String userId,
-      @HiveField(11) bool isSentToDB,
-      @HiveField(12) bool isRemoved});
+      {@HiveField(0) @JsonKey(name: "_id") String id,
+      @HiveField(1) DateTime updatedAt,
+      @HiveField(2) String name,
+      @HiveField(3) MedicineType type,
+      @HiveField(4) Periodicity periodicity,
+      @HiveField(5) @DateConverter() DateTime startDate,
+      @HiveField(6) List<int> weekdays,
+      @HiveField(7) Map<int, int> doses,
+      @HiveField(8) Instruction instruction,
+      @HiveField(9) List<DateTime> doneAt,
+      @HiveField(10) Map<DateTime, int> rescheduledOn,
+      @HiveField(11) bool isRemoved});
 }
 
 /// @nodoc
@@ -93,6 +92,7 @@ class _$MedicineModelCopyWithImpl<$Res, $Val extends MedicineModel>
   @override
   $Res call({
     Object? id = null,
+    Object? updatedAt = null,
     Object? name = null,
     Object? type = null,
     Object? periodicity = null,
@@ -102,8 +102,6 @@ class _$MedicineModelCopyWithImpl<$Res, $Val extends MedicineModel>
     Object? instruction = null,
     Object? doneAt = null,
     Object? rescheduledOn = null,
-    Object? userId = null,
-    Object? isSentToDB = null,
     Object? isRemoved = null,
   }) {
     return _then(_value.copyWith(
@@ -111,6 +109,10 @@ class _$MedicineModelCopyWithImpl<$Res, $Val extends MedicineModel>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      updatedAt: null == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -146,15 +148,7 @@ class _$MedicineModelCopyWithImpl<$Res, $Val extends MedicineModel>
       rescheduledOn: null == rescheduledOn
           ? _value.rescheduledOn
           : rescheduledOn // ignore: cast_nullable_to_non_nullable
-              as Map<DateTime, DateTime>,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      isSentToDB: null == isSentToDB
-          ? _value.isSentToDB
-          : isSentToDB // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as Map<DateTime, int>,
       isRemoved: null == isRemoved
           ? _value.isRemoved
           : isRemoved // ignore: cast_nullable_to_non_nullable
@@ -172,19 +166,18 @@ abstract class _$$MedicineModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@HiveField(0) String id,
-      @HiveField(1) String name,
-      @HiveField(2) MedicineType type,
-      @HiveField(3) Periodicity periodicity,
-      @HiveField(4) DateTime startDate,
-      @HiveField(5) List<int> weekdays,
-      @HiveField(6) Map<int, int> doses,
-      @HiveField(7) Instruction instruction,
-      @HiveField(8) List<DateTime> doneAt,
-      @HiveField(9) Map<DateTime, DateTime> rescheduledOn,
-      @HiveField(10) String userId,
-      @HiveField(11) bool isSentToDB,
-      @HiveField(12) bool isRemoved});
+      {@HiveField(0) @JsonKey(name: "_id") String id,
+      @HiveField(1) DateTime updatedAt,
+      @HiveField(2) String name,
+      @HiveField(3) MedicineType type,
+      @HiveField(4) Periodicity periodicity,
+      @HiveField(5) @DateConverter() DateTime startDate,
+      @HiveField(6) List<int> weekdays,
+      @HiveField(7) Map<int, int> doses,
+      @HiveField(8) Instruction instruction,
+      @HiveField(9) List<DateTime> doneAt,
+      @HiveField(10) Map<DateTime, int> rescheduledOn,
+      @HiveField(11) bool isRemoved});
 }
 
 /// @nodoc
@@ -199,6 +192,7 @@ class __$$MedicineModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? updatedAt = null,
     Object? name = null,
     Object? type = null,
     Object? periodicity = null,
@@ -208,8 +202,6 @@ class __$$MedicineModelImplCopyWithImpl<$Res>
     Object? instruction = null,
     Object? doneAt = null,
     Object? rescheduledOn = null,
-    Object? userId = null,
-    Object? isSentToDB = null,
     Object? isRemoved = null,
   }) {
     return _then(_$MedicineModelImpl(
@@ -217,6 +209,10 @@ class __$$MedicineModelImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      updatedAt: null == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -252,15 +248,7 @@ class __$$MedicineModelImplCopyWithImpl<$Res>
       rescheduledOn: null == rescheduledOn
           ? _value._rescheduledOn
           : rescheduledOn // ignore: cast_nullable_to_non_nullable
-              as Map<DateTime, DateTime>,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      isSentToDB: null == isSentToDB
-          ? _value.isSentToDB
-          : isSentToDB // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as Map<DateTime, int>,
       isRemoved: null == isRemoved
           ? _value.isRemoved
           : isRemoved // ignore: cast_nullable_to_non_nullable
@@ -273,19 +261,18 @@ class __$$MedicineModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$MedicineModelImpl extends _MedicineModel {
   const _$MedicineModelImpl(
-      {@HiveField(0) required this.id,
-      @HiveField(1) required this.name,
-      @HiveField(2) required this.type,
-      @HiveField(3) required this.periodicity,
-      @HiveField(4) required this.startDate,
-      @HiveField(5) final List<int> weekdays = const [],
-      @HiveField(6) required final Map<int, int> doses,
-      @HiveField(7) this.instruction = Instruction.noMatter,
-      @HiveField(8) final List<DateTime> doneAt = const [],
-      @HiveField(9) final Map<DateTime, DateTime> rescheduledOn = const {},
-      @HiveField(10) this.userId = "",
-      @HiveField(11) this.isSentToDB = false,
-      @HiveField(12) this.isRemoved = false})
+      {@HiveField(0) @JsonKey(name: "_id") required this.id,
+      @HiveField(1) required this.updatedAt,
+      @HiveField(2) required this.name,
+      @HiveField(3) required this.type,
+      @HiveField(4) required this.periodicity,
+      @HiveField(5) @DateConverter() required this.startDate,
+      @HiveField(6) final List<int> weekdays = const [],
+      @HiveField(7) required final Map<int, int> doses,
+      @HiveField(8) this.instruction = Instruction.noMatter,
+      @HiveField(9) final List<DateTime> doneAt = const [],
+      @HiveField(10) final Map<DateTime, int> rescheduledOn = const {},
+      @HiveField(11) this.isRemoved = false})
       : _weekdays = weekdays,
         _doses = doses,
         _doneAt = doneAt,
@@ -297,23 +284,28 @@ class _$MedicineModelImpl extends _MedicineModel {
 
   @override
   @HiveField(0)
+  @JsonKey(name: "_id")
   final String id;
   @override
   @HiveField(1)
-  final String name;
+  final DateTime updatedAt;
   @override
   @HiveField(2)
-  final MedicineType type;
+  final String name;
   @override
   @HiveField(3)
-  final Periodicity periodicity;
+  final MedicineType type;
   @override
   @HiveField(4)
+  final Periodicity periodicity;
+  @override
+  @HiveField(5)
+  @DateConverter()
   final DateTime startDate;
   final List<int> _weekdays;
   @override
   @JsonKey()
-  @HiveField(5)
+  @HiveField(6)
   List<int> get weekdays {
     if (_weekdays is EqualUnmodifiableListView) return _weekdays;
     // ignore: implicit_dynamic_type
@@ -324,22 +316,22 @@ class _$MedicineModelImpl extends _MedicineModel {
   final Map<int, int> _doses;
 // if Periodicity.certainDays
   @override
-  @HiveField(6)
+  @HiveField(7)
   Map<int, int> get doses {
     if (_doses is EqualUnmodifiableMapView) return _doses;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_doses);
   }
 
-// minutes offset: count
+// offset in min.: dose count
   @override
   @JsonKey()
-  @HiveField(7)
+  @HiveField(8)
   final Instruction instruction;
   final List<DateTime> _doneAt;
   @override
   @JsonKey()
-  @HiveField(8)
+  @HiveField(9)
   List<DateTime> get doneAt {
     if (_doneAt is EqualUnmodifiableListView) return _doneAt;
     // ignore: implicit_dynamic_type
@@ -347,33 +339,26 @@ class _$MedicineModelImpl extends _MedicineModel {
   }
 
 // as it's a regular event
-  final Map<DateTime, DateTime> _rescheduledOn;
+  final Map<DateTime, int> _rescheduledOn;
 // as it's a regular event
   @override
   @JsonKey()
-  @HiveField(9)
-  Map<DateTime, DateTime> get rescheduledOn {
+  @HiveField(10)
+  Map<DateTime, int> get rescheduledOn {
     if (_rescheduledOn is EqualUnmodifiableMapView) return _rescheduledOn;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_rescheduledOn);
   }
 
-  @override
-  @JsonKey()
-  @HiveField(10)
-  final String userId;
+// dose: min.
   @override
   @JsonKey()
   @HiveField(11)
-  final bool isSentToDB;
-  @override
-  @JsonKey()
-  @HiveField(12)
   final bool isRemoved;
 
   @override
   String toString() {
-    return 'MedicineModel(id: $id, name: $name, type: $type, periodicity: $periodicity, startDate: $startDate, weekdays: $weekdays, doses: $doses, instruction: $instruction, doneAt: $doneAt, rescheduledOn: $rescheduledOn, userId: $userId, isSentToDB: $isSentToDB, isRemoved: $isRemoved)';
+    return 'MedicineModel(id: $id, updatedAt: $updatedAt, name: $name, type: $type, periodicity: $periodicity, startDate: $startDate, weekdays: $weekdays, doses: $doses, instruction: $instruction, doneAt: $doneAt, rescheduledOn: $rescheduledOn, isRemoved: $isRemoved)';
   }
 
   @override
@@ -382,6 +367,8 @@ class _$MedicineModelImpl extends _MedicineModel {
         (other.runtimeType == runtimeType &&
             other is _$MedicineModelImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.periodicity, periodicity) ||
@@ -395,9 +382,6 @@ class _$MedicineModelImpl extends _MedicineModel {
             const DeepCollectionEquality().equals(other._doneAt, _doneAt) &&
             const DeepCollectionEquality()
                 .equals(other._rescheduledOn, _rescheduledOn) &&
-            (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.isSentToDB, isSentToDB) ||
-                other.isSentToDB == isSentToDB) &&
             (identical(other.isRemoved, isRemoved) ||
                 other.isRemoved == isRemoved));
   }
@@ -407,6 +391,7 @@ class _$MedicineModelImpl extends _MedicineModel {
   int get hashCode => Object.hash(
       runtimeType,
       id,
+      updatedAt,
       name,
       type,
       periodicity,
@@ -416,8 +401,6 @@ class _$MedicineModelImpl extends _MedicineModel {
       instruction,
       const DeepCollectionEquality().hash(_doneAt),
       const DeepCollectionEquality().hash(_rescheduledOn),
-      userId,
-      isSentToDB,
       isRemoved);
 
   @JsonKey(ignore: true)
@@ -436,19 +419,18 @@ class _$MedicineModelImpl extends _MedicineModel {
 
 abstract class _MedicineModel extends MedicineModel {
   const factory _MedicineModel(
-      {@HiveField(0) required final String id,
-      @HiveField(1) required final String name,
-      @HiveField(2) required final MedicineType type,
-      @HiveField(3) required final Periodicity periodicity,
-      @HiveField(4) required final DateTime startDate,
-      @HiveField(5) final List<int> weekdays,
-      @HiveField(6) required final Map<int, int> doses,
-      @HiveField(7) final Instruction instruction,
-      @HiveField(8) final List<DateTime> doneAt,
-      @HiveField(9) final Map<DateTime, DateTime> rescheduledOn,
-      @HiveField(10) final String userId,
-      @HiveField(11) final bool isSentToDB,
-      @HiveField(12) final bool isRemoved}) = _$MedicineModelImpl;
+      {@HiveField(0) @JsonKey(name: "_id") required final String id,
+      @HiveField(1) required final DateTime updatedAt,
+      @HiveField(2) required final String name,
+      @HiveField(3) required final MedicineType type,
+      @HiveField(4) required final Periodicity periodicity,
+      @HiveField(5) @DateConverter() required final DateTime startDate,
+      @HiveField(6) final List<int> weekdays,
+      @HiveField(7) required final Map<int, int> doses,
+      @HiveField(8) final Instruction instruction,
+      @HiveField(9) final List<DateTime> doneAt,
+      @HiveField(10) final Map<DateTime, int> rescheduledOn,
+      @HiveField(11) final bool isRemoved}) = _$MedicineModelImpl;
   const _MedicineModel._() : super._();
 
   factory _MedicineModel.fromJson(Map<String, dynamic> json) =
@@ -456,42 +438,41 @@ abstract class _MedicineModel extends MedicineModel {
 
   @override
   @HiveField(0)
+  @JsonKey(name: "_id")
   String get id;
   @override
   @HiveField(1)
-  String get name;
+  DateTime get updatedAt;
   @override
   @HiveField(2)
-  MedicineType get type;
+  String get name;
   @override
   @HiveField(3)
-  Periodicity get periodicity;
+  MedicineType get type;
   @override
   @HiveField(4)
-  DateTime get startDate;
+  Periodicity get periodicity;
   @override
   @HiveField(5)
+  @DateConverter()
+  DateTime get startDate;
+  @override
+  @HiveField(6)
   List<int> get weekdays;
   @override // if Periodicity.certainDays
-  @HiveField(6)
-  Map<int, int> get doses;
-  @override // minutes offset: count
   @HiveField(7)
+  Map<int, int> get doses;
+  @override // offset in min.: dose count
+  @HiveField(8)
   Instruction get instruction;
   @override
-  @HiveField(8)
+  @HiveField(9)
   List<DateTime> get doneAt;
   @override // as it's a regular event
-  @HiveField(9)
-  Map<DateTime, DateTime> get rescheduledOn;
-  @override
   @HiveField(10)
-  String get userId;
-  @override
+  Map<DateTime, int> get rescheduledOn;
+  @override // dose: min.
   @HiveField(11)
-  bool get isSentToDB;
-  @override
-  @HiveField(12)
   bool get isRemoved;
   @override
   @JsonKey(ignore: true)

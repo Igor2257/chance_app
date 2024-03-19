@@ -107,6 +107,7 @@ class AddMedicineBloc extends Bloc<AddMedicineEvent, AddMedicineState> {
       state.copyWith(
         medicine: MedicineModel(
           id: const Uuid().v1(),
+          updatedAt: DateTime.now(),
           name: state.name,
           type: state.type!,
           periodicity: state.periodicity!,

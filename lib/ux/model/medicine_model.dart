@@ -1,11 +1,17 @@
+// ignore_for_file: invalid_annotation_target
+
 import 'package:chance_app/ux/enum/instruction.dart';
 import 'package:chance_app/ux/enum/medicine_status.dart';
 import 'package:chance_app/ux/enum/medicine_type.dart';
 import 'package:chance_app/ux/enum/periodicity.dart';
+import 'package:chance_app/ux/helpers/date_converter.dart';
 import 'package:chance_app/ux/model/hive_type_id.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart' show DateUtils, TimeOfDay;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
+
+export 'package:chance_app/ux/enum/medicine_status.dart';
 
 part 'medicine_model.freezed.dart';
 part 'medicine_model.g.dart';
@@ -14,19 +20,18 @@ part 'medicine_model.g.dart';
 @HiveType(typeId: HiveTypeId.medicineModel)
 class MedicineModel with _$MedicineModel {
   const factory MedicineModel({
-    @HiveField(0) required String id,
-    @HiveField(1) required String name,
-    @HiveField(2) required MedicineType type,
-    @HiveField(3) required Periodicity periodicity,
-    @HiveField(4) required DateTime startDate,
-    @HiveField(5) @Default([]) List<int> weekdays, // if Periodicity.certainDays
-    @HiveField(6) required Map<int, int> doses, // minutes offset: count
-    @HiveField(7) @Default(Instruction.noMatter) Instruction instruction,
-    @HiveField(8) @Default([]) List<DateTime> doneAt, // as it's a regular event
-    @HiveField(9) @Default({}) Map<DateTime, DateTime> rescheduledOn,
-    @HiveField(10) @Default("") String userId,
-    @HiveField(11) @Default(false) bool isSentToDB,
-    @HiveField(12) @Default(false) bool isRemoved,
+    @HiveField(0) @JsonKey(name: "_id") required String id,
+    @HiveField(1) required DateTime updatedAt,
+    @HiveField(2) required String name,
+    @HiveField(3) required MedicineType type,
+    @HiveField(4) required Periodicity periodicity,
+    @HiveField(5) @DateConverter() required DateTime startDate,
+    @HiveField(6) @Default([]) List<int> weekdays, // if Periodicity.certainDays
+    @HiveField(7) required Map<int, int> doses, // offset in min.: dose count
+    @HiveField(8) @Default(Instruction.noMatter) Instruction instruction,
+    @HiveField(9) @Default([]) List<DateTime> doneAt, // as it's a regular event
+    @HiveField(10) @Default({}) Map<DateTime, int> rescheduledOn, // dose: min.
+    @HiveField(11) @Default(false) bool isRemoved, // local parameter
   }) = _MedicineModel;
 
   const MedicineModel._();
@@ -34,27 +39,15 @@ class MedicineModel with _$MedicineModel {
   factory MedicineModel.fromJson(Map<String, dynamic> json) =>
       _$MedicineModelFromJson(json);
 
-  MedicineModel setDoneAt(DateTime dateTime) {
-    if (!hasReminderAt(dateTime)) return this;
-    return copyWith(
-      doneAt: List.unmodifiable([...doneAt, dateTime]),
-    );
-  }
-
-  MedicineModel reschedule(DateTime doseTime, Duration value) {
-    if (!hasReminderAt(doseTime)) return this;
-    return copyWith(
-      rescheduledOn: Map.unmodifiable({
-        ...rescheduledOn,
-        doseTime: doseTime.add(value),
-      }),
-    );
-  }
-
-  bool hasRemindersAt(DateTime dayDate) {
-    final currentDay = DateUtils.dateOnly(dayDate);
+  /// Checks whether the medicine has planned doses at the [dayDate].
+  bool shouldBeTakenAt(DateTime dayDate) {
+    for (final entry in rescheduledOn.entries) {
+      final date = entry.key.add(Duration(minutes: entry.value));
+      if (DateUtils.isSameDay(date, dayDate)) return true;
+    }
+    dayDate = DateUtils.dateOnly(dayDate); // Ensure it's a date only
     final startDay = DateUtils.dateOnly(startDate);
-    final hoursDiff = currentDay.difference(startDay).inHours;
+    final hoursDiff = dayDate.difference(startDay).inHours;
     final isStarted = !hoursDiff.isNegative;
     switch (periodicity) {
       case Periodicity.everyDay:
@@ -62,36 +55,38 @@ class MedicineModel with _$MedicineModel {
       case Periodicity.inADay:
         return isStarted && (hoursDiff / Duration.hoursPerDay).round().isEven;
       case Periodicity.certainDays:
-        return isStarted && weekdays.contains(currentDay.weekday);
+        return isStarted && weekdays.contains(dayDate.weekday);
     }
   }
 
-  bool hasReminderAt(DateTime dateTime) {
-    if (!hasRemindersAt(dateTime)) return false;
-    final time = TimeOfDay.fromDateTime(dateTime);
-    if (doses.containsKey(time.toTimeOffset())) return true;
-    return rescheduledOn.values.any((element) => element == dateTime);
-  }
-
+  /// Returns dose count if [dateTime] is correct scheduled/rescheduled dose time.
   int? getDoseCountFor(DateTime dateTime) {
-    if (!hasRemindersAt(dateTime)) return null;
+    if (!shouldBeTakenAt(dateTime)) return null;
     final time = TimeOfDay.fromDateTime(dateTime);
     return doses[time.toTimeOffset()];
   }
 
-  DateTime? getActualDoneTime(DateTime doseTime) {
-    if (doneAt.contains(doseTime)) return doseTime; // was taken in time
-    return rescheduledOn[doseTime]; // or it was rescheduled (or missed)
+  /// Adds time offset if the dose is rescheduled or returns the same [doseTime] is it isn't.
+  DateTime getActualDoseTime(DateTime doseTime) {
+    final minutesOffset = rescheduledOn.entries
+        .firstWhereOrNull((e) => e.key.isAtSameMomentAs(doseTime))
+        ?.value;
+    if (minutesOffset == null) return doseTime;
+    return doseTime.add(Duration(minutes: minutesOffset));
   }
 
+  /// Returns medicine dose take status.
   MedicineStatus getStatus(DateTime doseTime) {
-    if (!doseTime.isAfter(DateTime.now()) && hasRemindersAt(doseTime)) {
-      final actualDoseTime = getActualDoneTime(doseTime);
-      if (actualDoseTime == null) return MedicineStatus.missed;
-      if (doneAt.contains(actualDoseTime)) return MedicineStatus.taken;
-      return MedicineStatus.postponed;
-    }
+    if (doneAt.contains(doseTime)) return MedicineStatus.taken;
+    final actualTime = getActualDoseTime(doseTime);
+    if (actualTime.isBefore(DateTime.now())) return MedicineStatus.missed;
+    if (actualTime != doseTime) return MedicineStatus.postponed;
     return MedicineStatus.pending;
+  }
+
+  /// Returns whether the medicine dose is done at [doseTime].
+  bool isDoneAt(DateTime doseTime) {
+    return getStatus(doseTime) == MedicineStatus.taken;
   }
 }
 

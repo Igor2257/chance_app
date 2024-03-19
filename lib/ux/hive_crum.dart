@@ -25,7 +25,6 @@ late final Box<MedicineModel> medicineBox;
 late final Box<PickResult> addressesBox;
 late final Box<Settings> settingsBox;
 late final Box<ProductModel> itemsBox;
-late final Box<Map<DateTime, int>> notificationsBox;
 
 class HiveCRUM {
   HiveCRUM._();
@@ -85,7 +84,6 @@ class HiveCRUM {
       addressesBox = await Hive.openBox("savedAddresses");
       itemsBox = await Hive.openBox("items");
       settingsBox = await Hive.openBox("settings");
-      notificationsBox = await Hive.openBox("notifications");
       final setting = settingsBox.get('settings') ?? const Settings();
       if (setting.firstEnter == null) {
         updateSettings(Settings(firstEnter: DateTime.now()));
@@ -115,7 +113,7 @@ class HiveCRUM {
     } else {
       await medicineBox.put(
         medicineModel.id,
-        medicineModel.copyWith(isRemoved: true, isSentToDB: false),
+        medicineModel.copyWith(isRemoved: true, updatedAt: DateTime.now()),
       );
     }
   }
@@ -140,37 +138,8 @@ class HiveCRUM {
     await tasksBox.put(taskModel.id, taskModel);
   }
 
-  Future<void> setIsDoneInLocalTask(String id, bool isDone) async {
-    TaskModel taskModel = myTasks.firstWhere((element) => element.id == id);
-    taskModel = taskModel.copyWith(isDone: isDone, isSentToDB: false);
+  Future<void> updateLocalTask(TaskModel taskModel) async {
     await tasksBox.put(taskModel.id, taskModel);
-  }
-
-  Future<void> setIsSentInLocalTask(bool isSentToDB,
-      {String? id, TaskModel? taskModel}) async {
-    if (id != null) {
-      TaskModel taskModel = myTasks.firstWhere((element) => element.id == id);
-      taskModel = taskModel.copyWith(isSentToDB: isSentToDB);
-      await tasksBox.put(taskModel.id, taskModel);
-    }
-    if (taskModel != null) {
-      taskModel = taskModel.copyWith(isSentToDB: isSentToDB);
-      await tasksBox.put(taskModel.id, taskModel);
-    }
-  }
-
-  Future<void> setIsSentInLocalMedicine(bool isSentToDB,
-      {String? id, MedicineModel? medicineModel}) async {
-    if (id != null) {
-      MedicineModel medicineModel =
-          myMedicines.firstWhere((element) => element.id == id);
-      medicineModel = medicineModel.copyWith(isSentToDB: isSentToDB);
-      await medicineBox.put(medicineModel.id, medicineModel);
-    }
-    if (medicineModel != null) {
-      medicineModel = medicineModel.copyWith(isSentToDB: isSentToDB);
-      await medicineBox.put(medicineModel.id, medicineModel);
-    }
   }
 
   Future<void> removeLocalTask(
@@ -182,7 +151,7 @@ class HiveCRUM {
     } else {
       await tasksBox.put(
         taskModel.id,
-        taskModel.copyWith(isRemoved: true, isSentToDB: false),
+        taskModel.copyWith(isRemoved: true, updatedAt: DateTime.now()),
       );
     }
   }

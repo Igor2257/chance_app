@@ -42,7 +42,7 @@ class AddMedicinePageScaffold extends StatelessWidget {
               RoundedButton(
                 onPress: () => Navigator.of(context).pop(false),
                 color: primary1000,
-                child: Text(
+                child: const Text(
                   "Продовжити",
                   style: TextStyle(color: primary50, fontSize: 16),
                 ),
@@ -136,9 +136,9 @@ class AddMedicinePageScaffold extends StatelessWidget {
             ),
             Expanded(
               child: DecoratedBox(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: darkNeutral600,
-                  borderRadius: const BorderRadius.vertical(
+                  borderRadius: BorderRadius.vertical(
                     top: Radius.circular(16),
                   ),
                 ),

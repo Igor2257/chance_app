@@ -8,9 +8,9 @@ class RemindersEvent with _$RemindersEvent {
     DateTime dayDate,
   ) = SelectDay;
 
-  const factory RemindersEvent.saveTask(
+  const factory RemindersEvent.addTask(
     TaskModel task,
-  ) = SaveTask;
+  ) = AddTask;
 
   const factory RemindersEvent.taskIsDone(
     TaskModel task,
@@ -25,9 +25,9 @@ class RemindersEvent with _$RemindersEvent {
     TaskModel task,
   ) = DeleteTask;
 
-  const factory RemindersEvent.saveMedicine(
+  const factory RemindersEvent.addMedicine(
     MedicineModel medicine,
-  ) = SaveMedicine;
+  ) = AddMedicine;
 
   const factory RemindersEvent.medicineIsDone(
     MedicineModel medicine, {

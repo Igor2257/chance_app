@@ -1,6 +1,9 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/edit_task_schedule_bottom_sheet.dart';
+import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/reschedule_time_picker.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/task_item.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
+import 'package:chance_app/ux/enum/reminder_action_result.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:collection/collection.dart';
 import 'package:cupertino_listview/cupertino_listview.dart';
@@ -18,13 +21,77 @@ class TaskList extends StatelessWidget {
   final List<TaskModel> tasks;
   final DateTime dayDate;
 
+  Future<bool> _onDeleteConfirmation(BuildContext context) async {
+    final accepted = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: const Text("Ви впевнені, що хочете видалити завдання?"),
+        contentTextStyle: const TextStyle(
+          fontSize: 16,
+          letterSpacing: 0.5,
+          color: primaryText,
+        ),
+        actionsPadding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text("Скасувати"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text("Видалити"),
+          ),
+        ],
+      ),
+    );
+    return accepted ?? false;
+  }
+
+  Future<void> _onItemPressed(
+    BuildContext context, {
+    required TaskModel item,
+  }) async {
+    final result = await showModalBottomSheet<ReminderState>(
+      context: context,
+      backgroundColor: beige100,
+      showDragHandle: true,
+      builder: (context) => EditTaskScheduleBottomSheet(item),
+    );
+    if (result == null || !context.mounted) return;
+
+    switch (result) {
+      case ReminderState.deleted:
+        final accepted = await _onDeleteConfirmation(context);
+        if (accepted && context.mounted) {
+          context.read<RemindersBloc>().add(DeleteTask(item));
+        }
+
+      case ReminderState.done:
+        context.read<RemindersBloc>().add(TaskIsDone(item));
+
+      case ReminderState.missed:
+        break;
+
+      case ReminderState.rescheduled:
+        final minutes = await showModalBottomSheet<int>(
+          context: context,
+          backgroundColor: beige100,
+          showDragHandle: true,
+          builder: (context) => const RescheduleTimePicker(),
+        );
+        if (minutes == null || !context.mounted) return;
+        context
+            .read<RemindersBloc>()
+            .add(TaskIsPostponed(item, minutes: minutes));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final items = tasks
-        .where((element) => !element.isRemoved)
-        .where((element) => DateUtils.isSameDay(element.date, dayDate))
-        .sortedBy((element) => element.date);
+        .where((e) => DateUtils.isSameDay(e.date, dayDate))
+        .sortedBy((e) => e.date);
 
     if (items.isEmpty) return _emptyListPlaceholder();
 
@@ -68,9 +135,7 @@ class TaskList extends StatelessWidget {
         final task = items[indexPath.child];
         return TaskItem(
           task,
-          onTap: () {
-            context.read<RemindersBloc>().add(TaskIsDone(task));
-          },
+          onTap: () => _onItemPressed(context, item: task),
         );
       },
     );

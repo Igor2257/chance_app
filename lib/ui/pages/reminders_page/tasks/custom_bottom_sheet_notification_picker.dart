@@ -11,7 +11,24 @@ enum NotificationsBefore {
   fiveMinute,
   thirtyMinute,
   oneHour,
-  oneDay
+  oneDay;
+
+  int? get minutesCount {
+    switch (this) {
+      case NotificationsBefore.no:
+        return null;
+      case NotificationsBefore.atTime:
+        return 0;
+      case NotificationsBefore.fiveMinute:
+        return 5;
+      case NotificationsBefore.thirtyMinute:
+        return 30;
+      case NotificationsBefore.oneHour:
+        return Duration.minutesPerHour;
+      case NotificationsBefore.oneDay:
+        return Duration.minutesPerDay;
+    }
+  }
 }
 
 class CustomBottomSheetNotificationPicker extends StatefulWidget {
@@ -54,8 +71,7 @@ class _CustomBottomSheetNotificationPickerState
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddTaskBloc, AddTaskState>(
-        builder: (context, state) {
+    return BlocBuilder<AddTaskBloc, AddTaskState>(builder: (context, state) {
       NotificationsBefore notificationsBefore = state.newNotificationsBefore;
       final List<String> notifications = state.notifications;
 
@@ -92,9 +108,9 @@ class _CustomBottomSheetNotificationPickerState
                         Text(
                           notifications[position],
                           style: TextStyle(
-                            fontSize: 16,
-                            color: isSelected ? primary50 : primaryText,fontWeight: FontWeight.w500
-                          ),
+                              fontSize: 16,
+                              color: isSelected ? primary50 : primaryText,
+                              fontWeight: FontWeight.w500),
                         ),
                         const Spacer(),
                         if (isSelected)

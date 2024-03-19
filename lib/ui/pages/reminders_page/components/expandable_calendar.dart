@@ -86,7 +86,9 @@ class _ExpandableCalendarState extends State<ExpandableCalendar> {
         final today = DateUtils.dateOnly(DateTime.now());
         if (today != _today) {
           _today = today;
-          WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) setState(() {});
+          });
         }
       },
     );
@@ -210,8 +212,8 @@ class _ExpandableCalendarState extends State<ExpandableCalendar> {
 
   Widget _mainBody() {
     final myTasks = groupBy(
-      widget.tasks.where((element) => !element.isRemoved),
-      (element) => DateUtils.dateOnly(element.date),
+      widget.tasks,
+      (e) => DateUtils.dateOnly(e.date),
     );
     return ValueListenableBuilder(
       valueListenable: _isExpanded,

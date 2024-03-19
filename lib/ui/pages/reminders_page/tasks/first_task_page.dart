@@ -3,10 +3,10 @@ import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_shee
 import 'package:chance_app/ux/bloc/add_task_bloc/add_task_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/model/task_model.dart';
-import 'package:chance_app/ux/repository/tasks_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:uuid/uuid.dart';
 
 class FirstTaskPage extends StatefulWidget {
   const FirstTaskPage({super.key});
@@ -75,71 +75,14 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
                       }
 
                       TaskModel taskModel = TaskModel(
-                        id: DateTime.now().millisecondsSinceEpoch.toString(),
+                        id: const Uuid().v1(),
+                        updatedAt: DateTime.now(),
                         message: name,
                         date: date,
-                        //notificationsBefore: state.oldNotificationsBefore.name,
+                        remindBefore: state.oldNotificationsBefore.minutesCount,
                       );
                       BlocProvider.of<RemindersBloc>(context)
-                          .add(SaveTask(taskModel));
-                      await TasksRepository().saveTask(taskModel).then((value) {
-                        showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (context) {
-                              return SizedBox(
-                                  height: 160,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: AlertDialog(
-                                    backgroundColor: beigeBG,
-                                    content: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 24, vertical: 16),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          const Icon(Icons.done),
-                                          const SizedBox(
-                                            height: 40,
-                                          ),
-                                          Text(
-                                            "Завдання додано",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 24,
-                                                color: primaryText),
-                                          ),
-                                          Text(
-                                            "”${taskModel.message}”",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: primaryText),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    actions: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: SizedBox(
-                                          height: 44,
-                                          child: Text(
-                                            "OK",
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                color: primary500),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ));
-                            }).whenComplete(() {
-                          Navigator.of(context).pop();
-                        });
-                      });
+                          .add(AddTask(taskModel));
                     }
                   }
                 }

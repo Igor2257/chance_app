@@ -1,6 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
-import 'package:chance_app/ux/hive_crum.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository/tasks_repository.dart';
 import 'package:collection/collection.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class TasksForToday extends StatefulWidget {
   const TasksForToday({super.key});
@@ -34,27 +32,23 @@ class _TasksForTodayState extends State<TasksForToday> {
 
   @override
   Widget build(BuildContext context) {
-    final dayDate = context.read<RemindersBloc>().state.selectedDay;
     Size size = MediaQuery.of(context).size;
-    return ValueListenableBuilder(
-      valueListenable: tasksBox.listenable(),
-      builder: (context, box, child) {
-        final tasksForToday = box.values
-            .where((element) => element.isRemoved == false)
-            .where((element) => DateUtils.isSameDay(element.date, dayDate))
-            .sortedBy((element) => element.date);
+    return BlocBuilder<RemindersBloc, RemindersState>(
+      builder: (context, state) {
+        final tasksForToday = state.tasks
+            .where((e) => DateUtils.isSameDay(e.date, state.selectedDay))
+            .sortedBy((e) => e.date);
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             surfaceTintColor: Colors.transparent,
             centerTitle: true,
-            title: Text(
+            title: const Text(
               "Завдання на сьогодні",
               style: TextStyle(fontSize: 22, color: primaryText),
             ),
             leading: CloseButton(
               onPressed: () {
-                //BlocProvider.of<RemindersBloc>(context).add(LoadData());
                 Navigator.of(context).pop();
               },
             ),
@@ -72,7 +66,7 @@ class _TasksForTodayState extends State<TasksForToday> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                Text(
+                const Text(
                   "Не забутьте відмітити завдання як виконане",
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -106,7 +100,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                   ),
                                   Text(
                                     task.message,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 24, color: primaryText),
                                   ),
                                   const Spacer(),
@@ -120,7 +114,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                             const SizedBox(
                                               width: 10,
                                             ),
-                                            Text(
+                                            const Text(
                                               "Виконано",
                                               style: TextStyle(
                                                   fontSize: 24,
@@ -139,7 +133,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                             ),
                                             Text(
                                               "${task.date.hour.toString().padLeft(2, "0")}:${task.date.minute.toString().padLeft(2, "0")}",
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontSize: 24,
                                                   color: primaryText),
                                             ),
@@ -202,7 +196,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                               const SizedBox(
                                                                 height: 40,
                                                               ),
-                                                              Text(
+                                                              const Text(
                                                                 "Завдання виконано",
                                                                 textAlign:
                                                                     TextAlign
@@ -218,7 +212,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                                 textAlign:
                                                                     TextAlign
                                                                         .center,
-                                                                style: TextStyle(
+                                                                style: const TextStyle(
                                                                     fontSize:
                                                                         16,
                                                                     color:
@@ -253,7 +247,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                           task.isDone
                                               ? "Не виконано"
                                               : "Виконано",
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontSize: 16, color: primary50),
                                         ),
                                       ],
@@ -262,120 +256,72 @@ class _TasksForTodayState extends State<TasksForToday> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         GestureDetector(
-                                          onTap: () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return SizedBox(
-                                                      height: 160,
-                                                      width:
-                                                          MediaQuery.of(context)
+                                          onTap: () async {
+                                            final delete =
+                                                await showDialog<bool>(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return SizedBox(
+                                                          height: 160,
+                                                          width: MediaQuery.of(
+                                                                  context)
                                                               .size
                                                               .width,
-                                                      child: AlertDialog(
-                                                          backgroundColor:
-                                                              beige100,
-                                                          content: Padding(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .zero,
-                                                              child: Column(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .min,
-                                                                children: [
-                                                                  Text(
-                                                                    "Ви впевнені, що хочете видалити завдання?",
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .center,
-                                                                    style: TextStyle(
-                                                                        color:
-                                                                            primaryText,
-                                                                        fontSize:
-                                                                            16),
-                                                                  ),
-                                                                  Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .end,
+                                                          child: AlertDialog(
+                                                              backgroundColor:
+                                                                  beige100,
+                                                              content: Padding(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .zero,
+                                                                  child: Column(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
                                                                     children: [
-                                                                      TextButton(
-                                                                          onPressed:
-                                                                              () {
-                                                                            Navigator.of(context).pop();
-                                                                          },
-                                                                          child:
-                                                                              Text(
-                                                                            "Скасувати",
-                                                                            textAlign:
-                                                                                TextAlign.center,
-                                                                            style: TextStyle(
-                                                                                fontSize: 16,
-                                                                                color: primary700,
-                                                                                decoration: TextDecoration.underline,
-                                                                                decorationColor: primary700),
-                                                                          )),
-                                                                      TextButton(
-                                                                          onPressed:
-                                                                              () async {
-                                                                            BlocProvider.of<RemindersBloc>(context).add(DeleteTask(
-                                                                              task,
-                                                                            ));
-                                                                            Future.delayed(const Duration(seconds: 1)).then((value) async {
-                                                                              Navigator.of(context).pop();
-                                                                            });
-                                                                            showDialog(
-                                                                                barrierDismissible: false,
-                                                                                context: context,
-                                                                                builder: (context) {
-                                                                                  return SizedBox(
-                                                                                    height: 160,
-                                                                                    width: MediaQuery.of(context).size.width,
-                                                                                    child: AlertDialog(
-                                                                                      backgroundColor: beigeBG,
-                                                                                      content: Padding(
-                                                                                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                                                                                        child: Column(
-                                                                                          mainAxisSize: MainAxisSize.min,
-                                                                                          children: <Widget>[
-                                                                                            const Icon(Icons.done),
-                                                                                            const SizedBox(
-                                                                                              height: 40,
-                                                                                            ),
-                                                                                            Text(
-                                                                                              "Завдання видалено",
-                                                                                              textAlign: TextAlign.center,
-                                                                                              style: TextStyle(fontSize: 24, color: primaryText),
-                                                                                            ),
-                                                                                            Text(
-                                                                                              "”${task.message}”",
-                                                                                              textAlign: TextAlign.center,
-                                                                                              style: TextStyle(fontSize: 16, color: primaryText),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                  );
-                                                                                }).whenComplete(() => Navigator.of(context).pop());
-                                                                          },
-                                                                          child:
-                                                                              Text(
-                                                                            "Видалити",
-                                                                            textAlign:
-                                                                                TextAlign.center,
-                                                                            style: TextStyle(
-                                                                                fontSize: 16,
-                                                                                color: primary700,
-                                                                                decoration: TextDecoration.underline,
-                                                                                decorationColor: primary700),
-                                                                          )),
+                                                                      const Text(
+                                                                        "Ви впевнені, що хочете видалити завдання?",
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                primaryText,
+                                                                            fontSize:
+                                                                                16),
+                                                                      ),
+                                                                      Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.end,
+                                                                        children: [
+                                                                          TextButton(
+                                                                              onPressed: () {
+                                                                                Navigator.of(context).pop(false);
+                                                                              },
+                                                                              child: const Text(
+                                                                                "Скасувати",
+                                                                                textAlign: TextAlign.center,
+                                                                                style: TextStyle(fontSize: 16, color: primary700, decoration: TextDecoration.underline, decorationColor: primary700),
+                                                                              )),
+                                                                          TextButton(
+                                                                              onPressed: () {
+                                                                                Navigator.of(context).pop(true);
+                                                                              },
+                                                                              child: const Text(
+                                                                                "Видалити",
+                                                                                textAlign: TextAlign.center,
+                                                                                style: TextStyle(fontSize: 16, color: primary700, decoration: TextDecoration.underline, decorationColor: primary700),
+                                                                              )),
+                                                                        ],
+                                                                      )
                                                                     ],
-                                                                  )
-                                                                ],
-                                                              ))));
-                                                });
+                                                                  ))));
+                                                    });
+                                            if ((delete ?? false) &&
+                                                context.mounted) {
+                                              BlocProvider.of<RemindersBloc>(
+                                                      context)
+                                                  .add(DeleteTask(task));
+                                            }
                                           },
                                           child: Container(
                                             height: 56,
@@ -385,7 +331,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                     BorderRadius.circular(90),
                                                 border: Border.all(
                                                     color: primary300)),
-                                            child: Center(
+                                            child: const Center(
                                               child: Icon(
                                                   Icons.delete_outline_rounded,
                                                   color: primary50),
@@ -395,7 +341,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                         const SizedBox(
                                           height: 10,
                                         ),
-                                        Text(
+                                        const Text(
                                           "Видалити",
                                           style: TextStyle(
                                               fontSize: 16, color: primary50),
