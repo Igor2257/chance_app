@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
-import 'package:chance_app/ux/hive_crum.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/product_model.dart';
-import 'package:chance_app/ux/model/settings.dart';
 import 'package:chance_app/ux/repository/items_repository.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -102,7 +103,7 @@ class _MenuPageState extends State<MenuPage> {
                 findMatch(products[0], 0);
               },
                 padding: const EdgeInsets.all(16),
-                height: 70,
+                height: 0,
                 color: darkNeutral600,
                 child: Row(
                   children: [
@@ -180,27 +181,27 @@ class _MenuPageState extends State<MenuPage> {
                   ],
                 )),
             const Spacer(),
-            RoundedButton(
-                margin: const EdgeInsets.symmetric(vertical: 4),
-                onPress: () async {
-                  await UserRepository().logout().then((value) {
-                    if (value == null) {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          "/signinup", (route) => false);
-                    }
-                  });
-                },
-                color: primary1000,
-                child: Text(
-                  AppLocalizations.instance.translate("logOut"),
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: primary50,
-                      fontWeight: FontWeight.w500),
-                )),
-            const SizedBox(
-              height: 40,
+            SafeArea(
+              child: RoundedButton(
+                  margin: const EdgeInsets.symmetric(vertical: 4),
+                  onPress: () async {
+                    await UserRepository().logout().then((value) {
+                      if (value == null) {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            "/signinup", (route) => false);
+                      }
+                    });
+                  },
+                  color: primary1000,
+                  child: Text(
+                    AppLocalizations.instance.translate("logOut"),
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: primary50,
+                        fontWeight: FontWeight.w500),
+                  )),
             ),
+            
           ],
         ),
       ),
@@ -224,18 +225,20 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   checkIfDocsAreAvailable() async {
-    List<ProductModel> items = List.of(HiveCRUM().myItems);
-    if (items.isNotEmpty) {
-      List<ProductModel> newItems = [];
-      for (int i = 0; i < items.length; i++) {
-        if (items[i].validity != null) {
-          if (items[i].validity!.isAfter(DateTime.now())) {
-            newItems.add(items[i]);
+    if (await Connectivity().checkConnectivity() == ConnectivityResult.none) {
+      List<ProductModel> items = List.of(HiveCRUD().myItems);
+      if (items.isNotEmpty) {
+        List<ProductModel> newItems = [];
+        for (int i = 0; i < items.length; i++) {
+          if (items[i].validity != null) {
+            if (items[i].validity!.isAfter(DateTime.now())) {
+              newItems.add(items[i]);
+            }
           }
         }
-      }
-      if (newItems != items) {
-        HiveCRUM().rewriteItems(newItems);
+        if (newItems != items) {
+          HiveCRUD().rewriteItems(newItems);
+        }
       }
     }
   }
@@ -266,7 +269,7 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   findMatch(ProductDetails item1, int position) async {
-    List<ProductModel> items = HiveCRUM().myItems;
+    List<ProductModel> items = HiveCRUD().myItems;
     if (items.isNotEmpty) {
       bool isAdBlockerValid = items.any((item) =>
               item.id == "adblocker" &&
@@ -325,8 +328,8 @@ class _MenuPageState extends State<MenuPage> {
       price: item.price,
       validity: DateTime.now().add(const Duration(days: 30)),
     );
-    HiveCRUM hiveCRUM=HiveCRUM();
-    List<ProductModel> items = hiveCRUM.myItems;
+    HiveCRUD hiveCRUD = HiveCRUD();
+    List<ProductModel> items = hiveCRUD.myItems;
     items.add(model);
     await ItemsRepository().rewriteItems(items);
     idOfPrd = "";

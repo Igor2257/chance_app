@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
+import 'package:chance_app/ui/pages/sos_page/group_details_screen.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +14,6 @@ class MainPageSos extends StatefulWidget {
 }
 
 class _MainPageSosState extends State<MainPageSos> {
-  SosContactsBloc get _sosContactsBloc {
-    return BlocProvider.of<SosContactsBloc>(context);
-  }
-
   bool isDeletePage = false;
 
   @override
@@ -47,7 +44,8 @@ class _MainPageSosState extends State<MainPageSos> {
                   child: Container(
                     decoration: const BoxDecoration(
                       border: Border(
-                          bottom: BorderSide(width: 1.0, color: Colors.black)),
+                        bottom: BorderSide(width: 1.0, color: Colors.black),
+                      ),
                     ),
                     child: Text(
                       AppLocalizations.instance.translate("editContacts"),
@@ -61,7 +59,8 @@ class _MainPageSosState extends State<MainPageSos> {
                   child: Container(
                     decoration: const BoxDecoration(
                       border: Border(
-                          bottom: BorderSide(width: 1.0, color: Colors.black)),
+                        bottom: BorderSide(width: 1.0, color: Colors.black),
+                      ),
                     ),
                     child: Text(
                       AppLocalizations.instance.translate("deleteContact"),
@@ -99,19 +98,42 @@ class _MainPageSosState extends State<MainPageSos> {
                   ),
                 ),
               ),
-              ListView.builder(
-                itemCount: _sosContactsBloc.contacts.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.only(bottom: 29),
-                itemBuilder: (context, index) {
-                  SosContactModel contactModel =
-                      _sosContactsBloc.contacts[index];
-                  return ContainerButton(
-                    text: contactModel.name,
-                    onPressed: () => _pushToCallScreen(contactModel),
-                  );
-                },
+              BlocSelector<SosContactsBloc, SosContactsState,
+                  List<SosGroupModel>>(
+                selector: (state) => state.contacts,
+                builder: (context, contacts) => ListView.builder(
+                  itemCount: contacts.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.only(bottom: 29),
+                  itemBuilder: (context, index) {
+                    SosGroupModel contactModel = contacts[index];
+                    return ContainerButton(
+                      text: contactModel.name.isNotEmpty
+                          ? contactModel.name
+                          : contactModel.contacts[0].name,
+                      onPressed: () {
+                        if (contactModel.name.isNotEmpty) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  GroupDetailsScreen(group: contactModel),
+                            ),
+                          );
+                        } else {
+                          _pushToCallScreen(
+                            SosContactModel(
+                              name: contactModel.contacts[0].name,
+                              phone: contactModel.contacts[0].phone,
+                            ),
+                          );
+                        }
+                      },
+                      isGroup: contactModel.name.isNotEmpty,
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -130,7 +152,7 @@ class _MainPageSosState extends State<MainPageSos> {
             color: primary50,
           ),
           label: Text(
-            AppLocalizations.instance.translate("added"),
+            AppLocalizations.instance.translate("add"),
             style: TextStyle(
               color: primary50,
               fontSize: 16,
@@ -235,9 +257,14 @@ class _MainPageSosState extends State<MainPageSos> {
 class ContainerButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
+  final bool isGroup;
 
-  const ContainerButton(
-      {super.key, required this.text, required this.onPressed});
+  const ContainerButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    this.isGroup = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -251,14 +278,27 @@ class ContainerButton extends StatelessWidget {
       ),
       child: TextButton(
         onPressed: onPressed,
-        child: Text(
-          text,
-          style: TextStyle(
-            // fontFamily: ,
-            color: primary50,
-            fontWeight: FontWeight.w400,
-            fontSize: 16,
-          ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    color: primary50,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+            if (isGroup)
+              Icon(
+                Icons.group,
+                color: primary50,
+              ),
+          ],
         ),
       ),
     );

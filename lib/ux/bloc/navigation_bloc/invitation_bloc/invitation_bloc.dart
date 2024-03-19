@@ -1,14 +1,11 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:chance_app/ux/enum/invitation_status.dart';
 import 'package:chance_app/ux/model/invitation_model.dart';
 import 'package:chance_app/ux/repository/invitation_repository.dart';
-import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:meta/meta.dart';
 
 part 'invitation_event.dart';
-
 part 'invitation_state.dart';
 
 class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
@@ -29,24 +26,6 @@ class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
         error = value;
       }
     });
-    list.add(InvitationModel(
-      id: "0",
-      email: "email@mail.com",
-      sentDate: DateTime.now(),
-      fromUserId: "cdscds",
-      toUserId: "dsccdscds",
-      invitationStatus: InvitationStatus.pending,
-      fromUserName: "cddcsdcdsccdscdsd",
-    ));
-    list.add(InvitationModel(
-      id: "1",
-      email: "email1@mail.com",
-      sentDate: DateTime.now(),
-      fromUserId: "dcsdcscdscs",
-      toUserId: "qwqssqsq",
-      invitationStatus: InvitationStatus.pending,
-      fromUserName: "jkjkhhmh",
-    ));
     emit(state.copyWith(
         isLoading: false,
         errorInvitationsForMe: error,
@@ -65,24 +44,7 @@ class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
         error = value;
       }
     });
-    list.add(InvitationModel(
-      id: "0",
-      email: "email@mail.com",
-      sentDate: DateTime.now(),
-      fromUserId: "cdscds",
-      toUserId: "dsccdscds",
-      invitationStatus: InvitationStatus.pending,
-      fromUserName: "cddcsdcdsccdscdsd",
-    ));
-    list.add(InvitationModel(
-      id: "1",
-      email: "email1@mail.com",
-      sentDate: DateTime.now(),
-      fromUserId: "dcsdcscdscs",
-      toUserId: "qwqssqsq",
-      invitationStatus: InvitationStatus.pending,
-      fromUserName: "jkjkhhmh",
-    ));
+
     emit(state.copyWith(
         isLoading: false,
         errorInvitationsFromMe: error,

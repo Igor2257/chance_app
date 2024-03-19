@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class LabeledTextField extends StatefulWidget {
@@ -105,7 +106,7 @@ class LabeledTextFieldState extends State<LabeledTextField> {
             onEditingComplete: () {
               if (!validate()) {
                 setState(() {
-                  errorText = 'Перевірте введені дані';
+                  errorText = AppLocalizations.instance.translate("checkTheEnteredData");
                 });
               }
             },

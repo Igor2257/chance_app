@@ -16,18 +16,18 @@ class ReplaceContactSosScreen extends StatefulWidget {
 class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
   late TextEditingController nameController;
   late TextEditingController phoneController;
-  late SosContactModel contactModel;
+  late SosGroupModel contactModel;
   SosContactsBloc get _sosContactsBloc {
     return BlocProvider.of<SosContactsBloc>(context);
   }
 
   @override
   void didChangeDependencies() {
-    contactModel =
-        ModalRoute.of(context)!.settings.arguments as SosContactModel;
+    contactModel = ModalRoute.of(context)!.settings.arguments as SosGroupModel;
     super.didChangeDependencies();
-    nameController = TextEditingController(text: contactModel.name);
-    phoneController = TextEditingController(text: contactModel.phone);
+    nameController = TextEditingController(text: contactModel.contacts[0].name);
+    phoneController =
+        TextEditingController(text: contactModel.contacts[0].phone);
   }
 
   @override
@@ -65,16 +65,24 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
                     onPressed: () {
                       print('Button pressed');
                       if (_validateForm()) {
-                        final oldContact = ModalRoute.of(context)!
-                            .settings
-                            .arguments as SosContactModel;
-                        final newContact = SosContactModel(
-                          name: nameController.text,
-                          phone: phoneController.text,
-                        );
+                        // SosContactModel editedContact = contactModel.contacts[0];
+                        // editedContact.name = nameController.text;
+
+                        // final oldContact = ModalRoute.of(context)!
+                        //     .settings
+                        //     .arguments as SosContactModel;
+                        // final newContact = SosContactModel(
+                        //   name: nameController.text,
+                        //   phone: phoneController.text,
+                        // );
 
                         _sosContactsBloc.add(EditContact(
-                            oldContact: oldContact, newContact: newContact));
+                            contactModel: contactModel.copyWith(contacts: [
+                          SosContactModel(
+                              name: nameController.text,
+                              phone: phoneController.text,
+                              id: contactModel.id)
+                        ])));
 
                         Navigator.of(context)
                             .pushNamedAndRemoveUntil("/sos", (route) => false);

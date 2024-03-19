@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -16,7 +17,10 @@ class ButtonMore extends StatelessWidget {
         children: [
           SvgPicture.asset("assets/icons/dots_icon.svg",
             semanticsLabel: 'Acme Logo',color: primary50,),
-          Text("Більше",style: TextStyle(fontSize: 16,color: primary50),)
+          Text(
+            AppLocalizations.instance.translate("more"),
+            style: TextStyle(fontSize: 16, color: primary50),
+          )
         ],
       ),
     );

@@ -54,6 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:587357455921:android:7c649ed9b6dd5cda107710',
     messagingSenderId: '587357455921',
     projectId: 'chance-bab22',
+    databaseURL: 'https://chance-bab22-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'chance-bab22.appspot.com',
   );
 
@@ -62,7 +63,9 @@ class DefaultFirebaseOptions {
     appId: '1:587357455921:ios:bb6c7f958f187aa5107710',
     messagingSenderId: '587357455921',
     projectId: 'chance-bab22',
+    databaseURL: 'https://chance-bab22-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'chance-bab22.appspot.com',
+    androidClientId: '587357455921-b2t3r6390999b5ko8a3p98itnf41th1d.apps.googleusercontent.com',
     iosClientId: '587357455921-fdue5dh2afv4b337qdn3jaemosl2th1a.apps.googleusercontent.com',
     iosBundleId: 'com.chanceapp.chanceApp',
   );

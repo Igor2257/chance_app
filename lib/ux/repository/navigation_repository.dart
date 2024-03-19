@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:chance_app/ui/pages/navigation/navigation_page/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class NavigationRepository {
   Future<LatLng?> getLocationFromPlaceId(PickResult pickResult) async {
@@ -28,9 +30,14 @@ class NavigationRepository {
     return latLng;
   }
 
-  Future<String?> sendMyLocation() async {
+  Future<String?> sendMyLocation(double latitude, double longitude) async {
     String? error;
-    try {} catch (e) {
+    try {
+      await Supabase.instance.client
+          .from("ward_location")
+          .update({"latitude": latitude, "longitude": longitude}).match(
+          {"myEmail": HiveCRUD().user!.email});
+    } catch (e) {
       error = e.toString();
     }
 

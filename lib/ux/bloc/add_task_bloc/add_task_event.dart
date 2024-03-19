@@ -50,3 +50,6 @@ class CancelAllDataNotificationBefore extends AddTaskEvent {
 class LoadDataForSelectDateForTasks extends AddTaskEvent {
   LoadDataForSelectDateForTasks();
 }
+class ClearState extends AddTaskEvent {
+  ClearState();
+}

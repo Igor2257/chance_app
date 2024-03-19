@@ -23,13 +23,15 @@ mixin _$WardLocationModel {
   @HiveField(0)
   String get id => throw _privateConstructorUsedError;
   @HiveField(1)
-  String get wardId => throw _privateConstructorUsedError;
+  String get myEmail => throw _privateConstructorUsedError;
   @HiveField(2)
-  String get wardName => throw _privateConstructorUsedError;
+  String get myName => throw _privateConstructorUsedError;
   @HiveField(3)
   double get latitude => throw _privateConstructorUsedError;
   @HiveField(4)
   double get longitude => throw _privateConstructorUsedError;
+  @HiveField(5)
+  String get toUserId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -45,10 +47,11 @@ abstract class $WardLocationModelCopyWith<$Res> {
   @useResult
   $Res call(
       {@HiveField(0) String id,
-      @HiveField(1) String wardId,
-      @HiveField(2) String wardName,
+      @HiveField(1) String myEmail,
+      @HiveField(2) String myName,
       @HiveField(3) double latitude,
-      @HiveField(4) double longitude});
+      @HiveField(4) double longitude,
+      @HiveField(5) String toUserId});
 }
 
 /// @nodoc
@@ -65,23 +68,24 @@ class _$WardLocationModelCopyWithImpl<$Res, $Val extends WardLocationModel>
   @override
   $Res call({
     Object? id = null,
-    Object? wardId = null,
-    Object? wardName = null,
+    Object? myEmail = null,
+    Object? myName = null,
     Object? latitude = null,
     Object? longitude = null,
+    Object? toUserId = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      wardId: null == wardId
-          ? _value.wardId
-          : wardId // ignore: cast_nullable_to_non_nullable
+      myEmail: null == myEmail
+          ? _value.myEmail
+          : myEmail // ignore: cast_nullable_to_non_nullable
               as String,
-      wardName: null == wardName
-          ? _value.wardName
-          : wardName // ignore: cast_nullable_to_non_nullable
+      myName: null == myName
+          ? _value.myName
+          : myName // ignore: cast_nullable_to_non_nullable
               as String,
       latitude: null == latitude
           ? _value.latitude
@@ -91,6 +95,10 @@ class _$WardLocationModelCopyWithImpl<$Res, $Val extends WardLocationModel>
           ? _value.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
               as double,
+      toUserId: null == toUserId
+          ? _value.toUserId
+          : toUserId // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -105,10 +113,11 @@ abstract class _$$WardLocationModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {@HiveField(0) String id,
-      @HiveField(1) String wardId,
-      @HiveField(2) String wardName,
+      @HiveField(1) String myEmail,
+      @HiveField(2) String myName,
       @HiveField(3) double latitude,
-      @HiveField(4) double longitude});
+      @HiveField(4) double longitude,
+      @HiveField(5) String toUserId});
 }
 
 /// @nodoc
@@ -123,23 +132,24 @@ class __$$WardLocationModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? wardId = null,
-    Object? wardName = null,
+    Object? myEmail = null,
+    Object? myName = null,
     Object? latitude = null,
     Object? longitude = null,
+    Object? toUserId = null,
   }) {
     return _then(_$WardLocationModelImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      wardId: null == wardId
-          ? _value.wardId
-          : wardId // ignore: cast_nullable_to_non_nullable
+      myEmail: null == myEmail
+          ? _value.myEmail
+          : myEmail // ignore: cast_nullable_to_non_nullable
               as String,
-      wardName: null == wardName
-          ? _value.wardName
-          : wardName // ignore: cast_nullable_to_non_nullable
+      myName: null == myName
+          ? _value.myName
+          : myName // ignore: cast_nullable_to_non_nullable
               as String,
       latitude: null == latitude
           ? _value.latitude
@@ -149,6 +159,10 @@ class __$$WardLocationModelImplCopyWithImpl<$Res>
           ? _value.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
               as double,
+      toUserId: null == toUserId
+          ? _value.toUserId
+          : toUserId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -158,10 +172,11 @@ class __$$WardLocationModelImplCopyWithImpl<$Res>
 class _$WardLocationModelImpl implements _WardLocationModel {
   const _$WardLocationModelImpl(
       {@HiveField(0) required this.id,
-      @HiveField(1) required this.wardId,
-      @HiveField(2) required this.wardName,
+      @HiveField(1) required this.myEmail,
+      @HiveField(2) required this.myName,
       @HiveField(3) required this.latitude,
-      @HiveField(4) required this.longitude});
+      @HiveField(4) required this.longitude,
+      @HiveField(5) required this.toUserId});
 
   factory _$WardLocationModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$WardLocationModelImplFromJson(json);
@@ -171,20 +186,23 @@ class _$WardLocationModelImpl implements _WardLocationModel {
   final String id;
   @override
   @HiveField(1)
-  final String wardId;
+  final String myEmail;
   @override
   @HiveField(2)
-  final String wardName;
+  final String myName;
   @override
   @HiveField(3)
   final double latitude;
   @override
   @HiveField(4)
   final double longitude;
+  @override
+  @HiveField(5)
+  final String toUserId;
 
   @override
   String toString() {
-    return 'WardLocationModel(id: $id, wardId: $wardId, wardName: $wardName, latitude: $latitude, longitude: $longitude)';
+    return 'WardLocationModel(id: $id, myEmail: $myEmail, myName: $myName, latitude: $latitude, longitude: $longitude, toUserId: $toUserId)';
   }
 
   @override
@@ -193,19 +211,20 @@ class _$WardLocationModelImpl implements _WardLocationModel {
         (other.runtimeType == runtimeType &&
             other is _$WardLocationModelImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.wardId, wardId) || other.wardId == wardId) &&
-            (identical(other.wardName, wardName) ||
-                other.wardName == wardName) &&
+            (identical(other.myEmail, myEmail) || other.myEmail == myEmail) &&
+            (identical(other.myName, myName) || other.myName == myName) &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
-                other.longitude == longitude));
+                other.longitude == longitude) &&
+            (identical(other.toUserId, toUserId) ||
+                other.toUserId == toUserId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, wardId, wardName, latitude, longitude);
+  int get hashCode => Object.hash(
+      runtimeType, id, myEmail, myName, latitude, longitude, toUserId);
 
   @JsonKey(ignore: true)
   @override
@@ -225,10 +244,11 @@ class _$WardLocationModelImpl implements _WardLocationModel {
 abstract class _WardLocationModel implements WardLocationModel {
   const factory _WardLocationModel(
       {@HiveField(0) required final String id,
-      @HiveField(1) required final String wardId,
-      @HiveField(2) required final String wardName,
+      @HiveField(1) required final String myEmail,
+      @HiveField(2) required final String myName,
       @HiveField(3) required final double latitude,
-      @HiveField(4) required final double longitude}) = _$WardLocationModelImpl;
+      @HiveField(4) required final double longitude,
+      @HiveField(5) required final String toUserId}) = _$WardLocationModelImpl;
 
   factory _WardLocationModel.fromJson(Map<String, dynamic> json) =
       _$WardLocationModelImpl.fromJson;
@@ -238,16 +258,19 @@ abstract class _WardLocationModel implements WardLocationModel {
   String get id;
   @override
   @HiveField(1)
-  String get wardId;
+  String get myEmail;
   @override
   @HiveField(2)
-  String get wardName;
+  String get myName;
   @override
   @HiveField(3)
   double get latitude;
   @override
   @HiveField(4)
   double get longitude;
+  @override
+  @HiveField(5)
+  String get toUserId;
   @override
   @JsonKey(ignore: true)
   _$$WardLocationModelImplCopyWith<_$WardLocationModelImpl> get copyWith =>

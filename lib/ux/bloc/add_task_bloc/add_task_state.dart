@@ -4,12 +4,12 @@ part of 'add_task_bloc.dart';
 class AddTaskState {
   final String taskTitle;
   final List<String> notifications = [
-    "Немає",
-    "Вчасно",
-    "за 5хв",
-    "за 30хв",
-    "за 1 год",
-    "за 1 день",
+    AppLocalizations.instance.translate("noDueDate"),
+    AppLocalizations.instance.translate("inTime"),
+    AppLocalizations.instance.translate("in5Minutes"),
+    AppLocalizations.instance.translate("in30Minutes"),
+    AppLocalizations.instance.translate("in60Minutes"),
+    AppLocalizations.instance.translate("inOneDay"),
   ];
   final int pageForPills, pageForTasks;
   final NotificationsBefore oldNotificationsBefore,

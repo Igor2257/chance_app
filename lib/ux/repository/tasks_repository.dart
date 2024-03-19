@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:chance_app/ux/api/api_client.dart';
-import 'package:chance_app/ux/hive_crum.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:hive/hive.dart';

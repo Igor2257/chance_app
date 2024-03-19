@@ -3,7 +3,7 @@ import 'package:chance_app/ui/pages/navigation/navigation_page/components/map_da
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/select_place.dart';
 import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
-import 'package:chance_app/ux/hive_crum.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -19,7 +19,7 @@ class SavedAddressesComponent extends StatefulWidget {
 }
 
 class _SavedAddressesComponentState extends State<SavedAddressesComponent> {
-  List<PickResult> savedAddresses =HiveCRUM().savedAddresses
+  List<PickResult> savedAddresses =HiveCRUD().savedAddresses
       .where((element) => element.isRecentlySearched == false)
       .toList();
 
@@ -44,7 +44,7 @@ class _SavedAddressesComponentState extends State<SavedAddressesComponent> {
                         savedAddresses[position].geometry!.location.lng),
                     icon: await getMarkerIcon(PickResultFor.first) ??
                         await BitmapDescriptor.fromAssetImage(
-                            ImageConfiguration(), "assets/icons/point_a.png"),
+                            const ImageConfiguration(), "assets/icons/point_a.png"),
                     infoWindow: InfoWindow(
                         title: savedAddresses[position].name,
                         snippet: savedAddresses[position].formattedAddress,

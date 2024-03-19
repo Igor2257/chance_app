@@ -1,3 +1,4 @@
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/model/hive_type_id.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
@@ -19,13 +20,13 @@ enum InvitationStatus {
   String toLocalizedString() {
     switch (this) {
       case InvitationStatus.pending:
-        return "В очікуванні";
+        return AppLocalizations.instance.translate("pending");
       case InvitationStatus.accepted:
-        return "Прийнято";
+        return AppLocalizations.instance.translate("accepted");
       case InvitationStatus.error:
-        return "Помилка";
+        return AppLocalizations.instance.translate("error");
       case InvitationStatus.canceled:
-        return "Відмінено";
+        return AppLocalizations.instance.translate("canceled");
     }
   }
 }

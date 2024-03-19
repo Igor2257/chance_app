@@ -2,6 +2,7 @@ import 'package:chance_app/ui/components/logo_name.dart';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
+import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 class SignInUpPage extends StatefulWidget {
@@ -57,7 +58,12 @@ class _SignInUpPageState extends State<SignInUpPage> {
             ),
             RoundedButton(
               onPress: ()async {
-                  //await Repository().getIdTokenFromAuthCode();
+                  await UserRepository().getIdTokenFromAuthCode().then((value) {
+                    if (!value) {
+                      Navigator.of(context)
+                          .pushNamedAndRemoveUntil("/", (route) => false);
+                    }
+                  });
                 },
                 color: Colors.transparent,
                 border: Border.all(color: primary1000),

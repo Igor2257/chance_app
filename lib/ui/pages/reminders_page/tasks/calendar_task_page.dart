@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:chance_app/ui/components/custom_time_picker.dart';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/calendar_for_tasks.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/custom_bottom_sheet_notification_picker.dart';
 import 'package:chance_app/ux/bloc/add_task_bloc/add_task_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
-
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,7 +40,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
           surfaceTintColor: Colors.transparent,
           centerTitle: true,
           title: Text(
-            "Коли потрібно зробити?",
+            "${AppLocalizations.instance.translate("whenYouNeedToDoIt")}?",
             style: TextStyle(fontSize: 22, color: primaryText),
           ),
           leading: IconButton(
@@ -111,7 +111,8 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                       onPress: () async {
                         final dateTime = await CustomTimePicker.show(
                           context,
-                          title: const Text("Термін виконання"),
+                          title: Text(
+                              AppLocalizations.instance.translate("deadline")),
                         );
                         if (dateTime != null && context.mounted) {
                           BlocProvider.of<AddTaskBloc>(context)
@@ -133,7 +134,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                             width: 8,
                           ),
                           Text(
-                            "Термін виконання",
+                            AppLocalizations.instance.translate("deadline"),
                             style: TextStyle(
                                 fontSize: 16,
                                 color: primary50,
@@ -143,7 +144,8 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                           Text(
                             deadlineForTask != null
                                 ? "${deadlineForTask.hour.toString().padLeft(2, "0")}:${deadlineForTask.minute.toString().padLeft(2, "0")}"
-                                : "немає",
+                                : AppLocalizations.instance
+                                    .translate("noDueDate"),
                             style: TextStyle(fontSize: 16, color: primary50),
                           ),
                           Icon(Icons.arrow_forward_ios, color: primary50)
@@ -172,7 +174,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                             width: 8,
                           ),
                           Text(
-                            "Нагадування",
+                            AppLocalizations.instance.translate("reminder"),
                             style: TextStyle(
                                 fontSize: 16,
                                 color: primary50,

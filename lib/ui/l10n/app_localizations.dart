@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:chance_app/ux/hive_crum.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -16,7 +16,6 @@ class AppLocalizations {
   static AppLocalizations get instance {
     if (_instance == null) {
       return AppLocalizations(const Locale("en"));
-      throw Exception('Translations have not been loaded.');
 
     }
 
@@ -25,15 +24,15 @@ class AppLocalizations {
 
   static Future<AppLocalizations> load(Locale locale) async {
     String jsonString = "";
-    if (HiveCRUM().setting.languageCode != null &&
+    if (HiveCRUD().setting.languageCode != null &&
         const MyLocalizationsDelegate()
-            .isSupportedCode(HiveCRUM().setting.languageCode!)) {
+            .isSupportedCode(HiveCRUD().setting.languageCode!)) {
       jsonString = await rootBundle.loadString(
-          'assets/localizations/app_${HiveCRUM().setting.languageCode!}.arb');
+          'assets/localizations/app_${HiveCRUD().setting.languageCode!}.arb');
       final jsonMap = json.decode(jsonString) as Map<String, dynamic>;
 
       final instance =
-          AppLocalizations(Locale(HiveCRUM().setting.languageCode!));
+          AppLocalizations(Locale(HiveCRUD().setting.languageCode!));
       instance._localizedValues = jsonMap.map(
         (key, value) => MapEntry(
           key,
@@ -41,7 +40,7 @@ class AppLocalizations {
         ),
       );
       _instance = instance;
-      return AppLocalizations(Locale(HiveCRUM().setting.languageCode!));
+      return AppLocalizations(Locale(HiveCRUD().setting.languageCode!));
     } else {
       if (const MyLocalizationsDelegate()
           .isSupportedCode(locale.languageCode)) {

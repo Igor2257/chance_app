@@ -3,7 +3,7 @@ import 'dart:developer' show log;
 import 'dart:ui' show DartPluginRegistrant;
 
 import 'package:chance_app/ux/helpers/reminders_helper.dart';
-import 'package:chance_app/ux/hive_crum.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:flutter/material.dart' show DateTimeRange, DateUtils;
 import 'package:flutter_background_service/flutter_background_service.dart';
 
@@ -50,7 +50,7 @@ abstract class BackgroundServiceHelper {
   static Future<void> _onStart(ServiceInstance service) async {
     DartPluginRegistrant.ensureInitialized();
 
-    final hiveIsInitialized = await HiveCRUM().initialize();
+    final hiveIsInitialized = await HiveCRUD().initialize();
     await RemindersHelper.initialize();
 
     _log("Service is started");

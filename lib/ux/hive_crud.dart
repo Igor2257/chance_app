@@ -17,6 +17,7 @@ import 'package:chance_app/ux/model/settings.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:hive/hive.dart';
+
 import 'package:path_provider/path_provider.dart';
 
 late final Box<MeUser> userBox;
@@ -25,13 +26,14 @@ late final Box<MedicineModel> medicineBox;
 late final Box<PickResult> addressesBox;
 late final Box<Settings> settingsBox;
 late final Box<ProductModel> itemsBox;
+late final Box<SosContactModel> groupBox;
 
-class HiveCRUM {
-  HiveCRUM._();
+class HiveCRUD {
+  HiveCRUD._();
 
-  factory HiveCRUM() => instance;
+  factory HiveCRUD() => instance;
 
-  static final HiveCRUM instance = HiveCRUM._();
+  static final HiveCRUD instance = HiveCRUD._();
   var _initialized = false;
 
   bool get isInitialized => _initialized;
@@ -44,9 +46,19 @@ class HiveCRUM {
 
   List<ProductModel> get myItems => List.unmodifiable(itemsBox.values);
 
+  List<SosContactModel> get myContacts => List.unmodifiable(groupBox.values);
+
   MeUser? get user => userBox.get('user');
 
   Settings get setting => settingsBox.get('settings') ?? const Settings();
+
+  Future addContact(SosGroupModel contactModel) async {
+    await groupBox.put(contactModel.id, contactModel as SosContactModel);
+  }
+
+  Future removeLocalContact(String id) async {
+    await groupBox.delete(id);
+  }
 
   Future<bool> initialize() async {
     final documentsDirectory = await getApplicationDocumentsDirectory();
@@ -84,6 +96,7 @@ class HiveCRUM {
       addressesBox = await Hive.openBox("savedAddresses");
       itemsBox = await Hive.openBox("items");
       settingsBox = await Hive.openBox("settings");
+      groupBox = await Hive.openBox("sosContactsModel");
       final setting = settingsBox.get('settings') ?? const Settings();
       if (setting.firstEnter == null) {
         updateSettings(Settings(firstEnter: DateTime.now()));

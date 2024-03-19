@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/edit_medicine_schedule_bottom_sheet.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/reschedule_time_picker.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/medicine/medicine_item.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/enum/reminder_action_result.dart';
@@ -153,12 +154,12 @@ class MedicineList extends StatelessWidget {
   }
 
   Widget _emptyListPlaceholder() {
-    return const Padding(
-      padding: EdgeInsets.all(16),
+    return  Padding(
+      padding: const EdgeInsets.all(16),
       child: Text(
-        "Додайте нагадування про прийом ліків",
+        AppLocalizations.instance.translate("addMedicationReminders"),
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 24),
+        style: const TextStyle(fontSize: 24),
       ),
     );
   }

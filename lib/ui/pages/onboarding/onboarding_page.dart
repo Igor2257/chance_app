@@ -49,7 +49,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 GestureDetector(
                   onTap: ()async {
                     Navigator.of(context)
-                        .pushNamedAndRemoveUntil("/login", (route) => false);
+                        .pushNamedAndRemoveUntil("/signinup", (route) => false);
                     await UserRepository().firstEnter();
                   },
                   child: SizedBox(

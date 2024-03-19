@@ -14,7 +14,7 @@ abstract class HiveTypeId {
   static const addressComponentModel = 13;
   static const geocodingResultModel = 14;
   static const pickResultModel = 16;
-
+  static const sosGroupModel = 17;
 
   // Enums
   static const medicineType = 100;

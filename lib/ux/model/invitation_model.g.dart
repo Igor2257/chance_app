@@ -18,33 +18,30 @@ class InvitationModelAdapter extends TypeAdapter<InvitationModel> {
     };
     return InvitationModel(
       id: fields[0] as String,
-      email: fields[1] as String,
-      sentDate: fields[2] as DateTime?,
-      fromUserId: fields[3] as String,
-      toUserId: fields[4] as String,
+      toUserEmail: fields[1] as String,
+      toUserName: fields[2] as String,
+      sentDate: fields[3] as DateTime?,
+      fromUserId: fields[4] as String,
       invitationStatus: fields[5] as InvitationStatus,
-      fromUserName: fields[6] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, InvitationModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.email)
+      ..write(obj.toUserEmail)
       ..writeByte(2)
-      ..write(obj.sentDate)
+      ..write(obj.toUserName)
       ..writeByte(3)
-      ..write(obj.fromUserId)
+      ..write(obj.sentDate)
       ..writeByte(4)
-      ..write(obj.toUserId)
+      ..write(obj.fromUserId)
       ..writeByte(5)
-      ..write(obj.invitationStatus)
-      ..writeByte(6)
-      ..write(obj.fromUserName);
+      ..write(obj.invitationStatus);
   }
 
   @override
@@ -66,28 +63,26 @@ _$InvitationModelImpl _$$InvitationModelImplFromJson(
         Map<String, dynamic> json) =>
     _$InvitationModelImpl(
       id: json['id'] as String? ?? "",
-      email: json['email'] as String? ?? "",
+      toUserEmail: json['toUserEmail'] as String? ?? "",
+      toUserName: json['toUserName'] as String? ?? "",
       sentDate: json['sentDate'] == null
           ? null
           : DateTime.parse(json['sentDate'] as String),
       fromUserId: json['fromUserId'] as String? ?? "",
-      toUserId: json['toUserId'] as String? ?? "",
       invitationStatus: $enumDecodeNullable(
               _$InvitationStatusEnumMap, json['invitationStatus']) ??
           InvitationStatus.pending,
-      fromUserName: json['fromUserName'] as String? ?? "",
     );
 
 Map<String, dynamic> _$$InvitationModelImplToJson(
         _$InvitationModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'email': instance.email,
+      'toUserEmail': instance.toUserEmail,
+      'toUserName': instance.toUserName,
       'sentDate': instance.sentDate?.toIso8601String(),
       'fromUserId': instance.fromUserId,
-      'toUserId': instance.toUserId,
       'invitationStatus': _$InvitationStatusEnumMap[instance.invitationStatus]!,
-      'fromUserName': instance.fromUserName,
     };
 
 const _$InvitationStatusEnumMap = {

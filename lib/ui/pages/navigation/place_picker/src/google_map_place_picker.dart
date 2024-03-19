@@ -13,9 +13,11 @@ import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geometry.
     as mygeometry;
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/location.dart'
     as mylocation;
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/address_component.dart'
+as myaddresscomponent;
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/place_picker.dart';
-import 'package:chance_app/ux/hive_crum.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -115,7 +117,7 @@ class GoogleMapPlacePicker extends StatefulWidget {
 }
 
 class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
-  MeUser meUser = HiveCRUM().user!;
+  MeUser meUser = HiveCRUD().user!;
 
   _searchByCameraLocation(PlaceProvider provider) async {
     // We don't want to search location again if camera location is changed by zooming in/out.
@@ -198,6 +200,10 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                   ? mybounds.Bounds(northeast: mylocation.Location(lat: response.results[0].geometry.bounds!.northeast.lat, lng: response.results[0].geometry.bounds!.northeast.lng), southwest: mylocation.Location(lat: response.results[0].geometry.bounds!.southwest.lat, lng: response.results[0].geometry.bounds!.southwest.lng))
                   : null)
           .toJson();
+      map["address_components"] = response.results[0].addressComponents
+          .map((e) => myaddresscomponent.AddressComponent(
+          types: e.types, longName: e.longName, shortName: e.shortName))
+          .toList();
 
       provider.selectedPlace =
           PickResult.fromGeocodingResult(my.GeocodingResult.fromJson(map));
@@ -545,7 +551,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
             GestureDetector(
               onTap: () async {
                 meUser = meUser.copyWith(mapType: 0);
-                await HiveCRUM()
+                await HiveCRUD()
                     .updateUser(meUser)
                     .whenComplete(() => setState(() {}));
               },
@@ -565,7 +571,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
             GestureDetector(
               onTap: () async {
                 meUser = meUser.copyWith(mapType: 1);
-                await HiveCRUM()
+                await HiveCRUD()
                     .updateUser(meUser)
                     .whenComplete(() => setState(() {}));
               },
@@ -585,7 +591,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
             GestureDetector(
               onTap: () async {
                 meUser = meUser.copyWith(mapType: 2);
-                await HiveCRUM()
+                await HiveCRUD()
                     .updateUser(meUser)
                     .whenComplete(() => setState(() {}));
               },

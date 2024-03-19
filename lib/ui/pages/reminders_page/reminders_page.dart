@@ -2,6 +2,7 @@ import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/medicine_added_bottom_sheet.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/medicine_status_updated_dialog.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/task_status_updated_dialog.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/custom_bottom_sheet.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/expandable_calendar.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/success_dialog.dart';
@@ -230,9 +231,9 @@ class _RemindersPageState extends State<RemindersPage> {
   }
 
   Widget _tabSwitcher() {
-    const tabs = {
-      Reminders.medicine: "Мої медикаменти",
-      Reminders.tasks: "Мої завдання",
+    final tabs = {
+      Reminders.medicine: AppLocalizations.instance.translate("myMedicines"),
+      Reminders.tasks: AppLocalizations.instance.translate("myTasks"),
     };
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -249,15 +250,20 @@ class _RemindersPageState extends State<RemindersPage> {
         }),
         children: {
           for (final tab in tabs.keys)
-            tab: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              child: Text(
-                tabs[tab]!,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: (_selectedTab == tab)
-                      ? Colors.white
-                      : const Color(0xff57524C),
+            tab: SizedBox(
+              width: MediaQuery.of(context).size.width / 2,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                child: Text(
+                  tabs[tab]!,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: (_selectedTab == tab)
+                        ? Colors.white
+                        : const Color(0xff57524C),
+                  ),
                 ),
               ),
             ),

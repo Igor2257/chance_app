@@ -1,46 +1,82 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
+import 'package:chance_app/ux/repository/sos_repository.dart';
 import 'package:flutter/material.dart';
 
-part 'sos_contacts_state.dart';
 part 'sos_contacts_event.dart';
 
+part 'sos_contacts_state.dart';
+
 class SosContactsBloc extends Bloc<SosContactsEvent, SosContactsState> {
-  List<SosContactModel> contacts = [
-    const SosContactModel(name: 'TestContact1', phone: '+380951234567'),
-    const SosContactModel(name: 'TestContact2', phone: '+380954444444'),
-    const SosContactModel(name: 'TestContact3', phone: '+380954445555'),
-  ];
+  List<SosGroupModel> list = [];
   SosContactsBloc() : super(SosContactsState()) {
     on<SaveContact>(_onSaveContact);
     on<DeleteContact>(_onDeleteContact);
+    on<DeleteGroup>(_onDeleteGroup);
     on<EditContact>(_onEditContact);
+    on<LoadSosContactsEvent>(_onLoadContacts);
+  }
+
+  FutureOr<void> _onLoadContacts(
+      LoadSosContactsEvent event, Emitter<SosContactsState> emit) async {
+    try {
+      await SosRepository().loadContacts().then((value) {
+        if (value != null) {
+          list = value;
+          emit(state.copyWith(contacts: value));
+        }
+      });
+    } catch (error) {
+      // emit(SosContactsError(error.toString())); // Emit error state
+    }
   }
 
   FutureOr<void> _onSaveContact(
       SaveContact event, Emitter<SosContactsState> emit) {
-    contacts.add(event.contactModel);
-    emit(state.copyWith(contacts: contacts));
+    list.add(event.contactModel);
+    emit(state.copyWith(contacts: list));
+    if (event.isGroup) {
+      SosRepository().addGroupName(name: event.contactModel.name).then((value) {
+        SosRepository().saveContact(event.contactModel, groupId: value);
+      });
+    } else {
+      SosRepository().saveContact(event.contactModel);
+    }
   }
 
   FutureOr<void> _onDeleteContact(
       DeleteContact event, Emitter<SosContactsState> emit) {
-    for (var element in event.contacts) {
-      contacts.remove(element);
-    }
+    list.removeWhere((element) => element.contacts[0].id == event.ids.first);
+    emit(state.copyWith(contacts: list));
+    SosRepository().removeContact(event.ids.first);
+  }
 
-    emit(state.copyWith(contacts: contacts));
+  FutureOr<void> _onDeleteGroup(
+      DeleteGroup event, Emitter<SosContactsState> emit) {
+    list.removeWhere((element) => element.id == event.ids.first);
+    emit(state.copyWith(contacts: list));
+    SosRepository().removeGroup(event.ids.first);
   }
 
   FutureOr<void> _onEditContact(
-      EditContact event, Emitter<SosContactsState> emit) {
-    final index = contacts.indexOf(event.oldContact);
+      EditContact event, Emitter<SosContactsState> emit) async {
+    final index = list
+        .indexWhere((groupContact) => groupContact.id == event.contactModel.id);
+    list[index] = event.contactModel;
+    emit(state.copyWith(contacts: list));
 
-    if (index != -1) {
-      contacts[index] = event.newContact;
-      emit(state.copyWith(contacts: contacts));
-      print('Contact edited: $event.oldContact -> $event.newContact');
+    if (event.contactModel.name.isNotEmpty) {
+      SosRepository().editGroup(event.contactModel);
+      for (var contact in event.contactModel.contacts) {
+        SosRepository().editContact(event.contactModel, contact);
+      }
+    } else {
+      SosRepository()
+          .editContact(event.contactModel, event.contactModel.contacts[0]);
     }
   }
+
+  loadContacts() {}
 }

@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class CustomBottomSheetScaffold extends StatelessWidget {
@@ -47,7 +48,7 @@ class CustomBottomSheetScaffold extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
-                      "Скасувати",
+                      AppLocalizations.instance.translate("cancel"),
                       style: TextStyle(fontSize: 22, color: primary700),
                     ),
                   ),

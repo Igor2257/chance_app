@@ -1,7 +1,10 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/labeled_text_field.dart';
+import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
+import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddGroupScreen extends StatefulWidget {
   const AddGroupScreen({super.key});
@@ -11,8 +14,23 @@ class AddGroupScreen extends StatefulWidget {
 }
 
 class _AddGroupScreenState extends State<AddGroupScreen> {
+  SosContactsBloc get _sosContactsBloc {
+    return BlocProvider.of<SosContactsBloc>(context);
+  }
+
   final TextEditingController groupNameController = TextEditingController();
-  final List<ContactItem> contacts = [ContactItem()];
+  final List<ContactItem> contacts = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    initContacts();
+  }
+
+  void initContacts() {
+    contacts.add(ContactItem());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,14 +86,14 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                           height: 5,
                         ),
                         LabeledTextField(
-                          controller: TextEditingController(),
+                          controller: contacts[index].nameController,
                           label: AppLocalizations.instance.translate("name"),
                           hintText: AppLocalizations.instance.translate("name"),
                           isPhone: false,
                           onChanged: (value) {},
                         ),
                         LabeledTextField(
-                          controller: TextEditingController(),
+                          controller: contacts[index].phoneController,
                           label: AppLocalizations.instance.translate("phone"),
                           hintText: '+380',
                           isPhone: true,
@@ -98,7 +116,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                         const Icon(Icons.add),
                         const SizedBox(width: 8),
                         Text(
-                          AppLocalizations.instance.translate("addedContact"),
+                          AppLocalizations.instance.translate("addContact"),
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
@@ -118,6 +136,35 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                       height: 48,
                       child: ElevatedButton(
                         onPressed: () {
+                          List<SosContactModel> contactModels = [];
+
+                          for (int index = 0;
+                              index < contacts.length;
+                              index++) {
+                            String name = contacts[index].nameController.text;
+                            String phone = contacts[index].phoneController.text;
+
+                            SosContactModel contactModel = SosContactModel(
+                              name: name,
+                              phone: phone,
+                              groupName: groupNameController.text,
+                            );
+
+                            contactModels.add(contactModel);
+                          }
+
+                          SosGroupModel sosGroupModel = SosGroupModel(
+                            name: groupNameController.text,
+                            contacts: contactModels,
+                          );
+
+                          _sosContactsBloc.add(
+                            SaveContact(
+                              contactModel: sosGroupModel,
+                              isGroup: true,
+                            ),
+                          );
+
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               "/sos", (route) => false);
                         },
@@ -148,4 +195,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
   }
 }
 
-class ContactItem {}
+class ContactItem {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+}

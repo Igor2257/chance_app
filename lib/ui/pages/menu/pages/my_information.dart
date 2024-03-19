@@ -1,7 +1,7 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/menu/components/input_my_info_layout.dart';
-import 'package:chance_app/ux/hive_crum.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:flutter/material.dart';
 
@@ -40,6 +40,7 @@ class _MyInformationState extends State<MyInformation> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(AppLocalizations.instance.translate("myInfo")),
+        backgroundColor: Colors.transparent,
       ),
       backgroundColor: beigeBG,
       body: Padding(
@@ -85,7 +86,7 @@ class _MyInformationState extends State<MyInformation> {
   }
 
   void loadData() async {
-    MeUser user = HiveCRUM().user!;
+    MeUser user = HiveCRUD().user!;
     firstNameTextEditingController.text = user.name;
     lastNameTextEditingController.text = user.lastName;
     phoneTextEditingController.text = user.phone;

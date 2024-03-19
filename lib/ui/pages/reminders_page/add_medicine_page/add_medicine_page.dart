@@ -8,9 +8,10 @@ import 'package:chance_app/ui/components/custom_time_picker.dart';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/components/separated_list.dart';
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/add_medicine_page/components/add_medicine_page_scaffold.dart';
-import 'package:chance_app/ui/pages/add_medicine_page/components/dose_count_picker.dart';
-import 'package:chance_app/ui/pages/add_medicine_page/components/dose_text.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
+import 'package:chance_app/ui/pages/reminders_page/add_medicine_page/components/add_medicine_page_scaffold.dart';
+import 'package:chance_app/ui/pages/reminders_page/add_medicine_page/components/dose_count_picker.dart';
+import 'package:chance_app/ui/pages/reminders_page/add_medicine_page/components/dose_text.dart';
 import 'package:chance_app/ux/bloc/add_medicine_bloc/add_medicine_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 // import 'package:chance_app/ux/enum/day_periodicity.dart';
@@ -26,7 +27,8 @@ abstract class AddMedicineStep {
   static const addName = "addName";
   static const addType = "addType";
   static const addPeriodicity = "addPeriodicity";
-  // static const addDayPeriodicity = "addDayPeriodicity";
+
+  // static  addDayPeriodicity = "addDayPeriodicity";
   static const addStartDay = "addStartDay";
   static const addWeekdays = "addWeekdays";
   static const addDose = "addDose";
@@ -97,7 +99,8 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
       borderSide: BorderSide(color: beige200),
     );
     return AddMedicinePageScaffold(
-      middleText: const Text("Який медикамент хочете додати?"),
+      middleText: Text(
+          "${AppLocalizations.instance.translate("whatMedicationDoYouWantToAdd")}?"),
       child: Column(
         children: [
           CupertinoTextField(
@@ -111,7 +114,8 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
               borderRadius: BorderRadius.circular(16),
             ),
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            placeholder: "Введіть назву препарату",
+            placeholder:
+                AppLocalizations.instance.translate("enterTheNameOfTheDrug"),
             placeholderStyle: const TextStyle(color: beige800),
             clearButtonMode: OverlayVisibilityMode.always,
             onTapOutside: (_) => FocusScope.of(context).unfocus(),
@@ -152,7 +156,8 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
       (type) => type != MedicineType.other, // Is excluded for now
     );
     return AddMedicinePageScaffold(
-      middleText: const Text("У якій формі випускається медикамент?"),
+      middleText: Text(
+          "${AppLocalizations.instance.translate("inWhatFormIsTheMedicationProduced")}?"),
       child: BlocSelector<AddMedicineBloc, AddMedicineState, MedicineType?>(
         selector: (state) => state.type,
         builder: (context, selectedType) {
@@ -181,7 +186,8 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
 
   Widget _addPeriodicityPage() {
     return AddMedicinePageScaffold(
-      middleText: const Text("Як часто Ви його приймаєте?"),
+      middleText: Text(
+          "${AppLocalizations.instance.translate("howOftenDoYouTakeIt")}?"),
       child: BlocSelector<AddMedicineBloc, AddMedicineState, Periodicity?>(
         selector: (state) => state.periodicity,
         builder: (context, selectedPeriodicity) {
@@ -216,13 +222,13 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
 
   // Widget _addDayPeriodicityPage() {
   //   return AddMedicinePageScaffold(
-  //     middleText: const Text("Як часто Ви його приймаєте?"),
+  //     middleText:  Text("Як часто Ви його приймаєте?"),
   //     child: BlocSelector<AddMedicineBloc, AddMedicineState, DayPeriodicity?>(
   //       selector: (state) => state.dayPeriodicity,
   //       builder: (context, selectedPeriodicity) {
   //         return SingleChildScrollView(
   //           child: SeparatedList(
-  //             separator: const SizedBox(height: 12),
+  //             separator:  SizedBox(height: 12),
   //             children: [
   //               for (final periodicity in DayPeriodicity.values)
   //                 CustomListTile(
@@ -232,7 +238,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
   //                         .add(SetDayPeriodicity(periodicity));
   //                   },
   //                   content: Text(periodicity.toLocalizedString()),
-  //                   trailing: const CupertinoListTileChevron(),
+  //                   trailing:  CupertinoListTileChevron(),
   //                   isSelected: periodicity == selectedPeriodicity,
   //                 ),
   //             ],
@@ -245,15 +251,15 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
 
   Widget _addWeekdaysPage() {
     return AddMedicinePageScaffold(
-      middleText: const Text("Дні прийому"),
+      middleText: Text(AppLocalizations.instance.translate("receptionDays")),
       child: BlocSelector<AddMedicineBloc, AddMedicineState, Set<int>>(
         selector: (state) => state.weekdays,
         builder: (context, selectedDays) {
           return Column(
             children: [
-              const Text(
-                'Оберіть дні тижня',
-                style: TextStyle(fontSize: 22, color: primary100),
+              Text(
+                AppLocalizations.instance.translate("chooseTheDaysOfTheWeek"),
+                style: const TextStyle(fontSize: 22, color: primary100),
               ),
               Expanded(
                 child: Center(
@@ -303,7 +309,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                       }
                     : null,
                 color: const Color(0xFF83CEFF),
-                child: const Text("Далі"),
+                child: Text(AppLocalizations.instance.translate("next")),
               ),
             ],
           );
@@ -316,7 +322,8 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
     final currentDate = context.read<AddMedicineBloc>().state.startDate;
     var selectedDate = currentDate ?? DateTime.now();
     return AddMedicinePageScaffold(
-      middleText: const Text("Коли потрібно почати приймати першу дозу?"),
+      middleText: Text(
+          "${AppLocalizations.instance.translate("whenToStartTakingTheFirstDose")}?"),
       child: Column(
         children: [
           Expanded(
@@ -341,7 +348,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
               _navigator.pushNamed(AddMedicineStep.addDose);
             },
             color: const Color(0xFF83CEFF),
-            child: const Text("Далі"),
+            child: Text(AppLocalizations.instance.translate("next")),
           ),
         ],
       ),
@@ -350,7 +357,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
 
   Widget _addDosePage() {
     return AddMedicinePageScaffold(
-      middleText: const Text("Час прийому"),
+      middleText: Text(AppLocalizations.instance.translate("receptionTime")),
       child: BlocBuilder<AddMedicineBloc, AddMedicineState>(
         builder: (context, state) {
           final doses = SplayTreeMap<TimeOfDay, int>.from(
@@ -382,7 +389,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                     decoration: TextDecoration.underline,
                   ),
                 ),
-                child: const Text("Додати дозу"),
+                child: Text(AppLocalizations.instance.translate("addDose")),
               ),
               Expanded(
                 child: Padding(
@@ -397,7 +404,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
-                            "${index + 1} доза",
+                            "${index + 1} ${AppLocalizations.instance.translate("dose").toLowerCase()}",
                             style: const TextStyle(
                               fontSize: 14,
                               color: Color(0xFFEDF7FF),
@@ -412,7 +419,8 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                                   final now = DateTime.now();
                                   final dateTime = await CustomTimePicker.show(
                                     context,
-                                    title: const Text("Час прийому"),
+                                    title: Text(AppLocalizations.instance
+                                        .translate("receptionTime")),
                                     initialDateTime: DateTime(
                                       now.year,
                                       now.month,
@@ -454,7 +462,8 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                                 onPressed: () async {
                                   final count = await DoseCountPicker.show(
                                     context,
-                                    title: const Text("Оберіть кількість доз"),
+                                    title: Text(AppLocalizations.instance
+                                        .translate("chooseTheNumberOfDoses")),
                                     medicineType: state.type,
                                     initialCount: doseCount,
                                   );
@@ -512,7 +521,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                       }
                     : null,
                 color: const Color(0xFF83CEFF),
-                child: const Text("Далі"),
+                child: Text(AppLocalizations.instance.translate("next")),
               ),
               const SizedBox(height: 4),
             ],
@@ -524,7 +533,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
 
   Widget _shouldAddInstructionsPage() {
     return AddMedicinePageScaffold(
-      middleText: const Text("Додати інструкції"),
+      middleText: Text(AppLocalizations.instance.translate("addInstructions")),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -547,9 +556,11 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                         color: primary50,
                       ),
                       if (!instructionAdded)
-                        const Text("Додати інструкції?")
+                        Text(
+                            "${AppLocalizations.instance.translate("addInstructions")}?")
                       else ...[
-                        const Text("Інструкції додані"),
+                        Text(AppLocalizations.instance
+                            .translate("instructionsAttached")),
                         const Icon(
                           Icons.check,
                           color: primary50,
@@ -566,7 +577,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
               context.read<AddMedicineBloc>().add(const SaveMedicine());
             },
             color: const Color(0xFF83CEFF),
-            child: const Text("Зберегти"),
+            child: Text(AppLocalizations.instance.translate("save")),
           ),
         ],
       ),
@@ -575,7 +586,8 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
 
   Widget _addInstructionsPage() {
     return AddMedicinePageScaffold(
-      middleText: const Text("Чи слід приймати це з їжею?"),
+      middleText: Text(
+          "${AppLocalizations.instance.translate("shouldITakeThisWithFood")}?"),
       child: BlocSelector<AddMedicineBloc, AddMedicineState, Instruction?>(
         selector: (state) => state.instruction,
         builder: (context, selectedInstruction) {

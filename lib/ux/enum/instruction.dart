@@ -1,3 +1,4 @@
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/model/hive_type_id.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -19,13 +20,13 @@ enum Instruction {
   String toLocalizedString() {
     switch (this) {
       case Instruction.beforeEating:
-        return "Перед іжею";
+        return AppLocalizations.instance.translate("beforeEating");
       case Instruction.whileEating:
-        return "Під час їжі";
+        return AppLocalizations.instance.translate("whileEating");
       case Instruction.afterEating:
-        return "Після їжі";
+        return AppLocalizations.instance.translate("afterMeals");
       case Instruction.noMatter:
-        return "Не має значення";
+        return AppLocalizations.instance.translate("doesNotMatter");
     }
   }
 }

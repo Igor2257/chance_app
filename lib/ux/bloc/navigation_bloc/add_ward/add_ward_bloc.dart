@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/navigation/add_ward/components/input_ward_layout.dart';
 import 'package:meta/meta.dart';
 
@@ -32,39 +33,39 @@ class AddWardBloc extends Bloc<AddWardEvent, AddWardState> {
 
   String? validateEmail(String text) {
     if (text.trim().isEmpty) {
-      return 'Невірний формат електронної пошти';
+      return AppLocalizations.instance.translate("invalidEmailFormat");
     }
 
     if (!RegExp(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b',
             caseSensitive: false)
         .hasMatch(text)) {
-      return 'Невірний формат електронної пошти';
+      return AppLocalizations.instance.translate("invalidEmailFormat");
     }
     if (text.trim().isNotEmpty &&
         text.trim().length > 4 &&
         (text.contains(".ru", text.length - 4) ||
             text.contains(".by", text.length - 4) ||
             text.contains(".рф", text.length - 4))) {
-      return 'Невірний формат електронної пошти';
+      return AppLocalizations.instance.translate("invalidEmailFormat");
     }
     return null;
   }
 
   String? validateName(String text) {
     if (text.trim().isEmpty) {
-      return 'Ім`я порожнє';
+      return AppLocalizations.instance.translate("nameIsEmpty");
     }
 
     if (text.trim().length < 2) {
-      return 'Ім’я повинно мати не менше 2 символів';
+      return AppLocalizations.instance.translate("nameMustHaveAtLeast2Characters");
     }
 
     if (text.trim().length > 30) {
-      return 'Ім’я повинно бути не більше 30 символів';
+      return AppLocalizations.instance.translate("nameMustNotExceed30Characters");
     }
     RegExp regex = RegExp(r"^[a-zA-Zа-яА-ЯІіЇїЄєҐґ\s\'-]+$");
     if (!regex.hasMatch(text)) {
-      return 'Недопустимі символи. Введіть латиницю, кирилицю, пробіл, апостроф і/або дефіс';
+      return AppLocalizations.instance.translate("invalidCharacters");
     }
 
     return null;

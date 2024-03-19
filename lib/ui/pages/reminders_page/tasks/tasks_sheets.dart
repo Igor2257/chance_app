@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/first_task_page.dart';
 import 'package:chance_app/ux/bloc/add_task_bloc/add_task_bloc.dart';
 import 'package:flutter/material.dart';
@@ -9,25 +10,33 @@ class TasksSheets extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Що потрібно зробити?",
-                  style: TextStyle(color: primaryText, fontSize: 22),
-                ),
-                const CloseButton(),
-              ],
-            ),
-            const SizedBox(height: 20),
-            pages(),
-          ],
+    return Container(
+      decoration: BoxDecoration(
+          color: beige100,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+          )),
+      child: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "${AppLocalizations.instance.translate("whatNeedsToBeDone")}?",
+                    style: TextStyle(color: primaryText, fontSize: 22),
+                  ),
+                  const CloseButton(),
+                ],
+              ),
+              const SizedBox(height: 20),
+              pages(),
+            ],
+          ),
         ),
       ),
     );

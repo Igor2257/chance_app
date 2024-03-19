@@ -3,6 +3,7 @@ import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/labeled_text_field.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
+import 'package:chance_app/ux/repository/sos_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,11 +15,14 @@ class AddContactScreen extends StatefulWidget {
 }
 
 class _AddContactScreenState extends State<AddContactScreen> {
+  final SosRepository sosRepository = SosRepository();
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   SosContactsBloc get _sosContactsBloc {
     return BlocProvider.of<SosContactsBloc>(context);
   }
+
+  SosContactModel? get contactModel => null;
 
   @override
   Widget build(BuildContext context) {
@@ -75,12 +79,16 @@ class _AddContactScreenState extends State<AddContactScreen> {
                     if (nameTextField.validate() && phoneTextField.validate()) {
                       _sosContactsBloc.add(
                         SaveContact(
-                          contactModel: SosContactModel(
-                            name: nameController.text,
-                            phone: phoneController.text,
-                          ),
+                          contactModel: SosGroupModel(name: "", contacts: [
+                            SosContactModel(
+                              name: nameController.text,
+                              phone: phoneController.text,
+                            )
+                          ]),
+                          isGroup: false,
                         ),
                       );
+
                       Navigator.of(context)
                           .pushNamedAndRemoveUntil("/sos", (route) => false);
                       nameTextField.clear();

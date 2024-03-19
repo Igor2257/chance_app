@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/input_reminders_layout.dart';
 import 'package:chance_app/ux/bloc/add_task_bloc/add_task_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
@@ -39,7 +40,7 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
         children: [
           InputRemindersLayout(
             textEditingController: nameTextEditingController,
-            title: 'Введіть завдання',
+            title: AppLocalizations.instance.translate("enterTheTask"),
             subTitle: '',
             saveData: (String value) {
               BlocProvider.of<AddTaskBloc>(context)
@@ -112,12 +113,11 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
             onTap: () async {
               await Navigator.of(context)
                   .pushNamed("/date_picker_for_tasks")
-                  .then((value) {
-                if (value is bool) {
-                  nameTextEditingController.text = "";
-                  BlocProvider.of<AddTaskBloc>(context)
-                      .add(SaveTaskName(name: ""));
-                }
+                  .whenComplete(() {
+                nameTextEditingController.text = "";
+                BlocProvider.of<AddTaskBloc>(context)
+                    .add(SaveTaskName(name: ""));
+                Navigator.of(context).pop();
               });
             },
             child: Container(
@@ -135,7 +135,7 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
                             (taskModel.date.day == now.day &&
                                 taskModel.date.month == now.month &&
                                 taskModel.date.year == now.year)
-                        ? "Сьогодні"
+                        ? AppLocalizations.instance.translate("today")
                         : "${taskModel.date.day.toString().padLeft(2, "0")}.${taskModel.date.month.toString().padLeft(2, "0")}.${taskModel.date.year}",
                     style: TextStyle(fontSize: 14, color: primaryText),
                   ),

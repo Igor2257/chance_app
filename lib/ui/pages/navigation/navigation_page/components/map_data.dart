@@ -15,9 +15,7 @@ import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_resu
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/select_place.dart';
 import 'package:chance_app/ux/position_controller.dart';
-import 'package:chance_app/ux/repository/invitation_repository.dart';
 import 'package:chance_app/ux/repository/navigation_repository.dart';
-import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_google_maps_webservices/places.dart';
@@ -27,26 +25,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 bool isNotTapedOnMyLocationButton = false;
 GoogleMapController? mapController;
 
-String googleAPIKey = "AIzaSyDmTTd3yiTiyosQb_CYX2Ync20v-xiynYg";
+String googleAPIKey = "AIzaSyB5JF5kDfQurzWIzGa8JSINevwpxLFHrIM";
 
 late PositionController positionController;
-
-
-String getUrl(LatLng position, LatLng position1) {
-  String origin = "origin=${position.latitude},${position.longitude}";
-  String destination =
-      "destination=${position1.latitude},${position1.longitude}";
-  String key = "key=AIzaSyDmTTd3yiTiyosQb_CYX2Ync20v-xiynYg";
-  String parameters = "$origin&$destination&$key";
-  String output = "json";
-  String url =
-      "https://maps.googleapis.com/maps/api/directions/$output?$parameters";
-  return url;
-}
-
-String autoCompleteUrl(String text) {
-  return "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$text&radius=1000000&key=$googleAPIKey";
-}
 
 Future<PointLatLng?> getPositionOfPoint(PickResult pickResult) async {
   final result = await NavigationRepository().getLocationFromPlaceId(pickResult);
@@ -230,7 +211,7 @@ Future<BitmapDescriptor?> getMarkerIconWithText(String text) async {
   textPainter.layout(minWidth: 0, maxWidth: size.width);
 
   // Рисуем текст на канве
-  final offset = const Offset(0, 0); // Позиция начала текста на канве
+  const offset = Offset(0, 0); // Позиция начала текста на канве
   textPainter.paint(canvas, offset);
 
   // Oval for the image

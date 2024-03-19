@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class InputRemindersLayout extends StatefulWidget {
@@ -65,12 +66,14 @@ class _InputRemindersLayoutState extends State<InputRemindersLayout> {
                             widget.saveData(textEditingController.text);
                           } else {
                             setState(() {
-                              errorText = "Назва має містити до 300 символів";
+                              errorText = AppLocalizations.instance.translate(
+                                  "theNameMustContainUpTo300Characters");
                             });
                           }
                         } else {
                           setState(() {
-                            errorText = "Назва має містити від 2 символів";
+                            errorText = AppLocalizations.instance.translate(
+                                "theNameMustContainAtLeast2Characters");
                           });
                         }
 

@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
+import 'package:chance_app/ui/pages/sos_page/edit_group_screen_sos.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
@@ -13,12 +14,10 @@ class DeleteContactsPage extends StatefulWidget {
 }
 
 class _DeleteContactsPageState extends State<DeleteContactsPage> {
-  List<SosContactModel> selectedContacts = [];
+  List<SosGroupModel> selectedModels = [];
+
   bool isButtonEnable = false;
   late bool isEdit;
-  SosContactsBloc get _sosContactsBloc {
-    return BlocProvider.of<SosContactsBloc>(context);
-  }
 
   @override
   void didChangeDependencies() {
@@ -32,8 +31,8 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
       appBar: AppBar(
         title: Text(
           isEdit == true
-              ? AppLocalizations.instance.translate("createAGroup")
-              : AppLocalizations.instance.translate("tOchange"),
+              ? AppLocalizations.instance.translate("deleteContact")
+              : AppLocalizations.instance.translate("toChange"),
         ),
       ),
       body: Padding(
@@ -41,30 +40,36 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              child: ListView.builder(
-                itemCount: _sosContactsBloc.contacts.length,
+                child: BlocSelector<SosContactsBloc, SosContactsState,
+                    List<SosGroupModel>>(
+              selector: (state) => state.contacts,
+              builder: (context, contacts) => ListView.builder(
+                itemCount: contacts.length,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.only(bottom: 29),
                 itemBuilder: (context, index) {
-                  SosContactModel contactModel =
-                      _sosContactsBloc.contacts[index];
+                  SosGroupModel contactModel = contacts[index];
                   return ContainerButtonWithCheckbox(
-                      contactModel: contactModel,
-                      text: contactModel.name,
-                      isSelected: selectedContacts.contains(
+                    contactModel: contactModel,
+                    text: contactModel.name.isNotEmpty
+                        ? contactModel.name
+                        : contactModel.contacts[0].name,
+                    isSelected: selectedModels.contains(
+                      contactModel,
+                    ),
+                    isEdit: isEdit,
+                    onChanged: (value) {
+                      handleCheckboxChange(
+                        value,
                         contactModel,
-                      ),
-                      isEdit: isEdit,
-                      onChanged: (value) {
-                        handleCheckboxChange(
-                          value,
-                          contactModel,
-                        );
-                      });
+                      );
+                    },
+                    isGroup: contactModel.name.isNotEmpty ? true : false,
+                  );
                 },
               ),
-            ),
+            )),
             if (isEdit)
               SliverFillRemaining(
                 child: Align(
@@ -82,9 +87,16 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
                       ),
                       onPressed: () {
                         if (isButtonEnable) {
-                          _sosContactsBloc.add(
-                            DeleteContact(contacts: selectedContacts),
-                          );
+                          if (selectedModels[0].name.isNotEmpty) {
+                            BlocProvider.of<SosContactsBloc>(context).add(
+                              DeleteGroup(ids: [selectedModels[0].id]),
+                            );
+                          } else {
+                            BlocProvider.of<SosContactsBloc>(context).add(
+                              DeleteContact(ids: [selectedModels[0].id]),
+                            );
+                          }
+
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               "/sos", (route) => false);
                         }
@@ -93,7 +105,7 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 44, vertical: 10),
                         child: Text(
-                          'Видалити',
+                          AppLocalizations.instance.translate("delete"),
                           style: TextStyle(
                             color: primary50,
                             fontSize: 16,
@@ -111,20 +123,15 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
     );
   }
 
-  void handleCheckboxChange(bool? value, SosContactModel contact) {
+  void handleCheckboxChange(bool? value, SosGroupModel contact) {
     setState(() {
       if (value != false) {
-        selectedContacts.add(contact);
+        selectedModels.add(contact);
       } else {
-        selectedContacts.remove(contact);
+        selectedModels.remove(contact);
       }
-      isButtonEnable = selectedContacts.isNotEmpty;
+      isButtonEnable = selectedModels.isNotEmpty;
     });
-  }
-
-  void _deleteSelectedContacts() {
-    selectedContacts.clear();
-    Navigator.of(context).pop();
   }
 }
 
@@ -132,8 +139,9 @@ class ContainerButtonWithCheckbox extends StatefulWidget {
   final String text;
   final bool isSelected;
   final bool isEdit;
+  final bool isGroup;
   final ValueChanged<bool?>? onChanged;
-  final SosContactModel contactModel;
+  final SosGroupModel contactModel;
 
   const ContainerButtonWithCheckbox({
     super.key,
@@ -141,6 +149,7 @@ class ContainerButtonWithCheckbox extends StatefulWidget {
     required this.isSelected,
     required this.isEdit,
     required this.contactModel,
+    required this.isGroup,
     this.onChanged,
   });
 
@@ -157,9 +166,17 @@ class _ContainerButtonWithCheckboxState
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (widget.isEdit == false) {
+        if (widget.isEdit == false && widget.isGroup == false) {
           Navigator.pushNamed(context, "/replace_contact_sos",
               arguments: widget.contactModel);
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  EditGroupScreenSos(groupModel: widget.contactModel),
+            ),
+          );
         }
       },
       child: Container(

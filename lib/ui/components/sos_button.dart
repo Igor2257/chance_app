@@ -1,5 +1,7 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SosButton extends StatefulWidget {
   const SosButton({super.key});
@@ -22,12 +24,11 @@ class _SosButtonState extends State<SosButton> {
       child: InkWell(
         canRequestFocus: true,
         borderRadius: BorderRadius.circular(67),
-        onTap: () {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            '/sos',
-            (route) => false,
-          );
+        onTap: () async {
+          BlocProvider.of<SosContactsBloc>(context).add(LoadSosContactsEvent());
+          // NEED REBORCK
+          await Future.delayed(const Duration(milliseconds: 500));
+          Navigator.of(context).pushNamed("/sos");
         },
         onHover: (_) {},
         splashColor: red1000,
