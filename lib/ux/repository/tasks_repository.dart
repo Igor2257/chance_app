@@ -63,10 +63,7 @@ class TasksRepository {
     final newItems = await _apiClient.fetchTasks(cookie: cookie.toString());
     if (newItems != null) {
       for (final item in newItems) {
-        if (!_storage.values.contains(item)) {
-          await _storage.putTask(item);
-          result.add(item.id);
-        }
+        if (!_storage.values.contains(item)) await _storage.putTask(item);
       }
     }
     return result;
