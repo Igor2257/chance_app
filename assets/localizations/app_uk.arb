@@ -200,11 +200,14 @@
   "saveTheContact": "Зберегти контакт",
   "createAContact": "Створити контакт",
 
+
   "cancel":"Скасувати",
   "enterTheTask":"Введіть завдання",
   "done":"Виконано",
   "delete":"Видалити",
   "accept":"Прийняти",
+
+  "editGroup": "Редагувати групу",
 
   
 

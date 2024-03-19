@@ -185,7 +185,8 @@ class SosRepository {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
 
-  Future<SosContactModel?> editContact(SosContactModel contactModel) async {
+  Future<SosContactModel?> editContact(
+      SosGroupModel group, SosContactModel contactModel) async {
     String? error;
     SosContactModel? groupModel;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
@@ -206,7 +207,7 @@ class SosRepository {
           'Cookie': cookie.toString(),
         },
         body: jsonEncode({
-          "group": contactModel.groupName,
+          "group": group.id,
           "contacts": [
             {"name": contactModel.name, "phone": contactModel.phone}
           ]
@@ -219,23 +220,55 @@ class SosRepository {
         Map<String, dynamic> data = json.decode(bodyString);
         List<dynamic> contactList = data['contacts'];
 
+        // await HiveCRUM().addContact(contactModel);
+      } else {
+        error = jsonDecode(response.body)["message"]
+            .toString()
+            .replaceAll("[", "")
+            .replaceAll("]", "");
+      }
+    } catch (e) {
+      error = e.toString();
+    }
+
+    if (error != null) {
+      Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+    }
+
+    return groupModel;
+  }
+
+  Future<SosContactModel?> editGroup(SosGroupModel contactModel) async {
+    String? error;
+    SosContactModel? groupModel;
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      // await HiveCRUM().addContact(contactModel);
+      Fluttertoast.showToast(
+          msg: "Немає підключення до інтернету",
+          toastLength: Toast.LENGTH_LONG);
+    }
+
+    try {
+      var url = Uri.parse('$apiUrl/sos/group/${contactModel.id}');
+      final cookie = await UserRepository().getCookie();
+
+      var response = await http.patch(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Cookie': cookie.toString(),
+        },
+        body: jsonEncode({"name": contactModel.name}),
+      );
+      // print("groupId: $groupId");
+
+      if (response.statusCode > 199 && response.statusCode < 300) {
+        String bodyString = response.body;
+        Map<String, dynamic> data = json.decode(bodyString);
+        List<dynamic> contactList = data['contacts'];
+
         // if (contactList.isNotEmpty) {
 
-        //   for (int i = 0; i < contactList.length; i++) {
-        //     Map<String, dynamic> groupData = contactList[i];
-        //     // String groupId = groupData["_id"];
-        //     String contactName = groupData["name"];
-        //     String contactPhone = groupData["phone"];
-        //     String contactId = groupData["_id"];
-        //     groupModel = SosGroupModel(name: "", contacts: [
-        //       SosContactModel(
-        //           name: contactName,
-        //           phone: contactPhone,
-        //           id: contactId,
-        //           groupName: "group_name_here")
-        //     ]);
-        //   }
-        // }
         // await HiveCRUM().addContact(contactModel);
       } else {
         error = jsonDecode(response.body)["message"]
