@@ -187,24 +187,27 @@
   "letsStart": "Стартуємо",
   "buyAdblocker": "Придбати блокувальник реклами",
   "logOut": "Вийти з облікового запису",
-  "addedContact": "Додати контакт",
+  "addContact": "Додати контакт",
   "saveTheGroup": "Зберегти групу",
   "deletingContacts": "Видалення контактів",
-  "tOchange": "Змінити",
+  "toChange": "Змінити",
   "editingContact": "Редагування контакту",
   "createAGroup": "Створити групу",
   "deleteContact": "Видалити контакт",
   "editContacts": "Замінити контакти",
-  "added": "Додати",
   "contact": "Контакт",
   "group": "Групу",
   "saveTheContact": "Зберегти контакт",
   "createAContact": "Створити контакт",
+
   "cancel":"Скасувати",
   "enterTheTask":"Введіть завдання",
   "done":"Виконано",
   "delete":"Видалити",
   "accept":"Прийняти",
+
+  
+
 
 
 
