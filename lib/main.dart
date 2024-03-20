@@ -43,17 +43,13 @@ import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
-import 'package:chance_app/ux/helpers/ad_helper.dart';
 import 'package:chance_app/ux/helpers/background_service_helper.dart';
 import 'package:chance_app/ux/helpers/reminders_helper.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/internet_connection_stream.dart';
 import 'package:chance_app/ux/model/product_model.dart';
 import 'package:chance_app/ux/model/settings.dart';
-import 'package:chance_app/ux/model/sos_contact_model.dart';
-import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/position_controller.dart';
-import 'package:chance_app/ux/repository/tasks_repository.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
@@ -327,13 +323,13 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                   theme: ThemeData(
                                       scaffoldBackgroundColor: beigeBG,
                                       dialogBackgroundColor: beigeBG,
-                                      dialogTheme: DialogTheme(
+                                      dialogTheme: const DialogTheme(
                                           backgroundColor: beigeBG,
                                           surfaceTintColor: beigeBG),
                                       colorScheme: ColorScheme.fromSeed(
                                           seedColor: primary400),
                                       useMaterial3: true,
-                                      popupMenuTheme: PopupMenuThemeData(
+                                      popupMenuTheme: const PopupMenuThemeData(
                                           color: beigeTransparent,
                                           surfaceTintColor: beigeTransparent)),
                                   supportedLocales: const [
@@ -362,9 +358,9 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                     "/date_picker_for_tasks": (context) =>
                                         const CalendarTaskPage(),
                                     "/add_medicine": (context) => BlocProvider(
-                                          create: (context) =>
+                                      create: (context) =>
                                               AddMedicineBloc(),
-                                          child: AddMedicinePage(),
+                                          child: const AddMedicinePage(),
                                         ),
                                     "/reset_password": (context) =>
                                         const ResetPassword(),
@@ -458,7 +454,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                                 .translate("connectionRestored")
                                             : AppLocalizations.instance
                                                 .translate("noConnection"),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 16, color: primary50),
                                       ),
                                     ],
@@ -505,12 +501,14 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                       title: Text(
                         AppLocalizations.instance
                             .translate("allowTheAppToUseTheLocation"),
-                        style: TextStyle(fontSize: 24, color: primaryText),
+                        style:
+                            const TextStyle(fontSize: 24, color: primaryText),
                       ),
                       content: Text(
                         AppLocalizations.instance.translate(
                             "forTheAppToWorkCorrectlyYouNeedToAllowThisPermissionToBeUsed"),
-                        style: TextStyle(fontSize: 16, color: primaryText),
+                        style:
+                            const TextStyle(fontSize: 16, color: primaryText),
                       ),
                       actions: [
                         RoundedButton(
@@ -526,7 +524,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                           color: primary1000,
                           child: Text(
                             AppLocalizations.instance.translate("goTo"),
-                            style: TextStyle(color: primary50),
+                            style: const TextStyle(color: primary50),
                           ),
                         ),
                       ],

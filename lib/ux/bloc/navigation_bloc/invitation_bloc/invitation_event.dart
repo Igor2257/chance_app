@@ -10,5 +10,7 @@ class LoadInvitationsForMe extends InvitationEvent{
 class LoadInvitationsFromMe extends InvitationEvent{
   LoadInvitationsFromMe();
 }
-
+class LoadMyWards extends InvitationEvent{
+  LoadMyWards();
+}
 

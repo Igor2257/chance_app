@@ -37,7 +37,7 @@ Future<PointLatLng?> getPositionOfPoint(PickResult pickResult) async {
   return PointLatLng(result.latitude, result.longitude);
 }
 
-Future<BitmapDescriptor?> getMarkerIcon(PickResultFor pickResultFor) async {
+Future<BitmapDescriptor?> getMarkerIcon(PickResultFor? pickResultFor) async {
   Size size = const Size(170, 170);
   final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
   final Canvas canvas = Canvas(pictureRecorder);
@@ -83,14 +83,16 @@ Future<BitmapDescriptor?> getMarkerIcon(PickResultFor pickResultFor) async {
   canvas.clipPath(Path()..addOval(oval));
 
   // Add image
-  String path = "";
-  switch (pickResultFor) {
-    case PickResultFor.first:
-      path = "assets/icons/point_a.png";
-      break;
-    case PickResultFor.second:
-      path = "assets/icons/point_b.png";
-      break;
+  String path = "assets/menu_icons/navigation.png";
+  if (pickResultFor != null) {
+    switch (pickResultFor) {
+      case PickResultFor.first:
+        path = "assets/icons/point_a.png";
+        break;
+      case PickResultFor.second:
+        path = "assets/icons/point_b.png";
+        break;
+    }
   }
   ui.Image image = await getImageFromPath(
       path: path); // Alternatively use your own method to get the image

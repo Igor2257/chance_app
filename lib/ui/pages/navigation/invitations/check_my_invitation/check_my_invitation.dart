@@ -39,7 +39,7 @@ class _CheckMyInvitationState extends State<CheckMyInvitation> {
           centerTitle: true,
           title: Text(
             AppLocalizations.instance.translate("invitation"),
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 22,
               color: primaryText,
             ),

@@ -12,6 +12,7 @@ class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
   InvitationBloc() : super(const InvitationState()) {
     on<LoadInvitationsForMe>(_onLoadInvitationsForMe);
     on<LoadInvitationsFromMe>(_onLoadInvitationsFromMe);
+    on<LoadMyWards>(_onLoadMyWards);
   }
 
   FutureOr<void> _onLoadInvitationsForMe(
@@ -49,5 +50,23 @@ class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
         isLoading: false,
         errorInvitationsFromMe: error,
         invitationsFromMe: list));
+  }
+
+  FutureOr<void> _onLoadMyWards(LoadMyWards event, Emitter<InvitationState> emit)async {
+    emit(state.copyWith(isLoading: true, page: 1));
+    String error = "";
+    List<InvitationModel> list = [];
+    await InvitationRepository().getMyWards().then((value) {
+      if (value is List<InvitationModel>) {
+        list = value;
+      } else {
+        error = value;
+      }
+    });
+
+    emit(state.copyWith(
+        isLoading: false,
+        errorMyWards: error,
+        myWards: list));
   }
 }

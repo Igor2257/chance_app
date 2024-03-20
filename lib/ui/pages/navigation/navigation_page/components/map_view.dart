@@ -60,12 +60,12 @@ class _MapViewState extends State<MapView>
                       title: Text(
                         AppLocalizations.instance
                             .translate("allowTheAppToUseTheLocation"),
-                        style: TextStyle(fontSize: 24, color: primaryText),
+                        style: const TextStyle(fontSize: 24, color: primaryText),
                       ),
                       content: Text(
                         AppLocalizations.instance.translate(
                             "forTheAppToWorkCorrectlyYouNeedToAllowThisPermissionToBeUsed"),
-                        style: TextStyle(fontSize: 16, color: primaryText),
+                        style: const TextStyle(fontSize: 16, color: primaryText),
                       ),
                       actions: [
                         RoundedButton(
@@ -81,7 +81,7 @@ class _MapViewState extends State<MapView>
                           color: primary1000,
                           child: Text(
                             AppLocalizations.instance.translate("goTo"),
-                            style: TextStyle(color: primary50),
+                            style: const TextStyle(color: primary50),
                           ),
                         ),
                       ],
@@ -212,6 +212,7 @@ class _MapViewState extends State<MapView>
                   alignment: Alignment.center,
                   child: BlocBuilder<NavigationBloc, NavigationState>(
                       builder: (context, state) {
+
                     return GoogleMap(
                         polylines: state.polylines,
                         mapType: meUser.mapType == 0
@@ -272,8 +273,8 @@ class _MapViewState extends State<MapView>
                                   margin: const EdgeInsets.all(10),
                                   width: 70,
                                   height: 70,
-                                  decoration: BoxDecoration(
-                                    boxShadow: const [
+                                  decoration: const BoxDecoration(
+                                    boxShadow: [
                                       BoxShadow(
                                           blurRadius: 6,
                                           color: Colors.black26,
@@ -281,11 +282,11 @@ class _MapViewState extends State<MapView>
                                           spreadRadius: 2,
                                           blurStyle: BlurStyle.normal)
                                     ],
-                                    borderRadius: const BorderRadius.all(
+                                    borderRadius: BorderRadius.all(
                                         Radius.circular(90)),
                                     color: beigeTransparent,
                                   ),
-                                  child: Icon(Icons.location_searching,
+                                  child: const Icon(Icons.location_searching,
                                       color: primaryText),
                                 ),
                               ),
@@ -319,8 +320,8 @@ class _MapViewState extends State<MapView>
                                   margin: const EdgeInsets.all(10),
                                   width: 70,
                                   height: 70,
-                                  decoration: BoxDecoration(
-                                    boxShadow: const [
+                                  decoration: const BoxDecoration(
+                                    boxShadow: [
                                       BoxShadow(
                                           blurRadius: 6,
                                           color: Colors.black26,
@@ -328,11 +329,11 @@ class _MapViewState extends State<MapView>
                                           spreadRadius: 2,
                                           blurStyle: BlurStyle.normal)
                                     ],
-                                    borderRadius: const BorderRadius.all(
+                                    borderRadius: BorderRadius.all(
                                         Radius.circular(90)),
                                     color: beigeTransparent,
                                   ),
-                                  child: Icon(Icons.route_rounded,
+                                  child: const Icon(Icons.route_rounded,
                                       color: primaryText),
                                 ),
                               ),
@@ -497,7 +498,7 @@ class _MapViewState extends State<MapView>
         },
       );
     }
-    return Center(
+    return const Center(
       child: CupertinoActivityIndicator(
         animating: true,
         radius: 10,

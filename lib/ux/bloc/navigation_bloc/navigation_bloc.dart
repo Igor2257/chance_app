@@ -5,6 +5,7 @@ import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/navigation/navigation_page/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/select_place.dart';
+import 'package:chance_app/ux/model/ward_location_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -19,6 +20,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     on<UpdateFirstPickResult>(_onUpdateFirstPickResult);
     on<UpdateSecondPickResult>(_onUpdateSecondPickResult);
     on<BuildRoute>(_onBuildRoute);
+    on<ChangeWardLocation>(_onChangeWardLocation);
   }
 
   FutureOr<void> _onUpdateMarkers(
@@ -142,5 +144,39 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       }
       emit(state.copyWith(setMarkers: setMarkers, polylines: polylines));
     }
+  }
+
+  FutureOr<void> _onChangeWardLocation(
+      ChangeWardLocation event, Emitter<NavigationState> emit) async {
+    List<WardLocationModel> list = state.wardLocations;
+    if (list.any((element) => element.id == event.wardLocationModel.id)) {
+      list.removeWhere((element) => element.id == event.wardLocationModel.id);
+    }
+    list.add(event.wardLocationModel);
+    BitmapDescriptor? bitmapDescriptor = await getMarkerIcon(null);
+    List<Marker> markers = state.setMarkers.toList();
+    if (bitmapDescriptor != null) {
+      for (int i = 0; i < markers.length; i++) {
+        if (list.any((element) => element.id == markers[i].markerId.value)) {
+          markers.removeAt(i);
+        }
+      }
+
+      for (int i = 0; i < list.length; i++) {
+        markers.add(Marker(
+            markerId: MarkerId(list[i].id),
+            draggable: false,
+            position: LatLng(list[i].latitude, list[i].longitude),
+            icon: bitmapDescriptor,
+            infoWindow: InfoWindow(
+                title: list[i].myName,
+                snippet: list[i].myEmail,
+                onTap: () {
+                  mapController!.animateCamera(CameraUpdate.newLatLngZoom(
+                      LatLng(list[i].latitude, list[i].longitude), 18));
+                })));
+      }
+    }
+    emit(state.copyWith(wardLocations: list, setMarkers: markers.toSet()));
   }
 }

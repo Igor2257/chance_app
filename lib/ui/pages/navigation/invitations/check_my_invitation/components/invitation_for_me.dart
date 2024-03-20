@@ -39,7 +39,7 @@ class InvitationForMe extends StatelessWidget {
                   Text(
                     AppLocalizations.instance.translate("noInternetConnection"),
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 20, color: primaryText),
+                    style: const TextStyle(fontSize: 20, color: primaryText),
                   ),
                 ],
               ));
@@ -54,7 +54,7 @@ class InvitationForMe extends StatelessWidget {
                   Text(
                     AppLocalizations.instance.translate("youHaveNoInvitations"),
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 20, color: primaryText),
+                    style: const TextStyle(fontSize: 20, color: primaryText),
                   ),
                 ],
               ));
@@ -82,7 +82,7 @@ class InvitationForMe extends StatelessWidget {
                               children: [
                                 Text(
                                   invitationForMe.toUserEmail,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 16, color: primaryText),
                                   maxLines: 1,
                                 ),
@@ -114,7 +114,7 @@ class InvitationForMe extends StatelessWidget {
                                 }
                               });
                             },
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.done,
                               color: green,
                             )),
@@ -131,7 +131,7 @@ class InvitationForMe extends StatelessWidget {
                                 }
                               });
                             },
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.close,
                               color: red800,
                             )),

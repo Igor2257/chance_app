@@ -178,6 +178,26 @@ class InvitationRepository {
 
     return error;
   }
+  Future<String?> deleteWard(String id) async {
+    String? error;
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      error= "Немає підключення до інтернету";
+    } else {
+      try {
+        await removeInvitation(id).whenComplete(()async {
+          await Supabase.instance.client
+              .from("ward_location")
+              .delete()
+              .eq("id", id);
+        });
+
+      } catch (e) {
+        error = e.toString();
+      }
+    }
+
+    return error;
+  }
   Future<String?> checkOnValidCode(String code) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {

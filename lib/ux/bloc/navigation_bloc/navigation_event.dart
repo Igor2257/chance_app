@@ -27,4 +27,8 @@ class BuildRoute extends NavigationEvent{
 
   BuildRoute();
 }
+class ChangeWardLocation extends NavigationEvent{
+  final WardLocationModel wardLocationModel;
 
+  ChangeWardLocation(this.wardLocationModel);
+}
