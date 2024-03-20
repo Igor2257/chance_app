@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:chance_app/firebase_options.dart';
+import 'package:chance_app/ui/components/ad_banner.dart';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
@@ -173,8 +174,6 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Key key = UniqueKey();
-  bool isBannerLoad = false;
-  BannerAd? bannerAd;
   late InternetConnectionStream internetConnectionStream;
   final Settings settings = HiveCRUD().setting;
   late String route;
@@ -201,11 +200,6 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
       key = UniqueKey();
     });
     try {
-      if (!settings.blockAd) initAd();
-    } catch (e) {
-      FlutterError("Error ${e.toString()}");
-    }
-    try {
       checkIfDocsAreAvailable();
     } catch (e) {
       FlutterError(e.toString());
@@ -220,43 +214,11 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     route = widget.route;
     internetConnectionStream = InternetConnectionStream(setState);
     try {
-      if (!settings.blockAd) initAd();
-    } catch (e) {
-      FlutterError("Error ${e.toString()}");
-    }
-    try {
       checkIfDocsAreAvailable();
     } catch (e) {
       FlutterError("Error ${e.toString()}");
     }
     loadGPSFunction();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    if (bannerAd != null) {
-      bannerAd!.dispose();
-    }
-  }
-
-  initAd() async {
-    bannerAd = BannerAd(
-        size: AdSize.banner,
-        adUnitId: AdHelper.bannerMainScreen,
-        listener: BannerAdListener(
-          // Called when an ad is successfully received.
-          onAdLoaded: (ad) {
-            isBannerLoad = true;
-          },
-          // Called when an ad request failed.
-          onAdFailedToLoad: (ad, error) {
-            debugPrint('BannerAd failed to load: $error');
-            ad.dispose();
-          },
-        ),
-        request: const AdRequest())
-      ..load();
   }
 
   checkIfDocsAreAvailable() async {
@@ -292,13 +254,9 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
       if (value) {
         settings = settings.copyWith(blockAd: true);
         HiveCRUD().updateSettings(settings);
-        if (bannerAd != null) {
-          bannerAd!.dispose();
-        }
       } else {
         settings = settings.copyWith(blockAd: false);
         HiveCRUD().updateSettings(settings);
-        initAd();
       }
     });
   }
@@ -507,22 +465,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                   ),
                                 )),
                           ),
-                        if (settings.blockAd == false &&
-                            isBannerLoad &&
-                            bannerAd != null)
-                          Container(
-                              width: size.width,
-                              constraints: BoxConstraints(
-                                maxHeight: bannerAd!.size.height.toDouble(),
-                              ),
-                              color: beigeBG,
-                              child: SafeArea(
-                                  top: false,
-                                  child: Center(
-                                    child: AdWidget(
-                                      ad: bannerAd!,
-                                    ),
-                                  ))),
+                        if (!settings.blockAd) const AdBanner(),
                       ],
                     ),
                   ),
