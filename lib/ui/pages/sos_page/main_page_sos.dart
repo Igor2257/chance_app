@@ -147,13 +147,13 @@ class _MainPageSosState extends State<MainPageSos> {
           onPressed: () {
             _showBottomSheet(context);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.add,
             color: primary50,
           ),
           label: Text(
             AppLocalizations.instance.translate("add"),
-            style: TextStyle(
+            style: const TextStyle(
               color: primary50,
               fontSize: 16,
               fontWeight: FontWeight.w500,
@@ -181,7 +181,7 @@ class _MainPageSosState extends State<MainPageSos> {
               Container(
                 height: 4,
                 width: 32,
-                decoration: BoxDecoration(color: beige400),
+                decoration: const BoxDecoration(color: beige400),
               ),
               Padding(
                 padding: const EdgeInsets.only(
@@ -206,7 +206,7 @@ class _MainPageSosState extends State<MainPageSos> {
                           },
                           child: Text(
                             AppLocalizations.instance.translate("contact"),
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               color: primary50,
                               fontSize: 16,
@@ -230,7 +230,7 @@ class _MainPageSosState extends State<MainPageSos> {
                           },
                           child: Text(
                             AppLocalizations.instance.translate("group"),
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               color: primary50,
                               fontSize: 16,
@@ -285,7 +285,7 @@ class ContainerButton extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   text,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: primary50,
                     fontWeight: FontWeight.w400,
                     fontSize: 16,
@@ -294,7 +294,7 @@ class ContainerButton extends StatelessWidget {
               ),
             ),
             if (isGroup)
-              Icon(
+              const Icon(
                 Icons.group,
                 color: primary50,
               ),

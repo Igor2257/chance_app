@@ -97,7 +97,7 @@ class _ResetPasswordEnterNewPasswordState
                 padding: const EdgeInsets.only(left: 16),
                 child: Text(
                   errorTextFirst,
-                  style: TextStyle(fontSize: 14, color: red900),
+                  style: const TextStyle(fontSize: 14, color: red900),
                 ),
               ),
             const SizedBox(
@@ -149,7 +149,7 @@ class _ResetPasswordEnterNewPasswordState
                 padding: const EdgeInsets.only(left: 16),
                 child: Text(
                   errorTextSecond,
-                  style: TextStyle(fontSize: 14, color: red900),
+                  style: const TextStyle(fontSize: 14, color: red900),
                 ),
               ),
             const Spacer(),
@@ -176,7 +176,7 @@ class _ResetPasswordEnterNewPasswordState
                 color: primary1000,
                 child: Text(
                   AppLocalizations.instance.translate("save"),
-                  style: TextStyle(fontSize: 16, color: primary50),
+                  style: const TextStyle(fontSize: 16, color: primary50),
                 )),
             const Spacer(),
           ],

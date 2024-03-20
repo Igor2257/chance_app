@@ -37,7 +37,7 @@ class InvitationFromMe extends StatelessWidget {
                 Text(
                   AppLocalizations.instance.translate("noInternetConnection"),
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, color: primaryText),
+                  style: const TextStyle(fontSize: 20, color: primaryText),
                 ),
               ],
             );
@@ -51,7 +51,7 @@ class InvitationFromMe extends StatelessWidget {
                 Text(
                   AppLocalizations.instance.translate("youDidNotInviteAnyone"),
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, color: primaryText),
+                  style: const TextStyle(fontSize: 20, color: primaryText),
                 ),
               ],
             );
@@ -80,7 +80,7 @@ class InvitationFromMe extends StatelessWidget {
                             Text(
                               invitationFromMe.toUserEmail,
                               style:
-                                  TextStyle(fontSize: 16, color: primaryText),
+                                  const TextStyle(fontSize: 16, color: primaryText),
                               maxLines: 1,
                             ),
                             Text(

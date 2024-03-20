@@ -141,7 +141,7 @@ class _InputLoginLayoutState extends State<InputLoginLayout> {
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
                     errorText!,
-                    style: TextStyle(fontSize: 14, color: red900),
+                    style: const TextStyle(fontSize: 14, color: red900),
                   ),
                 ),
             ],

@@ -19,7 +19,7 @@ class ButtonMore extends StatelessWidget {
             semanticsLabel: 'Acme Logo',color: primary50,),
           Text(
             AppLocalizations.instance.translate("more"),
-            style: TextStyle(fontSize: 16, color: primary50),
+            style: const TextStyle(fontSize: 16, color: primary50),
           )
         ],
       ),

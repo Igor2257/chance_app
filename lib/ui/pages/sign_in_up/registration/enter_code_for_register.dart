@@ -115,7 +115,7 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
                 padding: const EdgeInsets.symmetric(horizontal: 28),
                 child: Text(
                   AppLocalizations.instance.translate("enterCode"),
-                  style: TextStyle(color: primaryText, fontSize: 14),
+                  style: const TextStyle(color: primaryText, fontSize: 14),
                 ),
               ),
               const Spacer(),
@@ -144,7 +144,7 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
                   color: primary1000,
                   child: Text(
                     AppLocalizations.instance.translate("complete"),
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
                         color: primary50),
@@ -157,7 +157,7 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
                       height: 40,
                       child: Text(
                         "${AppLocalizations.instance.translate("didntReceive")}?   ${secondsLeft > 0 ? "${AppLocalizations.instance.translate("resend")}: $secondsLeft${AppLocalizations.instance.translate("sec")}." : ""}",
-                        style: TextStyle(color: primaryText, fontSize: 14),
+                        style: const TextStyle(color: primaryText, fontSize: 14),
                       )),
                   SizedBox(
                       height: 40,

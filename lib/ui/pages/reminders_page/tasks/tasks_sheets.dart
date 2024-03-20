@@ -11,9 +11,9 @@ class TasksSheets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: beige100,
-          borderRadius: const BorderRadius.only(
+          borderRadius: BorderRadius.only(
             topLeft: Radius.circular(16),
             topRight: Radius.circular(16),
           )),
@@ -28,7 +28,7 @@ class TasksSheets extends StatelessWidget {
                 children: [
                   Text(
                     "${AppLocalizations.instance.translate("whatNeedsToBeDone")}?",
-                    style: TextStyle(color: primaryText, fontSize: 22),
+                    style: const TextStyle(color: primaryText, fontSize: 22),
                   ),
                   const CloseButton(),
                 ],

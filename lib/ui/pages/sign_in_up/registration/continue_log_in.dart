@@ -46,7 +46,7 @@ class _ContinueLogInState extends State<ContinueLogIn> {
               color: state.isLoading ? darkNeutral1000 : primary1000,
               child: Text(
                 widget.name,
-                style: TextStyle(
+                style: const TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 16,
                     color: primary50),

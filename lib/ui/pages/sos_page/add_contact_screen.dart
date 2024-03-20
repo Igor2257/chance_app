@@ -111,7 +111,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                 ),
                 child: Text(
                   AppLocalizations.instance.translate("saveTheContact"),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: primary50,
                     fontWeight: FontWeight.w500,
                     fontSize: 16,

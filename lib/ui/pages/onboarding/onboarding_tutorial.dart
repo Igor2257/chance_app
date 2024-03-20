@@ -111,7 +111,7 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> {
                       page == 5
                           ? AppLocalizations.instance.translate("complete")
                           : AppLocalizations.instance.translate("next"),
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w400,
                           color: primary50),
@@ -166,7 +166,7 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(90),
                         color: beigeTransparent),
-                    child: Center(
+                    child: const Center(
                       child: Icon(
                         Icons.arrow_back,
                         color: primaryText,
@@ -189,7 +189,7 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> {
                     child: Center(
                       child: Text(
                             AppLocalizations.instance.translate("miss"),
-                            style: TextStyle(fontSize: 16, color: primaryText),
+                            style: const TextStyle(fontSize: 16, color: primaryText),
                           ),
                         ),
                       ),

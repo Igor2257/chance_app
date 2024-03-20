@@ -258,7 +258,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                     MenuItems.values.map((e) {
                                       return PopupMenuItem(
                                         value: e,
-                                        child: Text(e.name,style: TextStyle(color: primary50,fontSize: 16),),
+                                        child: Text(e.name,style: const TextStyle(color: primary50,fontSize: 16),),
                                       );
                                     }).toList()),
                           ],
@@ -425,7 +425,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                   child: Container(
                                     padding:
                                         const EdgeInsets.symmetric(vertical: 4),
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                         border: Border(
                                             bottom: BorderSide(
                                                 color: darkNeutral600))),
@@ -444,7 +444,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                                   ["description"]
                                               : savedAddresses[position]
                                                   .formattedAddress,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontSize: 16, color: primaryText),
                                           maxLines: 5,
                                           overflow: TextOverflow.ellipsis,

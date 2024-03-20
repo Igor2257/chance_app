@@ -33,10 +33,11 @@ class NavigationRepository {
   Future<String?> sendMyLocation(double latitude, double longitude) async {
     String? error;
     try {
-      await Supabase.instance.client
-          .from("ward_location")
-          .update({"latitude": latitude, "longitude": longitude}).match(
-          {"myEmail": HiveCRUD().user!.email});
+      await Supabase.instance.client.from("ward_location").update({
+        "latitude": latitude,
+        "longitude": longitude,
+        "when": DateTime.now(),
+      }).match({"myEmail": HiveCRUD().user!.email});
     } catch (e) {
       error = e.toString();
     }

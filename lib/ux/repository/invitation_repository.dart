@@ -137,7 +137,7 @@ class InvitationRepository {
                     myName: invitationModel.toUserName,
                     latitude: 0,
                     longitude: 0,
-                    toUserId: invitationModel.fromUserId)
+                    toUserId: invitationModel.fromUserId, when: DateTime.now())
                     .toJson());
           });
         }

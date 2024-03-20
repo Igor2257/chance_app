@@ -34,7 +34,7 @@ class _SignInUpPageState extends State<SignInUpPage> {
                 color: primary1000,
                 child: Text(
                   AppLocalizations.instance.translate("createAccount"),
-                  style: TextStyle(color: primary50, fontSize: 16,fontWeight: FontWeight.w500),
+                  style: const TextStyle(color: primary50, fontSize: 16,fontWeight: FontWeight.w500),
                 )),
             const SizedBox(
               height: 16,
@@ -46,7 +46,7 @@ class _SignInUpPageState extends State<SignInUpPage> {
                 },
                 child: Text(
                   AppLocalizations.instance.translate("enter"),
-                  style: TextStyle(
+                  style: const TextStyle(
                       decoration: TextDecoration.underline,
                       decorationColor: primary700,
                       color: primary700,
@@ -72,7 +72,7 @@ class _SignInUpPageState extends State<SignInUpPage> {
                   children: [
                     Text(
                       AppLocalizations.instance.translate("enterWith"),
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: primary1000,
                           fontSize: 16,
                           fontWeight: FontWeight.w500),
@@ -94,7 +94,7 @@ class _SignInUpPageState extends State<SignInUpPage> {
                   children: [
                     Text(
                       AppLocalizations.instance.translate("enterWith"),
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: primary1000,
                           fontSize: 16,
                           fontWeight: FontWeight.w500),
@@ -116,7 +116,7 @@ class _SignInUpPageState extends State<SignInUpPage> {
                   children: [
                     Text(
                       AppLocalizations.instance.translate("enterWith"),
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: primary1000,
                           fontSize: 16,
                           fontWeight: FontWeight.w500),

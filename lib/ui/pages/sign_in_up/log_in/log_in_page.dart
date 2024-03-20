@@ -99,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       if (state.isLoading)
-                        CupertinoActivityIndicator(
+                        const CupertinoActivityIndicator(
                           color: primary50,
                           radius: 8,
                         ),
@@ -109,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       Text(
                         AppLocalizations.instance.translate("enter"),
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: primary50,
                             fontSize: 16,
                             fontWeight: FontWeight.w400),
@@ -132,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Text(
                       "${AppLocalizations.instance.translate("dontHaveAccount")}?",
-                      style: TextStyle(
+                      style: const TextStyle(
                           letterSpacing: 0.5,
                           color: primary700,
                           fontSize: 16,
@@ -152,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
                         },
                         child: Text(
                           AppLocalizations.instance.translate("create"),
-                          style: TextStyle(
+                          style: const TextStyle(
                               decoration: TextDecoration.underline,
                               decorationColor: primary700,
                               letterSpacing: 0.5,
@@ -174,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Center(
                       child: Text(
                         "${AppLocalizations.instance.translate("forgotPassword")}?",
-                        style: TextStyle(
+                        style: const TextStyle(
                             decoration: TextDecoration.underline,
                             decorationColor: primary700,
                             color: primary700,

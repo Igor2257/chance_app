@@ -170,7 +170,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
             icon: bitmapDescriptor,
             infoWindow: InfoWindow(
                 title: list[i].myName,
-                snippet: list[i].myEmail,
+                snippet: "${list[i].myEmail}\n\n\n${list[i].when}",
                 onTap: () {
                   mapController!.animateCamera(CameraUpdate.newLatLngZoom(
                       LatLng(list[i].latitude, list[i].longitude), 18));

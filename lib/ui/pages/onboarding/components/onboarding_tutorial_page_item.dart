@@ -25,8 +25,8 @@ class OnboardingTutorialPageItem extends StatelessWidget {
           Container(
               padding: const EdgeInsets.only(
                   top: 40, right: 16, left: 16, bottom: 0),
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(16),
                     topRight: Radius.circular(16)),
                 color: beigeBG,
@@ -35,7 +35,7 @@ class OnboardingTutorialPageItem extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(fontSize: 32, color: primaryText),
+                    style: const TextStyle(fontSize: 32, color: primaryText),
                   ),
                   const SizedBox(
                     height: 24,
@@ -43,7 +43,7 @@ class OnboardingTutorialPageItem extends StatelessWidget {
                   Text(
                     subtitle,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       color: primaryText,
                     ),

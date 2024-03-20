@@ -49,12 +49,12 @@ class _RegistrationPageState extends State<RegistrationPage>
               title: Text(
                 "${AppLocalizations.instance.translate("wannaLeaveRegistration")}?",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 24, color: primaryText),
+                style: const TextStyle(fontSize: 24, color: primaryText),
               ),
               content: Text(
                 AppLocalizations.instance.translate("whenYouCloseRegistrationDataWontBeSave"),
                 textAlign: TextAlign.center,
-                style: TextStyle(color: primaryText, fontSize: 16),
+                style: const TextStyle(color: primaryText, fontSize: 16),
               ),
               actions: [
                 Row(
@@ -65,7 +65,7 @@ class _RegistrationPageState extends State<RegistrationPage>
                       },
                       child: Text(
                         AppLocalizations.instance.translate("continue"),
-                        style: TextStyle(fontSize: 16, color: primary500),
+                        style: const TextStyle(fontSize: 16, color: primary500),
                       ),
                     ),
                     const Spacer(),
@@ -78,7 +78,7 @@ class _RegistrationPageState extends State<RegistrationPage>
                       },
                       child: Text(
                         AppLocalizations.instance.translate("complete"),
-                        style: TextStyle(fontSize: 16, color: primary500),
+                        style: const TextStyle(fontSize: 16, color: primary500),
                       ),
                     ),
                   ],

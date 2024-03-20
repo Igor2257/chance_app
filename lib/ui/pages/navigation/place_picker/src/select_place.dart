@@ -106,7 +106,7 @@ class _SelectPlaceState extends State<SelectPlace> {
                                   children: [
                                     Container(
                                       padding: const EdgeInsets.all(16),
-                                      decoration: BoxDecoration(
+                                      decoration: const BoxDecoration(
                                           color: beigeBG,
                                           border: Border(
                                               bottom: BorderSide(
@@ -123,7 +123,7 @@ class _SelectPlaceState extends State<SelectPlace> {
                                                 onTap: () {
                                                   Navigator.of(context).pop();
                                                 },
-                                                child: SizedBox(
+                                                child: const SizedBox(
                                                   height: 44,
                                                   width: 44,
                                                   child: Center(
@@ -234,7 +234,7 @@ class _SelectPlaceState extends State<SelectPlace> {
                                                   Text(
                                                     AppLocalizations.instance
                                                         .translate("useMyLocation"),
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         fontSize: 14,
                                                         color: primaryText),
                                                   ),
@@ -307,7 +307,7 @@ class _SelectPlaceState extends State<SelectPlace> {
                                                   Text(
                                                     AppLocalizations.instance
                                                         .translate("selectOnTheMap"),
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         fontSize: 14,
                                                         color: primaryText),
                                                   ),
@@ -324,7 +324,7 @@ class _SelectPlaceState extends State<SelectPlace> {
                                     ),
                                     Container(
                                       padding: const EdgeInsets.all(16),
-                                      decoration: BoxDecoration(
+                                      decoration: const BoxDecoration(
                                           color: beigeBG,
                                           border: Border(
                                               top: BorderSide(
@@ -339,7 +339,7 @@ class _SelectPlaceState extends State<SelectPlace> {
                                                 .translate("similarToYourQuery")
                                                 : AppLocalizations.instance
                                                 .translate("recent"),
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontSize: 18,
                                                 color: primaryText,
                                                 fontWeight: FontWeight.w500),
@@ -389,7 +389,7 @@ class _SelectPlaceState extends State<SelectPlace> {
                                                   child: Container(
                                                     padding: const EdgeInsets.symmetric(
                                                         vertical: 4),
-                                                    decoration: BoxDecoration(
+                                                    decoration: const BoxDecoration(
                                                         border: Border(
                                                             bottom: BorderSide(
                                                                 color:
@@ -413,7 +413,7 @@ class _SelectPlaceState extends State<SelectPlace> {
                                                                   : savedAddresses[position]
                                                                   .formattedAddress ??
                                                                   "",
-                                                              style: TextStyle(
+                                                              style: const TextStyle(
                                                                   fontSize: 16,
                                                                   color: primaryText),
                                                               maxLines: 5,
@@ -438,7 +438,7 @@ class _SelectPlaceState extends State<SelectPlace> {
                   return const SizedBox();
                 });
           });}
-      return Center(
+      return const Center(
         child: CupertinoActivityIndicator(
           animating: true,
           radius: 10,

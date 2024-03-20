@@ -117,7 +117,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                         const SizedBox(width: 8),
                         Text(
                           AppLocalizations.instance.translate("addContact"),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: primary800,
@@ -176,7 +176,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                         ),
                         child: Text(
                           AppLocalizations.instance.translate("saveTheGroup"),
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: primary50,
                             fontWeight: FontWeight.w500,
                             fontSize: 16,

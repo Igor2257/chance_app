@@ -50,7 +50,7 @@ class _BuildRouteBottomSheetState extends State<BuildRouteBottomSheet> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   direction: Axis.horizontal,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.location_on_outlined,
                       color: primaryText,
                     ),
@@ -61,7 +61,7 @@ class _BuildRouteBottomSheetState extends State<BuildRouteBottomSheet> {
                         child: Text(
                       state.firstPickResult?.formattedAddress ??
                           AppLocalizations.instance.translate("addDeparturePoint"),
-                      style: TextStyle(color: primaryText, fontSize: 16),
+                      style: const TextStyle(color: primaryText, fontSize: 16),
                       maxLines: 5,
                     )),
                   ],
@@ -89,7 +89,7 @@ class _BuildRouteBottomSheetState extends State<BuildRouteBottomSheet> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   direction: Axis.horizontal,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.location_on_outlined,
                       color: primaryText,
                     ),
@@ -100,7 +100,7 @@ class _BuildRouteBottomSheetState extends State<BuildRouteBottomSheet> {
                         child: Text(
                       state.secondPickResult?.formattedAddress ??
                           AppLocalizations.instance.translate("addDeparturePoint"),
-                      style: TextStyle(color: primaryText, fontSize: 16),
+                      style: const TextStyle(color: primaryText, fontSize: 16),
                       maxLines: 5,
                     )),
                   ],
@@ -126,7 +126,7 @@ class _BuildRouteBottomSheetState extends State<BuildRouteBottomSheet> {
                     : darkNeutral400,
                 child: Text(
                   AppLocalizations.instance.translate("buildRoute"),
-                  style: TextStyle(color: primary50, fontSize: 16),
+                  style: const TextStyle(color: primary50, fontSize: 16),
                 )),
           ],
         ),

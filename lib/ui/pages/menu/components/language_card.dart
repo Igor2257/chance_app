@@ -23,10 +23,10 @@ class LanguageCard extends StatelessWidget {
             ),
             Text(
               title,
-              style: TextStyle(fontSize: 16,color: primaryText),
+              style: const TextStyle(fontSize: 16,color: primaryText),
             ),
             const Spacer(),
-             Icon(
+             const Icon(
               Icons.arrow_forward,
               size: 30,
                color: darkNeutral600,

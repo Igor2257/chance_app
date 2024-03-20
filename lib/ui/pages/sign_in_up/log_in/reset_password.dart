@@ -75,7 +75,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                 padding: const EdgeInsets.only(left: 16),
                 child: Text(
                   errorText,
-                  style: TextStyle(fontSize: 14, color: red900),
+                  style: const TextStyle(fontSize: 14, color: red900),
                 ),
               ),
             const Spacer(),
@@ -84,7 +84,7 @@ class _ResetPasswordState extends State<ResetPassword> {
               color: primary1000,
               child: Text(
                 AppLocalizations.instance.translate("confirm"),
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 16,
                     color: primary50,
                     fontWeight: FontWeight.w500),
@@ -104,7 +104,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                                     .translate("letterHasBeenSend"),
                                 textAlign: TextAlign.center,
                                 style:
-                                    TextStyle(color: primaryText, fontSize: 24),
+                                    const TextStyle(color: primaryText, fontSize: 24),
                               ),
                           ),
                           content: Column(
@@ -112,7 +112,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                             children: [
                               Text(
                                   "${AppLocalizations.instance.translate("checkYourMailPart1")} ${editingController.text}, ${AppLocalizations.instance.translate("checkYourMailPart2")}",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: primaryText, fontSize: 16),
                                   textAlign: TextAlign.center,
                                 ),
@@ -130,7 +130,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                                                             .text)),
                                             (route) => true);
                                       },
-                                      child: Text(
+                                      child: const Text(
                                         "OK",
                                         style: TextStyle(
                                             color: primary700, fontSize: 22),
@@ -152,7 +152,7 @@ class _ResetPasswordState extends State<ResetPassword> {
               AppLocalizations.instance
                   .translate("weWillSentLetterOnYourEmail"),
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                   color: primary700,
                   fontSize: 16,
                   decoration: TextDecoration.underline,

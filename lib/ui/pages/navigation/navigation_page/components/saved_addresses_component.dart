@@ -88,7 +88,7 @@ class _SavedAddressesComponentState extends State<SavedAddressesComponent> {
                   child: Text(
                     "${savedAddresses[position].addressComponents![1].longName}, ${savedAddresses[position].addressComponents!.first.longName}",
                     maxLines: 2,
-                    style: TextStyle(fontSize: 14, color: primaryText),
+                    style: const TextStyle(fontSize: 14, color: primaryText),
                   ),
                 ),
               ),

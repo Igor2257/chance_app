@@ -136,7 +136,7 @@ class _AddWardState extends State<AddWard> {
                       color: primary1000,
                       child: Text(
                         AppLocalizations.instance.translate("add"),
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16,
                             color: primary50,
                             fontWeight: FontWeight.w500),
@@ -151,7 +151,7 @@ class _AddWardState extends State<AddWard> {
             decoration: const BoxDecoration(color: Colors.black26),
             height: size.height,
             width: size.width,
-            child: Center(
+            child: const Center(
               child: CupertinoActivityIndicator(
                 color: primary500,
                 radius: 50,

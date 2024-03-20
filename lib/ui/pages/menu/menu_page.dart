@@ -53,7 +53,7 @@ class _MenuPageState extends State<MenuPage> {
         centerTitle: true,
         title: Text(
           AppLocalizations.instance.translate("menu"),
-          style: TextStyle(fontSize: 22, color: primaryText),
+          style: const TextStyle(fontSize: 22, color: primaryText),
         ),
         leading: BackButton(
           onPressed: () {
@@ -69,7 +69,7 @@ class _MenuPageState extends State<MenuPage> {
           children: [
             Text(
               AppLocalizations.instance.translate("account"),
-              style: TextStyle(fontSize: 16, color: darkNeutral800),
+              style: const TextStyle(fontSize: 16, color: darkNeutral800),
             ),
             RoundedButton(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -84,12 +84,12 @@ class _MenuPageState extends State<MenuPage> {
                   children: [
                     Text(
                       AppLocalizations.instance.translate("myInfo"),
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 16,
                           color: primaryText,
                           fontWeight: FontWeight.w500),
                     ),
-                    Icon(
+                    const Icon(
                       Icons.arrow_forward_ios_rounded,
                       color: primaryText,
                     )
@@ -118,7 +118,7 @@ class _MenuPageState extends State<MenuPage> {
                     Expanded(
                         child: Text(
                       AppLocalizations.instance.translate("buyAdblocker"),
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: primary50,
                           fontSize: 16,
                           fontWeight: FontWeight.w400),
@@ -132,7 +132,7 @@ class _MenuPageState extends State<MenuPage> {
             ),
             Text(
               AppLocalizations.instance.translate("aboutTheApplication"),
-              style: TextStyle(fontSize: 16, color: darkNeutral800),
+              style: const TextStyle(fontSize: 16, color: darkNeutral800),
             ),
             RoundedButton(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -145,12 +145,12 @@ class _MenuPageState extends State<MenuPage> {
                   children: [
                     Text(
                       AppLocalizations.instance.translate("privacyPolicy"),
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 16,
                           color: primaryText,
                           fontWeight: FontWeight.w500),
                     ),
-                    Icon(
+                    const Icon(
                       Icons.arrow_forward_ios_rounded,
                       color: primaryText,
                     )
@@ -169,12 +169,12 @@ class _MenuPageState extends State<MenuPage> {
                   children: [
                     Text(
                       AppLocalizations.instance.translate("changeLanguage"),
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 16,
                           color: primaryText,
                           fontWeight: FontWeight.w500),
                     ),
-                    Icon(
+                    const Icon(
                       Icons.arrow_forward_ios_rounded,
                       color: primaryText,
                     )
@@ -195,7 +195,7 @@ class _MenuPageState extends State<MenuPage> {
                   color: primary1000,
                   child: Text(
                     AppLocalizations.instance.translate("logOut"),
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 16,
                         color: primary50,
                         fontWeight: FontWeight.w500),

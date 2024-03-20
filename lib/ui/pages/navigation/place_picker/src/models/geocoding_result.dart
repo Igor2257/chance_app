@@ -14,12 +14,12 @@ part 'geocoding_result.g.dart';
 class GeocodingResult with _$GeocodingResult {
   factory GeocodingResult({
     @HiveField(0) required List<String> types,
-    @HiveField(1) required String? placeId,
-    @HiveField(2) @Default(null) String? formattedAddress,
-    @HiveField(3) @Default([]) List<AddressComponent> addressComponents,
-    @HiveField(4) @Default([]) List<String> postcodeLocalities,
+    @HiveField(1)@JsonKey(name: "place_id") required String? placeId,
+    @HiveField(2)@JsonKey(name: "formatted_address") @Default(null) String? formattedAddress,
+    @HiveField(3)@JsonKey(name: "address_components") @Default([]) List<AddressComponent> addressComponents,
+    @HiveField(4)@JsonKey(name: "postcode_localities") @Default([]) List<String> postcodeLocalities,
     @HiveField(5) @Default(null) Geometry? geometry,
-    @HiveField(6) @Default(false) bool partialMatch,
+    @HiveField(6)@JsonKey(name: "partial_match") @Default(false) bool partialMatch,
   }) = _GeocodingResult;
 
   factory GeocodingResult.fromJson(Map<String, dynamic> json) => _$GeocodingResultFromJson(json);

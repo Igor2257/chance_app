@@ -92,14 +92,14 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
                 height: 48,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 alignment: Alignment.center,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     border: Border(bottom: BorderSide(color: darkNeutral600))),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       state.taskTitle,
-                      style: TextStyle(fontSize: 16, color: primaryText),
+                      style: const TextStyle(fontSize: 16, color: primaryText),
                     ),
                     const Icon(Icons.arrow_forward_ios),
                   ],
@@ -137,7 +137,7 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
                                 taskModel.date.year == now.year)
                         ? AppLocalizations.instance.translate("today")
                         : "${taskModel.date.day.toString().padLeft(2, "0")}.${taskModel.date.month.toString().padLeft(2, "0")}.${taskModel.date.year}",
-                    style: TextStyle(fontSize: 14, color: primaryText),
+                    style: const TextStyle(fontSize: 14, color: primaryText),
                   ),
                 ],
               ),

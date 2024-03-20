@@ -96,7 +96,7 @@ class _InputRemindersLayoutState extends State<InputRemindersLayout> {
                         textEditingController.text = "";
                         widget.clearData();
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.cancel,
                         color: beige500,
                       )),
@@ -108,7 +108,7 @@ class _InputRemindersLayoutState extends State<InputRemindersLayout> {
                 padding: const EdgeInsets.only(left: 16),
                 child: Text(
                   errorText,
-                  style: TextStyle(fontSize: 14, color: red900),
+                  style: const TextStyle(fontSize: 14, color: red900),
                 ),
               ),
           ],

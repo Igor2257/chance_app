@@ -31,7 +31,7 @@ class _EnterAcceptCodeState extends State<EnterAcceptCode> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text(
+            const Text(
               "Введенням коду ви надаєте доступ відстежувати ваше місцезнаходження",
               style: TextStyle(
                   fontSize: 16,
@@ -42,7 +42,7 @@ class _EnterAcceptCodeState extends State<EnterAcceptCode> {
             const SizedBox(
               height: 40,
             ),
-            Text(
+            const Text(
               "Введіть код підтвердження",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 22, color: primaryText),
@@ -75,13 +75,13 @@ class _EnterAcceptCodeState extends State<EnterAcceptCode> {
             if (isError)
               Text(
                 error ?? "",
-                style: TextStyle(fontSize: 16, color: red900),
+                style: const TextStyle(fontSize: 16, color: red900),
               ),
             const Spacer(),
             RoundedButton(
                 onPress: checkOnValidCode,
                 color: primary1000,
-                child: Text(
+                child: const Text(
                   "Підтвердити",
                   style: TextStyle(
                       fontWeight: FontWeight.w500,

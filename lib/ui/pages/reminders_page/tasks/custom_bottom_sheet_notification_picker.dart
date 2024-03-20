@@ -87,7 +87,7 @@ class _CustomBottomSheetNotificationPickerState
               Text(
                 AppLocalizations.instance.translate("reminder"),
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 24, color: primaryText),
+                style: const TextStyle(fontSize: 24, color: primaryText),
               ),
               ListView.builder(
                   padding: const EdgeInsets.all(16),
@@ -121,7 +121,7 @@ class _CustomBottomSheetNotificationPickerState
                             ),
                             const Spacer(),
                             if (isSelected)
-                              Icon(
+                              const Icon(
                                 Icons.done,
                                 color: primary50,
                               )
@@ -141,7 +141,7 @@ class _CustomBottomSheetNotificationPickerState
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Text(
                         AppLocalizations.instance.translate("cancel"),
-                        style: TextStyle(fontSize: 22, color: primary700),
+                        style: const TextStyle(fontSize: 22, color: primary700),
                       ),
                     ),
                   ),
@@ -152,8 +152,8 @@ class _CustomBottomSheetNotificationPickerState
                     onTap: () {
                       Navigator.of(context).pop();
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
                       child: Text(
                         "OK",
                         style: TextStyle(fontSize: 22, color: primary700),

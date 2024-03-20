@@ -106,7 +106,7 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
                             horizontal: 44, vertical: 10),
                         child: Text(
                           AppLocalizations.instance.translate("delete"),
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: primary50,
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
@@ -220,7 +220,7 @@ class _ContainerButtonWithCheckboxState
             ),
             Text(
               widget.text,
-              style: TextStyle(
+              style: const TextStyle(
                 color: primary50,
                 fontWeight: FontWeight.w400,
                 fontSize: 16,

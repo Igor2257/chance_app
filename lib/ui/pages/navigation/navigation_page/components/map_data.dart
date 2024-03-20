@@ -199,7 +199,7 @@ Future<BitmapDescriptor?> getMarkerIconWithText(String text) async {
       borderPaint);
   final textSpan = TextSpan(
       text: text,
-      style: TextStyle(
+      style: const TextStyle(
         color: primaryText,
         fontSize: 16.0,
       ));

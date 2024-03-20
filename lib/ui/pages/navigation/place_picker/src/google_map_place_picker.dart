@@ -347,12 +347,12 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
     } else if (state == PinState.Idle) {
       return Stack(
         children: <Widget>[
-           Center(
+           const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Icon(Icons.place, size: 36, color: red900),
-                const SizedBox(height: 42),
+                SizedBox(height: 42),
               ],
             ),
           ),
@@ -371,12 +371,12 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
     } else {
       return Stack(
         children: <Widget>[
-          Center(
+          const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 AnimatedPin(child: Icon(Icons.place, size: 36, color: red900)),
-                const SizedBox(height: 42),
+                SizedBox(height: 42),
               ],
             ),
           ),
@@ -615,11 +615,11 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                 margin: const EdgeInsets.all(10),
                 width: 70,
                 height: 70,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(90)),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(90)),
                   color: beigeTransparent,
                 ),
-                child: Icon(Icons.location_searching, color: primaryText),
+                child: const Icon(Icons.location_searching, color: primaryText),
               ),
             ),
           ],

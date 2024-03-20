@@ -16,7 +16,7 @@ class InputMyInfoLayout extends StatelessWidget {
           padding: const EdgeInsets.only(left: 16),
           child: Text(
             title,
-            style: TextStyle(fontSize: 14, color: primaryText),
+            style: const TextStyle(fontSize: 14, color: primaryText),
           ),
         ),
         Container(
@@ -26,7 +26,7 @@ class InputMyInfoLayout extends StatelessWidget {
               borderRadius: BorderRadius.circular(16)),
           child: TextFormField(
             enabled: false,
-            style: TextStyle(fontSize: 16, color: primaryText),
+            style: const TextStyle(fontSize: 16, color: primaryText),
             decoration: const InputDecoration(
               border: InputBorder.none,
             ),

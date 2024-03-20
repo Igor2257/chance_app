@@ -19,7 +19,7 @@ class ButtonMain extends StatelessWidget {
           ),
           Text(
             AppLocalizations.instance.translate("main"),
-            style: TextStyle(fontSize: 16, color: primary200),
+            style: const TextStyle(fontSize: 16, color: primary200),
           )
         ],
       ),

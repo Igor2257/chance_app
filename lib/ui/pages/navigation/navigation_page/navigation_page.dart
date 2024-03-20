@@ -49,7 +49,7 @@ class _NavigationPageState extends State<NavigationPage>
                                     spreadRadius: 2,
                                     blurStyle: BlurStyle.normal)
                               ]),
-                          child: Center(
+                          child: const Center(
                             child: Icon(
                               Icons.arrow_back,
                               color: primaryText,

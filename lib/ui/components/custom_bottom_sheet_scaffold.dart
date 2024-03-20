@@ -21,9 +21,9 @@ class CustomBottomSheetScaffold extends StatelessWidget {
     final size = MediaQuery.sizeOf(context);
     return Container(
       height: size.height / 2.2,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: beige100,
-        borderRadius: const BorderRadius.only(
+        borderRadius: BorderRadius.only(
           topRight: Radius.circular(20),
           topLeft: Radius.circular(20),
         ),
@@ -36,7 +36,7 @@ class CustomBottomSheetScaffold extends StatelessWidget {
             const SizedBox(height: 20),
             if (title != null)
               DefaultTextStyle(
-                style: TextStyle(fontSize: 24, color: primaryText),
+                style: const TextStyle(fontSize: 24, color: primaryText),
                 child: title!,
               ),
             Expanded(child: body),
@@ -49,15 +49,15 @@ class CustomBottomSheetScaffold extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
                       AppLocalizations.instance.translate("cancel"),
-                      style: TextStyle(fontSize: 22, color: primary700),
+                      style: const TextStyle(fontSize: 22, color: primary700),
                     ),
                   ),
                 ),
                 const SizedBox(width: 24),
                 GestureDetector(
                   onTap: onOKPressed,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
                       "OK",
                       style: TextStyle(fontSize: 22, color: primary700),

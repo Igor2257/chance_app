@@ -25,7 +25,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             const SizedBox(height: 24.0),
             Text(AppLocalizations.instance.translate("onboardingTitle"),
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 28.0, color: primaryText)),
+                style: const TextStyle(fontSize: 28.0, color: primaryText)),
             const Spacer(),
             RoundedButton(
               onPress: ()async{
@@ -35,7 +35,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 },
                 color: primary1000,
                 child: Text(AppLocalizations.instance.translate("letsStart"),
-                    style: TextStyle(fontSize: 22.0, color: primary50))),
+                    style: const TextStyle(fontSize: 22.0, color: primary50))),
             const SizedBox(height: 40.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -43,7 +43,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 SizedBox(
                   height: 44,
                   child: Text("${AppLocalizations.instance.translate("alreadyHaveAccount")}?",
-                      style: TextStyle(fontSize: 16.0, color: primary700)),
+                      style: const TextStyle(fontSize: 16.0, color: primary700)),
                 ),
                 const SizedBox(width: 10),
                 GestureDetector(
@@ -55,7 +55,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   child: SizedBox(
                     height: 44,
                     child: Text(AppLocalizations.instance.translate("enter"),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16.0,
                           color: primary700,
                           decorationColor: primary700,

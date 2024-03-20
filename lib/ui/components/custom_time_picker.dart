@@ -78,7 +78,7 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
           selectedTime = date;
         },
         use24hFormat: true,
-        textStyle: TextStyle(fontSize: 28, color: primary800),
+        textStyle: const TextStyle(fontSize: 28, color: primary800),
       ),
       onOKPressed: () {
         Navigator.of(context).pop(selectedTime);

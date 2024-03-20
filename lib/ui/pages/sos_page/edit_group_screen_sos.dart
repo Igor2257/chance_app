@@ -124,7 +124,7 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
                               Text(
                                 AppLocalizations.instance
                                     .translate("deleteContact"),
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   color: primary800,
@@ -158,7 +158,7 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
                         ),
                         child: Text(
                           AppLocalizations.instance.translate("saveChanges"),
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: primary50,
                             fontWeight: FontWeight.w500,
                             fontSize: 16,

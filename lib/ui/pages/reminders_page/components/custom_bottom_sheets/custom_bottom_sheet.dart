@@ -35,7 +35,7 @@ class CustomBottomSheet extends StatelessWidget {
                           const SizedBox(height: 4),
                           Text(
                             item.toLocalizedString(),
-                            style: TextStyle(fontSize: 16, color: primary50),
+                            style: const TextStyle(fontSize: 16, color: primary50),
                           ),
                         ],
                       ),

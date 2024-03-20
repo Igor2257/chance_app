@@ -34,7 +34,7 @@ class GivePermission extends StatelessWidget {
             children: [
               Text(
                 AppLocalizations.instance.translate("iGivePermission"),
-                style: TextStyle(color: primaryText),
+                style: const TextStyle(color: primaryText),
                 maxLines: 5,
                 textAlign: TextAlign.justify,
               ),
@@ -44,7 +44,7 @@ class GivePermission extends StatelessWidget {
                     onTap: () {},
                     child: Text(
                       AppLocalizations.instance.translate("privacyPolicy"),
-                      style: TextStyle(color: primary700),
+                      style: const TextStyle(color: primary700),
                     ),
                   )),
             ],

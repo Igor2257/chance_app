@@ -12,8 +12,8 @@ part 'address_component.g.dart';
 class AddressComponent with _$AddressComponent {
   factory AddressComponent({
     @HiveField(0) required List<String> types,
-    @HiveField(1) required String longName,
-    @HiveField(2) required String shortName,
+    @HiveField(1)@JsonKey(name: "long_name") required String longName,
+    @HiveField(2)@JsonKey(name: "short_name") required String shortName,
   }) = _AddressComponent;
 
   factory AddressComponent.fromJson(Map<String, dynamic> json) => _$AddressComponentFromJson(json);

@@ -97,7 +97,7 @@ class _ResetPasswordEnterCodeState extends State<ResetPasswordEnterCode> {
               padding: const EdgeInsets.symmetric(horizontal: 28),
               child: Text(
                 AppLocalizations.instance.translate("enterCode"),
-                style: TextStyle(color: primaryText, fontSize: 14),
+                style: const TextStyle(color: primaryText, fontSize: 14),
               ),
             ),
             const Spacer(),
@@ -117,7 +117,7 @@ class _ResetPasswordEnterCodeState extends State<ResetPasswordEnterCode> {
                 color: primary1000,
                 child: Text(
                   AppLocalizations.instance.translate("confirm"),
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
                       color: primary50),
@@ -130,7 +130,7 @@ class _ResetPasswordEnterCodeState extends State<ResetPasswordEnterCode> {
                     height: 40,
                     child: Text(
                       "${AppLocalizations.instance.translate("didntReceive")}?   ${secondsLeft > 0 ? "${AppLocalizations.instance.translate("resend")}: $secondsLeft${AppLocalizations.instance.translate("sec")}." : ""}",
-                      style: TextStyle(color: primaryText, fontSize: 14),
+                      style: const TextStyle(color: primaryText, fontSize: 14),
                     )),
                 SizedBox(
                     height: 40,

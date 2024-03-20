@@ -133,7 +133,7 @@ class _InputRegisterLayoutState extends State<InputRegisterLayout> {
                 padding: const EdgeInsets.only(left: 16),
                 child: Text(
                   errorText!,
-                  style: TextStyle(fontSize: 14, color: red900),
+                  style: const TextStyle(fontSize: 14, color: red900),
                 ),
               ),
           ],
@@ -233,7 +233,7 @@ class _InputRegisterLayoutState extends State<InputRegisterLayout> {
                     if (widget.useCancelButton)
                       IconButton(
                           onPressed: () {},
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.cancel,
                             color: beige500,
                           )),
@@ -245,7 +245,7 @@ class _InputRegisterLayoutState extends State<InputRegisterLayout> {
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
                     errorText!,
-                    style: TextStyle(fontSize: 14, color: red900),
+                    style: const TextStyle(fontSize: 14, color: red900),
                   ),
                 ),
             ],

@@ -17,9 +17,9 @@ class _SosButtonState extends State<SosButton> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Ink(
-      decoration: ShapeDecoration(
+      decoration: const ShapeDecoration(
         color: red900,
-        shape: const CircleBorder(),
+        shape: CircleBorder(),
       ),
       child: InkWell(
         canRequestFocus: true,
@@ -39,7 +39,7 @@ class _SosButtonState extends State<SosButton> {
           width: size.width / 4,
           height: size.width / 4,
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(67)),
-          child: Center(
+          child: const Center(
             child: Text(
               "SOS",
               style: TextStyle(

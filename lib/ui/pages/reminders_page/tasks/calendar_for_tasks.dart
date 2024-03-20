@@ -32,7 +32,7 @@ final DateTime now=DateTime.now();
               children: [
                 Text(
                   "${getMonthName(state.dateForSwipingForTasks?.month ?? 0)}, ${state.dateForSwipingForTasks?.year ?? ""}",
-                  style: TextStyle(fontSize: 22, color: primaryText),
+                  style: const TextStyle(fontSize: 22, color: primaryText),
                 ),
                 const Spacer(),
                 IconButton(
@@ -40,13 +40,13 @@ final DateTime now=DateTime.now();
                       BlocProvider.of<AddTaskBloc>(context)
                           .add(ChangeMonthForTasks(sideSwipe: SideSwipe.left));
                     },
-                    icon: Icon(Icons.arrow_back_ios, color: primaryText)),
+                    icon: const Icon(Icons.arrow_back_ios, color: primaryText)),
                 IconButton(
                     onPressed: () {
                       BlocProvider.of<AddTaskBloc>(context)
                           .add(ChangeMonthForTasks(sideSwipe: SideSwipe.right));
                     },
-                    icon: Icon(Icons.arrow_forward_ios, color: primaryText)),
+                    icon: const Icon(Icons.arrow_forward_ios, color: primaryText)),
 
               ],
             ),
@@ -63,7 +63,7 @@ final DateTime now=DateTime.now();
                       height: 26,
                       child: Text(
                         AppLocalizations.instance.translate("mon").toUpperCase(),
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: primaryText,
                             fontSize: 16,
                             letterSpacing: 0.15),
@@ -75,7 +75,7 @@ final DateTime now=DateTime.now();
                       height: 26,
                       child: Text(
                         AppLocalizations.instance.translate("tue").toUpperCase(),
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: primaryText,
                             fontSize: 16,
                             letterSpacing: 0.15),
@@ -87,7 +87,7 @@ final DateTime now=DateTime.now();
                       height: 26,
                       child: Text(
                         AppLocalizations.instance.translate("wed").toUpperCase(),
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: primaryText,
                             fontSize: 16,
                             letterSpacing: 0.15),
@@ -99,7 +99,7 @@ final DateTime now=DateTime.now();
                       height: 26,
                       child: Text(
                         AppLocalizations.instance.translate("thu").toUpperCase(),
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: primaryText,
                             fontSize: 16,
                             letterSpacing: 0.15),
@@ -111,7 +111,7 @@ final DateTime now=DateTime.now();
                       height: 26,
                       child: Text(
                         AppLocalizations.instance.translate("fri").toUpperCase(),
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: primaryText,
                             fontSize: 16,
                             letterSpacing: 0.15),
@@ -123,7 +123,7 @@ final DateTime now=DateTime.now();
                       height: 26,
                       child: Text(
                         AppLocalizations.instance.translate("sat").toUpperCase(),
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: primaryText,
                             fontSize: 16,
                             letterSpacing: 0.15),
@@ -135,7 +135,7 @@ final DateTime now=DateTime.now();
                       height: 26,
                       child: Text(
                         AppLocalizations.instance.translate("sun").toUpperCase(),
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: primaryText,
                             fontSize: 16,
                             letterSpacing: 0.15),
@@ -143,7 +143,7 @@ final DateTime now=DateTime.now();
                     ),
                   ],
                 ),
-                Divider(
+                const Divider(
                   color: beige300,
                 ),
                 Wrap(

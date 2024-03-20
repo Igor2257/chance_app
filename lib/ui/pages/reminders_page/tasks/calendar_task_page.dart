@@ -41,7 +41,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
           centerTitle: true,
           title: Text(
             "${AppLocalizations.instance.translate("whenYouNeedToDoIt")}?",
-            style: TextStyle(fontSize: 22, color: primaryText),
+            style: const TextStyle(fontSize: 22, color: primaryText),
           ),
           leading: IconButton(
               onPressed: () {
@@ -87,7 +87,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                         .add(AddTask(taskModel));
                   }
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.done,
                   color: primaryText,
                 )),
@@ -100,8 +100,8 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
             CalendarForTasks(),
             Container(
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(16),
                       topRight: Radius.circular(16)),
                   color: darkNeutral600),
@@ -135,7 +135,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                           ),
                           Text(
                             AppLocalizations.instance.translate("deadline"),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 16,
                                 color: primary50,
                                 fontWeight: FontWeight.w500),
@@ -146,9 +146,9 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                                 ? "${deadlineForTask.hour.toString().padLeft(2, "0")}:${deadlineForTask.minute.toString().padLeft(2, "0")}"
                                 : AppLocalizations.instance
                                     .translate("noDueDate"),
-                            style: TextStyle(fontSize: 16, color: primary50),
+                            style: const TextStyle(fontSize: 16, color: primary50),
                           ),
-                          Icon(Icons.arrow_forward_ios, color: primary50)
+                          const Icon(Icons.arrow_forward_ios, color: primary50)
                         ],
                       )),
                   const SizedBox(
@@ -175,7 +175,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                           ),
                           Text(
                             AppLocalizations.instance.translate("reminder"),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 16,
                                 color: primary50,
                                 fontWeight: FontWeight.w500),
@@ -184,9 +184,9 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                           Text(
                             state.notifications[NotificationsBefore.values
                                 .indexOf(state.newNotificationsBefore)],
-                            style: TextStyle(fontSize: 16, color: primary50),
+                            style: const TextStyle(fontSize: 16, color: primary50),
                           ),
-                          Icon(Icons.arrow_forward_ios, color: primary50)
+                          const Icon(Icons.arrow_forward_ios, color: primary50)
                         ],
                       )),
                   SizedBox(

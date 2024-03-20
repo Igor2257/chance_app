@@ -5,7 +5,6 @@ import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/components/sos_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
-import 'package:chance_app/ux/repository/tasks_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -51,9 +50,9 @@ class _MainPageState extends State<MainPage> {
                               Text(
                                 AppLocalizations.instance.translate("tasks"),textAlign: TextAlign.center,
                                 style:
-                                    TextStyle(fontSize: 16, color: primaryText),
+                                    const TextStyle(fontSize: 16, color: primaryText),
                               ),
-                              Text(
+                              const Text(
                                 'remoteMessage.data["message"]',
                               textAlign: TextAlign.center,
                               style:
@@ -87,7 +86,7 @@ class _MainPageState extends State<MainPage> {
                                                 BorderRadius.circular(90),
                                             border:
                                                 Border.all(color: primary300)),
-                                        child: Center(
+                                        child: const Center(
                                           child: Icon(
                                             Icons.close,
                                             color: primary50,
@@ -99,7 +98,7 @@ class _MainPageState extends State<MainPage> {
                                       ),
                                       Text(
                                         AppLocalizations.instance.translate("miss"),textAlign: TextAlign.center,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color: primary50, fontSize: 16),
                                       ),
                                     ],
@@ -135,7 +134,7 @@ class _MainPageState extends State<MainPage> {
                                             borderRadius:
                                                 BorderRadius.circular(90),
                                             color: primary300),
-                                        child: Center(
+                                        child: const Center(
                                           child: Icon(
                                             Icons.done,
                                             color: primaryText,
@@ -147,7 +146,7 @@ class _MainPageState extends State<MainPage> {
                                       ),
                                       Text(
                                         AppLocalizations.instance.translate("done"),textAlign: TextAlign.center,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color: primary50, fontSize: 16),
                                       ),
                                     ],
@@ -199,7 +198,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                     text: Text(
                       AppLocalizations.instance.translate("reminder"),
-                      style: TextStyle(color: primaryText),
+                      style: const TextStyle(color: primaryText),
                     ),
                     width: cardWidth,
                     margin: const EdgeInsets.only(bottom: 8, top: 8, right: 8),
@@ -215,7 +214,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                     text: Text(
                       AppLocalizations.instance.translate("navigation"),
-                      style: TextStyle(color: primaryText),
+                      style: const TextStyle(color: primaryText),
                     ),
                     width: cardWidth,
                     margin: const EdgeInsets.only(bottom: 8, top: 8, left: 8),
@@ -239,7 +238,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                     text: Text(
                       AppLocalizations.instance.translate("communication"),
-                      style: TextStyle(color: primaryText),
+                      style: const TextStyle(color: primaryText),
                     ),
                     width: cardWidth,
                     margin: const EdgeInsets.only(bottom: 8, top: 8, right: 8),
@@ -253,7 +252,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                     text: Text(
                       AppLocalizations.instance.translate("appointmentWithDoctor"),
-                      style: TextStyle(color: primaryText),
+                      style: const TextStyle(color: primaryText),
                     ),
                     width: cardWidth,
                     margin: const EdgeInsets.only(bottom: 8, top: 8, left: 8),
@@ -271,7 +270,7 @@ class _MainPageState extends State<MainPage> {
                 ),
                 text: Text(
                   AppLocalizations.instance.translate("jobSearch"),
-                  style: TextStyle(color: primaryText),
+                  style: const TextStyle(color: primaryText),
                 ),
                 width: cardWidth,
                 margin: const EdgeInsets.only(bottom: 8, top: 8),
@@ -303,12 +302,12 @@ class _MainPageState extends State<MainPage> {
                   title: Text(
                     AppLocalizations.instance.translate("allowTheAppToUseTheLocation"),
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 24, color: primaryText),
+                    style: const TextStyle(fontSize: 24, color: primaryText),
                   ),
                   content: Text(
                     AppLocalizations.instance.translate("forTheAppToWorkCorrectlyYouNeedToAllowThisPermissionToBeUsed"),
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16, color: primaryText),
+                    style: const TextStyle(fontSize: 16, color: primaryText),
                   ),
                   actions: [
                     RoundedButton(
@@ -324,7 +323,7 @@ class _MainPageState extends State<MainPage> {
                       color: primary1000,
                       child: Text(
                         AppLocalizations.instance.translate("goTo"),
-                        style: TextStyle(color: primary50),
+                        style: const TextStyle(color: primary50),
                       ),
                     ),
                   ],

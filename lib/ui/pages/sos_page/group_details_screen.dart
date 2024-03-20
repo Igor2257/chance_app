@@ -72,7 +72,7 @@ class ContainerButton extends StatelessWidget {
         title: Center(
           child: Text(
             text,
-            style: TextStyle(
+            style: const TextStyle(
               color: primary50,
               fontWeight: FontWeight.w400,
               fontSize: 16,

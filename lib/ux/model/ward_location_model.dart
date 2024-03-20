@@ -16,6 +16,7 @@ class WardLocationModel with _$WardLocationModel {
     @HiveField(3) required double latitude,
     @HiveField(4) required double longitude,
     @HiveField(5) required String toUserId,
+    @HiveField(6) required DateTime when,
   }) = _WardLocationModel;
 
   factory WardLocationModel.fromJson(Map<String, dynamic> json) =>
