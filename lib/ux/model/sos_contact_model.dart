@@ -14,6 +14,7 @@ class SosContactModel with _$SosContactModel {
     @HiveField(2) required String phone,
     @HiveField(3) @Default("") String groupName,
     @HiveField(4) @Default("") String id,
+    @HiveField(5) @Default("") String contactsId,
   }) = _ContactModel;
 
   factory SosContactModel.fromJson(Map<String, dynamic> json) =>

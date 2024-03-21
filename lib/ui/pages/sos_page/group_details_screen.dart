@@ -1,6 +1,7 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class GroupDetailsScreen extends StatelessWidget {
   final SosGroupModel group;
@@ -35,8 +36,10 @@ class GroupDetailsScreen extends StatelessWidget {
           itemCount: group.contacts.length,
           itemBuilder: (context, index) {
             final contact = group.contacts[index];
+
             return ContainerButton(
-              text: contact.name,
+              contactName: contact.name,
+              contactPhone: contact.phone,
               onPressed: () {},
               contacts: const [],
             );
@@ -48,16 +51,27 @@ class GroupDetailsScreen extends StatelessWidget {
 }
 
 class ContainerButton extends StatelessWidget {
-  final String text;
+  final String contactName;
+  final String contactPhone;
   final List<SosContactModel> contacts;
   final VoidCallback onPressed;
 
   const ContainerButton({
     super.key,
-    required this.text,
+    required this.contactName,
     required this.contacts,
     required this.onPressed,
+    required this.contactPhone,
   });
+
+  void _makePhoneCall() async {
+    final phoneNumber = contactPhone;
+    if (await canLaunch('tel:$phoneNumber')) {
+      await launch('tel:$phoneNumber');
+    } else {
+      throw 'Could not launch $phoneNumber';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +85,7 @@ class ContainerButton extends StatelessWidget {
       child: ListTile(
         title: Center(
           child: Text(
-            text,
+            contactName,
             style: const TextStyle(
               color: primary50,
               fontWeight: FontWeight.w400,
@@ -79,7 +93,9 @@ class ContainerButton extends StatelessWidget {
             ),
           ),
         ),
-        onTap: onPressed,
+        onTap: () {
+          _makePhoneCall();
+        },
       ),
     );
   }

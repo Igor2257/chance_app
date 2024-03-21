@@ -17,7 +17,6 @@ import 'package:chance_app/ux/model/settings.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:hive/hive.dart';
-
 import 'package:path_provider/path_provider.dart';
 
 late final Box<MeUser> userBox;
@@ -26,7 +25,8 @@ late final Box<MedicineModel> medicineBox;
 late final Box<PickResult> addressesBox;
 late final Box<Settings> settingsBox;
 late final Box<ProductModel> itemsBox;
-late final Box<SosContactModel> groupBox;
+late final Box<SosContactModel> contactBox;
+late final Box<SosGroupModel> groupBox;
 
 class HiveCRUD {
   HiveCRUD._();
@@ -46,15 +46,13 @@ class HiveCRUD {
 
   List<ProductModel> get myItems => List.unmodifiable(itemsBox.values);
 
-  List<SosContactModel> get myContacts => List.unmodifiable(groupBox.values);
+  List<SosContactModel> get myContacts => List.unmodifiable(contactBox.values);
+
+  List<SosGroupModel> get myGroupContacts => List.unmodifiable(groupBox.values);
 
   MeUser? get user => userBox.get('user');
 
   Settings get setting => settingsBox.get('settings') ?? const Settings();
-
-  Future addContact(SosGroupModel contactModel) async {
-    await groupBox.put(contactModel.id, contactModel as SosContactModel);
-  }
 
   Future removeLocalContact(String id) async {
     await groupBox.delete(id);
@@ -76,6 +74,7 @@ class HiveCRUD {
     Hive.registerAdapter(ProductModelAdapter());
     Hive.registerAdapter(SettingsAdapter());
     Hive.registerAdapter(SosContactModelAdapter());
+    Hive.registerAdapter(SosGroupModelAdapter());
     Hive.registerAdapter(TaskModelAdapter());
     Hive.registerAdapter(AddressComponentAdapter());
     Hive.registerAdapter(BoundsAdapter());
@@ -96,7 +95,8 @@ class HiveCRUD {
       addressesBox = await Hive.openBox("savedAddresses");
       itemsBox = await Hive.openBox("items");
       settingsBox = await Hive.openBox("settings");
-      groupBox = await Hive.openBox("sosContactsModel");
+      contactBox = await Hive.openBox("sosContactModel");
+      groupBox = await Hive.openBox("sosGroupModel");
       final setting = settingsBox.get('settings') ?? const Settings();
       if (setting.firstEnter == null) {
         updateSettings(Settings(firstEnter: DateTime.now()));
@@ -131,6 +131,10 @@ class HiveCRUD {
     }
   }
 
+  Future<void> clearMedicines() async {
+    await medicineBox.clear();
+  }
+
   Future<void> updateSettings(Settings settings) async {
     await settingsBox.put("settings", settings);
   }
@@ -141,10 +145,6 @@ class HiveCRUD {
 
   Future<void> clearTasks() async {
     await tasksBox.clear();
-  }
-
-  Future<void> clearMedicines() async {
-    await medicineBox.clear();
   }
 
   Future<void> addTask(TaskModel taskModel) async {

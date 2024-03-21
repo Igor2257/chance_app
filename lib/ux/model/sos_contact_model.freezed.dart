@@ -28,6 +28,8 @@ mixin _$SosContactModel {
   String get groupName => throw _privateConstructorUsedError;
   @HiveField(4)
   String get id => throw _privateConstructorUsedError;
+  @HiveField(5)
+  String get contactsId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -45,7 +47,8 @@ abstract class $SosContactModelCopyWith<$Res> {
       {@HiveField(1) String name,
       @HiveField(2) String phone,
       @HiveField(3) String groupName,
-      @HiveField(4) String id});
+      @HiveField(4) String id,
+      @HiveField(5) String contactsId});
 }
 
 /// @nodoc
@@ -65,6 +68,7 @@ class _$SosContactModelCopyWithImpl<$Res, $Val extends SosContactModel>
     Object? phone = null,
     Object? groupName = null,
     Object? id = null,
+    Object? contactsId = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -83,6 +87,10 @@ class _$SosContactModelCopyWithImpl<$Res, $Val extends SosContactModel>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      contactsId: null == contactsId
+          ? _value.contactsId
+          : contactsId // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -99,7 +107,8 @@ abstract class _$$ContactModelImplCopyWith<$Res>
       {@HiveField(1) String name,
       @HiveField(2) String phone,
       @HiveField(3) String groupName,
-      @HiveField(4) String id});
+      @HiveField(4) String id,
+      @HiveField(5) String contactsId});
 }
 
 /// @nodoc
@@ -117,6 +126,7 @@ class __$$ContactModelImplCopyWithImpl<$Res>
     Object? phone = null,
     Object? groupName = null,
     Object? id = null,
+    Object? contactsId = null,
   }) {
     return _then(_$ContactModelImpl(
       name: null == name
@@ -135,6 +145,10 @@ class __$$ContactModelImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      contactsId: null == contactsId
+          ? _value.contactsId
+          : contactsId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -147,7 +161,8 @@ class _$ContactModelImpl implements _ContactModel {
       {@HiveField(1) required this.name,
       @HiveField(2) required this.phone,
       @HiveField(3) this.groupName = "",
-      @HiveField(4) this.id = ""});
+      @HiveField(4) this.id = "",
+      @HiveField(5) this.contactsId = ""});
 
   factory _$ContactModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ContactModelImplFromJson(json);
@@ -166,10 +181,14 @@ class _$ContactModelImpl implements _ContactModel {
   @JsonKey()
   @HiveField(4)
   final String id;
+  @override
+  @JsonKey()
+  @HiveField(5)
+  final String contactsId;
 
   @override
   String toString() {
-    return 'SosContactModel(name: $name, phone: $phone, groupName: $groupName, id: $id)';
+    return 'SosContactModel(name: $name, phone: $phone, groupName: $groupName, id: $id, contactsId: $contactsId)';
   }
 
   @override
@@ -181,12 +200,15 @@ class _$ContactModelImpl implements _ContactModel {
             (identical(other.phone, phone) || other.phone == phone) &&
             (identical(other.groupName, groupName) ||
                 other.groupName == groupName) &&
-            (identical(other.id, id) || other.id == id));
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.contactsId, contactsId) ||
+                other.contactsId == contactsId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, name, phone, groupName, id);
+  int get hashCode =>
+      Object.hash(runtimeType, name, phone, groupName, id, contactsId);
 
   @JsonKey(ignore: true)
   @override
@@ -207,7 +229,8 @@ abstract class _ContactModel implements SosContactModel {
       {@HiveField(1) required final String name,
       @HiveField(2) required final String phone,
       @HiveField(3) final String groupName,
-      @HiveField(4) final String id}) = _$ContactModelImpl;
+      @HiveField(4) final String id,
+      @HiveField(5) final String contactsId}) = _$ContactModelImpl;
 
   factory _ContactModel.fromJson(Map<String, dynamic> json) =
       _$ContactModelImpl.fromJson;
@@ -224,6 +247,9 @@ abstract class _ContactModel implements SosContactModel {
   @override
   @HiveField(4)
   String get id;
+  @override
+  @HiveField(5)
+  String get contactsId;
   @override
   @JsonKey(ignore: true)
   _$$ContactModelImplCopyWith<_$ContactModelImpl> get copyWith =>

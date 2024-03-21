@@ -21,13 +21,14 @@ class SosContactModelAdapter extends TypeAdapter<SosContactModel> {
       phone: fields[2] as String,
       groupName: fields[3] as String,
       id: fields[4] as String,
+      contactsId: fields[5] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, SosContactModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
@@ -35,7 +36,9 @@ class SosContactModelAdapter extends TypeAdapter<SosContactModel> {
       ..writeByte(3)
       ..write(obj.groupName)
       ..writeByte(4)
-      ..write(obj.id);
+      ..write(obj.id)
+      ..writeByte(5)
+      ..write(obj.contactsId);
   }
 
   @override
@@ -99,6 +102,7 @@ _$ContactModelImpl _$$ContactModelImplFromJson(Map<String, dynamic> json) =>
       phone: json['phone'] as String,
       groupName: json['groupName'] as String? ?? "",
       id: json['id'] as String? ?? "",
+      contactsId: json['contactsId'] as String? ?? "",
     );
 
 Map<String, dynamic> _$$ContactModelImplToJson(_$ContactModelImpl instance) =>
@@ -107,6 +111,7 @@ Map<String, dynamic> _$$ContactModelImplToJson(_$ContactModelImpl instance) =>
       'phone': instance.phone,
       'groupName': instance.groupName,
       'id': instance.id,
+      'contactsId': instance.contactsId,
     };
 
 _$GroupModelImpl _$$GroupModelImplFromJson(Map<String, dynamic> json) =>

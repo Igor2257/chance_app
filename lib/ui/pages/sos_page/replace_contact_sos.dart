@@ -65,17 +65,6 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
                     onPressed: () {
                       print('Button pressed');
                       if (_validateForm()) {
-                        // SosContactModel editedContact = contactModel.contacts[0];
-                        // editedContact.name = nameController.text;
-
-                        // final oldContact = ModalRoute.of(context)!
-                        //     .settings
-                        //     .arguments as SosContactModel;
-                        // final newContact = SosContactModel(
-                        //   name: nameController.text,
-                        //   phone: phoneController.text,
-                        // );
-
                         _sosContactsBloc.add(EditContact(
                             contactModel: contactModel.copyWith(contacts: [
                           SosContactModel(

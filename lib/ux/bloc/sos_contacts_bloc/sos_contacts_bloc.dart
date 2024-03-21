@@ -1,12 +1,10 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:chance_app/ux/repository/sos_repository.dart';
 import 'package:flutter/material.dart';
 
 part 'sos_contacts_event.dart';
-
 part 'sos_contacts_state.dart';
 
 class SosContactsBloc extends Bloc<SosContactsEvent, SosContactsState> {
@@ -69,8 +67,8 @@ class SosContactsBloc extends Bloc<SosContactsEvent, SosContactsState> {
 
     if (event.contactModel.name.isNotEmpty) {
       SosRepository().editGroup(event.contactModel);
-      for (var contact in event.contactModel.contacts) {
-        SosRepository().editContact(event.contactModel, contact);
+      for (SosContactModel contact in event.contactModel.contacts) {
+        SosRepository().editContacts(event.contactModel, contact);
       }
     } else {
       SosRepository()

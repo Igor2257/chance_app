@@ -61,16 +61,19 @@ class SosRepository {
 
             List<SosContactModel> contactsToModel = [];
             List<dynamic> sosContacts = contactItem["contacts"];
+            String sosContactsId = contactItem["_id"];
             if (sosContacts.isNotEmpty) {
               for (var sosContact in sosContacts) {
                 String contactName = sosContact["name"];
                 String contactPhone = sosContact["phone"];
                 String contactId = sosContact["_id"];
+                String contactsId = sosContactsId;
 
                 contactsToModel.add(SosContactModel(
                   name: contactName,
                   phone: contactPhone,
                   id: contactId,
+                  contactsId: contactsId,
                 ));
               }
             }
@@ -107,8 +110,6 @@ class SosRepository {
     return contacts;
   }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-
   Future<SosGroupModel?> saveContact(SosGroupModel contactModel,
       {String? groupId}) async {
     String? error;
@@ -142,7 +143,6 @@ class SosRepository {
           "contacts": contactsData,
         }),
       );
-      // print("groupId: $groupId");
 
       if (response.statusCode > 199 && response.statusCode < 300) {
         String bodyString = response.body;
@@ -152,7 +152,6 @@ class SosRepository {
         if (contactList.isNotEmpty) {
           for (int i = 0; i < contactList.length; i++) {
             Map<String, dynamic> groupData = contactList[i];
-            // String groupId = groupData["_id"];
             String contactName = groupData["name"];
             String contactPhone = groupData["phone"];
             String contactId = groupData["_id"];
@@ -165,7 +164,6 @@ class SosRepository {
             ]);
           }
         }
-        // await HiveCRUM().addContact(contactModel);
       } else {
         error = jsonDecode(response.body)["message"]
             .toString()
@@ -182,8 +180,6 @@ class SosRepository {
 
     return groupModel;
   }
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////
 
   Future<SosContactModel?> editContact(
       SosGroupModel group, SosContactModel contactModel) async {
@@ -207,19 +203,70 @@ class SosRepository {
           'Cookie': cookie.toString(),
         },
         body: jsonEncode({
-          "group": group.id,
+          "group": "",
           "contacts": [
             {"name": contactModel.name, "phone": contactModel.phone}
           ]
         }),
       );
-      // print("groupId: $groupId");
 
       if (response.statusCode > 199 && response.statusCode < 300) {
         String bodyString = response.body;
         Map<String, dynamic> data = json.decode(bodyString);
         List<dynamic> contactList = data['contacts'];
 
+        // await HiveCRUM().addContact(contactModel);
+      } else {
+        error = jsonDecode(response.body)["message"]
+            .toString()
+            .replaceAll("[", "")
+            .replaceAll("]", "");
+      }
+    } catch (e) {
+      error = e.toString();
+    }
+
+    if (error != null) {
+      Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+    }
+
+    return groupModel;
+  }
+
+  Future<SosContactModel?> editContacts(
+      SosGroupModel group, SosContactModel contactModel) async {
+    String? error;
+    SosContactModel? groupModel;
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      // await HiveCRUM().addContact(contactModel);
+      Fluttertoast.showToast(
+          msg: "Немає підключення до інтернету",
+          toastLength: Toast.LENGTH_LONG);
+    }
+
+    try {
+      var url = Uri.parse('$apiUrl/sos/${group.contacts[0].contactsId}');
+      final cookie = await UserRepository().getCookie();
+
+      List<Map<String, String>> contactsData = group.contacts
+          .map((e) => {
+                "name": e.name,
+                "phone": e.phone,
+              })
+          .toList();
+
+      var response = await http.patch(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Cookie': cookie.toString(),
+        },
+        body: jsonEncode({"group": group.id, "contacts": contactsData}),
+      );
+
+      if (response.statusCode > 199 && response.statusCode < 300) {
+        String bodyString = response.body;
+        Map<String, dynamic> data = json.decode(bodyString);
         // await HiveCRUM().addContact(contactModel);
       } else {
         error = jsonDecode(response.body)["message"]
@@ -260,14 +307,11 @@ class SosRepository {
         },
         body: jsonEncode({"name": contactModel.name}),
       );
-      // print("groupId: $groupId");
 
       if (response.statusCode > 199 && response.statusCode < 300) {
         String bodyString = response.body;
         Map<String, dynamic> data = json.decode(bodyString);
         List<dynamic> contactList = data['contacts'];
-
-        // if (contactList.isNotEmpty) {
 
         // await HiveCRUM().addContact(contactModel);
       } else {

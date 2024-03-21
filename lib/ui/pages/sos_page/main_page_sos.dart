@@ -5,6 +5,7 @@ import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MainPageSos extends StatefulWidget {
   const MainPageSos({super.key});
@@ -90,7 +91,7 @@ class _MainPageSosState extends State<MainPageSos> {
               ContainerButton(
                 text:
                     AppLocalizations.instance.translate("emergencyService112"),
-                onPressed: () => _pushToCallScreen(
+                onPressed: () => _makePhoneCall(
                   SosContactModel(
                     name: AppLocalizations.instance
                         .translate("emergencyService112"),
@@ -122,7 +123,7 @@ class _MainPageSosState extends State<MainPageSos> {
                             ),
                           );
                         } else {
-                          _pushToCallScreen(
+                          _makePhoneCall(
                             SosContactModel(
                               name: contactModel.contacts[0].name,
                               phone: contactModel.contacts[0].phone,
@@ -164,8 +165,6 @@ class _MainPageSosState extends State<MainPageSos> {
       ),
     );
   }
-
-  void _callContact(String contactName) {}
 
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
@@ -249,9 +248,14 @@ class _MainPageSosState extends State<MainPageSos> {
     );
   }
 
-  _pushToCallScreen(SosContactModel contactModel) =>
-      Navigator.pushNamed(context, "/call_contact_sos",
-          arguments: contactModel);
+  void _makePhoneCall(SosContactModel contactModel) async {
+    final phoneNumber = contactModel.phone;
+    if (await canLaunch('tel:$phoneNumber')) {
+      await launch('tel:$phoneNumber');
+    } else {
+      throw 'Could not launch $phoneNumber';
+    }
+  }
 }
 
 class ContainerButton extends StatelessWidget {

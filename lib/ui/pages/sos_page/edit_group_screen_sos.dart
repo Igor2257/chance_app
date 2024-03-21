@@ -107,9 +107,6 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
                           isPhone: true,
                           onChanged: (value) {},
                         ),
-                        const SizedBox(
-                          height: 18,
-                        ),
                         InkWell(
                           onTap: () {
                             setState(() {
@@ -117,9 +114,9 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
                             });
                           },
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              const Icon(Icons.remove),
+                              const Icon(Icons.delete),
                               const SizedBox(width: 8),
                               Text(
                                 AppLocalizations.instance
@@ -134,12 +131,37 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
                           ),
                         ),
                         const SizedBox(
-                          height: 18,
+                          height: 28,
                         ),
                       ],
                     ),
                   const SizedBox(
                     height: 18,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, bottom: 25),
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          contacts.add(ContactItem());
+                        });
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.add),
+                          const SizedBox(width: 8),
+                          Text(
+                            AppLocalizations.instance.translate("addContact"),
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: primary800,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 18),
@@ -157,7 +179,7 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
                           ),
                         ),
                         child: Text(
-                          AppLocalizations.instance.translate("saveChanges"),
+                          AppLocalizations.instance.translate("saveTheGroup"),
                           style: const TextStyle(
                             color: primary50,
                             fontWeight: FontWeight.w500,
@@ -186,6 +208,7 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
           name: contact.nameController.text,
           phone: contact.phoneController.text,
           id: widget.groupModel.contacts[0].id,
+          contactsId: widget.groupModel.contacts[0].contactsId,
         ),
       );
     }
@@ -197,14 +220,12 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
     );
 
     _sosContactsBloc.add(
-      // DeleteContact(
-      // ids: [updatedContacts[0].id])
       EditContact(
         contactModel: updatedGroup,
       ),
     );
 
-    Navigator.of(context).pop();
+    Navigator.pushNamed(context, "/sos");
   }
 }
 
