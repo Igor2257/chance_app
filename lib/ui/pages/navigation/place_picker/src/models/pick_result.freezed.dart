@@ -21,19 +21,24 @@ PickResult _$PickResultFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$PickResult {
   @HiveField(0)
+  @JsonKey(name: "place_id")
   String? get placeId => throw _privateConstructorUsedError;
   @HiveField(1)
   Geometry? get geometry => throw _privateConstructorUsedError;
   @HiveField(2)
+  @JsonKey(name: "formatted_address")
   String? get formattedAddress => throw _privateConstructorUsedError;
   @HiveField(3)
   List<String>? get types => throw _privateConstructorUsedError;
   @HiveField(4)
+  @JsonKey(name: "address_components")
   List<AddressComponent>? get addressComponents =>
       throw _privateConstructorUsedError;
   @HiveField(5)
+  @JsonKey(name: "adr_address")
   String? get adrAddress => throw _privateConstructorUsedError;
   @HiveField(6)
+  @JsonKey(name: "formatted_phone_number")
   String? get formattedPhoneNumber => throw _privateConstructorUsedError;
   @HiveField(7)
   String get id => throw _privateConstructorUsedError;
@@ -44,6 +49,7 @@ mixin _$PickResult {
   @HiveField(10)
   String? get name => throw _privateConstructorUsedError;
   @HiveField(13)
+  @JsonKey(name: "international_phone_number")
   String? get internationalPhoneNumber => throw _privateConstructorUsedError;
   @HiveField(15)
   num? get rating => throw _privateConstructorUsedError;
@@ -54,12 +60,14 @@ mixin _$PickResult {
   @HiveField(18)
   String? get vicinity => throw _privateConstructorUsedError;
   @HiveField(19)
+  @JsonKey(name: "utc_offset")
   num? get utcOffset => throw _privateConstructorUsedError;
   @HiveField(20)
   String? get website => throw _privateConstructorUsedError;
   @HiveField(22)
   bool get star => throw _privateConstructorUsedError;
   @HiveField(23)
+  @JsonKey(name: "is_recently_searched")
   bool get isRecentlySearched => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -75,26 +83,36 @@ abstract class $PickResultCopyWith<$Res> {
       _$PickResultCopyWithImpl<$Res, PickResult>;
   @useResult
   $Res call(
-      {@HiveField(0) String? placeId,
+      {@HiveField(0) @JsonKey(name: "place_id") String? placeId,
       @HiveField(1) Geometry? geometry,
-      @HiveField(2) String? formattedAddress,
+      @HiveField(2)
+      @JsonKey(name: "formatted_address")
+      String? formattedAddress,
       @HiveField(3) List<String>? types,
-      @HiveField(4) List<AddressComponent>? addressComponents,
-      @HiveField(5) String? adrAddress,
-      @HiveField(6) String? formattedPhoneNumber,
+      @HiveField(4)
+      @JsonKey(name: "address_components")
+      List<AddressComponent>? addressComponents,
+      @HiveField(5) @JsonKey(name: "adr_address") String? adrAddress,
+      @HiveField(6)
+      @JsonKey(name: "formatted_phone_number")
+      String? formattedPhoneNumber,
       @HiveField(7) String id,
       @HiveField(8) String? reference,
       @HiveField(9) String? icon,
       @HiveField(10) String? name,
-      @HiveField(13) String? internationalPhoneNumber,
+      @HiveField(13)
+      @JsonKey(name: "international_phone_number")
+      String? internationalPhoneNumber,
       @HiveField(15) num? rating,
       @HiveField(16) String? scope,
       @HiveField(17) String? url,
       @HiveField(18) String? vicinity,
-      @HiveField(19) num? utcOffset,
+      @HiveField(19) @JsonKey(name: "utc_offset") num? utcOffset,
       @HiveField(20) String? website,
       @HiveField(22) bool star,
-      @HiveField(23) bool isRecentlySearched});
+      @HiveField(23)
+      @JsonKey(name: "is_recently_searched")
+      bool isRecentlySearched});
 
   $GeometryCopyWith<$Res>? get geometry;
 }
@@ -239,26 +257,36 @@ abstract class _$$PickResultImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@HiveField(0) String? placeId,
+      {@HiveField(0) @JsonKey(name: "place_id") String? placeId,
       @HiveField(1) Geometry? geometry,
-      @HiveField(2) String? formattedAddress,
+      @HiveField(2)
+      @JsonKey(name: "formatted_address")
+      String? formattedAddress,
       @HiveField(3) List<String>? types,
-      @HiveField(4) List<AddressComponent>? addressComponents,
-      @HiveField(5) String? adrAddress,
-      @HiveField(6) String? formattedPhoneNumber,
+      @HiveField(4)
+      @JsonKey(name: "address_components")
+      List<AddressComponent>? addressComponents,
+      @HiveField(5) @JsonKey(name: "adr_address") String? adrAddress,
+      @HiveField(6)
+      @JsonKey(name: "formatted_phone_number")
+      String? formattedPhoneNumber,
       @HiveField(7) String id,
       @HiveField(8) String? reference,
       @HiveField(9) String? icon,
       @HiveField(10) String? name,
-      @HiveField(13) String? internationalPhoneNumber,
+      @HiveField(13)
+      @JsonKey(name: "international_phone_number")
+      String? internationalPhoneNumber,
       @HiveField(15) num? rating,
       @HiveField(16) String? scope,
       @HiveField(17) String? url,
       @HiveField(18) String? vicinity,
-      @HiveField(19) num? utcOffset,
+      @HiveField(19) @JsonKey(name: "utc_offset") num? utcOffset,
       @HiveField(20) String? website,
       @HiveField(22) bool star,
-      @HiveField(23) bool isRecentlySearched});
+      @HiveField(23)
+      @JsonKey(name: "is_recently_searched")
+      bool isRecentlySearched});
 
   @override
   $GeometryCopyWith<$Res>? get geometry;
@@ -385,26 +413,36 @@ class __$$PickResultImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$PickResultImpl implements _PickResult {
   _$PickResultImpl(
-      {@HiveField(0) this.placeId = null,
+      {@HiveField(0) @JsonKey(name: "place_id") this.placeId = null,
       @HiveField(1) this.geometry = null,
-      @HiveField(2) this.formattedAddress = null,
+      @HiveField(2)
+      @JsonKey(name: "formatted_address")
+      this.formattedAddress = null,
       @HiveField(3) final List<String>? types = null,
-      @HiveField(4) final List<AddressComponent>? addressComponents = null,
-      @HiveField(5) this.adrAddress = null,
-      @HiveField(6) this.formattedPhoneNumber = null,
+      @HiveField(4)
+      @JsonKey(name: "address_components")
+      final List<AddressComponent>? addressComponents = null,
+      @HiveField(5) @JsonKey(name: "adr_address") this.adrAddress = null,
+      @HiveField(6)
+      @JsonKey(name: "formatted_phone_number")
+      this.formattedPhoneNumber = null,
       @HiveField(7) required this.id,
       @HiveField(8) this.reference = null,
       @HiveField(9) this.icon = null,
       @HiveField(10) this.name = null,
-      @HiveField(13) this.internationalPhoneNumber = null,
+      @HiveField(13)
+      @JsonKey(name: "international_phone_number")
+      this.internationalPhoneNumber = null,
       @HiveField(15) this.rating = null,
       @HiveField(16) this.scope = null,
       @HiveField(17) this.url = null,
       @HiveField(18) this.vicinity = null,
-      @HiveField(19) this.utcOffset = null,
+      @HiveField(19) @JsonKey(name: "utc_offset") this.utcOffset = null,
       @HiveField(20) this.website = null,
       @HiveField(22) this.star = false,
-      @HiveField(23) this.isRecentlySearched = true})
+      @HiveField(23)
+      @JsonKey(name: "is_recently_searched")
+      this.isRecentlySearched = true})
       : _types = types,
         _addressComponents = addressComponents;
 
@@ -412,16 +450,16 @@ class _$PickResultImpl implements _PickResult {
       _$$PickResultImplFromJson(json);
 
   @override
-  @JsonKey()
   @HiveField(0)
+  @JsonKey(name: "place_id")
   final String? placeId;
   @override
   @JsonKey()
   @HiveField(1)
   final Geometry? geometry;
   @override
-  @JsonKey()
   @HiveField(2)
+  @JsonKey(name: "formatted_address")
   final String? formattedAddress;
   final List<String>? _types;
   @override
@@ -437,8 +475,8 @@ class _$PickResultImpl implements _PickResult {
 
   final List<AddressComponent>? _addressComponents;
   @override
-  @JsonKey()
   @HiveField(4)
+  @JsonKey(name: "address_components")
   List<AddressComponent>? get addressComponents {
     final value = _addressComponents;
     if (value == null) return null;
@@ -449,12 +487,12 @@ class _$PickResultImpl implements _PickResult {
   }
 
   @override
-  @JsonKey()
   @HiveField(5)
+  @JsonKey(name: "adr_address")
   final String? adrAddress;
   @override
-  @JsonKey()
   @HiveField(6)
+  @JsonKey(name: "formatted_phone_number")
   final String? formattedPhoneNumber;
   @override
   @HiveField(7)
@@ -472,8 +510,8 @@ class _$PickResultImpl implements _PickResult {
   @HiveField(10)
   final String? name;
   @override
-  @JsonKey()
   @HiveField(13)
+  @JsonKey(name: "international_phone_number")
   final String? internationalPhoneNumber;
   @override
   @JsonKey()
@@ -492,8 +530,8 @@ class _$PickResultImpl implements _PickResult {
   @HiveField(18)
   final String? vicinity;
   @override
-  @JsonKey()
   @HiveField(19)
+  @JsonKey(name: "utc_offset")
   final num? utcOffset;
   @override
   @JsonKey()
@@ -504,8 +542,8 @@ class _$PickResultImpl implements _PickResult {
   @HiveField(22)
   final bool star;
   @override
-  @JsonKey()
   @HiveField(23)
+  @JsonKey(name: "is_recently_searched")
   final bool isRecentlySearched;
 
   @override
@@ -593,50 +631,65 @@ class _$PickResultImpl implements _PickResult {
 
 abstract class _PickResult implements PickResult {
   factory _PickResult(
-      {@HiveField(0) final String? placeId,
+      {@HiveField(0) @JsonKey(name: "place_id") final String? placeId,
       @HiveField(1) final Geometry? geometry,
-      @HiveField(2) final String? formattedAddress,
+      @HiveField(2)
+      @JsonKey(name: "formatted_address")
+      final String? formattedAddress,
       @HiveField(3) final List<String>? types,
-      @HiveField(4) final List<AddressComponent>? addressComponents,
-      @HiveField(5) final String? adrAddress,
-      @HiveField(6) final String? formattedPhoneNumber,
+      @HiveField(4)
+      @JsonKey(name: "address_components")
+      final List<AddressComponent>? addressComponents,
+      @HiveField(5) @JsonKey(name: "adr_address") final String? adrAddress,
+      @HiveField(6)
+      @JsonKey(name: "formatted_phone_number")
+      final String? formattedPhoneNumber,
       @HiveField(7) required final String id,
       @HiveField(8) final String? reference,
       @HiveField(9) final String? icon,
       @HiveField(10) final String? name,
-      @HiveField(13) final String? internationalPhoneNumber,
+      @HiveField(13)
+      @JsonKey(name: "international_phone_number")
+      final String? internationalPhoneNumber,
       @HiveField(15) final num? rating,
       @HiveField(16) final String? scope,
       @HiveField(17) final String? url,
       @HiveField(18) final String? vicinity,
-      @HiveField(19) final num? utcOffset,
+      @HiveField(19) @JsonKey(name: "utc_offset") final num? utcOffset,
       @HiveField(20) final String? website,
       @HiveField(22) final bool star,
-      @HiveField(23) final bool isRecentlySearched}) = _$PickResultImpl;
+      @HiveField(23)
+      @JsonKey(name: "is_recently_searched")
+      final bool isRecentlySearched}) = _$PickResultImpl;
 
   factory _PickResult.fromJson(Map<String, dynamic> json) =
       _$PickResultImpl.fromJson;
 
   @override
   @HiveField(0)
+  @JsonKey(name: "place_id")
   String? get placeId;
   @override
   @HiveField(1)
   Geometry? get geometry;
   @override
   @HiveField(2)
+  @JsonKey(name: "formatted_address")
   String? get formattedAddress;
   @override
   @HiveField(3)
   List<String>? get types;
   @override
   @HiveField(4)
+  @JsonKey(name: "address_components")
   List<AddressComponent>? get addressComponents;
   @override
   @HiveField(5)
+  @JsonKey(name: "adr_address")
   String? get adrAddress;
   @override
   @HiveField(6)
+  @JsonKey(name: "formatted_phone_number")
   String? get formattedPhoneNumber;
   @override
   @HiveField(7)
@@ -652,6 +705,7 @@ abstract class _PickResult implements PickResult {
   String? get name;
   @override
   @HiveField(13)
+  @JsonKey(name: "international_phone_number")
   String? get internationalPhoneNumber;
   @override
   @HiveField(15)
@@ -667,6 +721,7 @@ abstract class _PickResult implements PickResult {
   String? get vicinity;
   @override
   @HiveField(19)
+  @JsonKey(name: "utc_offset")
   num? get utcOffset;
   @override
   @HiveField(20)
@@ -676,6 +731,7 @@ abstract class _PickResult implements PickResult {
   bool get star;
   @override
   @HiveField(23)
+  @JsonKey(name: "is_recently_searched")
   bool get isRecentlySearched;
   @override
   @JsonKey(ignore: true)

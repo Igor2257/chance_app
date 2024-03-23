@@ -12,6 +12,7 @@ import 'package:chance_app/ui/pages/reminders_page/tasks/tasks_sheets.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/enum/reminder_action_result.dart';
 import 'package:chance_app/ux/enum/reminders.dart';
+import 'package:chance_app/ux/helpers/show_dismissible_dialog.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -64,27 +65,31 @@ class _RemindersPageState extends State<RemindersPage> {
 
   @override
   Widget build(BuildContext context) {
+    const dialogDismissDuration = Duration(seconds: 2);
     return BlocListener<RemindersBloc, RemindersState>(
       listener: (context, state) async {
         if (state is TaskAdded) {
-          await showDialog<void>(
+          await showDismissibleDialog<void>(
             context: context,
+            dismissAfter: dialogDismissDuration,
             builder: (context) => SuccessDialog(
               title: const Text("Завдання додано"),
               subtitle: Text('"${state.task.message}"'),
             ),
           );
         } else if (state is TaskDone) {
-          await showDialog<void>(
+          await showDismissibleDialog<void>(
             context: context,
+            dismissAfter: dialogDismissDuration,
             builder: (context) => SuccessDialog(
               title: const Text("Завдання виконано"),
               subtitle: Text('"${state.task.message}"'),
             ),
           );
         } else if (state is TaskPostponed) {
-          await showDialog<void>(
+          await showDismissibleDialog<void>(
             context: context,
+            dismissAfter: dialogDismissDuration,
             builder: (context) => TaskStatusUpdatedDialog(
               state.task,
               status: ReminderState.rescheduled,
@@ -92,8 +97,9 @@ class _RemindersPageState extends State<RemindersPage> {
             ),
           );
         } else if (state is TaskDeleted) {
-          await showDialog<void>(
+          await showDismissibleDialog<void>(
             context: context,
+            dismissAfter: dialogDismissDuration,
             builder: (context) => SuccessDialog(
               title: const Text("Завдання видалено"),
               subtitle: Text('"${state.task.message}"'),
@@ -110,8 +116,9 @@ class _RemindersPageState extends State<RemindersPage> {
             Navigator.of(context).pushNamed("/add_medicine");
           }
         } else if (state is MedicineDone) {
-          await showDialog<void>(
+          await showDismissibleDialog<void>(
             context: context,
+            dismissAfter: dialogDismissDuration,
             builder: (context) => MedicineStatusUpdatedDialog(
               state.medicine,
               doseTime: state.at,
@@ -120,8 +127,9 @@ class _RemindersPageState extends State<RemindersPage> {
             ),
           );
         } else if (state is MedicinePostponed) {
-          await showDialog<void>(
+          await showDismissibleDialog<void>(
             context: context,
+            dismissAfter: dialogDismissDuration,
             builder: (context) => MedicineStatusUpdatedDialog(
               state.medicine,
               doseTime: state.doseTime,
@@ -130,8 +138,9 @@ class _RemindersPageState extends State<RemindersPage> {
             ),
           );
         } else if (state is MedicineDeleted) {
-          await showDialog<void>(
+          await showDismissibleDialog<void>(
             context: context,
+            dismissAfter: dialogDismissDuration,
             builder: (context) => SuccessDialog(
               title: Text("${state.medicine.name} видалено"),
             ),

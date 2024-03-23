@@ -23,6 +23,7 @@ mixin _$Geometry {
   @HiveField(0)
   Location get location => throw _privateConstructorUsedError;
   @HiveField(1)
+  @JsonKey(name: "location_type")
   String? get locationType => throw _privateConstructorUsedError;
   @HiveField(2)
   Bounds? get viewport => throw _privateConstructorUsedError;
@@ -42,7 +43,7 @@ abstract class $GeometryCopyWith<$Res> {
   @useResult
   $Res call(
       {@HiveField(0) Location location,
-      @HiveField(1) String? locationType,
+      @HiveField(1) @JsonKey(name: "location_type") String? locationType,
       @HiveField(2) Bounds? viewport,
       @HiveField(3) Bounds? bounds});
 
@@ -132,7 +133,7 @@ abstract class _$$GeometryImplCopyWith<$Res>
   @useResult
   $Res call(
       {@HiveField(0) Location location,
-      @HiveField(1) String? locationType,
+      @HiveField(1) @JsonKey(name: "location_type") String? locationType,
       @HiveField(2) Bounds? viewport,
       @HiveField(3) Bounds? bounds});
 
@@ -186,7 +187,7 @@ class __$$GeometryImplCopyWithImpl<$Res>
 class _$GeometryImpl implements _Geometry {
   _$GeometryImpl(
       {@HiveField(0) required this.location,
-      @HiveField(1) this.locationType = null,
+      @HiveField(1) @JsonKey(name: "location_type") this.locationType = null,
       @HiveField(2) this.viewport = null,
       @HiveField(3) this.bounds = null});
 
@@ -197,8 +198,8 @@ class _$GeometryImpl implements _Geometry {
   @HiveField(0)
   final Location location;
   @override
-  @JsonKey()
   @HiveField(1)
+  @JsonKey(name: "location_type")
   final String? locationType;
   @override
   @JsonKey()
@@ -250,7 +251,7 @@ class _$GeometryImpl implements _Geometry {
 abstract class _Geometry implements Geometry {
   factory _Geometry(
       {@HiveField(0) required final Location location,
-      @HiveField(1) final String? locationType,
+      @HiveField(1) @JsonKey(name: "location_type") final String? locationType,
       @HiveField(2) final Bounds? viewport,
       @HiveField(3) final Bounds? bounds}) = _$GeometryImpl;
 
@@ -262,6 +263,7 @@ abstract class _Geometry implements Geometry {
   Location get location;
   @override
   @HiveField(1)
+  @JsonKey(name: "location_type")
   String? get locationType;
   @override
   @HiveField(2)
