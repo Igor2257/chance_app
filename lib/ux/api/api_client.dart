@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ux/api/api_exception.dart';
@@ -87,6 +88,15 @@ class ApiClient {
         body: (json != null) ? jsonEncode(json) : null,
       );
       return _parseResponse(response);
+    } catch (error, stackTrace) {
+      _onCatchError(error, stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<Uint8List> readBytes(String path) async {
+    try {
+      return await http.readBytes(getUrl(path));
     } catch (error, stackTrace) {
       _onCatchError(error, stackTrace);
       rethrow;
