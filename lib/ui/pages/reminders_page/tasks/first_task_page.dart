@@ -84,6 +84,7 @@ class _FirstTaskPageState extends State<FirstTaskPage> {
                       );
                       BlocProvider.of<RemindersBloc>(context)
                           .add(AddTask(taskModel));
+                      Navigator.of(context).pop();
                     }
                   }
                 }

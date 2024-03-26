@@ -85,6 +85,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
 
                     BlocProvider.of<RemindersBloc>(context)
                         .add(AddTask(taskModel));
+                    Navigator.of(context).pop();
                   }
                 },
                 icon: const Icon(
@@ -146,7 +147,8 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                                 ? "${deadlineForTask.hour.toString().padLeft(2, "0")}:${deadlineForTask.minute.toString().padLeft(2, "0")}"
                                 : AppLocalizations.instance
                                     .translate("noDueDate"),
-                            style: const TextStyle(fontSize: 16, color: primary50),
+                            style:
+                                const TextStyle(fontSize: 16, color: primary50),
                           ),
                           const Icon(Icons.arrow_forward_ios, color: primary50)
                         ],
@@ -184,7 +186,8 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                           Text(
                             state.notifications[NotificationsBefore.values
                                 .indexOf(state.newNotificationsBefore)],
-                            style: const TextStyle(fontSize: 16, color: primary50),
+                            style:
+                                const TextStyle(fontSize: 16, color: primary50),
                           ),
                           const Icon(Icons.arrow_forward_ios, color: primary50)
                         ],

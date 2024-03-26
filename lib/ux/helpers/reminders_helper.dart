@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer' show log;
 import 'dart:io' show Platform;
 import 'dart:math' show Random, pow;
@@ -16,9 +17,12 @@ import 'package:timezone/data/latest_all.dart';
 import 'package:timezone/timezone.dart';
 
 abstract class RemindersHelper {
+  static const categoryId = "reminders";
   static late final Box<Map<dynamic, dynamic>> _configBox;
 
-  static Future<void> initialize() async {
+  static Future<void> initialize({
+    void Function(NotificationResponse)? onDidReceiveNotificationResponse,
+  }) async {
     _configBox = await Hive.openBox("reminders");
     // Local notifications plugin setup
     await FlutterLocalNotificationsPlugin().initialize(
@@ -26,6 +30,7 @@ abstract class RemindersHelper {
         android: AndroidInitializationSettings(kDefaultAndroidIcon),
         iOS: DarwinInitializationSettings(),
       ),
+      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
     );
     // Timezone setup, is required by scheduler
     final currentTimeZone = await FlutterTimezone.getLocalTimezone();
@@ -72,8 +77,12 @@ abstract class RemindersHelper {
       title: task.message,
       body: [
         "Сьогодні",
-        Jiffy.parseFromDateTime(reminderTime).Hm,
+        Jiffy.parseFromDateTime(task.date).Hm,
       ].join(" "),
+      payload: jsonEncode({
+        categoryId: "tasks",
+        ...task.toJson(),
+      }),
     );
 
     if (scheduledId != notificationId) {
@@ -155,6 +164,10 @@ abstract class RemindersHelper {
                 medicine.instruction.toLocalizedString().toLowerCase(),
             ].join(' '),
       iOSSubtitle: reminderText,
+      payload: jsonEncode({
+        categoryId: "medicines",
+        ...medicine.toJson(),
+      }),
     );
 
     if (scheduledId != notificationId) {
@@ -258,9 +271,11 @@ abstract class RemindersHelper {
           importance: Importance.max,
           priority: Priority.max,
           category: AndroidNotificationCategory.reminder,
+          groupKey: categoryId,
         ),
         iOS: DarwinNotificationDetails(
           subtitle: iOSSubtitle,
+          categoryIdentifier: categoryId,
           interruptionLevel: InterruptionLevel.critical,
         ),
       ),

@@ -9,6 +9,8 @@ import flutter_background_service_ios
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    GeneratedPluginRegistrant.register(with: self)
+
     UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(60*15))
     SwiftFlutterBackgroundServicePlugin.taskIdentifier = "dev.flutter.background.refresh"
     GMSServices.provideAPIKey("AIzaSyDmTTd3yiTiyosQb_CYX2Ync20v-xiynYg")
@@ -16,7 +18,6 @@ import flutter_background_service_ios
         UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
     }
 
-    GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
