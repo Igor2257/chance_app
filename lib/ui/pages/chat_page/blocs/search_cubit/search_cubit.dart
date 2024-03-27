@@ -1,8 +1,8 @@
-import 'package:chance_app/ux/model/chat_user_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
-class SearchCubit extends Cubit<List<ChatUserModel>> {
-  final List<ChatUserModel> _list;
+class SearchCubit extends Cubit<List<types.User>> {
+  final List<types.User> _list;
 
   SearchCubit(this._list) : super([]);
 
@@ -12,7 +12,8 @@ class SearchCubit extends Cubit<List<ChatUserModel>> {
     }
     return emit(
       _list
-          .where((v) => v.name.toLowerCase().startsWith(value.toLowerCase()))
+          .where(
+              (v) => v.lastName!.toLowerCase().startsWith(value.toLowerCase()))
           .toList(),
     );
   }

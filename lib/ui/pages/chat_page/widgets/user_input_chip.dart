@@ -1,6 +1,8 @@
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ux/model/chat_user_model.dart';
+import 'package:chance_app/ux/extensions/chat_user_name.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+
 
 class UserInputChip extends StatelessWidget {
   const UserInputChip({
@@ -8,7 +10,7 @@ class UserInputChip extends StatelessWidget {
     required this.value,
   });
 
-  final ChatUserModel value;
+  final types.User value;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class UserInputChip extends StatelessWidget {
           ),
         ),
         child: Text(
-          value.name,
+          value.fullName,
           style: TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 14,

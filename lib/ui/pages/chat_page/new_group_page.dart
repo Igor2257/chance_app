@@ -1,12 +1,13 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/chat_page/blocs/select_cubit/select_cubit.dart';
-import 'package:chance_app/ui/pages/chat_page/search_group_page.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/add_new_contect_widget.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/user_checkbox_tile.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/user_input_chip.dart';
-import 'package:chance_app/ux/model/chat_user_model.dart';
+import 'package:chance_app/ux/helpers/chat_map_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 
 class NewGroupPage extends StatefulWidget {
   const NewGroupPage({super.key});
@@ -16,24 +17,9 @@ class NewGroupPage extends StatefulWidget {
 }
 
 class _NewGroupPageState extends State<NewGroupPage> {
-  final List<ChatUserModel> _testUsers = <ChatUserModel>[
-    const ChatUserModel(name: 'Olives'),
-    const ChatUserModel(name: 'Tomato'),
-    const ChatUserModel(name: 'Cheese'),
-    const ChatUserModel(name: 'Pepperoni'),
-    const ChatUserModel(name: 'Bacon'),
-    const ChatUserModel(name: 'Onion'),
-    const ChatUserModel(name: 'Jalapeno'),
-    const ChatUserModel(name: 'Mushrooms'),
-    const ChatUserModel(name: 'Pineapple'),
-  ];
-
-  late final Map<String, List<ChatUserModel>> _users =
-      _generateSortMap(_testUsers);
-
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SelectCubit, List<ChatUserModel>>(
+    return BlocBuilder<SelectCubit, List<types.User>>(
       builder: (context, state) {
         bool isEmpty = state.isEmpty;
 
@@ -107,14 +93,26 @@ class _NewGroupPageState extends State<NewGroupPage> {
                 ),
               ),
               const AddNewContactWidget(),
-              if (_users.isNotEmpty)
-                Expanded(
-                  child: ListView(
-                    children: _users.entries
-                        .map((entry) => _buildSortedList(entry, state))
-                        .toList(),
-                  ),
+              Expanded(
+                child: StreamBuilder<List<types.User>>(
+                  stream: FirebaseChatCore.instance.users(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    }
+                    if (snapshot.hasData) {
+                      return ListView(
+                        children: ChatMapUtils.generateSortMap(snapshot.data!)
+                            .entries
+                            .map((entry) => _buildSortedList(entry, state))
+                            .toList(),
+                      );
+                    }
+
+                    return const SizedBox();
+                  },
                 ),
+              ),
             ],
           ),
         );
@@ -123,8 +121,8 @@ class _NewGroupPageState extends State<NewGroupPage> {
   }
 
   Widget _buildSortedList(
-    MapEntry<String, List<ChatUserModel>> entry,
-    List<ChatUserModel> list,
+    MapEntry<String, List<types.User>> entry,
+    List<types.User> list,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -162,19 +160,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
     );
   }
 
-  Map<String, List<ChatUserModel>> _generateSortMap(List<ChatUserModel> list) {
-    Map<String, List<ChatUserModel>> map = {};
-    list.sort((a, b) => a.name.compareTo(b.name));
-    for (ChatUserModel item in list) {
-      String firstLetter = item.name[0].toUpperCase();
-      map.putIfAbsent(firstLetter, () => []);
-      map[firstLetter]!.add(item);
-    }
-
-    return map;
-  }
-
-  void _changeCheckbox(ChatUserModel user) {
+  void _changeCheckbox(types.User user) {
     SelectCubit cubit = context.read<SelectCubit>();
     if (cubit.state.contains(user)) {
       cubit.remove(user);
@@ -187,8 +173,8 @@ class _NewGroupPageState extends State<NewGroupPage> {
     SelectCubit cubit = context.read<SelectCubit>();
     final result = await Navigator.of(context).pushNamed(
       '/search_group',
-      arguments: SearchGroupPageParameters(_testUsers, cubit.state),
-    ) as List<ChatUserModel>?;
+      arguments: cubit.state,
+    ) as List<types.User>?;
     if (result != null) {
       cubit.addAll(result);
     }

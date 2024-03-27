@@ -35,7 +35,8 @@ import 'package:chance_app/ui/pages/sos_page/delete_contact_screen.dart';
 import 'package:chance_app/ui/pages/sos_page/main_page_sos.dart';
 import 'package:chance_app/ui/pages/sos_page/replace_contact_sos.dart';
 import 'package:chance_app/ux/bloc/add_medicine_bloc/add_medicine_bloc.dart';
-import 'package:chance_app/ux/model/chat_user_model.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+
 
 class AppRouter {
   const AppRouter._();
@@ -193,10 +194,10 @@ class AppRouter {
       case "/chat":
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => const ChatPage(),
+          builder: (_) => ChatPage(room: args as types.Room),
         );
       case "/search_chat":
-        List<ChatUserModel> list = args as List<ChatUserModel>;
+        List<types.User> list = args as List<types.User>;
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => BlocProvider(
@@ -206,24 +207,22 @@ class AppRouter {
         );
 
       case "/search_group":
-        SearchGroupPageParameters params = args as SearchGroupPageParameters;
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => MultiBlocProvider(
             providers: [
-              BlocProvider(create: (_) => SearchCubit(params.allUsers)),
               BlocProvider(
-                create: (_) => SelectCubit(list: params.selectedUsers),
+                create: (_) => SelectCubit(list: args as List<types.User>),
               ),
             ],
-            child: SearchGroupPage(list: params.allUsers),
+            child: const SearchGroupPage(),
           ),
         );
       case "/create_group":
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => CreateGroupPage(
-            selectedUsers: args as List<ChatUserModel>,
+            selectedUsers: args as List<types.User>,
           ),
         );
       default:

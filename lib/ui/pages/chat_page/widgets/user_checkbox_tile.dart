@@ -1,6 +1,8 @@
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ux/model/chat_user_model.dart';
+import 'package:chance_app/ux/extensions/chat_user_name.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+
 
 class UserCheckboxTile extends StatelessWidget {
   const UserCheckboxTile({
@@ -11,8 +13,8 @@ class UserCheckboxTile extends StatelessWidget {
   });
 
   final bool isSelected;
-  final ChatUserModel value;
-  final ValueChanged<ChatUserModel>? onChanged;
+  final types.User value;
+  final ValueChanged<types.User>? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,7 @@ class UserCheckboxTile extends StatelessWidget {
         ),
         const SizedBox(width: 20.0),
         Text(
-          value.name,
+          value.fullName,
           style: TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 16,

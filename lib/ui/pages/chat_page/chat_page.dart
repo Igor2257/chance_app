@@ -1,100 +1,25 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/chat_bubble_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:socket_io_client/socket_io_client.dart';
-
-class StreamSocket {
-  final _socketResponse = StreamController<String>();
-
-  void Function(String) get addResponse => _socketResponse.sink.add;
-
-  Stream<String> get getResponse => _socketResponse.stream;
-
-  void dispose() {
-    _socketResponse.close();
-  }
-}
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+  const ChatPage({super.key, required this.room});
+
+  final types.Room room;
 
   @override
   State<ChatPage> createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
- late final Socket socket;
   final TextEditingController _controller = TextEditingController();
-  StreamSocket streamSocket = StreamSocket();
-
-  final List<String> _testUsers = <String>[
-    'Olives',
-    'Tomato',
-    'Cheese',
-    'Pepperoni',
-    'Bacon',
-    'Onion',
-    'Jalapeno',
-    'Mushrooms',
-    'Pineapple',
-  ];
-
-  @override
-  void initState() {
-    try {
-      socket = io(
-        'http://139.28.37.11:56565/',
-        OptionBuilder()
-            .setTransports(['websocket']) // for Flutter or Dart VM
-            .setExtraHeaders({'withCredentials': true}) // optional
-            .disableAutoConnect()
-            .build(),
-      );
-      socket.connect();
-      socket.onConnect((_) {
-        print('connect');
-        socket.emit('msg', 'connect');
-      });
-      socket.onConnectError((e) {
-        print('onConnectError - $e');
-        socket.emit('msg', 'test');
-      });
-      socket.onConnecting((e) {
-        print('onConnecting');
-        socket.emit('msg', 'test');
-      });
-      socket.onError((e) {
-        print('onError $e');
-        socket.emit('msg', 'test');
-      });
-      socket.onReconnect((_) {
-        print('onReconnect');
-        socket.emit('msg', 'test');
-      });
-      socket.on('text-chat', (data) {
-        print("data $data");
-        streamSocket.addResponse(data);
-      });
-      socket.on('msg', (data) {
-        print("data $data");
-        //streamSocket.addResponse(data);
-      });
-      socket.onDisconnect((_) => print('disconnect'));
-      socket.on('fromServer', (_) => print(_));
-    } catch (e) {
-      print(e);
-    }
-    super.initState();
-  }
+  late final Stream<List<types.Message>> _messagesStream =
+      FirebaseChatCore.instance.messages(widget.room);
 
   @override
   void dispose() {
-    socket.disconnect();
-    socket.dispose();
-
     _controller.dispose();
     super.dispose();
   }
@@ -105,9 +30,9 @@ class _ChatPageState extends State<ChatPage> {
       onTap: () => _unFocus(context),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Юзер',
-            style: TextStyle(
+          title: Text(
+            widget.room.name ?? 'Chat',
+            style: const TextStyle(
               fontWeight: FontWeight.w400,
               fontSize: 22,
               height: 28 / 22,
@@ -115,48 +40,46 @@ class _ChatPageState extends State<ChatPage> {
           ),
           centerTitle: true,
         ),
-        body: StreamBuilder(
-          stream: null,
+        body: StreamBuilder<List<types.Message>>(
+          stream: _messagesStream,
           builder: (context, snapshot) {
-            print(snapshot);
+            // We are waiting for incoming data data
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
 
-            /// We are waiting for incoming data data
-            // if (snapshot.connectionState == ConnectionState.waiting) {
-            //   return const Center(
-            //     child: CircularProgressIndicator(),
-            //   );
-            // }
+            // We have an active connection and we have received data
+            if (snapshot.connectionState == ConnectionState.active &&
+                snapshot.hasData) {
+              return ListView.builder(
+                reverse: true,
+                padding: const EdgeInsets.all(16.0),
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  types.Message message = snapshot.data![index];
+                  if (message is types.TextMessage) {
+                    return ChatBubbleWidget(message: message);
+                  }
+                  return const SizedBox();
+                },
+              );
+            }
 
-            /// We have an active connection and we have received data
-            // if (snapshot.connectionState == ConnectionState.active &&
-            //     snapshot.hasData) {
-            return ListView.builder(
-              reverse: true,
-              padding: const EdgeInsets.all(16.0),
-              itemCount: _testUsers.length,
-              itemBuilder: (context, index) {
-                return ChatBubbleWidget(
-                  text: _testUsers[index],
-                  isMine: index % 2 == 0,
-                );
-              },
-            );
-            //}
-
-            /// When we have closed the connection
             if (snapshot.connectionState == ConnectionState.done) {
               return const Center(
                 child: Text(
                   'No more data',
                   style: TextStyle(
-                    color: Colors.red,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 22,
+                    height: 28 / 22,
                   ),
                 ),
               );
             }
 
-            /// For all other situations, we display a simple "No data"
-            /// message
             return const Center(
               child: Text('No messages'),
             );
@@ -189,6 +112,7 @@ class _ChatPageState extends State<ChatPage> {
             letterSpacing: -0.4,
             color: primary1000,
           ),
+          onEditingComplete: _onSendBtnTap,
           decoration: InputDecoration(
             fillColor: background,
             filled: true,
@@ -217,31 +141,13 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Future<void> _onSendBtnTap() async {
-    // Map<String, dynamic> map = {
-
-    // };
-    try {
-      //await _channel?.ready;
+  void _onSendBtnTap() {
+    if (_controller.text.isNotEmpty) {
+      FirebaseChatCore.instance.sendMessage(
+        types.PartialText(text: _controller.text),
+        widget.room.id,
+      );
       _controller.clear();
-      if (mounted) {
-        _unFocus(context);
-        print('socket - ${socket.active}');
-        socket.emit(
-          'text-chat',
-          {
-            'name': 'Name',
-            'toUserId': '1',
-            'message': _controller.text,
-          },
-        );
-        //_channel?.sink.add('Info');
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
-      }
     }
   }
 

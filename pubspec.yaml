@@ -76,6 +76,10 @@ dependencies:
   workmanager: ^0.5.2
   google_mobile_ads: ^4.0.0
   socket_io_client: ^2.0.3+1
+  flutter_firebase_chat_core: ^1.6.7
+  flutter_chat_types: ^3.6.2
+  timeago: ^3.6.1 
+  dart_jsonwebtoken: 2.13.0
 
 
   # The following adds the Cupertino Icons font to your application.

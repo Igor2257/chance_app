@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:chance_app/main.dart';
 import 'package:chance_app/ui/pages/navigation/navigation_page/components/map_data.dart';
@@ -12,17 +13,19 @@ import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart' show sha256;
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class Repository {
   static const apiUrl = 'http://139.28.37.11:56565/stage/api';
-
 
   Future<String?> sendLoginData(String email, String password) async {
     String? error;
@@ -49,6 +52,9 @@ class Repository {
         )
             .then((value) async {
           final cookie = _parseCookieFromLogin(value);
+          Map<String, dynamic> data = json.decode(value.body);
+          UserCredential credential =
+              await FirebaseAuth.instance.signInWithCustomToken(data['token']);
 
           if (value.statusCode > 199 && value.statusCode < 300) {
             var url = Uri.parse('$apiUrl/auth/me');
@@ -72,6 +78,15 @@ class Repository {
                   deviceId: map["deviceId"],
                 );
                 await HiveCRUM().addUser(meUser);
+
+                await FirebaseChatCore.instance.createUserInFirestore(
+                  types.User(
+                    firstName: meUser.name,
+                    id: credential.user!.uid,
+                    lastName: meUser.lastName,
+                  ),
+                );
+
                 await FirebaseMessaging.instance.getToken().then((token) {
                   patchUserData(token: token);
                 });
@@ -89,6 +104,7 @@ class Repository {
                 .toString()
                 .replaceAll("[", "")
                 .replaceAll("]", "");
+                log(error.toString());
             Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
           }
         });
@@ -361,7 +377,8 @@ class Repository {
     List<TaskModel> list = [];
 
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      list = List.from(HiveCRUM().myTasks.where((element) => element.isRemoved == false));
+      list = List.from(
+          HiveCRUM().myTasks.where((element) => element.isRemoved == false));
     } else {
       if ((forcePush != null && forcePush) || !checkIsAnyTasksNotSent()) {
         await loadTasks().then((value) async {
@@ -542,7 +559,8 @@ class Repository {
                 isGoogle: map["isGoogle"],
                 isConfirmed: map["isConfirmed"],
                 deviceId: map["deviceId"],
-              );HiveCRUM();
+              );
+              HiveCRUM();
               await HiveCRUM().addUser(meUser!);
               return meUser;
             } else {
@@ -597,8 +615,8 @@ class Repository {
 
   Future<bool> sendAllLocalData() async {
     List<TaskModel> dbTasks = await loadTasks(),
-        localTasks =
-            List.from(HiveCRUM().myTasks.where((element) => element.isSentToDB == false));
+        localTasks = List.from(
+            HiveCRUM().myTasks.where((element) => element.isSentToDB == false));
     for (int i = 0; i < localTasks.length; i++) {
       if (dbTasks.any((element) => element.id == localTasks[i].id)) {
         if (localTasks[i].isRemoved) {
@@ -649,6 +667,7 @@ class Repository {
       error = "Немає підключення до інтернету";
     } else {
       try {
+        await FirebaseAuth.instance.signOut();
         var url = Uri.parse('$apiUrl/auth/logout');
         final cookie = await getCookie();
         await http.post(url, headers: <String, String>{
@@ -669,13 +688,11 @@ class Repository {
   }
 
   bool checkIsAnyTasksNotSent() {
-    List<TaskModel> myTasks=List.from(HiveCRUM().myTasks);
+    List<TaskModel> myTasks = List.from(HiveCRUM().myTasks);
     return myTasks.isNotEmpty
         ? myTasks.any((element) => element.isSentToDB == false)
         : false;
   }
-
-
 
   Future<String?> deleteAllTasks() async {
     String? error;
@@ -769,8 +786,9 @@ class Repository {
     List<MedicineModel> medicines = [];
 
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      medicines =
-          List.from(HiveCRUM().myMedicines.where((element) => element.isRemoved == false));
+      medicines = List.from(HiveCRUM()
+          .myMedicines
+          .where((element) => element.isRemoved == false));
     } else {
       if ((forcePush != null && forcePush) || !checkIsAnyTasksNotSent()) {
         await loadMedicines().then((value) async {
@@ -856,7 +874,9 @@ class Repository {
                 .replaceAll("[", "")
                 .replaceAll("]", "");
           } else {
-            await await HiveCRUM().addMedicine(medicineModel).whenComplete(() async {
+            await await HiveCRUM()
+                .addMedicine(medicineModel)
+                .whenComplete(() async {
               await setIsSentInLocalMedicine(true,
                   medicineModel: medicineModel);
             });
@@ -876,7 +896,7 @@ class Repository {
       {String? id, MedicineModel? medicineModel}) async {
     if (id != null) {
       MedicineModel medicineModel =
-      HiveCRUM().myMedicines.firstWhere((element) => element.id == id);
+          HiveCRUM().myMedicines.firstWhere((element) => element.id == id);
       medicineModel = medicineModel.copyWith(isSentToDB: isSentToDB);
       await medicineBox!.put(medicineModel.id, medicineModel);
     }
@@ -958,6 +978,7 @@ class Repository {
     }
     return error;
   }
+
   Future<String?> sendConfirmToWard(String email) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
@@ -1080,10 +1101,11 @@ class Repository {
     }
     return invitations;
   }
+
   Future<String?> checkOnValidCode(String code) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error= "Немає підключення до інтернету";
+      error = "Немає підключення до інтернету";
     } else {
       try {
         //var url = Uri.parse('$apiUrl/medicine');
@@ -1114,10 +1136,9 @@ class Repository {
         //  }
         //});
       } catch (e) {
-        error=e.toString();
+        error = e.toString();
       }
     }
-
 
     return error;
   }
@@ -1125,7 +1146,7 @@ class Repository {
   Future<String?> removeInvitation(String id) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error= "Немає підключення до інтернету";
+      error = "Немає підключення до інтернету";
     } else {
       try {
         //var url = Uri.parse('$apiUrl/medicine');
@@ -1156,17 +1177,18 @@ class Repository {
         //  }
         //});
       } catch (e) {
-        error=e.toString();
+        error = e.toString();
       }
     }
-
 
     return error;
   }
-  Future<String?> changeStatus(String id,InvitationStatus invitationStatus) async {
+
+  Future<String?> changeStatus(
+      String id, InvitationStatus invitationStatus) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error= "Немає підключення до інтернету";
+      error = "Немає підключення до інтернету";
     } else {
       try {
         //var url = Uri.parse('$apiUrl/medicine');
@@ -1197,10 +1219,9 @@ class Repository {
         //  }
         //});
       } catch (e) {
-        error=e.toString();
+        error = e.toString();
       }
     }
-
 
     return error;
   }

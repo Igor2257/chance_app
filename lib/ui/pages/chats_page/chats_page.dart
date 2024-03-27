@@ -1,6 +1,8 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/chats_page/widgets/chat_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ChatsPage extends StatelessWidget {
   const ChatsPage({super.key});
@@ -19,14 +21,38 @@ class ChatsPage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: ListView.separated(
-        itemCount: 10,
-        padding: const EdgeInsets.all(16.0),
-        itemBuilder: (context, index) => const ChatTile(),
-        separatorBuilder: (_, __) => Divider(
-          thickness: 1.0,
-          height: 0.0,
-          color: Colors.black.withOpacity(.1),
+      body: Center(
+        child: StreamBuilder<List<types.Room>>(
+          stream: FirebaseChatCore.instance.rooms(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasData) {
+              if (snapshot.data!.isEmpty) {
+                return const Text(
+                  'Немає створених чатів!',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 22,
+                    height: 28 / 22,
+                  ),
+                );
+              }
+              return ListView.separated(
+                itemCount: snapshot.data!.length,
+                padding: const EdgeInsets.all(16.0),
+                itemBuilder: (context, index) => ChatTile(
+                  room: snapshot.data![index],
+                ),
+                separatorBuilder: (_, __) => Divider(
+                  thickness: 1.0,
+                  height: 0.0,
+                  color: Colors.black.withOpacity(.1),
+                ),
+              );
+            }
+            return const SizedBox();
+          },
         ),
       ),
       floatingActionButton: FloatingActionButton(

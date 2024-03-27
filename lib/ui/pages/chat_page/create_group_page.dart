@@ -1,14 +1,14 @@
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/chat_page/blocs/select_cubit/select_cubit.dart';
-import 'package:chance_app/ux/model/chat_user_model.dart';
+import 'package:chance_app/ux/extensions/chat_user_name.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 
 class CreateGroupPage extends StatefulWidget {
   const CreateGroupPage({super.key, required this.selectedUsers});
 
-  final List<ChatUserModel> selectedUsers;
+  final List<types.User> selectedUsers;
 
   @override
   State<CreateGroupPage> createState() => _CreateGroupPageState();
@@ -25,7 +25,6 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(_controller.text.trim().isEmpty);
     return GestureDetector(
       onTap: () => _unFocus(context),
       child: Scaffold(
@@ -51,9 +50,8 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                 controller: _controller,
                 autofocus: true,
                 keyboardType: TextInputType.name,
-                textInputAction: TextInputAction.search,
+                textInputAction: TextInputAction.done,
                 textCapitalization: TextCapitalization.words,
-                //onChanged: context.read<SearchCubit>().search,
                 style: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 22,
@@ -74,7 +72,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
               Expanded(
                 child: ListView.separated(
                   itemBuilder: (context, index) => Text(
-                    widget.selectedUsers[index].name,
+                    widget.selectedUsers[index].fullName,
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 16,
@@ -124,8 +122,16 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
     );
   }
 
-  void _onCreateGroupBtnTap(BuildContext context) =>
-      Navigator.of(context).pushNamed('/chat');
+  Future<void> _onCreateGroupBtnTap(BuildContext context) async {
+    types.Room room = await FirebaseChatCore.instance.createGroupRoom(
+      name: _controller.text.trim(),
+      users: widget.selectedUsers,
+    );
+
+    if (!context.mounted) return;
+
+    Navigator.of(context).pushNamed('/chat', arguments: room);
+  }
 
   void _unFocus(BuildContext context) => FocusScope.of(context).unfocus();
 }

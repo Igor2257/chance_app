@@ -51,6 +51,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest_all.dart';
 import 'package:timezone/timezone.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -89,6 +90,7 @@ Future<void> main() async {
   final currentTimeZone = await FlutterTimezone.getLocalTimezone();
   initializeTimeZones();
   setLocalLocation(getLocation(currentTimeZone));
+  timeago.setLocaleMessages('uk', timeago.UkMessages()); // Add uk messages
 
   await initHiveBoxes().then((value) async {
     if ((!HiveCRUM().setting.blockAd)) {

@@ -2,19 +2,47 @@ import 'package:chance_app/ui/constans.dart';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:timeago/timeago.dart' as timeago;
 
 class ChatTile extends StatelessWidget {
-  const ChatTile({super.key});
+  const ChatTile({
+    super.key,
+    required this.room,
+  });
+
+  final types.Room room;
 
   @override
   Widget build(BuildContext context) {
+    types.Message? lastMessage =
+        room.lastMessages?.isEmpty ?? true ? null : room.lastMessages!.first;
+
+    String title = '';
+    String subtitle = '';
+    DateTime? updatedAt;
+
+    if (lastMessage != null) {
+      title = room.name != null
+          ? room.name!
+          : '${lastMessage.author.firstName} ${lastMessage.author.lastName}';
+      if (lastMessage.updatedAt != null) {
+        updatedAt = DateTime.fromMillisecondsSinceEpoch(lastMessage.updatedAt!);
+      }
+      if (lastMessage is types.TextMessage) {
+        subtitle = room.name != null
+            ? '${lastMessage.author.firstName} ${lastMessage.author.lastName}: ${lastMessage.text}'
+            : lastMessage.text;
+      }
+    }
+
     return ListTile(
       onTap: () => _openChatPage(context),
       contentPadding: EdgeInsets.zero,
       leading: CircleAvatar(
         radius: 24.0,
         child: Text(
-          'Д',
+          title.isNotEmpty ? title[0] : '',
           style: TextStyle(
             fontSize: 14,
             height: 20 / 14,
@@ -23,20 +51,20 @@ class ChatTile extends StatelessWidget {
           ),
         ),
       ),
-      title: const Text(
-        'Друзі',
+      title: Text(
+        title,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
-      subtitle: const Text(
-        'Можемо зустрітися',
+      subtitle: Text(
+        subtitle,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
       trailing: SizedBox(
         height: double.infinity,
         child: Text(
-          DateFormat('hh:mm').format(DateTime.now()),
+          updatedAt != null ? timeago.format(updatedAt, locale: 'uk') : '',
           style: TextStyle(
             fontSize: 14,
             height: 20 / 14,
@@ -66,5 +94,5 @@ class ChatTile extends StatelessWidget {
   }
 
   void _openChatPage(BuildContext context) =>
-      Navigator.of(context).pushNamed('/chat');
+      Navigator.of(context).pushNamed('/chat', arguments: room);
 }
