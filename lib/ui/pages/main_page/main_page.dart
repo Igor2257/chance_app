@@ -242,7 +242,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                     width: cardWidth,
                     margin: const EdgeInsets.only(bottom: 8, top: 8, right: 8),
-                    onPress: () {},
+                    onPress: () => _onChatsBtnTap(context),
                   ),
                   CustomCard(
                     icon: Image.asset(
@@ -335,4 +335,7 @@ class _MainPageState extends State<MainPage> {
 
     return isOkay;
   }
+
+  void _onChatsBtnTap(BuildContext context) =>
+      Navigator.of(context).pushNamed('/chats');
 }

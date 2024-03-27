@@ -13,6 +13,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+
 
 class UserRepository {
   Future<String?> sendLoginData(String email, String password) async {
@@ -40,6 +43,9 @@ class UserRepository {
         )
             .then((value) async {
           final cookie = _parseCookieFromLogin(value);
+          Map<String, dynamic> data = json.decode(value.body);
+          UserCredential credential =
+              await FirebaseAuth.instance.signInWithCustomToken(data['token']);
 
           if (value.statusCode > 199 && value.statusCode < 300) {
             var url = Uri.parse('$apiUrl/auth/me');
@@ -62,6 +68,15 @@ class UserRepository {
                   isConfirmed: map["isConfirmed"],
                   deviceId: map["deviceId"] ?? "",
                 );
+
+                await FirebaseChatCore.instance.createUserInFirestore(
+                  types.User(
+                    firstName: meUser.name,
+                    id: credential.user!.uid,
+                    lastName: meUser.lastName,
+                  ),
+                );
+
                 await HiveCRUD().addUser(meUser);
               } else {
                 error = jsonDecode(value.body)["message"]
