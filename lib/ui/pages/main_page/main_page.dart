@@ -6,8 +6,11 @@ import 'package:chance_app/ui/components/sos_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -17,6 +20,148 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  _listenFCM() async {
+    showDialog(
+          context: context,
+          builder: (context) {
+            Size size = MediaQuery.of(context).size;
+            return Container(
+                color: Colors.black38,
+                child: Center(
+                  child: Container(
+                    width: size.width,
+                    decoration: BoxDecoration(
+                        color: beige100,
+                        borderRadius: BorderRadius.circular(16)),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 24),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 16, horizontal: 24),
+                          child: Column(
+                            children: [
+                              SvgPicture.asset(
+                                "assets/icons/tasks_big.svg",
+                                color: beige500,
+                              ),
+                              Text(
+                                AppLocalizations.instance.translate("tasks"),textAlign: TextAlign.center,
+                                style:
+                                    const TextStyle(fontSize: 16, color: primaryText),
+                              ),
+                              const Text(
+                                'remoteMessage.data["message"]',
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(fontSize: 24, color: primaryText),
+                            ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: 120,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              color: darkNeutral800),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: SizedBox(
+                                  width: size.width / 4,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        height: 56,
+                                        width: 56,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(90),
+                                            border:
+                                                Border.all(color: primary300)),
+                                        child: const Center(
+                                          child: Icon(
+                                            Icons.close,
+                                            color: primary50,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        AppLocalizations.instance.translate("miss"),textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color: primary50, fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () async {
+                                  try {
+                                    // await TasksRepository()
+                                    //     .updateTask(
+                                    //         id: remoteMessage.data["id"]
+                                    //             .toString(),
+                                    //         isDone: true)
+                                    //     .then((value) {
+                                    //   if (value == null) {
+                                    //     Navigator.of(context).pop();
+                                    //   }
+                                    // });
+                                  } catch (e) {
+                                    Fluttertoast.showToast(msg: e.toString());
+                                  }
+                                },
+                                child: SizedBox(
+                                  width: size.width / 4,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        height: 56,
+                                        width: 56,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(90),
+                                            color: primary300),
+                                        child: const Center(
+                                          child: Icon(
+                                            Icons.done,
+                                            color: primaryText,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        AppLocalizations.instance.translate("done"),textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color: primary50, fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ));
+        });
+  }
   @override
   void initState() {
     super.initState();
@@ -58,8 +203,7 @@ class _MainPageState extends State<MainPage> {
                     width: cardWidth,
                     margin: const EdgeInsets.only(bottom: 8, top: 8, right: 8),
                     onPress: () async {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          "/reminders", (route) => true);
+                      Navigator.of(context).pushNamedAndRemoveUntil("/reminders", (route) => true);
                     },
                   ),
                   CustomCard(
@@ -98,7 +242,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                     width: cardWidth,
                     margin: const EdgeInsets.only(bottom: 8, top: 8, right: 8),
-                    onPress: () => _onChatsBtnTap(context),
+                    onPress: () {},
                   ),
                   CustomCard(
                     icon: Image.asset(
@@ -107,8 +251,7 @@ class _MainPageState extends State<MainPage> {
                       width: 44,
                     ),
                     text: Text(
-                      AppLocalizations.instance
-                          .translate("appointmentWithDoctor"),
+                      AppLocalizations.instance.translate("appointmentWithDoctor"),
                       style: const TextStyle(color: primaryText),
                     ),
                     width: cardWidth,
@@ -157,14 +300,12 @@ class _MainPageState extends State<MainPage> {
               builder: (context) {
                 return AlertDialog(
                   title: Text(
-                    AppLocalizations.instance
-                        .translate("allowTheAppToUseTheLocation"),
+                    AppLocalizations.instance.translate("allowTheAppToUseTheLocation"),
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 24, color: primaryText),
                   ),
                   content: Text(
-                    AppLocalizations.instance.translate(
-                        "forTheAppToWorkCorrectlyYouNeedToAllowThisPermissionToBeUsed"),
+                    AppLocalizations.instance.translate("forTheAppToWorkCorrectlyYouNeedToAllowThisPermissionToBeUsed"),
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 16, color: primaryText),
                   ),
@@ -194,7 +335,4 @@ class _MainPageState extends State<MainPage> {
 
     return isOkay;
   }
-
-  void _onChatsBtnTap(BuildContext context) =>
-      Navigator.of(context).pushNamed('/chats_page');
 }

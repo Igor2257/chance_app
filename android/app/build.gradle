@@ -97,7 +97,6 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:32.7.2')
     implementation 'com.google.android.gms:play-services-maps:18.2.0'
     implementation 'com.google.android.gms:play-services-ads:21.1.0'
-    implementation("com.google.firebase:firebase-auth")
 
     implementation "androidx.multidex:multidex:2.0.1"
     def billing_version = "6.0.1"
