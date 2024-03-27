@@ -23,7 +23,10 @@ class _EnterAcceptCodeState extends State<EnterAcceptCode> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: beigeBG,
+
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         centerTitle: true,
         title: const Text("Код підтвердження"),
       ),

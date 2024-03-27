@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:chance_app/firebase_options.dart';
 import 'package:chance_app/ui/components/ad_banner.dart';
-import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/doctor_appointment/doctor_appointment.dart';
@@ -16,8 +15,7 @@ import 'package:chance_app/ui/pages/menu/pages/select_language.dart';
 import 'package:chance_app/ui/pages/navigation/add_ward/add_ward.dart';
 import 'package:chance_app/ui/pages/navigation/invitations/check_my_invitation/check_my_invitation.dart';
 import 'package:chance_app/ui/pages/navigation/invitations/enter_accept_code/enter_accept_code.dart';
-import 'package:chance_app/ui/pages/navigation/my_wards/my_wards.dart';
-import 'package:chance_app/ui/pages/navigation/navigation_page/components/map_data.dart';
+import 'package:chance_app/ui/pages/navigation/my_wards/my_wards_guardians.dart';
 import 'package:chance_app/ui/pages/navigation/navigation_page/navigation_page.dart';
 import 'package:chance_app/ui/pages/onboarding/onboarding_page.dart';
 import 'package:chance_app/ui/pages/onboarding/onboarding_tutorial.dart';
@@ -50,7 +48,7 @@ import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/internet_connection_stream.dart';
 import 'package:chance_app/ux/model/product_model.dart';
 import 'package:chance_app/ux/model/settings.dart';
-import 'package:chance_app/ux/position_controller.dart';
+import 'package:chance_app/ux/repository/navigation_repository.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
@@ -63,7 +61,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -74,10 +71,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await Supabase.initialize(
-      url: "https://tnvxszbqdurbkpnvjvgz.supabase.co",
-      anonKey:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudnhzemJxZHVyYmtwbnZqdmd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA4NDU5NjUsImV4cCI6MjAyNjQyMTk2NX0.I_Tf2UAA5Qo05EOSR2HXkv9yMun2NyixOZtCyr3OvoA");
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   final GoogleMapsFlutterPlatform platform = GoogleMapsFlutterPlatform.instance;
@@ -105,13 +98,23 @@ Future<void> main() async {
   });
 
   await HiveCRUD().initialize().then((value) async {
-    await Permission.notification.request();
-    await RemindersHelper.initialize();
-    await BackgroundServiceHelper.initialize();
+    await Supabase.initialize(
+        url: "https://tnvxszbqdurbkpnvjvgz.supabase.co",
+        anonKey:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudnhzemJxZHVyYmtwbnZqdmd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA4NDU5NjUsImV4cCI6MjAyNjQyMTk2NX0.I_Tf2UAA5Qo05EOSR2HXkv9yMun2NyixOZtCyr3OvoA")
+        .then((value)async {
+      //value.client.from("invitations").select().match(query)
+      await NavigationRepository().isAppShouldSentLocation();
+      await Permission.notification.request();
+      await RemindersHelper.initialize();
+      await BackgroundServiceHelper.initialize();
 
-    if ((!HiveCRUD().setting.blockAd)) {
-      unawaited(MobileAds.instance.initialize());
-    }
+      if ((!HiveCRUD().setting.blockAd)) {
+        unawaited(MobileAds.instance.initialize());
+      }
+    });
+
+
   }).whenComplete(() async {
     UserRepository repository = UserRepository();
     String route = "/onboarding_page";
@@ -148,10 +151,16 @@ Future<AndroidMapRenderer?> initializeMapRenderer() async {
 
   final GoogleMapsFlutterPlatform platform = GoogleMapsFlutterPlatform.instance;
   if (Platform.isAndroid) {
-    unawaited((platform as GoogleMapsFlutterAndroid)
-        .initializeWithRenderer(AndroidMapRenderer.latest)
-        .then((AndroidMapRenderer initializedRenderer) =>
-            completer.complete(initializedRenderer)));
+    try {
+      unawaited((platform as GoogleMapsFlutterAndroid)
+          .initializeWithRenderer(AndroidMapRenderer.latest)
+          .then((AndroidMapRenderer initializedRenderer) =>
+              completer.complete(initializedRenderer)));
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
 
   return completer.future;
@@ -161,6 +170,7 @@ class MyApp extends StatefulWidget {
   const MyApp(this.route, {super.key});
 
   final String route;
+
   static void restartApp(BuildContext context) {
     context.findAncestorStateOfType<MyAppState>()!.restartApp();
   }
@@ -184,6 +194,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
           route = "/";
         } else {
           await repository.getCookie().then((value) {
+            ///TODO: проверить как это работает, чтобы при логауте и перезагрузки не кидало сюда опять
             if (value != null) {
               route = "/";
             }
@@ -215,7 +226,6 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     } catch (e) {
       FlutterError("Error ${e.toString()}");
     }
-    loadGPSFunction();
   }
 
   checkIfDocsAreAvailable() async {
@@ -392,7 +402,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                         const EnterAcceptCode(),
                                     "/choose_language": (context) =>
                                         const ChooseLanguage(),
-                                    "/my_wards": (context) => const MyWards(),
+                                    "/my_wards": (context) =>
+                                        const MyWardsGuardians(),
                                     "/doctor_appointment": (context) =>
                                         const DoctorAppointment(),
                                     "/job_search": (context) =>
@@ -473,70 +484,5 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
             ),
           );
         }));
-  }
-
-  void loadGPSFunction() {
-    if (HiveCRUD().setting.isAppShouldSentLocation) {}
-    checkLocationPermission(context).then((value) async {
-      if (value) {
-        positionController = PositionController(setState);
-      }
-    });
-  }
-
-  Future<bool> checkLocationPermission(BuildContext context) async {
-    bool isOkay = false;
-    await Permission.location.request().then((status) async {
-      if (status != PermissionStatus.denied &&
-          status != PermissionStatus.permanentlyDenied) {
-        isOkay = true;
-      }
-      if (!isOkay) {
-        if (mounted) {
-          await showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (context) {
-                return PopScope(
-                    canPop: false,
-                    onPopInvoked: (value) {},
-                    child: AlertDialog(
-                      title: Text(
-                        AppLocalizations.instance
-                            .translate("allowTheAppToUseTheLocation"),
-                        style:
-                            const TextStyle(fontSize: 24, color: primaryText),
-                      ),
-                      content: Text(
-                        AppLocalizations.instance.translate(
-                            "forTheAppToWorkCorrectlyYouNeedToAllowThisPermissionToBeUsed"),
-                        style:
-                            const TextStyle(fontSize: 16, color: primaryText),
-                      ),
-                      actions: [
-                        RoundedButton(
-                          onPress: () async {
-                            await Geolocator.openAppSettings().whenComplete(() {
-                              if (mounted) {
-                                Navigator.of(context).pop();
-                              }
-                            });
-
-                            return true;
-                          },
-                          color: primary1000,
-                          child: Text(
-                            AppLocalizations.instance.translate("goTo"),
-                            style: const TextStyle(color: primary50),
-                          ),
-                        ),
-                      ],
-                    ));
-              });
-        }
-      }
-    });
-
-    return isOkay;
   }
 }

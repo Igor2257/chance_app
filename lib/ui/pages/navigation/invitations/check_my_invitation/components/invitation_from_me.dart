@@ -11,9 +11,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class InvitationFromMe extends StatelessWidget {
+class InvitationFromMe extends StatefulWidget {
   const InvitationFromMe({super.key});
 
+  @override
+  State<InvitationFromMe> createState() => _InvitationFromMeState();
+}
+
+class _InvitationFromMeState extends State<InvitationFromMe> {
+  bool isLoading = false;
+@override
+  void initState() {
+  BlocProvider.of<InvitationBloc>(context).add(LoadInvitationsFromMe());
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -78,9 +89,15 @@ class InvitationFromMe extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                             Text(
+                              invitationFromMe.toUserName,
+                              style: const TextStyle(
+                                  fontSize: 16, color: primaryText),
+                              maxLines: 1,
+                            ),
+                            Text(
                               invitationFromMe.toUserEmail,
-                              style:
-                                  const TextStyle(fontSize: 16, color: primaryText),
+                              style: const TextStyle(
+                                  fontSize: 16, color: primaryText),
                               maxLines: 1,
                             ),
                             Text(
@@ -99,16 +116,25 @@ class InvitationFromMe extends StatelessWidget {
                           ])),
                       IconButton(
                           onPressed: () async {
-                            await InvitationRepository()
-                                .removeInvitation(invitationFromMe.id)
-                                .then((value) {
-                              if (value == null) {
-                                BlocProvider.of<InvitationBloc>(context)
-                                    .add(LoadInvitationsFromMe());
-                              } else {
-                                Fluttertoast.showToast(msg: value);
-                              }
-                            });
+                            if (!isLoading) {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              await InvitationRepository()
+                                  .removeInvitation(invitationFromMe.id)
+                                  .then((value) {
+                                if (value == null) {
+                                  BlocProvider.of<InvitationBloc>(context)
+                                      .add(LoadInvitationsFromMe());
+                                } else {
+                                  Fluttertoast.showToast(msg: value);
+                                }
+                                isLoading = false;
+                                if (mounted) {
+                                  setState(() {});
+                                }
+                              });
+                            }
                           },
                           icon: const Icon(Icons.delete)),
                     ],

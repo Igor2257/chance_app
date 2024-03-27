@@ -47,6 +47,8 @@ class _AddWardState extends State<AddWard> {
       return Stack(children: [
         Scaffold(
           appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            surfaceTintColor: Colors.transparent,
             centerTitle: true,
             title: Text(AppLocalizations.instance.translate("addWard")),
             leading: BackButton(
@@ -113,7 +115,6 @@ class _AddWardState extends State<AddWard> {
                               .sendConfirmToWard(nameTextEditingController.text,
                                   emailTextEditingController.text)
                               .then((value) async {
-                            print(value);
                             if (value == null || value == "null") {
                               final crud = HiveCRUD();
                               Settings settings = crud.setting;

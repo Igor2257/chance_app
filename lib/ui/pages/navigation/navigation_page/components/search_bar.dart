@@ -177,15 +177,14 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                           })
                                       .toList();
                                   predictionsForTapMapView = predictions;
-                                  print(predictionsForTapMapView);
                                   setState(() {});
                                 },
                               ),
                             ),
                             const Spacer(),
                             PopupMenuButton(
-                              color: darkNeutral800,
-                              surfaceTintColor: darkNeutral800,
+                                color: darkNeutral800,
+                                surfaceTintColor: darkNeutral800,
                                 child: SvgPicture.asset(
                                   "assets/icons/dots_vertical.svg",
                                   width: 24,
@@ -258,7 +257,11 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                     MenuItems.values.map((e) {
                                       return PopupMenuItem(
                                         value: e,
-                                        child: Text(e.name,style: const TextStyle(color: primary50,fontSize: 16),),
+                                        child: Text(
+                                          e.name,
+                                          style: const TextStyle(
+                                              color: primary50, fontSize: 16),
+                                        ),
                                       );
                                     }).toList()),
                           ],
@@ -325,6 +328,8 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                                   snippet:
                                                       value.formattedAddress,
                                                   onTap: () {
+                                                    isNotTapedOnMyLocationButton =
+                                                        true;
                                                     mapController!.animateCamera(
                                                         CameraUpdate.newLatLngZoom(
                                                             LatLng(
@@ -338,6 +343,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                           await HiveCRUD()
                                               .addSavedAddresses(value)
                                               .whenComplete(() {
+                                            isNotTapedOnMyLocationButton = true;
                                             mapController!.animateCamera(
                                                 CameraUpdate.newLatLngZoom(
                                                     LatLng(
@@ -373,7 +379,8 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                                   .lng),
                                           icon: await getMarkerIcon(
                                                   PickResultFor.first) ??
-                                              await BitmapDescriptor.fromAssetImage(
+                                              await BitmapDescriptor
+                                                  .fromAssetImage(
                                                       const ImageConfiguration(),
                                                       "assets/icons/point_a.png"),
                                           infoWindow: InfoWindow(
@@ -382,6 +389,8 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                               snippet: savedAddresses[position]
                                                   .formattedAddress,
                                               onTap: () {
+                                                isNotTapedOnMyLocationButton =
+                                                    true;
                                                 mapController!.animateCamera(
                                                     CameraUpdate.newLatLngZoom(
                                                         LatLng(
@@ -397,6 +406,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                                                 .lng),
                                                         18));
                                               }));
+                                      isNotTapedOnMyLocationButton = true;
                                       mapController!.animateCamera(
                                           CameraUpdate.newLatLngZoom(
                                               LatLng(

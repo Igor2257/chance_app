@@ -12,29 +12,27 @@ class InvitationRepository {
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       error = "Немає підключення до інтернету";
     } else {
-      try {
-        final userId = HiveCRUD().user!.id;
-        await Supabase.instance.client
-            .from("invitations")
-            .select()
-            .eq("toUserEmail", email)
-            .eq("fromUserId", userId)
-            .then((value) async {
-          if (value.toString() == "[]") {
-            final model = InvitationModel(
-              id: DateTime.now().microsecondsSinceEpoch.toString(),
-              toUserEmail: email,
-              toUserName: name,
-              sentDate: DateTime.now(),
-              fromUserId: userId,
-              invitationStatus: InvitationStatus.pending,
-            ).toJson();
-            await Supabase.instance.client.from("invitations").insert(model);
-          }
-        });
-      } catch (e) {
-        error = error.toString();
-      }
+      final user = HiveCRUD().user!;
+      final userEmail = user.email;
+      await Supabase.instance.client
+          .from("invitations")
+          .select()
+          .eq("toUserEmail", email)
+          .eq("fromUserEmail", userEmail)
+          .then((value) async {
+        if (value.toString() == "[]") {
+          final model = InvitationModel(
+            id: DateTime.now().microsecondsSinceEpoch.toString(),
+            toUserEmail: email,
+            toUserName: name,
+            sentDate: DateTime.now(),
+            fromUserEmail: userEmail,
+            fromUserName: "${user.name} ${user.lastName}",
+            invitationStatus: InvitationStatus.pending,
+          ).toJson();
+          await Supabase.instance.client.from("invitations").insert(model);
+        }
+      });
     }
 
     return error;
@@ -73,7 +71,7 @@ class InvitationRepository {
         await Supabase.instance.client
             .from("invitations")
             .select()
-            .eq("fromUserId", HiveCRUD().user!.id)
+            .eq("fromUserEmail", HiveCRUD().user!.email)
             .inFilter("invitationStatus", [
           InvitationStatus.pending.name,
           InvitationStatus.error.name,
@@ -97,12 +95,33 @@ class InvitationRepository {
       return "noInternet";
     } else {
       try {
-        await Supabase.instance.client
-            .from("invitations")
-            .select()
-            .eq("fromUserId", HiveCRUD().user!.id)
-            .eq("invitationStatus", InvitationStatus.accepted.name)
-            .then((value) {
+        await Supabase.instance.client.from("invitations").select().match({
+          "fromUserEmail": HiveCRUD().user!.email,
+          "invitationStatus": InvitationStatus.accepted.name
+        }).then((value) {
+          List<dynamic> list = value;
+          for (int i = 0; i < list.length; i++) {
+            invitations.add(InvitationModel.fromJson(list[i]));
+          }
+        });
+      } catch (e) {
+        return e.toString();
+      }
+    }
+    return invitations;
+  }
+  Future<dynamic> getMyGuardians() async {
+    List<InvitationModel> invitations = [];
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      return "noInternet";
+    } else {
+      try {
+        print("object");
+        await Supabase.instance.client.from("invitations").select().match({
+          "toUserEmail": HiveCRUD().user!.email,
+          "invitationStatus": InvitationStatus.accepted.name
+        }).then((value) {
+          print("invitations $value");
           List<dynamic> list = value;
           for (int i = 0; i < list.length; i++) {
             invitations.add(InvitationModel.fromJson(list[i]));
@@ -127,20 +146,21 @@ class InvitationRepository {
           .then((value) async {
         if (value.toString() == "null") {
           final crud = HiveCRUD();
-          Settings settings = crud.setting;
-          settings = settings.copyWith(isAppShouldSentLocation: true);
-          await crud.updateSettings(settings).then((value) async {
-            await Supabase.instance.client.from("ward_location").insert(
-                WardLocationModel(
-                    id: invitationModel.id,
-                    myEmail: invitationModel.toUserEmail,
-                    myName: invitationModel.toUserName,
-                    latitude: 0,
-                    longitude: 0,
-                    toUserId: invitationModel.fromUserId, when: DateTime.now())
-                    .toJson());
-          });
-        }
+              Settings settings = crud.setting;
+              settings = settings.copyWith(isAppShouldSentLocation: true);
+              await crud.updateSettings(settings).then((value) async {
+                await Supabase.instance.client.from("ward_location").insert(
+                    WardLocationModel(
+                            id: invitationModel.id,
+                            myEmail: invitationModel.toUserEmail,
+                            myName: invitationModel.toUserName,
+                            latitude: 0,
+                            longitude: 0,
+                            when: DateTime.now(),
+                            toUserEmail: invitationModel.fromUserEmail)
+                        .toJson());
+              });
+            }
       });
     }
 

@@ -35,7 +35,7 @@ mixin _$MeUser {
   @HiveField(6)
   bool get isConfirmed => throw _privateConstructorUsedError;
   @HiveField(7)
-  String get deviceId => throw _privateConstructorUsedError;
+  String? get deviceId => throw _privateConstructorUsedError;
   @HiveField(8)
   int get mapType => throw _privateConstructorUsedError;
 
@@ -57,7 +57,7 @@ abstract class $MeUserCopyWith<$Res> {
       @HiveField(4) String email,
       @HiveField(5) bool isGoogle,
       @HiveField(6) bool isConfirmed,
-      @HiveField(7) String deviceId,
+      @HiveField(7) String? deviceId,
       @HiveField(8) int mapType});
 }
 
@@ -81,7 +81,7 @@ class _$MeUserCopyWithImpl<$Res, $Val extends MeUser>
     Object? email = null,
     Object? isGoogle = null,
     Object? isConfirmed = null,
-    Object? deviceId = null,
+    Object? deviceId = freezed,
     Object? mapType = null,
   }) {
     return _then(_value.copyWith(
@@ -113,10 +113,10 @@ class _$MeUserCopyWithImpl<$Res, $Val extends MeUser>
           ? _value.isConfirmed
           : isConfirmed // ignore: cast_nullable_to_non_nullable
               as bool,
-      deviceId: null == deviceId
+      deviceId: freezed == deviceId
           ? _value.deviceId
           : deviceId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       mapType: null == mapType
           ? _value.mapType
           : mapType // ignore: cast_nullable_to_non_nullable
@@ -140,7 +140,7 @@ abstract class _$$MeUserImplCopyWith<$Res> implements $MeUserCopyWith<$Res> {
       @HiveField(4) String email,
       @HiveField(5) bool isGoogle,
       @HiveField(6) bool isConfirmed,
-      @HiveField(7) String deviceId,
+      @HiveField(7) String? deviceId,
       @HiveField(8) int mapType});
 }
 
@@ -162,7 +162,7 @@ class __$$MeUserImplCopyWithImpl<$Res>
     Object? email = null,
     Object? isGoogle = null,
     Object? isConfirmed = null,
-    Object? deviceId = null,
+    Object? deviceId = freezed,
     Object? mapType = null,
   }) {
     return _then(_$MeUserImpl(
@@ -194,10 +194,10 @@ class __$$MeUserImplCopyWithImpl<$Res>
           ? _value.isConfirmed
           : isConfirmed // ignore: cast_nullable_to_non_nullable
               as bool,
-      deviceId: null == deviceId
+      deviceId: freezed == deviceId
           ? _value.deviceId
           : deviceId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       mapType: null == mapType
           ? _value.mapType
           : mapType // ignore: cast_nullable_to_non_nullable
@@ -217,7 +217,7 @@ class _$MeUserImpl implements _MeUser {
       @HiveField(4) this.email = "",
       @HiveField(5) this.isGoogle = false,
       @HiveField(6) this.isConfirmed = false,
-      @HiveField(7) this.deviceId = "",
+      @HiveField(7) this.deviceId = null,
       @HiveField(8) this.mapType = 0});
 
   factory _$MeUserImpl.fromJson(Map<String, dynamic> json) =>
@@ -253,7 +253,7 @@ class _$MeUserImpl implements _MeUser {
   @override
   @JsonKey()
   @HiveField(7)
-  final String deviceId;
+  final String? deviceId;
   @override
   @JsonKey()
   @HiveField(8)
@@ -312,7 +312,7 @@ abstract class _MeUser implements MeUser {
       @HiveField(4) final String email,
       @HiveField(5) final bool isGoogle,
       @HiveField(6) final bool isConfirmed,
-      @HiveField(7) final String deviceId,
+      @HiveField(7) final String? deviceId,
       @HiveField(8) final int mapType}) = _$MeUserImpl;
 
   factory _MeUser.fromJson(Map<String, dynamic> json) = _$MeUserImpl.fromJson;
@@ -340,7 +340,7 @@ abstract class _MeUser implements MeUser {
   bool get isConfirmed;
   @override
   @HiveField(7)
-  String get deviceId;
+  String? get deviceId;
   @override
   @HiveField(8)
   int get mapType;

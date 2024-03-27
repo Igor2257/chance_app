@@ -1,11 +1,11 @@
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/medicine_added_bottom_sheet.dart';
-import 'package:chance_app/ui/pages/reminders_page/components/medicine_status_updated_dialog.dart';
-import 'package:chance_app/ui/pages/reminders_page/components/task_status_updated_dialog.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/custom_bottom_sheet.dart';
+import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/medicine_added_bottom_sheet.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/expandable_calendar.dart';
+import 'package:chance_app/ui/pages/reminders_page/components/medicine_status_updated_dialog.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/success_dialog.dart';
+import 'package:chance_app/ui/pages/reminders_page/components/task_status_updated_dialog.dart';
 import 'package:chance_app/ui/pages/reminders_page/medicine/medicine_list.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/task_list.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/tasks_sheets.dart';
@@ -73,16 +73,16 @@ class _RemindersPageState extends State<RemindersPage> {
             context: context,
             dismissAfter: dialogDismissDuration,
             builder: (context) => SuccessDialog(
-              title: const Text("Завдання додано"),
+              title: Text(AppLocalizations.instance.translate("taskAdded")),
               subtitle: Text('"${state.task.message}"'),
             ),
-          );
+          ).whenComplete(() => Navigator.of(context).pop());
         } else if (state is TaskDone) {
           await showDismissibleDialog<void>(
             context: context,
             dismissAfter: dialogDismissDuration,
             builder: (context) => SuccessDialog(
-              title: const Text("Завдання виконано"),
+              title: Text(AppLocalizations.instance.translate("taskCompleted")),
               subtitle: Text('"${state.task.message}"'),
             ),
           );
@@ -101,7 +101,7 @@ class _RemindersPageState extends State<RemindersPage> {
             context: context,
             dismissAfter: dialogDismissDuration,
             builder: (context) => SuccessDialog(
-              title: const Text("Завдання видалено"),
+              title: Text(AppLocalizations.instance.translate("taskDeleted")),
               subtitle: Text('"${state.task.message}"'),
             ),
           );
@@ -123,7 +123,7 @@ class _RemindersPageState extends State<RemindersPage> {
               state.medicine,
               doseTime: state.at,
               status: ReminderState.done,
-              bottom: const Text("Прийнято"),
+              bottom: Text(AppLocalizations.instance.translate("accepted")),
             ),
           );
         } else if (state is MedicinePostponed) {
@@ -151,21 +151,17 @@ class _RemindersPageState extends State<RemindersPage> {
         key: _scaffoldKey,
         backgroundColor: beigeBG,
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
           centerTitle: true,
           scrolledUnderElevation: 0,
           titleTextStyle: const TextStyle(fontSize: 22, color: primaryText),
-          title: const Text("Нагадування"),
+          title: Text(AppLocalizations.instance.translate("reminder")),
           leading: BackButton(
             onPressed: () {
               Navigator.of(context).pushNamed("/");
             },
           ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.more_vert),
-            ),
-          ],
         ),
         body: SafeArea(
           bottom: false,
@@ -217,7 +213,7 @@ class _RemindersPageState extends State<RemindersPage> {
                     ),
                   ),
                   icon: const Icon(Icons.add),
-                  label: const Text("Додати"),
+                  label: Text(AppLocalizations.instance.translate("add")),
                 ),
               ),
             ],

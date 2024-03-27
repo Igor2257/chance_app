@@ -17,6 +17,8 @@ class _ChooseLanguageState extends State<ChooseLanguage> {
     return Scaffold(
       backgroundColor: beigeBG,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         centerTitle: true,
         title: Text(
           AppLocalizations.instance.translate("changeLanguage"),

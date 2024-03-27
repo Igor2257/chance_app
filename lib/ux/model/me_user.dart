@@ -16,7 +16,7 @@ class MeUser with _$MeUser {
     @HiveField(4) @Default("") String email,
     @HiveField(5) @Default(false) bool isGoogle,
     @HiveField(6) @Default(false) bool isConfirmed,
-    @HiveField(7) @Default("") String deviceId,
+    @HiveField(7) @Default(null) String? deviceId,
     @HiveField(8) @Default(0) int mapType,
   }) = _MeUser;
 

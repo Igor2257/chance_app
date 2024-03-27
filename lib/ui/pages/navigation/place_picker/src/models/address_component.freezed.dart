@@ -130,7 +130,7 @@ class __$$AddressComponentImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$AddressComponentImpl implements _AddressComponent {
-  _$AddressComponentImpl(
+  const _$AddressComponentImpl(
       {@HiveField(0) required final List<String> types,
       @HiveField(1) @JsonKey(name: "long_name") required this.longName,
       @HiveField(2) @JsonKey(name: "short_name") required this.shortName})
@@ -195,7 +195,7 @@ class _$AddressComponentImpl implements _AddressComponent {
 }
 
 abstract class _AddressComponent implements AddressComponent {
-  factory _AddressComponent(
+  const factory _AddressComponent(
       {@HiveField(0) required final List<String> types,
       @HiveField(1) @JsonKey(name: "long_name") required final String longName,
       @HiveField(2)

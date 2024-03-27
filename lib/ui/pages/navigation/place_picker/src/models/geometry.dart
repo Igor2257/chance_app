@@ -1,3 +1,4 @@
+// ignore_for_file: invalid_annotation_target
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/bounds.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/location.dart';
 import 'package:chance_app/ux/model/hive_type_id.dart';

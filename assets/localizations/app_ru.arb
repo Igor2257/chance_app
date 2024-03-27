@@ -232,6 +232,10 @@
   "similarToYourQuery":"Похожие на ваш запрос",
   "recent":"Недавние",
   "myWards": "Мои подопечные",
+
   "failedToCallTheNumber": "Не удалось позвонить по номеру"
+
+
+  "youHaveNoWards":"У вас нет подопечных"
 
 }

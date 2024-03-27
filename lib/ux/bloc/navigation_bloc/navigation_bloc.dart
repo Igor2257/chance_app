@@ -1,16 +1,18 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/navigation/navigation_page/components/map_data.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/select_place.dart';
 import 'package:chance_app/ux/model/ward_location_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 part 'navigation_event.dart';
+
 part 'navigation_state.dart';
 
 class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
@@ -45,110 +47,118 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
 
   FutureOr _onBuildRoute(
       BuildRoute event, Emitter<NavigationState> emit) async {
-    PickResult? firstPickResult = state.firstPickResult,
-        secondPickResult = state.secondPickResult;
-    if (firstPickResult != null && secondPickResult != null) {
-      PolylinePoints polylinePoints = PolylinePoints();
-      PointLatLng? firstPointLatLng;
-      if (firstPickResult.id != "me") {
-        try {
+    if (!state.isLoading) {
+      emit(state.copyWith(isLoading: false));
+      PickResult? firstPickResult = state.firstPickResult,
+          secondPickResult = state.secondPickResult;
+      if (firstPickResult != null && secondPickResult != null) {
+        PolylinePoints polylinePoints = PolylinePoints();
+        PointLatLng? firstPointLatLng;
+        if (firstPickResult.id != "me") {
+          try {
+            firstPointLatLng = PointLatLng(
+                firstPickResult.geometry!.location.lat,
+                firstPickResult.geometry!.location.lng);
+          } catch (e) {
+            firstPointLatLng = await getPositionOfPoint(firstPickResult);
+          }
+        } else {
           firstPointLatLng = PointLatLng(firstPickResult.geometry!.location.lat,
               firstPickResult.geometry!.location.lng);
-        } catch (e) {
-          firstPointLatLng = await getPositionOfPoint(firstPickResult);
         }
-      } else {
-        firstPointLatLng = PointLatLng(firstPickResult.geometry!.location.lat,
-            firstPickResult.geometry!.location.lng);
-      }
-      PointLatLng? secondPointLatLng;
-      if (secondPickResult.id != "me") {
-        try {
+        PointLatLng? secondPointLatLng;
+        if (secondPickResult.id != "me") {
+          try {
+            secondPointLatLng = PointLatLng(
+                secondPickResult.geometry!.location.lat,
+                secondPickResult.geometry!.location.lng);
+          } catch (e) {
+            secondPointLatLng = await getPositionOfPoint(secondPickResult);
+          }
+        } else {
           secondPointLatLng = PointLatLng(
               secondPickResult.geometry!.location.lat,
               secondPickResult.geometry!.location.lng);
-        } catch (e) {
-          secondPointLatLng = await getPositionOfPoint(secondPickResult);
         }
-      } else {
-        secondPointLatLng = PointLatLng(secondPickResult.geometry!.location.lat,
-            secondPickResult.geometry!.location.lng);
-      }
-      if (firstPointLatLng == null || secondPointLatLng == null) {
-        return null;
-      }
-      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-        googleAPIKey,
-        firstPointLatLng,
-        secondPointLatLng,
-      );
-      List<LatLng> polylineCoordinates = [];
-      if (result.points.isNotEmpty) {
-        for (var point in result.points) {
-          polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+        if (firstPointLatLng == null || secondPointLatLng == null) {
+          return null;
         }
+        PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+          googleAPIKey,
+          firstPointLatLng,
+          secondPointLatLng,
+        );
+        List<LatLng> polylineCoordinates = [];
+        if (result.points.isNotEmpty) {
+          for (var point in result.points) {
+            polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+          }
+        }
+        Polyline polyline = Polyline(
+          polylineId: const PolylineId("route"),
+          color: red900,
+          points: polylineCoordinates,
+          width: 3,
+        );
+        Set<Polyline> polylines = {};
+        polylines.add(polyline);
+        BitmapDescriptor? bitmapDescriptor =
+            await getMarkerIcon(PickResultFor.first);
+        Marker? pointA;
+        if (bitmapDescriptor != null) {
+          pointA = Marker(
+              markerId: const MarkerId("point_a"),
+              draggable: false,
+              position:
+                  LatLng(firstPointLatLng.latitude, firstPointLatLng.longitude),
+              icon: bitmapDescriptor,
+              infoWindow: InfoWindow(
+                  title: firstPickResult.name,
+                  snippet: firstPickResult.formattedAddress,
+                  onTap: () {
+                    isNotTapedOnMyLocationButton = true;
+                    mapController!.animateCamera(CameraUpdate.newLatLngZoom(
+                        LatLng(firstPointLatLng!.latitude,
+                            firstPointLatLng.longitude),
+                        18));
+                  }));
+        }
+        Set<Marker> setMarkers = {};
+        if (pointA != null) {
+          setMarkers.add(pointA);
+        }
+        Marker? pointB;
+        bitmapDescriptor = await getMarkerIcon(PickResultFor.second);
+        if (bitmapDescriptor != null) {
+          pointB = Marker(
+              markerId: const MarkerId("point_B"),
+              draggable: false,
+              position: LatLng(
+                  secondPointLatLng.latitude, secondPointLatLng.longitude),
+              icon: bitmapDescriptor,
+              infoWindow: InfoWindow(
+                  title: secondPickResult.name,
+                  snippet: secondPickResult.formattedAddress,
+                  onTap: () {
+                    isNotTapedOnMyLocationButton = true;
+                    mapController!.animateCamera(CameraUpdate.newLatLngZoom(
+                        LatLng(secondPointLatLng!.latitude,
+                            secondPointLatLng.longitude),
+                        18));
+                  }));
+        }
+        if (pointB != null) {
+          setMarkers.add(pointB);
+        }
+        emit(state.copyWith(
+            setMarkers: setMarkers, polylines: polylines, isLoading: false));
       }
-      Polyline polyline = Polyline(
-        polylineId: const PolylineId("route"),
-        color: red900,
-        points: polylineCoordinates,
-        width: 3,
-      );
-      Set<Polyline> polylines = {};
-      polylines.add(polyline);
-      BitmapDescriptor? bitmapDescriptor =
-      await getMarkerIcon(PickResultFor.first);
-      Marker? pointA;
-      if (bitmapDescriptor != null) {
-        pointA = Marker(
-            markerId: const MarkerId("point_a"),
-            draggable: false,
-            position:
-            LatLng(firstPointLatLng.latitude, firstPointLatLng.longitude),
-            icon: bitmapDescriptor,
-            infoWindow: InfoWindow(
-                title: firstPickResult.name,
-                snippet: firstPickResult.formattedAddress,
-                onTap: () {
-                  mapController!.animateCamera(CameraUpdate.newLatLngZoom(
-                      LatLng(firstPointLatLng!.latitude,
-                          firstPointLatLng.longitude),
-                      18));
-                }));
-      }
-      Set<Marker> setMarkers = {};
-      if (pointA != null) {
-        setMarkers.add(pointA);
-      }
-      Marker? pointB;
-      bitmapDescriptor = await getMarkerIcon(PickResultFor.second);
-      if (bitmapDescriptor != null) {
-        pointB = Marker(
-            markerId: const MarkerId("point_B"),
-            draggable: false,
-            position:
-            LatLng(secondPointLatLng.latitude, secondPointLatLng.longitude),
-            icon: bitmapDescriptor,
-            infoWindow: InfoWindow(
-                title: secondPickResult.name,
-                snippet: secondPickResult.formattedAddress,
-                onTap: () {
-                  mapController!.animateCamera(CameraUpdate.newLatLngZoom(
-                      LatLng(secondPointLatLng!.latitude,
-                          secondPointLatLng.longitude),
-                      18));
-                }));
-      }
-      if (pointB != null) {
-        setMarkers.add(pointB);
-      }
-      emit(state.copyWith(setMarkers: setMarkers, polylines: polylines));
     }
   }
 
   FutureOr<void> _onChangeWardLocation(
       ChangeWardLocation event, Emitter<NavigationState> emit) async {
-    List<WardLocationModel> list = state.wardLocations;
+    List<WardLocationModel> list = List.from(state.wardLocations);
     if (list.any((element) => element.id == event.wardLocationModel.id)) {
       list.removeWhere((element) => element.id == event.wardLocationModel.id);
     }
@@ -170,8 +180,10 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
             icon: bitmapDescriptor,
             infoWindow: InfoWindow(
                 title: list[i].myName,
-                snippet: "${list[i].myEmail}\n\n\n${list[i].when}",
+                snippet:
+                    "${list[i].myEmail}\n\n\n${AppLocalizations.instance.translate("whenUserWereHere")}: ${list[i].when.sinceDate}",
                 onTap: () {
+                  isNotTapedOnMyLocationButton = true;
                   mapController!.animateCamera(CameraUpdate.newLatLngZoom(
                       LatLng(list[i].latitude, list[i].longitude), 18));
                 })));

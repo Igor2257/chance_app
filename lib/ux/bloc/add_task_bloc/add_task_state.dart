@@ -24,24 +24,27 @@ class AddTaskState {
       oldDeadlineForTask,
       newDeadlineForTask;
   final int sessionForNotification, sessionForSelectingDateForTask;
+  final bool isLoading;
 
-  AddTaskState(
-      {this.taskTitle = "",
-      this.pageForPills = 0,
-      this.pageForTasks = 0,
-      this.fromLastSession = NotificationsBefore.no,
-      this.oldNotificationsBefore = NotificationsBefore.no,
-      this.newNotificationsBefore = NotificationsBefore.no,
-      this.taskModel,
-      this.daysForTasks = const [],
-      this.selectedDate,
-      this.oldSelectedDateForTasks,
-      this.newSelectedDateForTasks,
-      this.dateForSwipingForTasks,
-      this.oldDeadlineForTask,
-      this.sessionForNotification = 0,
-      this.sessionForSelectingDateForTask = 0,
-      this.newDeadlineForTask});
+  AddTaskState({
+    this.taskTitle = "",
+    this.pageForPills = 0,
+    this.pageForTasks = 0,
+    this.fromLastSession = NotificationsBefore.no,
+    this.oldNotificationsBefore = NotificationsBefore.no,
+    this.newNotificationsBefore = NotificationsBefore.no,
+    this.taskModel,
+    this.daysForTasks = const [],
+    this.selectedDate,
+    this.oldSelectedDateForTasks,
+    this.newSelectedDateForTasks,
+    this.dateForSwipingForTasks,
+    this.oldDeadlineForTask,
+    this.sessionForNotification = 0,
+    this.sessionForSelectingDateForTask = 0,
+    this.newDeadlineForTask,
+    this.isLoading = false,
+  });
 
   AddTaskState copyWith({
     String? taskTitle,
@@ -62,6 +65,7 @@ class AddTaskState {
     NotificationsBefore? newNotificationsBefore,
     NotificationsBefore? fromLastSession,
     TaskModel? taskModel,
+    bool? isLoading,
   }) {
     return AddTaskState(
       taskTitle: taskTitle ?? this.taskTitle,
@@ -87,6 +91,7 @@ class AddTaskState {
       taskModel: taskModel ?? this.taskModel,
       sessionForSelectingDateForTask:
           sessionForSelectingDateForTask ?? this.sessionForSelectingDateForTask,
+      isLoading: isLoading ?? this.isLoading,
     );
   }
 
@@ -107,6 +112,7 @@ class AddTaskState {
       taskModel: null,
       sessionForSelectingDateForTask: 0,
       taskTitle: "",
+      isLoading: false,
     );
   }
 }

@@ -5,6 +5,7 @@ class NavigationState {
   final Set<Polyline> polylines;
   final PickResult? firstPickResult, secondPickResult;
   final List<WardLocationModel> wardLocations;
+  final bool isLoading;
 
   const NavigationState({
     this.setMarkers = const {},
@@ -12,6 +13,7 @@ class NavigationState {
     this.firstPickResult,
     this.secondPickResult,
     this.wardLocations=const [],
+    this.isLoading=false,
   });
 
   NavigationState copyWith({
@@ -20,6 +22,7 @@ class NavigationState {
     PickResult? firstPickResult,
     PickResult? secondPickResult,
     List<WardLocationModel>? wardLocations,
+    bool? isLoading,
   }) {
     return NavigationState(
       setMarkers: setMarkers ?? this.setMarkers,
@@ -27,6 +30,7 @@ class NavigationState {
       firstPickResult: firstPickResult ?? this.firstPickResult,
       secondPickResult: secondPickResult ?? this.secondPickResult,
       wardLocations: wardLocations ?? this.wardLocations,
+      isLoading: isLoading ?? this.isLoading,
     );
   }
 }

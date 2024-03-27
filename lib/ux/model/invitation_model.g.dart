@@ -21,15 +21,16 @@ class InvitationModelAdapter extends TypeAdapter<InvitationModel> {
       toUserEmail: fields[1] as String,
       toUserName: fields[2] as String,
       sentDate: fields[3] as DateTime?,
-      fromUserId: fields[4] as String,
-      invitationStatus: fields[5] as InvitationStatus,
+      fromUserEmail: fields[4] as String,
+      fromUserName: fields[5] as String,
+      invitationStatus: fields[6] as InvitationStatus,
     );
   }
 
   @override
   void write(BinaryWriter writer, InvitationModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -39,8 +40,10 @@ class InvitationModelAdapter extends TypeAdapter<InvitationModel> {
       ..writeByte(3)
       ..write(obj.sentDate)
       ..writeByte(4)
-      ..write(obj.fromUserId)
+      ..write(obj.fromUserEmail)
       ..writeByte(5)
+      ..write(obj.fromUserName)
+      ..writeByte(6)
       ..write(obj.invitationStatus);
   }
 
@@ -62,13 +65,14 @@ class InvitationModelAdapter extends TypeAdapter<InvitationModel> {
 _$InvitationModelImpl _$$InvitationModelImplFromJson(
         Map<String, dynamic> json) =>
     _$InvitationModelImpl(
-      id: json['id'] as String? ?? "",
-      toUserEmail: json['toUserEmail'] as String? ?? "",
-      toUserName: json['toUserName'] as String? ?? "",
+      id: json['id'] as String,
+      toUserEmail: json['toUserEmail'] as String,
+      toUserName: json['toUserName'] as String,
       sentDate: json['sentDate'] == null
           ? null
           : DateTime.parse(json['sentDate'] as String),
-      fromUserId: json['fromUserId'] as String? ?? "",
+      fromUserEmail: json['fromUserEmail'] as String,
+      fromUserName: json['fromUserName'] as String,
       invitationStatus: $enumDecodeNullable(
               _$InvitationStatusEnumMap, json['invitationStatus']) ??
           InvitationStatus.pending,
@@ -81,7 +85,8 @@ Map<String, dynamic> _$$InvitationModelImplToJson(
       'toUserEmail': instance.toUserEmail,
       'toUserName': instance.toUserName,
       'sentDate': instance.sentDate?.toIso8601String(),
-      'fromUserId': instance.fromUserId,
+      'fromUserEmail': instance.fromUserEmail,
+      'fromUserName': instance.fromUserName,
       'invitationStatus': _$InvitationStatusEnumMap[instance.invitationStatus]!,
     };
 

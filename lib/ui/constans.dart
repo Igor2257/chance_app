@@ -145,3 +145,18 @@ const Map<String, String> languages = {
   "uk": "Українська",
   //"zh": "简体中文"
 };
+
+extension DateTimeUtils on DateTime {
+  String get sinceDate {
+    DateTime dateTimeNow = DateTime.now();
+    if (difference(dateTimeNow) <= const Duration(seconds: 30)) {
+      return AppLocalizations.instance.translate("now");
+    } else if (difference(dateTimeNow) <= const Duration(minutes: 1)) {
+      return AppLocalizations.instance.translate("lessThenMinuteAgo");
+    } else if (difference(dateTimeNow) <= const Duration(minutes: 5)) {
+      return AppLocalizations.instance.translate("lessThenFiveMinuteAgo");
+    } else {
+      return "$hour:$minute:$second $day.$month.$year";
+    }
+  }
+}

@@ -287,6 +287,7 @@ class _PlacePickerState extends State<PlacePicker> {
                   iconTheme: Theme.of(context).iconTheme,
                   elevation: 0,
                   backgroundColor: Colors.transparent,
+                  surfaceTintColor: Colors.transparent,
                   titleSpacing: 0.0,
                   title: _buildSearchBar(context),
                 ),

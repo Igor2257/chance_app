@@ -5,8 +5,9 @@ class InvitationState {
   final List<InvitationModel> invitationsForMe;
   final List<InvitationModel> invitationsFromMe;
   final List<InvitationModel> myWards;
+  final List<InvitationModel> myGuardians;
 
-  final String? errorInvitationsForMe, errorInvitationsFromMe,errorMyWards;
+  final String? errorInvitationsForMe, errorInvitationsFromMe,errorMyWards,errorMyGuardians;
   final int page;
   final bool isLoading;
 
@@ -14,9 +15,11 @@ class InvitationState {
     this.invitationsForMe = const [],
     this.invitationsFromMe = const [],
     this.myWards = const [],
+    this.myGuardians = const [],
     this.errorInvitationsForMe,
     this.errorInvitationsFromMe,
     this.errorMyWards,
+    this.errorMyGuardians,
     this.page = 0,
     this.isLoading = false,
   });
@@ -25,9 +28,11 @@ class InvitationState {
     List<InvitationModel>? invitationsForMe,
     List<InvitationModel>? invitationsFromMe,
     List<InvitationModel>? myWards,
+    List<InvitationModel>? myGuardians,
     String? errorInvitationsForMe,
     String? errorInvitationsFromMe,
     String? errorMyWards,
+    String? errorMyGuardians,
     int? page,
     bool? isLoading,
   }) {
@@ -42,6 +47,8 @@ class InvitationState {
       isLoading: isLoading ?? this.isLoading,
       myWards: myWards ?? this.myWards,
       errorMyWards: errorMyWards ?? this.errorMyWards,
+      errorMyGuardians: errorMyGuardians ?? this.errorMyGuardians,
+      myGuardians: myGuardians ?? this.myGuardians,
     );
   }
 }

@@ -11,12 +11,13 @@ part 'invitation_model.g.dart';
 @HiveType(typeId: HiveTypeId.invitationModel)
 class InvitationModel with _$InvitationModel {
   const factory InvitationModel({
-    @HiveField(0) @Default("") String id,
-    @HiveField(1) @Default("") String toUserEmail,
-    @HiveField(2) @Default("") String toUserName,
-    @HiveField(3) @Default(null) DateTime? sentDate,
-    @HiveField(4) @Default("") String fromUserId,
-    @HiveField(5) @Default(InvitationStatus.pending) InvitationStatus invitationStatus,
+    @HiveField(0) required String id,
+    @HiveField(1) required String toUserEmail,
+    @HiveField(2) required String toUserName,
+    @HiveField(3) required DateTime? sentDate,
+    @HiveField(4) required String fromUserEmail,
+    @HiveField(5) required String fromUserName,
+    @HiveField(6) @Default(InvitationStatus.pending) InvitationStatus invitationStatus,
   }) = _InvitationModel;
 
   factory InvitationModel.fromJson(Map<String, dynamic> json) =>

@@ -13,4 +13,7 @@ class LoadInvitationsFromMe extends InvitationEvent{
 class LoadMyWards extends InvitationEvent{
   LoadMyWards();
 }
+class LoadMyGuardians extends InvitationEvent{
+  LoadMyGuardians();
+}
 

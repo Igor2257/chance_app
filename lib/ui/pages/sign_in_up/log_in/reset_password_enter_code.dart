@@ -48,6 +48,7 @@ class _ResetPasswordEnterCodeState extends State<ResetPasswordEnterCode> {
         title: Text(AppLocalizations.instance.translate("resetPassword")),
       ),
       backgroundColor: beigeBG,
+      resizeToAvoidBottomInset: false,
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

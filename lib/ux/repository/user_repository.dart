@@ -7,6 +7,7 @@ import 'package:chance_app/ux/model/me_user.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart' show sha256;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -58,7 +59,7 @@ class UserRepository {
                   phone: map["phone"],
                   isGoogle: map["isGoogle"],
                   isConfirmed: map["isConfirmed"],
-                  deviceId: map["deviceId"],
+                  deviceId: map["deviceId"] ?? "",
                 );
                 await HiveCRUD().addUser(meUser);
               } else {
@@ -343,8 +344,6 @@ class UserRepository {
     return error;
   }
 
-
-
   Future<MeUser?> getUser() async {
     MeUser? meUser;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
@@ -442,12 +441,12 @@ class UserRepository {
                 MeUser meUser = MeUser(
                   id: map["_id"],
                   email: map["email"],
-                  name: map["name"]??"",
-                  lastName: map["lastName"]??"",
-                  phone: map["phone"]??"",
+                  name: map["name"] ?? "",
+                  lastName: map["lastName"] ?? "",
+                  phone: map["phone"] ?? "",
                   isGoogle: map["isGoogle"],
                   isConfirmed: map["isConfirmed"],
-                  deviceId: map["deviceId"]??"",
+                  deviceId: map["deviceId"] ?? "",
                 );
                 await HiveCRUD().addUser(meUser);
                 error = false;
@@ -496,6 +495,7 @@ class UserRepository {
           }
         });
       } catch (error) {
+        FlutterError(error.toString());
         Fluttertoast.showToast(
             msg: error.toString(), toastLength: Toast.LENGTH_LONG);
       }

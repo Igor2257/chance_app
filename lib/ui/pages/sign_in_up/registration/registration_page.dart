@@ -102,6 +102,7 @@ class _RegistrationPageState extends State<RegistrationPage>
           onBack(state);
         },
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
               backgroundColor: Colors.transparent,
               surfaceTintColor: Colors.transparent,

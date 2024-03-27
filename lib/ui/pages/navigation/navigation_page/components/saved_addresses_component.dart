@@ -19,7 +19,8 @@ class SavedAddressesComponent extends StatefulWidget {
 }
 
 class _SavedAddressesComponentState extends State<SavedAddressesComponent> {
-  List<PickResult> savedAddresses =HiveCRUD().savedAddresses
+  List<PickResult> savedAddresses = HiveCRUD()
+      .savedAddresses
       .where((element) => element.isRecentlySearched == false)
       .toList();
 
@@ -44,11 +45,13 @@ class _SavedAddressesComponentState extends State<SavedAddressesComponent> {
                         savedAddresses[position].geometry!.location.lng),
                     icon: await getMarkerIcon(PickResultFor.first) ??
                         await BitmapDescriptor.fromAssetImage(
-                            const ImageConfiguration(), "assets/icons/point_a.png"),
+                            const ImageConfiguration(),
+                            "assets/icons/point_a.png"),
                     infoWindow: InfoWindow(
                         title: savedAddresses[position].name,
                         snippet: savedAddresses[position].formattedAddress,
                         onTap: () {
+                          isNotTapedOnMyLocationButton = true;
                           mapController!.animateCamera(
                               CameraUpdate.newLatLngZoom(
                                   LatLng(
@@ -64,6 +67,7 @@ class _SavedAddressesComponentState extends State<SavedAddressesComponent> {
                         }));
                 BlocProvider.of<NavigationBloc>(context)
                     .add(UpdateMarkers(markers: {point}));
+                isNotTapedOnMyLocationButton = true;
                 mapController!.animateCamera(CameraUpdate.newLatLngZoom(
                     LatLng(savedAddresses[position].geometry!.location.lat,
                         savedAddresses[position].geometry!.location.lng),

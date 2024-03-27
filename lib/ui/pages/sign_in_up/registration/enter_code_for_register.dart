@@ -123,21 +123,25 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
               RoundedButton(
                   onPress: () async {
                     isTaped = true;
-                    String code = textEditingController.text;
-                    if (code.length == 4) {
-                      await UserRepository()
-                          .checkIsCodeValid(textEditingController.text,
-                              state.email, state.passwordFirst)
-                          .then((value) {
-                        if (value != null) {
-                          Navigator.of(context)
-                              .pushNamedAndRemoveUntil("/", (route) => false);
-                          BlocProvider.of<RegistrationBloc>(context)
-                              .add(ClearData());
-                        }
-                      });
+                    if(isTaped){
+                      String code = textEditingController.text;
+                      if (code.length == 4) {
+                        await UserRepository()
+                            .checkIsCodeValid(textEditingController.text,
+                            state.email, state.passwordFirst)
+                            .then((value) {
+                          if (value != null) {
+                            Navigator.of(context)
+                                .pushNamedAndRemoveUntil("/", (route) => false);
+                            BlocProvider.of<RegistrationBloc>(context)
+                                .add(ClearData());
+                          }
+                        });
+                      }
+
                     }
                     isTaped = false;
+
                     //BlocProvider.of<RegistrationBloc>(context)
                     //    .add(IncreaseCurrentStep(context));
                   },

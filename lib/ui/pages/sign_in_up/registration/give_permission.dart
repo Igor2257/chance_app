@@ -7,9 +7,16 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class GivePermission extends StatelessWidget {
-  const GivePermission({super.key});
+class GivePermission extends StatefulWidget {
+  const GivePermission({super.key, required this.onTap});
 
+  final Function() onTap;
+
+  @override
+  State<GivePermission> createState() => _GivePermissionState();
+}
+
+class _GivePermissionState extends State<GivePermission> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
@@ -17,9 +24,8 @@ class GivePermission extends StatelessWidget {
       return Row(
         children: [
           GestureDetector(
-            onTap: () {
-              BlocProvider.of<RegistrationBloc>(context)
-                  .add(ChangeUserGrantPermissionForProcessingPersonalData());
+            onTap: (){
+              widget.onTap();
             },
             child: SvgPicture.asset(
                 "assets/icons/checkbox_${state.isUserGrantPermissionForProcessingPersonalData ? "checked" : "empty"}.svg"),

@@ -45,6 +45,7 @@ class _LoginPageState extends State<LoginPage> {
                     .pushNamedAndRemoveUntil("/signinup", (route) => false);
               },
             )),
+        resizeToAvoidBottomInset: false,
         backgroundColor: beigeBG,
         body: Padding(
           padding: const EdgeInsets.all(16.0),

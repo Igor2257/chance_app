@@ -22,7 +22,7 @@ class WardLocationModelAdapter extends TypeAdapter<WardLocationModel> {
       myName: fields[2] as String,
       latitude: fields[3] as double,
       longitude: fields[4] as double,
-      toUserId: fields[5] as String,
+      toUserEmail: fields[5] as String,
       when: fields[6] as DateTime,
     );
   }
@@ -42,7 +42,7 @@ class WardLocationModelAdapter extends TypeAdapter<WardLocationModel> {
       ..writeByte(4)
       ..write(obj.longitude)
       ..writeByte(5)
-      ..write(obj.toUserId)
+      ..write(obj.toUserEmail)
       ..writeByte(6)
       ..write(obj.when);
   }
@@ -70,7 +70,7 @@ _$WardLocationModelImpl _$$WardLocationModelImplFromJson(
       myName: json['myName'] as String,
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
-      toUserId: json['toUserId'] as String,
+      toUserEmail: json['toUserEmail'] as String,
       when: DateTime.parse(json['when'] as String),
     );
 
@@ -82,6 +82,6 @@ Map<String, dynamic> _$$WardLocationModelImplToJson(
       'myName': instance.myName,
       'latitude': instance.latitude,
       'longitude': instance.longitude,
-      'toUserId': instance.toUserId,
+      'toUserEmail': instance.toUserEmail,
       'when': instance.when.toIso8601String(),
     };

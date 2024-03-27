@@ -4,12 +4,16 @@ import 'dart:ui' show DartPluginRegistrant;
 
 import 'package:chance_app/ux/helpers/reminders_helper.dart';
 import 'package:chance_app/ux/hive_crud.dart';
+import 'package:chance_app/ux/repository/navigation_repository.dart';
 import 'package:flutter/material.dart' show DateTimeRange, DateUtils;
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class BackgroundTasks {
   static const scheduleTasks = "schedule-tasks";
   static const scheduleMedicines = "schedule-medicines";
+  static const sendMyLocation = "send-my-location";
 }
 
 abstract class BackgroundServiceHelper {
@@ -46,12 +50,18 @@ abstract class BackgroundServiceHelper {
     return true;
   }
 
+  static bool isAppShouldSentLocation =
+      HiveCRUD().setting.isAppShouldSentLocation;
+
   @pragma('vm:entry-point')
   static Future<void> _onStart(ServiceInstance service) async {
     DartPluginRegistrant.ensureInitialized();
 
     final hiveIsInitialized = await HiveCRUD().initialize();
     await RemindersHelper.initialize();
+    if (isAppShouldSentLocation) {
+      loadTimer();
+    }
 
     _log("Service is started");
 
@@ -79,6 +89,20 @@ abstract class BackgroundServiceHelper {
         }
         _log("Medicine reminders are scheduled");
       });
+  }
+
+  static loadTimer() async {
+    await Supabase.initialize(
+            url: "https://tnvxszbqdurbkpnvjvgz.supabase.co",
+            anonKey:
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudnhzemJxZHVyYmtwbnZqdmd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA4NDU5NjUsImV4cCI6MjAyNjQyMTk2NX0.I_Tf2UAA5Qo05EOSR2HXkv9yMun2NyixOZtCyr3OvoA")
+        .whenComplete(() {
+      Timer.periodic(const Duration(seconds: 60), (timer) async {
+        final position = await Geolocator.getCurrentPosition();
+        await NavigationRepository()
+            .sendMyLocation(position.latitude, position.longitude);
+      });
+    });
   }
 
   static void _log(String message) => log(message, name: "BackgroundService");

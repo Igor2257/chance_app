@@ -15,7 +15,7 @@ class WardLocationModel with _$WardLocationModel {
     @HiveField(2) required String myName,
     @HiveField(3) required double latitude,
     @HiveField(4) required double longitude,
-    @HiveField(5) required String toUserId,
+    @HiveField(5) required String toUserEmail,
     @HiveField(6) required DateTime when,
   }) = _WardLocationModel;
 

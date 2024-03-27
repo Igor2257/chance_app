@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/repository/navigation_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10,7 +11,7 @@ import 'package:geolocator/geolocator.dart';
 class PositionController {
   StreamSubscription<Position>? positionStream;
   Position? _myPreviousPosition;
-  late Function(VoidCallback fn) _setState;
+  late final Function(VoidCallback fn) _setState;
   static ValueNotifier<Position>? myPosition;
   final List<String> _fakeMessages = [
     'Раз збрехавши, хто тобі повірить?',
@@ -23,18 +24,17 @@ class PositionController {
     'Хто бреше, той не гідний бути людиною.',
     'Хто хоче брехати з користю, повинен брехати рідко.'
   ];
+  late final Timer timer;
 
   PositionController(void Function(VoidCallback fn) this._setState) {
-    print("object");
     Geolocator.getCurrentPosition().then((value) {
-      print("value $value");
       final stream = Geolocator.getPositionStream(
           locationSettings: LocationSettings(
               accuracy: Platform.isAndroid
                   ? LocationAccuracy.high
                   : LocationAccuracy.best,
               distanceFilter: 5));
-      print("object1");
+
       positionStream = stream.listen((Position? position) async {
         if (kDebugMode) {
           print("position: $position");
@@ -51,7 +51,6 @@ class PositionController {
                 return;
               }
             }
-
             _setState(() {
               _myPreviousPosition = position;
               if (myPosition != null) {
@@ -60,8 +59,10 @@ class PositionController {
                 myPosition = ValueNotifier<Position>(position);
               }
             });
-            await NavigationRepository()
-                .sendMyLocation(position.latitude, position.longitude);
+            if (HiveCRUD.instance.setting.isAppShouldSentLocation) {
+              await NavigationRepository()
+                  .sendMyLocation(position.latitude, position.longitude);
+            }
           }
         } catch (e) {
           if (e.toString() == 'isMocked') {
@@ -75,8 +76,9 @@ class PositionController {
           }
         }
       });
-      print("object2");
+
       resume();
+      loadTimer();
     });
   }
 
@@ -95,11 +97,15 @@ class PositionController {
     );
   }
 
-
-
   void resume() {
     positionStream!.resume();
   }
 
-
+  loadTimer() async {
+    timer = Timer.periodic(const Duration(seconds: 60), (timer) async {
+      final position = await Geolocator.getCurrentPosition();
+      await NavigationRepository()
+          .sendMyLocation(position.latitude, position.longitude);
+    });
+  }
 }

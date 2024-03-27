@@ -41,6 +41,7 @@ class _MyInformationState extends State<MyInformation> {
         centerTitle: true,
         title: Text(AppLocalizations.instance.translate("myInfo")),
         backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
       ),
       backgroundColor: beigeBG,
       body: Padding(

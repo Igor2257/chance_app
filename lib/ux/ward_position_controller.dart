@@ -8,23 +8,38 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class WardPositionController {
-  late StreamSubscription<WardLocationModel> _stream;
+  late StreamSubscription<WardLocationModel?> _stream;
 
   WardPositionController(BuildContext context) {
     _stream = Supabase.instance.client
-        .from('servers')
-        .stream(primaryKey: ['id'])
-        .map((maps) => maps
-            .map((map) => WardLocationModel.fromJson(map))
-            .toList()
-            .firstWhere((element) => element.toUserId == HiveCRUD().user!.id))
-        .listen((event) {
-
-          BlocProvider.of<NavigationBloc>(context).add(ChangeWardLocation(event));
-        })..resume();
+        .from('ward_location')
+        .stream(primaryKey: ['id']).map<WardLocationModel?>((maps) {
+      List<WardLocationModel> list =
+          maps.map((map) => WardLocationModel.fromJson(map)).toList();
+      if (maps
+          .toList()
+          .any((element) => element["toUserEmail"] == HiveCRUD().user!.email)) {
+        return list.firstWhere(
+                (element) => element.toUserEmail == HiveCRUD().user!.email);
+      }
+      return null;
+    }).listen((event) {
+      if (event != null) {
+        BlocProvider.of<NavigationBloc>(context).add(ChangeWardLocation(event));
+      }
+    })
+      ..resume();
   }
 
   void cancel() {
     _stream.cancel();
+  }
+
+  void pause() {
+    _stream.pause();
+  }
+
+  void resume() {
+    _stream.resume();
   }
 }

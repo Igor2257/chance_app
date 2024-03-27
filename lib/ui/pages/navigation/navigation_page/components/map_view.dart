@@ -9,9 +9,11 @@ import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:chance_app/ux/position_controller.dart';
+import 'package:chance_app/ux/ward_position_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -25,7 +27,7 @@ class MapView extends StatefulWidget {
 
 class _MapViewState extends State<MapView>
     with TickerProviderStateMixin, WidgetsBindingObserver {
-
+  MeUser meUser = HiveCRUD().user!;
   late AnimationController _controllerMyLocation,
       _controllerCloseMap,
       _controllerBuildPath,
@@ -38,6 +40,7 @@ class _MapViewState extends State<MapView>
       scaleNormalMap = 0,
       scaleTerrainMap = 0,
       scaleHybridMap = 0;
+  late WardPositionController wardPositionController;
 
   Future<bool> checkLocationPermission(BuildContext context) async {
     bool isOkay = false;
@@ -60,12 +63,14 @@ class _MapViewState extends State<MapView>
                       title: Text(
                         AppLocalizations.instance
                             .translate("allowTheAppToUseTheLocation"),
-                        style: const TextStyle(fontSize: 24, color: primaryText),
+                        style:
+                            const TextStyle(fontSize: 24, color: primaryText),
                       ),
                       content: Text(
                         AppLocalizations.instance.translate(
                             "forTheAppToWorkCorrectlyYouNeedToAllowThisPermissionToBeUsed"),
-                        style: const TextStyle(fontSize: 16, color: primaryText),
+                        style:
+                            const TextStyle(fontSize: 16, color: primaryText),
                       ),
                       actions: [
                         RoundedButton(
@@ -93,23 +98,6 @@ class _MapViewState extends State<MapView>
 
     return isOkay;
   }
-
-  @override
-  void dispose() {
-    _controllerMyLocation.dispose();
-    _controllerCloseMap.dispose();
-    _controllerNormalMap.dispose();
-    _controllerTerrainMap.dispose();
-    _controllerHybridMap.dispose();
-    _controllerBuildPath.dispose();
-    if(mapController!=null) {
-      mapController!.dispose();
-      mapController=null;
-    }
-    super.dispose();
-  }
-
-  MeUser meUser = HiveCRUD().user!;
 
   @override
   void initState() {
@@ -181,11 +169,26 @@ class _MapViewState extends State<MapView>
         }
       }
     });
+    wardPositionController = WardPositionController(context);
 
     super.initState();
   }
 
-
+  @override
+  void dispose() {
+    _controllerMyLocation.dispose();
+    _controllerCloseMap.dispose();
+    _controllerNormalMap.dispose();
+    _controllerTerrainMap.dispose();
+    _controllerHybridMap.dispose();
+    _controllerBuildPath.dispose();
+    if (mapController != null) {
+      mapController!.dispose();
+      mapController = null;
+    }
+    wardPositionController.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -197,26 +200,37 @@ class _MapViewState extends State<MapView>
     scaleHybridMap = 1 - _controllerHybridMap.value;
     scaleBuildPath = 1 - _controllerBuildPath.value;
     if (PositionController.myPosition != null) {
-      return ValueListenableBuilder<Position>(
-        valueListenable: PositionController.myPosition!,
-        builder: (context, position, _) {
-          if (mapController != null) {
-            mapController!.animateCamera(CameraUpdate.newLatLngZoom(
-                LatLng(position.latitude, position.longitude), 18));
-          }
-          return SizedBox(
-              width: size.width,
-              height: size.height,
-              child: Stack(children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: BlocBuilder<NavigationBloc, NavigationState>(
-                      builder: (context, state) {
-
-                    return GoogleMap(
-                        polylines: state.polylines,
-                        mapType: meUser.mapType == 0
-                            ? MapType.normal
+      return FGBGNotifier(
+          onEvent: (event) {
+            if (FGBGType.background == event ||
+                AppLifecycleState.inactive.name == event.name ||
+                AppLifecycleState.paused.name == event.name) {
+              wardPositionController.pause();
+            } else if (FGBGType.foreground == event ||
+                AppLifecycleState.resumed.name == event.name) {
+              wardPositionController.resume();
+            }
+            setState(() {});
+          },
+          child: ValueListenableBuilder<Position>(
+            valueListenable: PositionController.myPosition!,
+            builder: (context, position, _) {
+              if (mapController != null) {
+                mapController!.animateCamera(CameraUpdate.newLatLngZoom(
+                    LatLng(position.latitude, position.longitude), 18));
+              }
+              return SizedBox(
+                  width: size.width,
+                  height: size.height,
+                  child: Stack(children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: BlocBuilder<NavigationBloc, NavigationState>(
+                          builder: (context, state) {
+                        return GoogleMap(
+                            polylines: state.polylines,
+                            mapType: meUser.mapType == 0
+                                ? MapType.normal
                                 : meUser.mapType == 1
                                     ? MapType.terrain
                                     : MapType.hybrid,
@@ -282,8 +296,8 @@ class _MapViewState extends State<MapView>
                                           spreadRadius: 2,
                                           blurStyle: BlurStyle.normal)
                                     ],
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(90)),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(90)),
                                     color: beigeTransparent,
                                   ),
                                   child: const Icon(Icons.location_searching,
@@ -329,8 +343,8 @@ class _MapViewState extends State<MapView>
                                           spreadRadius: 2,
                                           blurStyle: BlurStyle.normal)
                                     ],
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(90)),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(90)),
                                     color: beigeTransparent,
                                   ),
                                   child: const Icon(Icons.route_rounded,
@@ -484,19 +498,19 @@ class _MapViewState extends State<MapView>
                                           ? primary400
                                           : beigeTransparent,
                                     ),
-                                child: Icon(Icons.satellite_alt,
-                                    color: meUser.mapType == 2
-                                        ? beigeTransparent
-                                        : primaryText),
+                                    child: Icon(Icons.satellite_alt,
+                                        color: meUser.mapType == 2
+                                            ? beigeTransparent
+                                            : primaryText),
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
-                      ),
-                    )),
-              ]));
-        },
-      );
+                        )),
+                  ]));
+            },
+          ));
     }
     return const Center(
       child: CupertinoActivityIndicator(

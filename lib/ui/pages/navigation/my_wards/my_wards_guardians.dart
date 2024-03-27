@@ -1,28 +1,37 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
-import 'package:chance_app/ui/pages/navigation/invitations/check_my_invitation/components/invitation_for_me.dart';
-import 'package:chance_app/ui/pages/navigation/invitations/check_my_invitation/components/invitation_from_me.dart';
+import 'package:chance_app/ui/pages/navigation/my_wards/components/my_guardians.dart';
+import 'package:chance_app/ui/pages/navigation/my_wards/components/my_wards.dart';
 import 'package:chance_app/ux/bloc/navigation_bloc/invitation_bloc/invitation_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-enum InvitationParts { forMe, fromMe }
+enum WardOrGuardians { ward, guardians }
 
-class CheckMyInvitation extends StatefulWidget {
-  const CheckMyInvitation({super.key});
+class MyWardsGuardians extends StatefulWidget {
+  const MyWardsGuardians({super.key});
 
   @override
-  State<CheckMyInvitation> createState() => _CheckMyInvitationState();
+  State<MyWardsGuardians> createState() => _MyWardsGuardiansState();
 }
 
-class _CheckMyInvitationState extends State<CheckMyInvitation> {
-  final tabs = {
-    InvitationParts.forMe: AppLocalizations.instance.translate("forMe"),
-    InvitationParts.fromMe: AppLocalizations.instance.translate("fromMe"),
-  };
-  var _selectedTab = InvitationParts.forMe;
+class _MyWardsGuardiansState extends State<MyWardsGuardians> {
+  @override
+  void initState() {
+    BlocProvider.of<InvitationBloc>(context).add(LoadMyWards());
 
+    super.initState();
+  }
+
+  final tabs = {
+    WardOrGuardians.ward: AppLocalizations.instance.translate("wards"),
+    WardOrGuardians.guardians: AppLocalizations.instance.translate("guardians"),
+  };
+
+  WardOrGuardians _selectedTab = WardOrGuardians.ward;
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -30,16 +39,11 @@ class _CheckMyInvitationState extends State<CheckMyInvitation> {
     return Scaffold(
       backgroundColor: beigeBG,
       appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          centerTitle: true,
-          title: Text(
-            AppLocalizations.instance.translate("invitation"),
-            style: const TextStyle(
-              fontSize: 22,
-              color: primaryText,
-            ),
-          )),
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        centerTitle: true,
+        title: Text(AppLocalizations.instance.translate("myWards")),
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -86,9 +90,9 @@ class _CheckMyInvitationState extends State<CheckMyInvitation> {
                 alignment: Alignment.topCenter,
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 125),
-                  child: _selectedTab == InvitationParts.forMe
-                      ? const InvitationForMe()
-                      : const InvitationFromMe(),
+                  child: _selectedTab == WardOrGuardians.ward
+                      ? const MyWards()
+                      : const MyGuardians(),
                 ),
               ),
             ),

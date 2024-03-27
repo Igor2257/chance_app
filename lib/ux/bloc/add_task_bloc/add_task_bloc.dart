@@ -46,59 +46,69 @@ class AddTaskBloc extends Bloc<AddTaskEvent, AddTaskState> {
 
   FutureOr<void> _onChangeMonthForTasks(
       ChangeMonthForTasks event, Emitter<AddTaskState> emit) {
-    List<Map<String, dynamic>> dates = [];
-    DateTime now = state.dateForSwipingForTasks ?? DateTime.now();
-    int plusOrMinus = event.sideSwipe == SideSwipe.left ? -1 : 1;
-    int year = now.year;
-    int month = now.month;
-    if (month + plusOrMinus <= 12 && month + plusOrMinus >= 0) {
-      month = now.month + plusOrMinus;
-    } else {
-      if (event.sideSwipe == SideSwipe.left) {
-        year = now.year - 1;
-        month = 12;
+    if (!state.isLoading) {
+      emit(state.copyWith(isLoading: true));
+      List<Map<String, dynamic>> dates = [];
+      DateTime now = state.dateForSwipingForTasks ?? DateTime.now();
+      int plusOrMinus = event.sideSwipe == SideSwipe.left ? -1 : 1;
+      int year = now.year;
+      int month = now.month;
+      if (month + plusOrMinus <= 12 && month + plusOrMinus >= 0) {
+        month = now.month + plusOrMinus;
       } else {
-        year = now.year + 1;
-        month = 1;
+        if (event.sideSwipe == SideSwipe.left) {
+          year = now.year - 1;
+          month = 12;
+        } else {
+          year = now.year + 1;
+          month = 1;
+        }
       }
-    }
 
-    int daysInMonth = DateTime(year, month + 1, 0).day;
-    DateTime? selectedDate = state.selectedDate;
-    List<TaskModel> myTasks = List.from(
-        HiveCRUD().myTasks.where((element) => element.isRemoved == false));
+      int daysInMonth = DateTime(year, month + 1, 0).day;
+      DateTime? selectedDate = state.selectedDate;
+      List<TaskModel> myTasks = List.from(
+          HiveCRUD().myTasks.where((element) => element.isRemoved == false));
 
-    for (int i = 1; i <= daysInMonth; i++) {
-      DateTime date = DateTime(year, month, i);
-      String weekDay = getWeekdayName(date.weekday);
-      dates.add({
-        "weekDay": weekDay,
-        "number": (i.toString()).padLeft(2, "0"),
-        "month": month,
-        "year": year,
-        "isSelected": (state.selectedDate != null &&
-            DateUtils.isSameDay(date, selectedDate)),
-        "hasTasks": checkIfDayHasTask(myTasks, i, month, year)
-      });
+      for (int i = 1; i <= daysInMonth; i++) {
+        DateTime date = DateTime(year, month, i);
+        String weekDay = getWeekdayName(date.weekday);
+        dates.add({
+          "weekDay": weekDay,
+          "number": (i.toString()).padLeft(2, "0"),
+          "month": month,
+          "year": year,
+          "isSelected": (state.selectedDate != null &&
+              DateUtils.isSameDay(date, selectedDate)),
+          "hasTasks": checkIfDayHasTask(myTasks, i, month, year)
+        });
+      }
+      emit(state.copyWith(
+          daysForTasks: dates,
+          dateForSwipingForTasks: DateTime(year, month),
+          isLoading: false));
     }
-    emit(state.copyWith(
-        daysForTasks: dates, dateForSwipingForTasks: DateTime(year, month)));
   }
 
   FutureOr<void> _onSelectedDateForTasks(
       SelectedDateForTasks event, Emitter<AddTaskState> emit) {
-    List<Map<String, dynamic>> dates = state.daysForTasks;
-    Map<String, dynamic> date = event.selectedDate;
-    int index = dates.indexWhere((e) => e["number"] == date["number"]);
-    for (int i = 0; i < dates.length; i++) {
-      dates[i]["isSelected"] = false;
-    }
-    dates[index]["isSelected"] = true;
-    emit(state.copyWith(
+    if (!state.isLoading) {
+      emit(state.copyWith(isLoading: true));
+      List<Map<String, dynamic>> dates = state.daysForTasks;
+      Map<String, dynamic> date = event.selectedDate;
+      int index = dates.indexWhere((e) => e["number"] == date["number"]);
+      for (int i = 0; i < dates.length; i++) {
+        dates[i]["isSelected"] = false;
+      }
+      dates[index]["isSelected"] = true;
+      emit(state.copyWith(
         daysForTasks: dates,
         oldSelectedDateForTasks: state.newSelectedDateForTasks,
         newSelectedDateForTasks: DateTime(dates[index]["year"],
-            dates[index]["month"], int.parse(dates[index]["number"]))));
+            dates[index]["month"], int.parse(dates[index]["number"])),
+        isLoading: false,
+      ));
+    }
   }
 
   FutureOr<void> _onSaveDeadlineForTask(
@@ -136,17 +146,19 @@ class AddTaskBloc extends Bloc<AddTaskEvent, AddTaskState> {
 
   FutureOr<void> _onLoadDataForSelectDateForTasks(
       LoadDataForSelectDateForTasks event, Emitter<AddTaskState> emit) {
-    List<Map<String, dynamic>> dates = [];
-    DateTime now = DateTime.now();
-    int year = now.year;
-    int month = now.month;
-    int day = now.day;
-    int daysInMonth = DateTime(year, month + 1, 0).day;
-    List<TaskModel> myTasks = List.from(
-        HiveCRUD().myTasks.where((element) => element.isRemoved == false));
+    if (!state.isLoading) {
+      emit(state.copyWith(isLoading: true));
+      List<Map<String, dynamic>> dates = [];
+      DateTime now = DateTime.now();
+      int year = now.year;
+      int month = now.month;
+      int day = now.day;
+      int daysInMonth = DateTime(year, month + 1, 0).day;
+      List<TaskModel> myTasks = List.from(
+          HiveCRUD().myTasks.where((element) => element.isRemoved == false));
 
-    for (int i = 1; i <= daysInMonth; i++) {
-      DateTime date = DateTime(year, month, i);
+      for (int i = 1; i <= daysInMonth; i++) {
+        DateTime date = DateTime(year, month, i);
       String weekDay = getWeekdayName(date.weekday);
       dates.add({
         "weekDay": weekDay,
@@ -160,17 +172,19 @@ class AddTaskBloc extends Bloc<AddTaskEvent, AddTaskState> {
       });
     }
     myTasks = myTasks
-        .where((element) =>
-            DateUtils.isSameDay(element.date, now) &&
-            element.isRemoved == false)
-        .toList();
-    myTasks.sort((a, b) => a.date.compareTo(b.date));
-    emit(state.copyWith(
-      daysForTasks: dates,
-      oldSelectedDateForTasks: DateTime.now(),
-      newSelectedDateForTasks: DateTime.now(),
-      dateForSwipingForTasks: DateTime.now(),
-    ));
+          .where((element) =>
+              DateUtils.isSameDay(element.date, now) &&
+              element.isRemoved == false)
+          .toList();
+      myTasks.sort((a, b) => a.date.compareTo(b.date));
+      emit(state.copyWith(
+        daysForTasks: dates,
+        oldSelectedDateForTasks: DateTime.now(),
+        newSelectedDateForTasks: DateTime.now(),
+        dateForSwipingForTasks: DateTime.now(),
+        isLoading: false,
+      ));
+    }
   }
 
   FutureOr<void> _onClearState(ClearState event, Emitter<AddTaskState> emit) {

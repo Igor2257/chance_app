@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/sign_in_up/log_in/input_login_layout.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
@@ -42,23 +42,26 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   FutureOr<void> _onValidateForm(
       ValidateForm event, Emitter<LoginState> emit) async {
-    emit(state.copyWith(isLoading: true,email: event.email,password: event.password));
-    bool isValid = validate(emit);
-    if (isValid) {
-      await UserRepository()
-          .sendLoginData(state.email, state.password)
-          .then((value) {
-        if (value == null) {
-          Navigator.of(event.context)
-              .pushNamedAndRemoveUntil("/", (route) => false);
-          emit(state.clear());
-        } else {
-          emit(state.copyWith(
-              errorEmail: value, errorPassword: value, isLoading: false));
-        }
-      });
-    } else {
-      emit(state.copyWith(isLoading: false));
+    if (!state.isLoading) {
+      emit(state.copyWith(
+          isLoading: true, email: event.email, password: event.password));
+      bool isValid = validate(emit);
+      if (isValid) {
+        await UserRepository()
+            .sendLoginData(state.email, state.password)
+            .then((value) {
+          if (value == null) {
+            Navigator.of(event.context)
+                .pushNamedAndRemoveUntil("/", (route) => false);
+            emit(state.clear());
+          } else {
+            emit(state.copyWith(
+                errorEmail: value, errorPassword: value, isLoading: false));
+          }
+        });
+      } else {
+        emit(state.copyWith(isLoading: false));
+      }
     }
   }
 

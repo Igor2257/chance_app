@@ -4,7 +4,7 @@
   "signIn": "Вхід",
   "registration": "Реєстрація",
   "register": "Зареєструвати",
-  "name": "І`мя",
+  "name": "Ім`я",
   "surname": "Прізвище",
   "connectionRestored": "З'єднання відновлено",
   "tasks": "Завдання",
@@ -141,6 +141,14 @@
   "recent":"Недавні",
 
   "myWards":"Мої підопічні",
+  "youHaveNoWards": "У вас немає підопічних",
+  "lessThenMinuteAgo":"Менше хвилини назад",
+  "lessThenFiveMinutesAgo":"Менше п`яти хвилин назад",
+  "now":"Тільки що",
+  "whenUserWereHere":"Коли тут був юзер",
+  "guardians":"Опекуни",
+  "wards":"Підопічні",
+  "youHaveNoGuardians":"У вас немає опекунів",
 
 
 

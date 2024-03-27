@@ -16,6 +16,7 @@ import 'package:chance_app/ux/model/product_model.dart';
 import 'package:chance_app/ux/model/settings.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:chance_app/ux/model/task_model.dart';
+import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -61,7 +62,7 @@ class HiveCRUD {
   Future<bool> initialize() async {
     final documentsDirectory = await getApplicationDocumentsDirectory();
     Hive.init(documentsDirectory.path);
-    //await Repository().deleteCookie();
+    //await UserRepository().deleteCookie();
     //await Hive.deleteBoxFromDisk('user');
     //await Hive.deleteBoxFromDisk('myTasks');
     //await Hive.deleteBoxFromDisk('savedAddresses');

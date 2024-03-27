@@ -2,7 +2,9 @@ import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/continue_log_in.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/give_permission.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/input_register_layout.dart';
+import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ThirdSubPage extends StatefulWidget {
   const ThirdSubPage({super.key});
@@ -15,7 +17,7 @@ class _ThirdSubPageState extends State<ThirdSubPage> {
   final FocusNode firstPasswordFocusNode = FocusNode(),
       secondPasswordFocusNode = FocusNode();
   final TextEditingController firstPasswordEditingController =
-  TextEditingController(),
+          TextEditingController(),
       lastPasswordEditingController = TextEditingController();
 
   //@override
@@ -68,9 +70,21 @@ class _ThirdSubPageState extends State<ThirdSubPage> {
               key: const ValueKey("second"),
             ),
             const Spacer(),
-            const GivePermission(),
+            GivePermission(
+              onTap: () {
+                BlocProvider.of<RegistrationBloc>(context)
+                    .add(ChangeUserGrantPermissionForProcessingPersonalData());
+                BlocProvider.of<RegistrationBloc>(context).add(
+                    SavePasswordFirst(
+                        passwordFirst: firstPasswordEditingController.text));
+                BlocProvider.of<RegistrationBloc>(context).add(
+                    SavePasswordSecond(
+                        passwordSecond: lastPasswordEditingController.text));
+              print("object");
+                },
+            ),
             const SizedBox(
-              height: 20,
+              height: 24,
             ),
             ContinueLogIn(
               name: AppLocalizations.instance.translate("continue"),

@@ -36,6 +36,7 @@ class _ResetPasswordState extends State<ResetPassword> {
         title: Text(AppLocalizations.instance.translate("resetPassword")),
       ),
       backgroundColor: beigeBG,
+      resizeToAvoidBottomInset: false,
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

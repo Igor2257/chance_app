@@ -1,4 +1,4 @@
-
+// ignore_for_file: invalid_annotation_target
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/address_component.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geocoding_result.dart';
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geometry.dart';
