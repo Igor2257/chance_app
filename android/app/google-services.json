@@ -15,8 +15,6 @@
       },
       "oauth_client": [
         {
-<<<<<<< HEAD
-=======
           "client_id": "587357455921-cnp81tu0njpkh1q8b6jkomhd43tmhir2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -25,7 +23,6 @@
           }
         },
         {
->>>>>>> 61dbfbe (Update chat logic)
           "client_id": "587357455921-hvfrgm33l656vck69s2rq8af9i8au9g3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

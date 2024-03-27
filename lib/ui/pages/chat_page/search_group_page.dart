@@ -39,7 +39,7 @@ class SearchGroupPage extends StatelessWidget {
                       const SizedBox(width: 16.0),
                       TextButton(
                         onPressed: () => _onCloseSearchPage(context),
-                        child: Text(
+                        child: const Text(
                           'Скасувати',
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
@@ -94,7 +94,7 @@ class SearchGroupPage extends StatelessWidget {
                   ),
                   child: RoundedButton(
                     color: primary1000,
-                    child: Text(
+                    child: const Text(
                       'Додати',
                       style: TextStyle(
                         fontSize: 16,

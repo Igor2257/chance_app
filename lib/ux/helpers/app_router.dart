@@ -6,7 +6,7 @@ import 'package:chance_app/ui/pages/chat_page/create_group_page.dart';
 import 'package:chance_app/ui/pages/main_page/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:chance_app/ui/pages/add_medicine_page/add_medicine_page.dart';
+// import 'package:chance_app/ui/pages/add_medicine_page/add_medicine_page.dart';
 import 'package:chance_app/ui/pages/chat_page/create_chat_page.dart';
 import 'package:chance_app/ui/pages/chat_page/new_chat_page.dart';
 import 'package:chance_app/ui/pages/chat_page/new_group_page.dart';
@@ -28,11 +28,11 @@ import 'package:chance_app/ui/pages/sign_in_up/log_in/log_in_page.dart';
 import 'package:chance_app/ui/pages/sign_in_up/log_in/reset_password.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/enter_code_for_register.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/registration_page.dart';
-import 'package:chance_app/ui/pages/sign_in_up/registration/subscription_page.dart';
+// import 'package:chance_app/ui/pages/sign_in_up/registration/subscription_page.dart';
 import 'package:chance_app/ui/pages/sign_in_up/sign_in_up_page.dart';
 import 'package:chance_app/ui/pages/sos_page/add_contact_screen.dart';
 import 'package:chance_app/ui/pages/sos_page/add_group_screen.dart';
-import 'package:chance_app/ui/pages/sos_page/delete_contact_screen.dart';
+// import 'package:chance_app/ui/pages/sos_page/delete_contact_screen.dart';
 import 'package:chance_app/ui/pages/sos_page/main_page_sos.dart';
 import 'package:chance_app/ui/pages/sos_page/replace_contact_sos.dart';
 import 'package:chance_app/ux/bloc/add_medicine_bloc/add_medicine_bloc.dart';
@@ -70,11 +70,11 @@ class AppRouter {
           settings: settings,
           builder: (_) => const EnterCodeForRegister(),
         );
-      case "/subscription_page":
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => const SubscriptionPage(),
-        );
+      // case "/subscription_page":
+      //   return MaterialPageRoute(
+      //     settings: settings,
+      //     builder: (_) => const SubscriptionPage(),
+      //   );
       case "/reminders":
         return MaterialPageRoute(
           settings: settings,
@@ -85,14 +85,14 @@ class AppRouter {
           settings: settings,
           builder: (_) => const CalendarTaskPage(),
         );
-      case "/add_medicine":
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => BlocProvider(
-            create: (context) => AddMedicineBloc(),
-            child: const AddMedicinePage(),
-          ),
-        );
+      // case "/add_medicine":
+      //   return MaterialPageRoute(
+      //     settings: settings,
+      //     builder: (_) => BlocProvider(
+      //       create: (context) => AddMedicineBloc(),
+      //       child: const AddMedicinePage(),
+      //     ),
+      //   );
       case "/reset_password":
         return MaterialPageRoute(
           settings: settings,
@@ -133,11 +133,11 @@ class AppRouter {
           settings: settings,
           builder: (_) => const OnboardingTutorial(),
         );
-      case "/delete_contact_sos":
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => const DeleteContactsPage(),
-        );
+      // case "/delete_contact_sos":
+      //   return MaterialPageRoute(
+      //     settings: settings,
+      //     builder: (_) => const DeleteContactsPage(),
+      //   );
       case "/my_information":
         return MaterialPageRoute(
           settings: settings,
