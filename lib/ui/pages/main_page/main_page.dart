@@ -335,4 +335,10 @@ class _MainPageState extends State<MainPage> {
 
     return isOkay;
   }
+<<<<<<< HEAD
+=======
+
+  void _onChatsBtnTap(BuildContext context) =>
+      Navigator.of(context).pushNamed('/chats');
+>>>>>>> 25de46d (Add chat settings + fix minor issues)
 }
