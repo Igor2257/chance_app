@@ -1,84 +1,103 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/add_new_contect_widget.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/chat_user_tile.dart';
+import 'package:chance_app/ux/helpers/chat_helper.dart';
 import 'package:chance_app/ux/helpers/chat_map_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
-class NewChatPage extends StatelessWidget {
+class NewChatPage extends StatefulWidget {
   const NewChatPage({super.key});
 
   @override
+  State<NewChatPage> createState() => _NewChatPageState();
+}
+
+class _NewChatPageState extends State<NewChatPage> {
+  final Stream<List<types.User>> _stream = ChatHelper.users;
+
+  bool _loading = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Новий Чат',
-          style: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: 22,
-            height: 28 / 22,
-          ),
-        ),
-        centerTitle: true,
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(height: 32.0),
-          GestureDetector(
-            onTap: () => _onTextFieldTap(context),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Пошук контакту',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                      height: 24 / 16,
-                      letterSpacing: 0.5,
-                      color: Color(0xFFD9D9D9),
-                    ),
-                  ),
-                  SizedBox(height: 8.0),
-                  Divider(
-                    height: 0,
-                    thickness: 1,
-                    color: Color(0xFFD9D9D9),
-                  ),
-                ],
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Новий Чат',
+              style: TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 22,
+                height: 28 / 22,
               ),
             ),
+            centerTitle: true,
           ),
-          const AddNewContactWidget(),
-          Expanded(
-            child: StreamBuilder<List<types.User>>(
-              stream: FirebaseChatCore.instance.users(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                }
-                if (snapshot.hasData) {
-                  return ListView(
-                    children: ChatMapUtils.generateSortMap(snapshot.data!)
-                        .entries
-                        .map(_buildSortedList)
-                        .toList(),
-                  );
-                }
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 32.0),
+              GestureDetector(
+                onTap: () => _onTextFieldTap(context),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Пошук контакту',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                          height: 24 / 16,
+                          letterSpacing: 0.5,
+                          color: Color(0xFFD9D9D9),
+                        ),
+                      ),
+                      SizedBox(height: 8.0),
+                      Divider(
+                        height: 0,
+                        thickness: 1,
+                        color: Color(0xFFD9D9D9),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const AddNewContactWidget(),
+              Expanded(
+                child: StreamBuilder<List<types.User>>(
+                  stream: _stream,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    }
+                    if (snapshot.hasData) {
+                      return ListView(
+                        children: ChatMapUtils.generateSortMap(snapshot.data!)
+                            .entries
+                            .map(_buildSortedList)
+                            .toList(),
+                      );
+                    }
 
-                return const SizedBox();
-              },
-            ),
+                    return const SizedBox();
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        if (_loading)
+          Container(
+            color: primary1000.withOpacity(.5),
+            alignment: Alignment.center,
+            child: const CircularProgressIndicator(),
+          )
+      ],
     );
   }
 
@@ -104,11 +123,31 @@ class NewChatPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children:
-                entry.value.map((user) => ChatUserTile(user: user)).toList(),
+            children: entry.value
+                .map((user) => GestureDetector(
+                      onTap: () => _openChat(context, user),
+                      child: ChatUserTile(user: user),
+                    ))
+                .toList(),
           ),
         ),
       ],
+    );
+  }
+
+  void _openChat(BuildContext context, types.User user) async {
+    setState(() {
+      _loading = true;
+    });
+
+    final room = await ChatHelper.createRoom(user);
+
+    if (!context.mounted) return;
+
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      '/chat',
+      ModalRoute.withName('/chats'),
+      arguments: room,
     );
   }
 

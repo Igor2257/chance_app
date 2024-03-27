@@ -1,9 +1,9 @@
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ux/extensions/chat_user_name.dart';
+import 'package:chance_app/ux/helpers/chat_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 
 class CreateGroupPage extends StatefulWidget {
   const CreateGroupPage({super.key, required this.selectedUsers});
@@ -27,6 +27,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => _unFocus(context),
+      behavior: HitTestBehavior.translucent,
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
@@ -49,6 +50,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
               TextField(
                 controller: _controller,
                 autofocus: true,
+                onChanged: (_) => setState(() {}),
                 keyboardType: TextInputType.name,
                 textInputAction: TextInputAction.done,
                 textCapitalization: TextCapitalization.words,
@@ -123,14 +125,18 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
   }
 
   Future<void> _onCreateGroupBtnTap(BuildContext context) async {
-    types.Room room = await FirebaseChatCore.instance.createGroupRoom(
+    types.Room room = await ChatHelper.createGroupRoom(
       name: _controller.text.trim(),
       users: widget.selectedUsers,
     );
 
     if (!context.mounted) return;
 
-    Navigator.of(context).pushNamed('/chat', arguments: room);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      '/chat',
+      ModalRoute.withName('/chats'),
+      arguments: room,
+    );
   }
 
   void _unFocus(BuildContext context) => FocusScope.of(context).unfocus();

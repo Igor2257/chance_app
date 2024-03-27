@@ -411,5 +411,5 @@ class _MainPageState extends State<MainPage> {
   }
 
   void _onChatsBtnTap(BuildContext context) =>
-      Navigator.of(context).pushNamed('/chats_page');
+      Navigator.of(context).pushNamed('/chats');
 }

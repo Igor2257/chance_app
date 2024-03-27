@@ -1,7 +1,7 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/chat_bubble_widget.dart';
+import 'package:chance_app/ux/helpers/chat_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ChatPage extends StatefulWidget {
@@ -16,7 +16,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _controller = TextEditingController();
   late final Stream<List<types.Message>> _messagesStream =
-      FirebaseChatCore.instance.messages(widget.room);
+      ChatHelper.messages(widget.room);
 
   @override
   void dispose() {
@@ -39,51 +39,58 @@ class _ChatPageState extends State<ChatPage> {
             ),
           ),
           centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () => _openChatSettingsPage(context),
+              icon: Icon(
+                Icons.more_vert,
+                color: primary800,
+              ),
+              iconSize: 24.0,
+            )
+          ],
         ),
-        body: StreamBuilder<List<types.Message>>(
-          stream: _messagesStream,
-          builder: (context, snapshot) {
-            // We are waiting for incoming data data
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
+        body: Center(
+          child: StreamBuilder<List<types.Message>>(
+            stream: _messagesStream,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasData) {
+                if (snapshot.data!.isEmpty) {
+                  return const Text(
+                    'Нема повідомлень',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 22,
+                      height: 28 / 22,
+                    ),
+                  );
+                }
+                return ListView.builder(
+                  reverse: true,
+                  padding: const EdgeInsets.all(16.0),
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    types.Message message = snapshot.data![index];
+                    if (message is types.TextMessage) {
+                      return ChatBubbleWidget(message: message);
+                    }
+                    return const SizedBox();
+                  },
+                );
+              }
 
-            // We have an active connection and we have received data
-            if (snapshot.connectionState == ConnectionState.active &&
-                snapshot.hasData) {
-              return ListView.builder(
-                reverse: true,
-                padding: const EdgeInsets.all(16.0),
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  types.Message message = snapshot.data![index];
-                  if (message is types.TextMessage) {
-                    return ChatBubbleWidget(message: message);
-                  }
-                  return const SizedBox();
-                },
-              );
-            }
-
-            if (snapshot.connectionState == ConnectionState.done) {
-              return const Center(
-                child: Text(
-                  'No more data',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 22,
-                    height: 28 / 22,
-                  ),
+              return const Text(
+                'Помилка',
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 22,
+                  height: 28 / 22,
                 ),
               );
-            }
-
-            return const Center(
-              child: Text('No messages'),
-            );
-          },
+            },
+          ),
         ),
         bottomNavigationBar: _buildMessageTextField(context),
       ),
@@ -143,13 +150,13 @@ class _ChatPageState extends State<ChatPage> {
 
   void _onSendBtnTap() {
     if (_controller.text.isNotEmpty) {
-      FirebaseChatCore.instance.sendMessage(
-        types.PartialText(text: _controller.text),
-        widget.room.id,
-      );
+      ChatHelper.sendMessage(_controller.text, widget.room.id);
       _controller.clear();
     }
   }
 
   void _unFocus(BuildContext context) => FocusScope.of(context).unfocus();
+
+  void _openChatSettingsPage(BuildContext context) =>
+      Navigator.of(context).pushNamed('/chat_settings', arguments: widget.room);
 }

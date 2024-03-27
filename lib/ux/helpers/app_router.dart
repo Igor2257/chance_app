@@ -1,6 +1,7 @@
-import 'package:chance_app/ui/pages/chat_page/blocs/search_cubit/search_cubit.dart';
 import 'package:chance_app/ui/pages/chat_page/blocs/select_cubit/select_cubit.dart';
+import 'package:chance_app/ui/pages/chat_page/change_group_page.dart';
 import 'package:chance_app/ui/pages/chat_page/chat_page.dart';
+import 'package:chance_app/ui/pages/chat_page/chat_settings_page.dart';
 import 'package:chance_app/ui/pages/chat_page/create_group_page.dart';
 import 'package:chance_app/ui/pages/main_page/main_page.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,6 @@ import 'package:chance_app/ui/pages/sos_page/main_page_sos.dart';
 import 'package:chance_app/ui/pages/sos_page/replace_contact_sos.dart';
 import 'package:chance_app/ux/bloc/add_medicine_bloc/add_medicine_bloc.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-
 
 class AppRouter {
   const AppRouter._();
@@ -168,7 +168,7 @@ class AppRouter {
           settings: settings,
           builder: (_) => const EnterAcceptCode(),
         );
-      case "/chats_page":
+      case "/chats":
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => const ChatsPage(),
@@ -197,13 +197,9 @@ class AppRouter {
           builder: (_) => ChatPage(room: args as types.Room),
         );
       case "/search_chat":
-        List<types.User> list = args as List<types.User>;
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => BlocProvider(
-            create: (_) => SearchCubit(list),
-            child: SearchChatPage(list: list),
-          ),
+          builder: (_) => const SearchChatPage(),
         );
 
       case "/search_group":
@@ -223,6 +219,20 @@ class AppRouter {
           settings: settings,
           builder: (_) => CreateGroupPage(
             selectedUsers: args as List<types.User>,
+          ),
+        );
+      case "/chat_settings":
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => ChatSettingsPage(
+            room: args as types.Room,
+          ),
+        );
+      case "/change_group":
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => ChangeGroupPage(
+            room: args as types.Room,
           ),
         );
       default:

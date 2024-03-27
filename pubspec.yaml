@@ -79,7 +79,6 @@ dependencies:
   flutter_firebase_chat_core: ^1.6.7
   flutter_chat_types: ^3.6.2
   timeago: ^3.6.1 
-  dart_jsonwebtoken: 2.13.0
 
 
   # The following adds the Cupertino Icons font to your application.

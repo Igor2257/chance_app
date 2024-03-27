@@ -4,12 +4,11 @@ import 'package:chance_app/ui/pages/chat_page/blocs/search_cubit/search_cubit.da
 import 'package:chance_app/ui/pages/chat_page/blocs/select_cubit/select_cubit.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/chat_search_field.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/user_checkbox_tile.dart';
+import 'package:chance_app/ux/helpers/chat_helper.dart';
 import 'package:chance_app/ux/helpers/chat_map_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 
 class SearchGroupPage extends StatelessWidget {
   const SearchGroupPage({super.key});
@@ -17,7 +16,7 @@ class SearchGroupPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<types.User>>(
-      stream: FirebaseChatCore.instance.users(),
+      stream: ChatHelper.users,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(

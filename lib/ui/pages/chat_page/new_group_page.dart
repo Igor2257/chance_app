@@ -3,11 +3,11 @@ import 'package:chance_app/ui/pages/chat_page/blocs/select_cubit/select_cubit.da
 import 'package:chance_app/ui/pages/chat_page/widgets/add_new_contect_widget.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/user_checkbox_tile.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/user_input_chip.dart';
+import 'package:chance_app/ux/helpers/chat_helper.dart';
 import 'package:chance_app/ux/helpers/chat_map_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 
 class NewGroupPage extends StatefulWidget {
   const NewGroupPage({super.key});
@@ -95,7 +95,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
               const AddNewContactWidget(),
               Expanded(
                 child: StreamBuilder<List<types.User>>(
-                  stream: FirebaseChatCore.instance.users(),
+                  stream: ChatHelper.users,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const CircularProgressIndicator();

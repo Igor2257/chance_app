@@ -1,7 +1,7 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/pages/chats_page/widgets/chat_tile.dart';
+import 'package:chance_app/ux/helpers/chat_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ChatsPage extends StatelessWidget {
@@ -23,7 +23,7 @@ class ChatsPage extends StatelessWidget {
       ),
       body: Center(
         child: StreamBuilder<List<types.Room>>(
-          stream: FirebaseChatCore.instance.rooms(),
+          stream: ChatHelper.rooms,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();

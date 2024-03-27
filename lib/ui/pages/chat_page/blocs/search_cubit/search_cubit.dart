@@ -13,7 +13,7 @@ class SearchCubit extends Cubit<List<types.User>> {
     return emit(
       _list
           .where(
-              (v) => v.lastName!.toLowerCase().startsWith(value.toLowerCase()))
+              (v) => v.firstName!.toLowerCase().startsWith(value.toLowerCase()))
           .toList(),
     );
   }

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:chance_app/main.dart';
 import 'package:chance_app/ui/pages/navigation/navigation_page/components/map_data.dart';
@@ -13,7 +12,6 @@ import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart' show sha256;
-import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
@@ -104,7 +102,6 @@ class Repository {
                 .toString()
                 .replaceAll("[", "")
                 .replaceAll("]", "");
-                log(error.toString());
             Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
           }
         });
