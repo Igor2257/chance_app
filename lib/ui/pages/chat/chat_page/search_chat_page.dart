@@ -1,7 +1,8 @@
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/chat_page/blocs/search_cubit/search_cubit.dart';
-import 'package:chance_app/ui/pages/chat_page/widgets/chat_search_field.dart';
-import 'package:chance_app/ui/pages/chat_page/widgets/chat_user_tile.dart';
+import 'package:chance_app/ui/pages/chat/chat_page/blocs/search_cubit/search_cubit.dart';
+import 'package:chance_app/ui/pages/chat/chat_page/widgets/chat_search_field.dart';
+import 'package:chance_app/ui/pages/chat/chat_page/widgets/chat_user_tile.dart';
+
 import 'package:chance_app/ux/helpers/chat_map_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,7 +41,7 @@ class SearchChatPage extends StatelessWidget {
                       const SizedBox(width: 16.0),
                       TextButton(
                         onPressed: () => _onCloseSearchPage(context),
-                        child: Text(
+                        child: const Text(
                           'Скасувати',
                           style: TextStyle(
                             fontWeight: FontWeight.w400,

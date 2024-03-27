@@ -17,7 +17,7 @@ class ChatUserTile extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 8.0),
         child: Text(
           user.fullName,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 16,
             height: 24 / 16,

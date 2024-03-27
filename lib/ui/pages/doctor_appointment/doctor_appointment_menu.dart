@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
 enum _MenuOptions {
   navigationDelegate,
   userAgent,
@@ -10,8 +11,10 @@ enum _MenuOptions {
   setCookie,
   removeCookie,
 }
-class DoctorAppointmentMenu extends  StatefulWidget {
+
+class DoctorAppointmentMenu extends StatefulWidget {
   const DoctorAppointmentMenu({super.key, required this.controller});
+
   final WebViewController controller;
 
   @override
@@ -20,6 +23,7 @@ class DoctorAppointmentMenu extends  StatefulWidget {
 
 class _DoctorAppointmentMenuState extends State<DoctorAppointmentMenu> {
   final cookieManager = WebViewCookieManager();
+
   Future<void> _onListCookies(WebViewController controller) async {
     final String cookies = await controller
         .runJavaScriptReturningResult('document.cookie') as String;
@@ -30,6 +34,7 @@ class _DoctorAppointmentMenuState extends State<DoctorAppointmentMenu> {
       ),
     );
   }
+
   Future<void> _onClearCookies() async {
     final hadCookies = await cookieManager.clearCookies();
     String message = 'There were cookies. Now, they are gone!';
@@ -43,6 +48,7 @@ class _DoctorAppointmentMenuState extends State<DoctorAppointmentMenu> {
       ),
     );
   }
+
   Future<void> _onAddCookie(WebViewController controller) async {
     await controller.runJavaScript('''var date = new Date();
   date.setTime(date.getTime()+(30*24*60*60*1000));
@@ -54,6 +60,7 @@ class _DoctorAppointmentMenuState extends State<DoctorAppointmentMenu> {
       ),
     );
   }
+
   Future<void> _onSetCookie(WebViewController controller) async {
     await cookieManager.setCookie(
       const WebViewCookie(name: 'foo', value: 'bar', domain: 'flutter.dev'),
@@ -65,6 +72,7 @@ class _DoctorAppointmentMenuState extends State<DoctorAppointmentMenu> {
       ),
     );
   }
+
   Future<void> _onRemoveCookie(WebViewController controller) async {
     await controller.runJavaScript(
         'document.cookie="FirstName=John; expires=Thu, 01 Jan 1970 00:00:00 UTC" ');
@@ -75,6 +83,7 @@ class _DoctorAppointmentMenuState extends State<DoctorAppointmentMenu> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<_MenuOptions>(
@@ -85,12 +94,15 @@ class _DoctorAppointmentMenuState extends State<DoctorAppointmentMenu> {
                 .loadRequest(Uri.parse('https://youtube.com'));
             break;
           case _MenuOptions.userAgent:
-            final userAgent = await widget.controller
-                .runJavaScriptReturningResult('navigator.userAgent');
-            if (!mounted) return;
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('$userAgent'),
-            ));
+            await widget.controller
+                .runJavaScriptReturningResult('navigator.userAgent')
+                .then((userAgent) {
+              if (!mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('$userAgent'),
+              ));
+            });
+
             break;
           case _MenuOptions.javascriptChannel:
             await widget.controller.runJavaScript('''

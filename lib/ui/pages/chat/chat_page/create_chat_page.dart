@@ -30,7 +30,7 @@ class CreateChatPage extends StatelessWidget {
             RoundedButton(
               height: 44.0,
               color: primary1000,
-              child: Text(
+              child: const Text(
                 'Створити нову групу',
                 style: TextStyle(
                   fontSize: 16,
@@ -46,7 +46,7 @@ class CreateChatPage extends StatelessWidget {
             RoundedButton(
               height: 44.0,
               color: primary1000,
-              child: Text(
+              child: const Text(
                 'Створити новий чат',
                 style: TextStyle(
                   fontSize: 16,

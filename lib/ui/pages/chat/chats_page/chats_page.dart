@@ -1,8 +1,8 @@
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/chats_page/widgets/chat_tile.dart';
+import 'package:chance_app/ui/pages/chat/chats_page/widgets/chat_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 
 class ChatsPage extends StatelessWidget {
   const ChatsPage({super.key});

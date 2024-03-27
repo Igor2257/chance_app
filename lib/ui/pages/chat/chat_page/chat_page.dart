@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/chat_page/widgets/chat_bubble_widget.dart';
+import 'package:chance_app/ui/pages/chat/chat_page/widgets/chat_bubble_widget.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -96,16 +97,16 @@ class _ChatPageState extends State<ChatPage> {
       margin: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: darkNeutral800,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(8.0)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(8.0)),
       ),
       child: SafeArea(
         child: TextField(
           controller: _controller,
           textInputAction: TextInputAction.send,
           textCapitalization: TextCapitalization.sentences,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 17,
             height: 22 / 17,
@@ -118,7 +119,7 @@ class _ChatPageState extends State<ChatPage> {
             filled: true,
             suffixIcon: IconButton(
               onPressed: _onSendBtnTap,
-              icon: Icon(
+              icon: const Icon(
                 Icons.send,
                 color: primary1000,
               ),

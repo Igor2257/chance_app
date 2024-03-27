@@ -1,8 +1,8 @@
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/chat_page/blocs/select_cubit/select_cubit.dart';
-import 'package:chance_app/ui/pages/chat_page/widgets/add_new_contect_widget.dart';
-import 'package:chance_app/ui/pages/chat_page/widgets/user_checkbox_tile.dart';
-import 'package:chance_app/ui/pages/chat_page/widgets/user_input_chip.dart';
+import 'package:chance_app/ui/pages/chat/chat_page/blocs/select_cubit/select_cubit.dart';
+import 'package:chance_app/ui/pages/chat/chat_page/widgets/add_new_contect_widget.dart';
+import 'package:chance_app/ui/pages/chat/chat_page/widgets/user_checkbox_tile.dart';
+import 'package:chance_app/ui/pages/chat/chat_page/widgets/user_input_chip.dart';
 import 'package:chance_app/ux/helpers/chat_map_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

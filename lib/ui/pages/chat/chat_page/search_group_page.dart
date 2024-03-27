@@ -1,9 +1,9 @@
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/chat_page/blocs/search_cubit/search_cubit.dart';
-import 'package:chance_app/ui/pages/chat_page/blocs/select_cubit/select_cubit.dart';
-import 'package:chance_app/ui/pages/chat_page/widgets/chat_search_field.dart';
-import 'package:chance_app/ui/pages/chat_page/widgets/user_checkbox_tile.dart';
+import 'package:chance_app/ui/pages/chat/chat_page/blocs/search_cubit/search_cubit.dart';
+import 'package:chance_app/ui/pages/chat/chat_page/blocs/select_cubit/select_cubit.dart';
+import 'package:chance_app/ui/pages/chat/chat_page/widgets/chat_search_field.dart';
+import 'package:chance_app/ui/pages/chat/chat_page/widgets/user_checkbox_tile.dart';
 import 'package:chance_app/ux/helpers/chat_map_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -40,7 +40,7 @@ class SearchGroupPage extends StatelessWidget {
                       const SizedBox(width: 16.0),
                       TextButton(
                         onPressed: () => _onCloseSearchPage(context),
-                        child: Text(
+                        child: const Text(
                           'Скасувати',
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
@@ -95,7 +95,7 @@ class SearchGroupPage extends StatelessWidget {
                   ),
                   child: RoundedButton(
                     color: primary1000,
-                    child: Text(
+                    child: const Text(
                       'Додати',
                       style: TextStyle(
                         fontSize: 16,

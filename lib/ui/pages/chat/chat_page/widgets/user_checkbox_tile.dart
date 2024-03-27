@@ -30,7 +30,7 @@ class UserCheckboxTile extends StatelessWidget {
             checkColor: darkNeutral800,
             activeColor: background,
             side: MaterialStateBorderSide.resolveWith(
-              (_) => BorderSide(
+              (_) => const BorderSide(
                 color: darkNeutral800,
                 width: 2,
               ),
@@ -40,7 +40,7 @@ class UserCheckboxTile extends StatelessWidget {
         const SizedBox(width: 20.0),
         Text(
           value.fullName,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 16,
             height: 24 / 16,
