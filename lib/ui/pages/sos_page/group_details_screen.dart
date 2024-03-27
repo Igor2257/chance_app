@@ -1,8 +1,10 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class GroupDetailsScreen extends StatelessWidget {
   final SosGroupModel group;
@@ -56,7 +58,7 @@ class ContainerButton extends StatelessWidget {
   final List<SosContactModel> contacts;
   final VoidCallback onPressed;
 
-  ContainerButton({
+  const ContainerButton({
     super.key,
     required this.contactName,
     required this.contacts,
@@ -64,40 +66,24 @@ class ContainerButton extends StatelessWidget {
     required this.contactPhone,
   });
 
-  // Future<void> _makePhoneCall() async {
-  //   final callPermissionStatus = await Permission.phone.request();
-  //   if (callPermissionStatus.isGranted) {
-  //     // final userPhone = contactPhone;
-  //     // try {
-  //     //   const MethodChannel('caller').invokeMethod('makeCall', userPhone);
-  //     // } on PlatformException catch (e) {
-  //     //   Fluttertoast.showToast(
-  //     //     msg: AppLocalizations.instance
-  //     //         .translate("failedToCallTheNumber $contactPhone, ${e.message}"),
-  //     //   );
-  //     // }
-
-  //     final uri = Uri(scheme: 'tel', path: contactPhone);
-  //     final url = uri.toString();
-  //     if (await canLaunch(url)) {
-  //       await launch(url);
-  //     } else {
-  //       await launch(url);
-  //     }
-  //   } else {
-  //     Fluttertoast.showToast(
-  //       msg: AppLocalizations.instance
-  //           .translate("failedToCallTheNumber $contactPhone"),
-  //     );
-  //   }
-  // }
-  final uri = Uri(scheme: 'tel', path: "380501231235");
-  callNumber() async {
-    await launchUrl(uri);
-  }
-
-  directCall() async {
-    await FlutterPhoneDirectCaller.callNumber("380501231235");
+  Future<void> _makePhoneCall() async {
+    final callPermissionStatus = await Permission.phone.request();
+    if (callPermissionStatus.isGranted) {
+      final String userPhone = contactPhone;
+      try {
+        const MethodChannel('caller').invokeMethod('makeCall', userPhone);
+      } on PlatformException catch (e) {
+        Fluttertoast.showToast(
+          msg: AppLocalizations.instance
+              .translate("failedToCallTheNumber $contactPhone, ${e.message}"),
+        );
+      }
+    } else {
+      Fluttertoast.showToast(
+        msg: AppLocalizations.instance
+            .translate("failedToCallTheNumber $contactPhone"),
+      );
+    }
   }
 
   @override
@@ -121,7 +107,7 @@ class ContainerButton extends StatelessWidget {
           ),
         ),
         onTap: () {
-          callNumber();
+          _makePhoneCall();
         },
       ),
     );

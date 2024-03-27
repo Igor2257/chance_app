@@ -4,10 +4,10 @@ import 'package:chance_app/ui/pages/sos_page/group_details_screen.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MainPageSos extends StatefulWidget {
   const MainPageSos({super.key});
@@ -253,17 +253,20 @@ class _MainPageSosState extends State<MainPageSos> {
   Future<void> _makePhoneCall(SosContactModel contactModel) async {
     final callPermissionStatus = await Permission.phone.request();
     if (callPermissionStatus.isGranted) {
-      final uri = Uri(scheme: 'tel', path: contactModel.phone);
-      final url = uri.toString();
-      if (await canLaunch(url)) {
-        await launch(url);
-      } else {
-        await launch(url);
+      final String userPhone = contactModel.phone;
+      try {
+        const MethodChannel('caller').invokeMethod('makeCall', userPhone);
+      } on PlatformException catch (e) {
+        Fluttertoast.showToast(
+          msg: AppLocalizations.instance
+              .translate("failedToCallTheNumber $userPhone, ${e.message}"),
+        );
       }
     } else {
       Fluttertoast.showToast(
-          msg: AppLocalizations.instance
-              .translate("failedToCallTheNumber $contactModel.phone"));
+        msg: AppLocalizations.instance
+            .translate("failedToCallTheNumber $contactModel.phone"),
+      );
     }
   }
 }
