@@ -1,6 +1,7 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LabeledTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -106,7 +107,10 @@ class LabeledTextFieldState extends State<LabeledTextField> {
             onEditingComplete: () {
               if (!validate()) {
                 setState(() {
-                  errorText = AppLocalizations.instance.translate("checkTheEnteredData");
+                  // errorText = AppLocalizations.instance.translate("checkTheEnteredData");
+                  Fluttertoast.showToast(
+                      msg: AppLocalizations.instance
+                          .translate("checkTheEnteredData"));
                 });
               }
             },

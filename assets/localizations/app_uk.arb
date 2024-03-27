@@ -245,5 +245,6 @@
   "passwordsDoNotMatch":"Паролі не співпадають",
   "theNameMustContainUpTo300Characters":"Назва має містити до 300 символів",
   "theNameMustContainAtLeast2Characters":"Назва має містити від 2 символів",
-  "error":"Помилка"
+  "error":"Помилка",
+  "failedToCallTheNumber": "Не вдалося зателефонувати за номером"
 }
