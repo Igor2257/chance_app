@@ -86,25 +86,23 @@ class SearchGroupPage extends StatelessWidget {
                   },
                 ),
                 bottomNavigationBar: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    16.0,
-                    16.0,
-                    16.0,
-                    16.0 + MediaQuery.of(context).viewInsets.bottom,
-                  ),
-                  child: RoundedButton(
-                    color: primary1000,
-                    child: const Text(
-                      'Додати',
-                      style: TextStyle(
-                        fontSize: 16,
-                        height: 24 / 16,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 0.15,
-                        color: beige0,
+                  padding: const EdgeInsets.all(16.0),
+                  child: SizedBox(
+                    height: 56.0,
+                    child: RoundedButton(
+                      color: primary1000,
+                      child: const Text(
+                        'Додати',
+                        style: TextStyle(
+                          fontSize: 16,
+                          height: 24 / 16,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0.15,
+                          color: beige0,
+                        ),
                       ),
+                      onPress: () => _onAddBtnTap(context),
                     ),
-                    onPress: () => _onAddBtnTap(context),
                   ),
                 ),
               ),
