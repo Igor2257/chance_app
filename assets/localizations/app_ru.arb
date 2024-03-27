@@ -231,5 +231,7 @@
   "selectOnTheMap":"Выбрать на карте",
   "similarToYourQuery":"Похожие на ваш запрос",
   "recent":"Недавние",
-  "myWards": "Мои подопечные"
+  "myWards": "Мои подопечные",
+  "failedToCallTheNumber": "Не удалось позвонить по номеру"
+
 }

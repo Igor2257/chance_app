@@ -24,7 +24,6 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
   @override
   void initState() {
     super.initState();
-
     initContacts();
   }
 
@@ -137,34 +136,28 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           List<SosContactModel> contactModels = [];
-
                           for (int index = 0;
                               index < contacts.length;
                               index++) {
                             String name = contacts[index].nameController.text;
                             String phone = contacts[index].phoneController.text;
-
                             SosContactModel contactModel = SosContactModel(
                               name: name,
                               phone: phone,
                               groupName: groupNameController.text,
                             );
-
                             contactModels.add(contactModel);
                           }
-
                           SosGroupModel sosGroupModel = SosGroupModel(
                             name: groupNameController.text,
                             contacts: contactModels,
                           );
-
                           _sosContactsBloc.add(
                             SaveContact(
                               contactModel: sosGroupModel,
                               isGroup: true,
                             ),
                           );
-
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               "/sos", (route) => false);
                         },

@@ -5,6 +5,7 @@ import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ReplaceContactSosScreen extends StatefulWidget {
   const ReplaceContactSosScreen({super.key});
@@ -63,7 +64,6 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
                   height: 48,
                   child: ElevatedButton(
                     onPressed: () {
-                      print('Button pressed');
                       if (_validateForm()) {
                         _sosContactsBloc.add(EditContact(
                             contactModel: contactModel.copyWith(contacts: [
@@ -78,11 +78,9 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
                         nameController.clear();
                         phoneController.clear();
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(AppLocalizations.instance
-                                .translate("checkTheCorrectnessOfTheData")),
-                          ),
+                        Fluttertoast.showToast(
+                          msg: AppLocalizations.instance
+                              .translate("checkTheCorrectnessOfTheData"),
                         );
                       }
                     },

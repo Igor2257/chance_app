@@ -239,6 +239,6 @@
   "selectOnTheMap": "Select on the map",
   "similarToYourQuery": "Similar to your query",
   "recent": "Recent",
-  "myWards": "My wards"
-  
+  "myWards": "My wards",
+  "failedToCallTheNumber": "Failed to call the number"
 }

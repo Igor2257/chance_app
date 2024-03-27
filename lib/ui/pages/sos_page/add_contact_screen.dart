@@ -6,6 +6,7 @@ import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:chance_app/ux/repository/sos_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AddContactScreen extends StatefulWidget {
   const AddContactScreen({super.key});
@@ -74,7 +75,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
                 onPressed: () {
                   final nameTextField = LabeledTextFieldState.nameTextField;
                   final phoneTextField = LabeledTextFieldState.phoneTextField;
-
                   if (nameTextField != null && phoneTextField != null) {
                     if (nameTextField.validate() && phoneTextField.validate()) {
                       _sosContactsBloc.add(
@@ -88,17 +88,14 @@ class _AddContactScreenState extends State<AddContactScreen> {
                           isGroup: false,
                         ),
                       );
-
                       Navigator.of(context)
                           .pushNamedAndRemoveUntil("/sos", (route) => false);
                       nameTextField.clear();
                       phoneTextField.clear();
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(AppLocalizations.instance
-                              .translate("checkTheCorrectnessOfTheData")),
-                        ),
+                      Fluttertoast.showToast(
+                        msg: AppLocalizations.instance
+                            .translate("checkTheCorrectnessOfTheData"),
                       );
                     }
                   }
