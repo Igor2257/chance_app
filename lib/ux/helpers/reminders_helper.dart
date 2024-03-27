@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 import 'dart:math' show Random, pow;
 
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/enum/instruction.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/model/task_model.dart';
@@ -59,10 +60,10 @@ abstract class RemindersHelper {
     final reminderTime = task.date.subtract(remindBefore);
     if (reminderTime.isBefore(DateTime.now())) return;
 
-    const notificationChannel = AndroidNotificationChannel(
+    final notificationChannel = AndroidNotificationChannel(
       "tasks",
-      "Завдання",
-      description: "Нагадування про виконання завдань",
+      AppLocalizations.instance.translate("tasks"),
+      description: AppLocalizations.instance.translate("taskReminder"),
       enableLights: true,
       ledColor: primary400,
     );
@@ -76,7 +77,7 @@ abstract class RemindersHelper {
       id: notificationId,
       title: task.message,
       body: [
-        "Сьогодні",
+        AppLocalizations.instance.translate("today"),
         Jiffy.parseFromDateTime(task.date).Hm,
       ].join(" "),
       payload: jsonEncode({
@@ -133,10 +134,10 @@ abstract class RemindersHelper {
     final reminderTime = medicine.getActualDoseTime(doseTime);
     if (reminderTime.isBefore(DateTime.now())) return;
 
-    const notificationChannel = AndroidNotificationChannel(
+    final notificationChannel = AndroidNotificationChannel(
       "medicines",
-      "Медикаменти",
-      description: "Нагадування про прийом ліків",
+      AppLocalizations.instance.translate("medicines"),
+      description: AppLocalizations.instance.translate("medicineReminder"),
       enableLights: true,
       ledColor: primary400,
     );
@@ -145,7 +146,7 @@ abstract class RemindersHelper {
     final reminderText = [
       doseCount,
       medicine.type.toDoseString(doseCount).toLowerCase(),
-      "сьогодні о",
+      AppLocalizations.instance.translate("todayAt").toLowerCase(),
       Jiffy.parseFromDateTime(reminderTime).Hm,
     ].join(' ');
     final shouldShowInstruction = medicine.instruction != Instruction.noMatter;
@@ -159,7 +160,7 @@ abstract class RemindersHelper {
       body: (Platform.isIOS && !shouldShowInstruction)
           ? null
           : [
-              if (Platform.isIOS) "Прийняти" else reminderText,
+              if (Platform.isIOS) AppLocalizations.instance.translate("accept") else reminderText,
               if (shouldShowInstruction)
                 medicine.instruction.toLocalizedString().toLowerCase(),
             ].join(' '),

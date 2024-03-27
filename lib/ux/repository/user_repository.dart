@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/me_user.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -18,9 +19,9 @@ class UserRepository {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
+          msg: AppLocalizations.instance.translate("noInternet"),
           toastLength: Toast.LENGTH_LONG);
-      error = "Немає підключення до інтернету";
+      error = AppLocalizations.instance.translate("noInternet");
     } else {
       try {
         var url = Uri.parse('$apiUrl/auth/login');
@@ -83,6 +84,7 @@ class UserRepository {
         error = errors.toString();
         Fluttertoast.showToast(
             msg: errors.toString(), toastLength: Toast.LENGTH_LONG);
+        FlutterError(errors.toString());
       }
     }
     return error;
@@ -93,9 +95,9 @@ class UserRepository {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
+          msg: AppLocalizations.instance.translate("noInternet"),
           toastLength: Toast.LENGTH_LONG);
-      error = "Немає підключення до інтернету";
+      error = AppLocalizations.instance.translate("noInternet");
     } else {
       try {
         var url = Uri.parse('$apiUrl/auth/register');
@@ -130,6 +132,7 @@ class UserRepository {
       } catch (error) {
         Fluttertoast.showToast(
             msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+        FlutterError(error.toString());
       }
     }
     return error;
@@ -143,9 +146,9 @@ class UserRepository {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
+          msg: AppLocalizations.instance.translate("noInternet"),
           toastLength: Toast.LENGTH_LONG);
-      error = "Немає підключення до інтернету";
+      error = AppLocalizations.instance.translate("noInternet");
     } else {
       try {
         var url = Uri.parse('$apiUrl/auth/confirm');
@@ -173,6 +176,7 @@ class UserRepository {
       } catch (error) {
         Fluttertoast.showToast(
             msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+        FlutterError(error.toString());
       }
     }
     return error;
@@ -183,9 +187,9 @@ class UserRepository {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
+          msg: AppLocalizations.instance.translate("noInternet"),
           toastLength: Toast.LENGTH_LONG);
-      error = "Немає підключення до інтернету";
+      error = AppLocalizations.instance.translate("noInternet");
     } else {
       try {
         var url = Uri.parse('$apiUrl/user');
@@ -216,6 +220,7 @@ class UserRepository {
       } catch (e) {
         Fluttertoast.showToast(
             msg: e.toString(), toastLength: Toast.LENGTH_LONG);
+        FlutterError(error.toString());
       }
     }
     return error;
@@ -223,14 +228,14 @@ class UserRepository {
 
   Future<String?> resendCode(String email) async {
     if (email.isEmpty) {
-      return "Електрона пошта пуста";
+      return AppLocalizations.instance.translate("enterEmail");
     }
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
+          msg: AppLocalizations.instance.translate("noInternet"),
           toastLength: Toast.LENGTH_LONG);
-      error = "Немає підключення до інтернету";
+      error = AppLocalizations.instance.translate("noInternet");
     } else {
       try {
         var url = Uri.parse('$apiUrl/auth/resend-code');
@@ -255,6 +260,7 @@ class UserRepository {
       } catch (error) {
         Fluttertoast.showToast(
             msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+        FlutterError(error.toString());
       }
     }
     return error;
@@ -264,9 +270,9 @@ class UserRepository {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
+          msg: AppLocalizations.instance.translate("noInternet"),
           toastLength: Toast.LENGTH_LONG);
-      error = "Немає підключення до інтернету";
+      error = AppLocalizations.instance.translate("noInternet");
     } else {
       try {
         var url = Uri.parse('$apiUrl/auth/forget-password');
@@ -291,6 +297,7 @@ class UserRepository {
       } catch (error) {
         Fluttertoast.showToast(
             msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+        FlutterError(error.toString());
       }
     }
     return error;
@@ -301,9 +308,9 @@ class UserRepository {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
+          msg: AppLocalizations.instance.translate("noInternet"),
           toastLength: Toast.LENGTH_LONG);
-      error = "Немає підключення до інтернету";
+      error = AppLocalizations.instance.translate("noInternet");
     } else {
       try {
         var salt = 'UVocjgjgXg8P7zIsC93kKlRU8sPbTBhsAMFLnLUPDRYFIWAk';
@@ -339,6 +346,7 @@ class UserRepository {
       } catch (error) {
         Fluttertoast.showToast(
             msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+        FlutterError(error.toString());
       }
     }
     return error;
@@ -348,7 +356,7 @@ class UserRepository {
     MeUser? meUser;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
+          msg: AppLocalizations.instance.translate("noInternet"),
           toastLength: Toast.LENGTH_LONG);
     } else {
       try {
@@ -390,6 +398,7 @@ class UserRepository {
       } catch (error) {
         Fluttertoast.showToast(
             msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+        FlutterError(error.toString());
       }
     }
     return meUser;
@@ -418,7 +427,7 @@ class UserRepository {
       if (await (Connectivity().checkConnectivity()) ==
           ConnectivityResult.none) {
         Fluttertoast.showToast(
-            msg: "Немає підключення до інтернету",
+            msg: AppLocalizations.instance.translate("noInternet"),
             toastLength: Toast.LENGTH_LONG);
       } else {
         var url = Uri.parse('$apiUrl/auth/google/$token');
@@ -466,6 +475,7 @@ class UserRepository {
                     .replaceAll("[", "")
                     .replaceAll("]", ""),
                 toastLength: Toast.LENGTH_LONG);
+            FlutterError(error.toString());
           }
         });
       }
@@ -478,9 +488,9 @@ class UserRepository {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
+          msg: AppLocalizations.instance.translate("noInternet"),
           toastLength: Toast.LENGTH_LONG);
-      error = "Немає підключення до інтернету";
+      error = AppLocalizations.instance.translate("noInternet");
     } else {
       try {
         var url = Uri.parse('$apiUrl/auth/logout');
@@ -498,6 +508,7 @@ class UserRepository {
         FlutterError(error.toString());
         Fluttertoast.showToast(
             msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+        FlutterError(error.toString());
       }
     }
     return error;

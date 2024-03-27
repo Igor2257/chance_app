@@ -93,7 +93,7 @@ class _RemindersPageState extends State<RemindersPage> {
             builder: (context) => TaskStatusUpdatedDialog(
               state.task,
               status: ReminderState.rescheduled,
-              bottom: Text("Відкладено на ${state.value.inMinutes}хв"),
+              bottom: Text("${AppLocalizations.instance.translate("postponedTo")} ${state.value.inMinutes}${AppLocalizations.instance.translate("min")}"),
             ),
           );
         } else if (state is TaskDeleted) {
@@ -134,7 +134,7 @@ class _RemindersPageState extends State<RemindersPage> {
               state.medicine,
               doseTime: state.doseTime,
               status: ReminderState.rescheduled,
-              bottom: Text("Відкладено на ${state.value.inMinutes}хв"),
+              bottom: Text("${AppLocalizations.instance.translate("postponedTo")} ${state.value.inMinutes}${AppLocalizations.instance.translate("min")}"),
             ),
           );
         } else if (state is MedicineDeleted) {

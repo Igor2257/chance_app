@@ -149,6 +149,30 @@
   "guardians":"Опекуни",
   "wards":"Підопічні",
   "youHaveNoGuardians":"У вас немає опекунів",
+  "taskReminder":"Нагадування про виконання завдань",
+  "medicines":"Медикаменти",
+  "medicineReminder":"Нагадування про прийом ліків",
+  "tablet":"Таблетка",
+  "tablet1":"Таблетки",
+  "tablet2":"Таблеток",
+  "injection":"Ін’єкція",
+  "injection1":"Ін’єкції",
+  "injection2":"Ін’єкцій",
+  "rozchin":"Розчин",
+  "kraplі":"Краплі",
+  "powder":"Порошок",
+  "other":"Інше",
+  "dose1":"Дози",
+  "dose2":"Доз",
+  "every2Days":"Кожні 2 дні",
+
+  ///
+  "postponedTo":"Відкладено на",
+  "min":"хв",
+  "enterEmail":"Введыть електронну пошту",
+  "":"",
+
+
 
 
 

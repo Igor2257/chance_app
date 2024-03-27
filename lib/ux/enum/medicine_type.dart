@@ -1,4 +1,5 @@
 import 'package:chance_app/resources/medicine_icons.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/model/hive_type_id.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -58,17 +59,17 @@ enum MedicineType {
   String toLocalizedString() {
     switch (this) {
       case MedicineType.pill:
-        return "Таблетка";
+        return AppLocalizations.instance.translate("tablet");
       case MedicineType.injection:
-        return "Ін’єкція";
+        return AppLocalizations.instance.translate("injection");
       case MedicineType.solution:
-        return "Розчин";
+        return AppLocalizations.instance.translate("rozchin");
       case MedicineType.drops:
-        return "Краплі";
+        return AppLocalizations.instance.translate("kraplі");
       case MedicineType.powder:
-        return "Порошок";
+        return AppLocalizations.instance.translate("powder");
       case MedicineType.other:
-        return "Інше";
+        return AppLocalizations.instance.translate("other");
     }
   }
 
@@ -76,29 +77,29 @@ enum MedicineType {
     switch (this) {
       case MedicineType.pill:
         return (count == 1)
-            ? "Таблетка"
+            ? AppLocalizations.instance.translate("tablet")
             : (count > 0 && count < 5)
-                ? "Таблетки"
-                : "Таблеток";
+                ? AppLocalizations.instance.translate("tablet1")
+                : AppLocalizations.instance.translate("tablet2");
 
       case MedicineType.injection:
         return (count == 1)
-            ? "Ін’єкція"
+            ? AppLocalizations.instance.translate("injection")
             : (count > 0 && count < 5)
-                ? "Ін’єкції"
-                : "Ін’єкцій";
+                ? AppLocalizations.instance.translate("injection1")
+                : AppLocalizations.instance.translate("injection2");
 
       case MedicineType.powder:
-        return "Саше";
+        return AppLocalizations.instance.translate("powder");
 
       case MedicineType.solution:
       case MedicineType.drops:
       case MedicineType.other:
         return (count == 1)
-            ? "Доза"
+            ? AppLocalizations.instance.translate("dose")
             : (count > 0 && count < 5)
-                ? "Дози"
-                : "Доз";
+                ? AppLocalizations.instance.translate("dose1")
+                : AppLocalizations.instance.translate("dose2");
     }
   }
 }

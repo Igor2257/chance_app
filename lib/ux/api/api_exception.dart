@@ -1,7 +1,9 @@
+import 'package:chance_app/ui/l10n/app_localizations.dart';
+
 class ApiException implements Exception {
   const ApiException(this.message);
 
-  factory ApiException.unknown() => const ApiException("Помилка");
+  factory ApiException.unknown() =>  ApiException(AppLocalizations.instance.translate("smthWentWrong"));
 
   final String message;
 

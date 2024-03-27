@@ -2,10 +2,8 @@ import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/navigation/invitations/check_my_invitation/components/invitation_for_me.dart';
 import 'package:chance_app/ui/pages/navigation/invitations/check_my_invitation/components/invitation_from_me.dart';
-import 'package:chance_app/ux/bloc/navigation_bloc/invitation_bloc/invitation_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 enum InvitationParts { forMe, fromMe }
 
@@ -22,7 +20,6 @@ class _CheckMyInvitationState extends State<CheckMyInvitation> {
     InvitationParts.fromMe: AppLocalizations.instance.translate("fromMe"),
   };
   var _selectedTab = InvitationParts.forMe;
-
 
   @override
   Widget build(BuildContext context) {

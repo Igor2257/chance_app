@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/api/api_exception.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart' show debugPrintStack;
@@ -121,7 +122,7 @@ class ApiClient {
     if (await Connectivity().checkConnectivity() == ConnectivityResult.none) {
       unawaited(
         Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
+          msg: AppLocalizations.instance.translate("noInternet"),
           toastLength: Toast.LENGTH_LONG,
         ),
       );

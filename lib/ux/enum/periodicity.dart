@@ -18,9 +18,9 @@ enum Periodicity {
   String toLocalizedString() {
     switch (this) {
       case Periodicity.everyDay:
-        return "Щодня";
+        return AppLocalizations.instance.translate("daily");
       case Periodicity.inADay:
-        return "Кожні 2 дні";
+        return AppLocalizations.instance.translate("every2Days");
       case Periodicity.certainDays:
         return AppLocalizations.instance.translate("certainDaysOfTheWeek");
     }

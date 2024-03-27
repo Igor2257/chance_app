@@ -1,3 +1,4 @@
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/enum/invitation_status.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/invitation_model.dart';
@@ -10,7 +11,7 @@ class InvitationRepository {
   Future<String?> sendConfirmToWard(String name, String email) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error = "Немає підключення до інтернету";
+      error = AppLocalizations.instance.translate("noInternet");
     } else {
       final user = HiveCRUD().user!;
       final userEmail = user.email;
@@ -116,12 +117,10 @@ class InvitationRepository {
       return "noInternet";
     } else {
       try {
-        print("object");
         await Supabase.instance.client.from("invitations").select().match({
           "toUserEmail": HiveCRUD().user!.email,
           "invitationStatus": InvitationStatus.accepted.name
         }).then((value) {
-          print("invitations $value");
           List<dynamic> list = value;
           for (int i = 0; i < list.length; i++) {
             invitations.add(InvitationModel.fromJson(list[i]));
@@ -137,7 +136,7 @@ class InvitationRepository {
   Future<String?> acceptInvitation(InvitationModel invitationModel) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error = "Немає підключення до інтернету";
+      error = AppLocalizations.instance.translate("noInternet");
     } else {
       await Supabase.instance.client
           .from("invitations")
@@ -169,7 +168,7 @@ class InvitationRepository {
   Future<String?> rejectInvitation(String id) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error= "Немає підключення до інтернету";
+      error= AppLocalizations.instance.translate("noInternet");
     } else {
       try {
         await Supabase.instance.client.from("invitations").update(
@@ -184,7 +183,7 @@ class InvitationRepository {
   Future<String?> removeInvitation(String id) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error= "Немає підключення до інтернету";
+      error= AppLocalizations.instance.translate("noInternet");
     } else {
       try {
         await Supabase.instance.client
@@ -201,7 +200,7 @@ class InvitationRepository {
   Future<String?> deleteWard(String id) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error= "Немає підключення до інтернету";
+      error= AppLocalizations.instance.translate("noInternet");
     } else {
       try {
         await removeInvitation(id).whenComplete(()async {
@@ -221,7 +220,7 @@ class InvitationRepository {
   Future<String?> checkOnValidCode(String code) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error = "Немає підключення до інтернету";
+      error = AppLocalizations.instance.translate("noInternet");
     } else {
       try {
         //var url = Uri.parse('$apiUrl/medicine');

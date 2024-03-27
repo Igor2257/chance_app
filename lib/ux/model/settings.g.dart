@@ -70,8 +70,8 @@ _$SettingsImpl _$$SettingsImplFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['firstEnter'] as String),
       isNotificationEnable: json['isNotificationEnable'] as bool? ?? false,
-      language: json['language'] as String? ?? null,
-      languageCode: json['languageCode'] as String? ?? null,
+      language: json['language'] as String?,
+      languageCode: json['languageCode'] as String?,
       isAppShouldSentLocation:
           json['isAppShouldSentLocation'] as bool? ?? false,
     );

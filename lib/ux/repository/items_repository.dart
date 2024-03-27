@@ -1,46 +1,35 @@
-import 'dart:convert';
-
-import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
+import 'package:chance_app/ux/api/api_client.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/product_model.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
 
 class ItemsRepository {
+  final _apiClient = const ApiClient();
+  final _userRepository = UserRepository();
+
   Future<List<ProductModel>> getItems() async {
     List<ProductModel> items = [];
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
+          msg: AppLocalizations.instance.translate("noInternet"),
           toastLength: Toast.LENGTH_LONG);
     } else {
       try {
-        var url = Uri.parse('$apiUrl/product');
-        final cookie = await UserRepository().getCookie();
-        await http.get(url, headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Cookie': cookie.toString(),
-        }).then((value) {
-          if (!(value.statusCode > 199 && value.statusCode < 300)) {
-            Fluttertoast.showToast(
-                msg: jsonDecode(value.body)["message"]
-                    .toString()
-                    .replaceAll("[", "")
-                    .replaceAll("]", ""),
-                toastLength: Toast.LENGTH_LONG);
-          } else {
-            List<dynamic> list = jsonDecode(value.body);
-
-            for (int i = 0; i < list.length; i++) {
-              items.add(ProductModel.fromJson(list[i]));
-            }
-          }
-        });
+        final cookie = await _userRepository.getCookie();
+        final fetchedItems = await _apiClient.fetchProducts(
+          cookie: cookie.toString(),
+        );
+        if (fetchedItems != null) {
+          items = fetchedItems;
+        }
       } catch (e) {
         Fluttertoast.showToast(
             msg: e.toString(), toastLength: Toast.LENGTH_LONG);
+        FlutterError(e.toString());
       }
     }
     return items;
@@ -50,59 +39,86 @@ class ItemsRepository {
     List<ProductModel> dbItems = await getItems();
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
+          msg: AppLocalizations.instance.translate("noInternet"),
           toastLength: Toast.LENGTH_LONG);
     } else {
       try {
+        final cookie = await _userRepository.getCookie();
         for (int i = 0; i < newItems.length; i++) {
           if (dbItems.any((element) => element.id != newItems[i].id)) {
             ///Add this item
-            var url = Uri.parse('$apiUrl/product');
-            final cookie = await UserRepository().getCookie();
-            await http
-                .post(url,
-                    headers: <String, String>{
-                      'Content-Type': 'application/json',
-                      'Cookie': cookie.toString(),
-                    },
-                    body: jsonEncode(dbItems[i].toJson()))
-                .then((value) {
-              if (!(value.statusCode > 199 && value.statusCode < 300)) {
-                Fluttertoast.showToast(
-                    msg: jsonDecode(value.body)["message"]
-                        .toString()
-                        .replaceAll("[", "")
-                        .replaceAll("]", ""),
-                    toastLength: Toast.LENGTH_LONG);
-              }
-            });
+
+            await _apiClient.postProduct(
+              dbItems[i],
+              cookie: cookie.toString(),
+            );
           }
         }
         for (int i = 0; i < dbItems.length; i++) {
           if (newItems.any((element) => element.id != dbItems[i].id)) {
             /// Delete this item
-            var url = Uri.parse('$apiUrl/product/${dbItems[i].id}');
-            final cookie = await UserRepository().getCookie();
-            await http.delete(url, headers: <String, String>{
-              'Content-Type': 'application/json',
-              'Cookie': cookie.toString(),
-            }).then((value) {
-              if (!(value.statusCode > 199 && value.statusCode < 300)) {
-                Fluttertoast.showToast(
-                    msg: jsonDecode(value.body)["message"]
-                        .toString()
-                        .replaceAll("[", "")
-                        .replaceAll("]", ""),
-                    toastLength: Toast.LENGTH_LONG);
-              }
-            });
+            await _apiClient.deleteProduct(
+              dbItems[i],
+              cookie: cookie.toString(),
+            );
           }
         }
         await HiveCRUD().rewriteItems(newItems);
       } catch (e) {
         Fluttertoast.showToast(
             msg: e.toString(), toastLength: Toast.LENGTH_LONG);
+        FlutterError(e.toString());
       }
     }
+  }
+}
+
+extension _ProductsClient on ApiClient {
+  Future<List<ProductModel>?> fetchProducts({required String cookie}) async {
+    try {
+      final items = await get("/product", cookie: cookie) as List<dynamic>;
+      return items.cast<Map<String, dynamic>>().map(_modelFromJson).toList();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<ProductModel?> postProduct(
+    ProductModel productModel, {
+    required String cookie,
+  }) async {
+    try {
+      final json = await post(
+        "/product",
+        cookie: cookie,
+        json: _modelToJson(productModel),
+      ) as Map<String, dynamic>;
+      return _modelFromJson(json);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<bool> deleteProduct(
+    ProductModel productModel, {
+    required String cookie,
+  }) async {
+    try {
+      await delete(
+        "/product/${productModel.id}",
+        cookie: cookie.toString(),
+      );
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Map<String, dynamic> _modelToJson(ProductModel productModel) {
+    return productModel.toJson();
+  }
+
+  ProductModel _modelFromJson(Map<String, dynamic> json) {
+    return ProductModel.fromJson(json);
   }
 }

@@ -4,7 +4,7 @@ import 'package:chance_app/ui/pages/navigation/navigation_page/components/map_da
 import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/settings.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -28,6 +28,7 @@ class NavigationRepository {
     } catch (error) {
       Fluttertoast.showToast(
           msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+      FlutterError(error.toString());
     }
     return latLng;
   }
@@ -40,11 +41,11 @@ class NavigationRepository {
         "longitude": longitude,
         "when": DateTime.now().toIso8601String(),
       }).match({"myEmail": HiveCRUD().user!.email}).then((value) {
-        print("value $value");
+
       });
     } catch (e) {
       error = e.toString();
-      print("value $error");
+      FlutterError(error);
     }
 
     return error;
@@ -63,7 +64,7 @@ class NavigationRepository {
       });
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      print("error $e");
+      FlutterError(e.toString());
     }
 
     return latLng;
@@ -90,7 +91,7 @@ class NavigationRepository {
       });
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
-      print("error $e");
+      FlutterError(e.toString());
     }
 
     return error;
