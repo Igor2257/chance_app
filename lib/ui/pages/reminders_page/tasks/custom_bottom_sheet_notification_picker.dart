@@ -72,9 +72,8 @@ class _CustomBottomSheetNotificationPickerState
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddTaskBloc, AddTaskState>(
-        builder: (context, state) {
-          NotificationsBefore notificationsBefore = state.newNotificationsBefore;
+    return BlocBuilder<AddTaskBloc, AddTaskState>(builder: (context, state) {
+      NotificationsBefore notificationsBefore = state.newNotificationsBefore;
       final List<String> notifications = state.notifications;
 
       return SizedBox(
@@ -162,7 +161,9 @@ class _CustomBottomSheetNotificationPickerState
                   ),
                 ],
               ),
-              const SizedBox(height: 20,),
+              const SizedBox(
+                height: 20,
+              ),
             ],
           ),
         ),

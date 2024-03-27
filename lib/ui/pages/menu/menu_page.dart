@@ -8,7 +8,6 @@ import 'package:chance_app/ux/model/product_model.dart';
 import 'package:chance_app/ux/repository/items_repository.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -99,9 +98,9 @@ class _MenuPageState extends State<MenuPage> {
               height: 30,
             ),
             RoundedButton(
-              onPress: (){
-                findMatch(products[0], 0);
-              },
+                onPress: () {
+                  findMatch(products[0], 0);
+                },
                 padding: const EdgeInsets.all(16),
                 height: 0,
                 color: darkNeutral600,
@@ -138,7 +137,9 @@ class _MenuPageState extends State<MenuPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 margin: const EdgeInsets.symmetric(vertical: 4),
                 border: Border.all(color: darkNeutral800),
-                onPress: () async {},
+                onPress: () async {
+                  Navigator.of(context).pushNamed("/privacy_policy");
+                },
                 color: Colors.transparent,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -201,7 +202,6 @@ class _MenuPageState extends State<MenuPage> {
                         fontWeight: FontWeight.w500),
                   )),
             ),
-            
           ],
         ),
       ),

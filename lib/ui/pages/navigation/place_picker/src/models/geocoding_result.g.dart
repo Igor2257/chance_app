@@ -67,7 +67,7 @@ _$GeocodingResultImpl _$$GeocodingResultImplFromJson(
     _$GeocodingResultImpl(
       types: (json['types'] as List<dynamic>).map((e) => e as String).toList(),
       placeId: json['place_id'] as String?,
-      formattedAddress: json['formatted_address'] as String?,
+      formattedAddress: json['formatted_address'] as String? ?? null,
       addressComponents: (json['address_components'] as List<dynamic>?)
               ?.map((e) => AddressComponent.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -89,7 +89,7 @@ Map<String, dynamic> _$$GeocodingResultImplToJson(
       'place_id': instance.placeId,
       'formatted_address': instance.formattedAddress,
       'address_components': instance.addressComponents,
-      'postcodeLocalities': instance.postcodeLocalities,
+      'postcode_localities': instance.postcodeLocalities,
       'geometry': instance.geometry,
       'partial_match': instance.partialMatch,
     };

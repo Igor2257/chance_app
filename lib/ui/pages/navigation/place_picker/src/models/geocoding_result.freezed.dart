@@ -23,17 +23,22 @@ mixin _$GeocodingResult {
   @HiveField(0)
   List<String> get types => throw _privateConstructorUsedError;
   @HiveField(1)
+  @JsonKey(name: "place_id")
   String? get placeId => throw _privateConstructorUsedError;
   @HiveField(2)
+  @JsonKey(name: "formatted_address")
   String? get formattedAddress => throw _privateConstructorUsedError;
   @HiveField(3)
+  @JsonKey(name: "address_components")
   List<AddressComponent> get addressComponents =>
       throw _privateConstructorUsedError;
   @HiveField(4)
+  @JsonKey(name: "postcode_localities")
   List<String> get postcodeLocalities => throw _privateConstructorUsedError;
   @HiveField(5)
   Geometry? get geometry => throw _privateConstructorUsedError;
   @HiveField(6)
+  @JsonKey(name: "partial_match")
   bool get partialMatch => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -50,12 +55,18 @@ abstract class $GeocodingResultCopyWith<$Res> {
   @useResult
   $Res call(
       {@HiveField(0) List<String> types,
-      @HiveField(1) String? placeId,
-      @HiveField(2) String? formattedAddress,
-      @HiveField(3) List<AddressComponent> addressComponents,
-      @HiveField(4) List<String> postcodeLocalities,
+      @HiveField(1) @JsonKey(name: "place_id") String? placeId,
+      @HiveField(2)
+      @JsonKey(name: "formatted_address")
+      String? formattedAddress,
+      @HiveField(3)
+      @JsonKey(name: "address_components")
+      List<AddressComponent> addressComponents,
+      @HiveField(4)
+      @JsonKey(name: "postcode_localities")
+      List<String> postcodeLocalities,
       @HiveField(5) Geometry? geometry,
-      @HiveField(6) bool partialMatch});
+      @HiveField(6) @JsonKey(name: "partial_match") bool partialMatch});
 
   $GeometryCopyWith<$Res>? get geometry;
 }
@@ -136,12 +147,18 @@ abstract class _$$GeocodingResultImplCopyWith<$Res>
   @useResult
   $Res call(
       {@HiveField(0) List<String> types,
-      @HiveField(1) String? placeId,
-      @HiveField(2) String? formattedAddress,
-      @HiveField(3) List<AddressComponent> addressComponents,
-      @HiveField(4) List<String> postcodeLocalities,
+      @HiveField(1) @JsonKey(name: "place_id") String? placeId,
+      @HiveField(2)
+      @JsonKey(name: "formatted_address")
+      String? formattedAddress,
+      @HiveField(3)
+      @JsonKey(name: "address_components")
+      List<AddressComponent> addressComponents,
+      @HiveField(4)
+      @JsonKey(name: "postcode_localities")
+      List<String> postcodeLocalities,
       @HiveField(5) Geometry? geometry,
-      @HiveField(6) bool partialMatch});
+      @HiveField(6) @JsonKey(name: "partial_match") bool partialMatch});
 
   @override
   $GeometryCopyWith<$Res>? get geometry;
@@ -204,12 +221,18 @@ class __$$GeocodingResultImplCopyWithImpl<$Res>
 class _$GeocodingResultImpl implements _GeocodingResult {
   _$GeocodingResultImpl(
       {@HiveField(0) required final List<String> types,
-      @HiveField(1) required this.placeId,
-      @HiveField(2) this.formattedAddress = null,
-      @HiveField(3) final List<AddressComponent> addressComponents = const [],
-      @HiveField(4) final List<String> postcodeLocalities = const [],
+      @HiveField(1) @JsonKey(name: "place_id") required this.placeId,
+      @HiveField(2)
+      @JsonKey(name: "formatted_address")
+      this.formattedAddress = null,
+      @HiveField(3)
+      @JsonKey(name: "address_components")
+      final List<AddressComponent> addressComponents = const [],
+      @HiveField(4)
+      @JsonKey(name: "postcode_localities")
+      final List<String> postcodeLocalities = const [],
       @HiveField(5) this.geometry = null,
-      @HiveField(6) this.partialMatch = false})
+      @HiveField(6) @JsonKey(name: "partial_match") this.partialMatch = false})
       : _types = types,
         _addressComponents = addressComponents,
         _postcodeLocalities = postcodeLocalities;
@@ -228,15 +251,16 @@ class _$GeocodingResultImpl implements _GeocodingResult {
 
   @override
   @HiveField(1)
+  @JsonKey(name: "place_id")
   final String? placeId;
   @override
-  @JsonKey()
   @HiveField(2)
+  @JsonKey(name: "formatted_address")
   final String? formattedAddress;
   final List<AddressComponent> _addressComponents;
   @override
-  @JsonKey()
   @HiveField(3)
+  @JsonKey(name: "address_components")
   List<AddressComponent> get addressComponents {
     if (_addressComponents is EqualUnmodifiableListView)
       return _addressComponents;
@@ -246,8 +270,8 @@ class _$GeocodingResultImpl implements _GeocodingResult {
 
   final List<String> _postcodeLocalities;
   @override
-  @JsonKey()
   @HiveField(4)
+  @JsonKey(name: "postcode_localities")
   List<String> get postcodeLocalities {
     if (_postcodeLocalities is EqualUnmodifiableListView)
       return _postcodeLocalities;
@@ -260,8 +284,8 @@ class _$GeocodingResultImpl implements _GeocodingResult {
   @HiveField(5)
   final Geometry? geometry;
   @override
-  @JsonKey()
   @HiveField(6)
+  @JsonKey(name: "partial_match")
   final bool partialMatch;
 
   @override
@@ -318,12 +342,20 @@ class _$GeocodingResultImpl implements _GeocodingResult {
 abstract class _GeocodingResult implements GeocodingResult {
   factory _GeocodingResult(
       {@HiveField(0) required final List<String> types,
-      @HiveField(1) required final String? placeId,
-      @HiveField(2) final String? formattedAddress,
-      @HiveField(3) final List<AddressComponent> addressComponents,
-      @HiveField(4) final List<String> postcodeLocalities,
+      @HiveField(1) @JsonKey(name: "place_id") required final String? placeId,
+      @HiveField(2)
+      @JsonKey(name: "formatted_address")
+      final String? formattedAddress,
+      @HiveField(3)
+      @JsonKey(name: "address_components")
+      final List<AddressComponent> addressComponents,
+      @HiveField(4)
+      @JsonKey(name: "postcode_localities")
+      final List<String> postcodeLocalities,
       @HiveField(5) final Geometry? geometry,
-      @HiveField(6) final bool partialMatch}) = _$GeocodingResultImpl;
+      @HiveField(6)
+      @JsonKey(name: "partial_match")
+      final bool partialMatch}) = _$GeocodingResultImpl;
 
   factory _GeocodingResult.fromJson(Map<String, dynamic> json) =
       _$GeocodingResultImpl.fromJson;
@@ -333,21 +365,26 @@ abstract class _GeocodingResult implements GeocodingResult {
   List<String> get types;
   @override
   @HiveField(1)
+  @JsonKey(name: "place_id")
   String? get placeId;
   @override
   @HiveField(2)
+  @JsonKey(name: "formatted_address")
   String? get formattedAddress;
   @override
   @HiveField(3)
+  @JsonKey(name: "address_components")
   List<AddressComponent> get addressComponents;
   @override
   @HiveField(4)
+  @JsonKey(name: "postcode_localities")
   List<String> get postcodeLocalities;
   @override
   @HiveField(5)
   Geometry? get geometry;
   @override
   @HiveField(6)
+  @JsonKey(name: "partial_match")
   bool get partialMatch;
   @override
   @JsonKey(ignore: true)

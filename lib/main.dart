@@ -7,6 +7,7 @@ import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/doctor_appointment/doctor_appointment.dart';
+import 'package:chance_app/ui/pages/documents/privacy_policy_page.dart';
 import 'package:chance_app/ui/pages/job_search/job_search.dart';
 import 'package:chance_app/ui/pages/main_page/main_page.dart';
 import 'package:chance_app/ui/pages/menu/menu_page.dart';
@@ -358,7 +359,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                     "/date_picker_for_tasks": (context) =>
                                         const CalendarTaskPage(),
                                     "/add_medicine": (context) => BlocProvider(
-                                      create: (context) =>
+                                          create: (context) =>
                                               AddMedicineBloc(),
                                           child: const AddMedicinePage(),
                                         ),
@@ -396,6 +397,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                         const DoctorAppointment(),
                                     "/job_search": (context) =>
                                         const JobSearch(),
+                                    "/privacy_policy": (context) =>
+                                        const PrivacyPolicyPage(),
                                   },
                                   builder: (context, child) {
                                     final locale =

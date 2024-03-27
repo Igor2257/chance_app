@@ -23,8 +23,10 @@ mixin _$AddressComponent {
   @HiveField(0)
   List<String> get types => throw _privateConstructorUsedError;
   @HiveField(1)
+  @JsonKey(name: "long_name")
   String get longName => throw _privateConstructorUsedError;
   @HiveField(2)
+  @JsonKey(name: "short_name")
   String get shortName => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -41,8 +43,8 @@ abstract class $AddressComponentCopyWith<$Res> {
   @useResult
   $Res call(
       {@HiveField(0) List<String> types,
-      @HiveField(1) String longName,
-      @HiveField(2) String shortName});
+      @HiveField(1) @JsonKey(name: "long_name") String longName,
+      @HiveField(2) @JsonKey(name: "short_name") String shortName});
 }
 
 /// @nodoc
@@ -89,8 +91,8 @@ abstract class _$$AddressComponentImplCopyWith<$Res>
   @useResult
   $Res call(
       {@HiveField(0) List<String> types,
-      @HiveField(1) String longName,
-      @HiveField(2) String shortName});
+      @HiveField(1) @JsonKey(name: "long_name") String longName,
+      @HiveField(2) @JsonKey(name: "short_name") String shortName});
 }
 
 /// @nodoc
@@ -130,8 +132,8 @@ class __$$AddressComponentImplCopyWithImpl<$Res>
 class _$AddressComponentImpl implements _AddressComponent {
   _$AddressComponentImpl(
       {@HiveField(0) required final List<String> types,
-      @HiveField(1) required this.longName,
-      @HiveField(2) required this.shortName})
+      @HiveField(1) @JsonKey(name: "long_name") required this.longName,
+      @HiveField(2) @JsonKey(name: "short_name") required this.shortName})
       : _types = types;
 
   factory _$AddressComponentImpl.fromJson(Map<String, dynamic> json) =>
@@ -148,9 +150,11 @@ class _$AddressComponentImpl implements _AddressComponent {
 
   @override
   @HiveField(1)
+  @JsonKey(name: "long_name")
   final String longName;
   @override
   @HiveField(2)
+  @JsonKey(name: "short_name")
   final String shortName;
 
   @override
@@ -193,8 +197,10 @@ class _$AddressComponentImpl implements _AddressComponent {
 abstract class _AddressComponent implements AddressComponent {
   factory _AddressComponent(
       {@HiveField(0) required final List<String> types,
-      @HiveField(1) required final String longName,
-      @HiveField(2) required final String shortName}) = _$AddressComponentImpl;
+      @HiveField(1) @JsonKey(name: "long_name") required final String longName,
+      @HiveField(2)
+      @JsonKey(name: "short_name")
+      required final String shortName}) = _$AddressComponentImpl;
 
   factory _AddressComponent.fromJson(Map<String, dynamic> json) =
       _$AddressComponentImpl.fromJson;
@@ -204,9 +210,11 @@ abstract class _AddressComponent implements AddressComponent {
   List<String> get types;
   @override
   @HiveField(1)
+  @JsonKey(name: "long_name")
   String get longName;
   @override
   @HiveField(2)
+  @JsonKey(name: "short_name")
   String get shortName;
   @override
   @JsonKey(ignore: true)

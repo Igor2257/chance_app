@@ -77,7 +77,9 @@ class MedicineModel with _$MedicineModel {
 
   /// Returns medicine dose take status.
   MedicineStatus getStatus(DateTime doseTime) {
-    if (doneAt.contains(doseTime)) return MedicineStatus.taken;
+    if (doneAt.any((date) => date.isAtSameMomentAs(doseTime))) {
+      return MedicineStatus.taken;
+    }
     final actualTime = getActualDoseTime(doseTime);
     if (actualTime.isBefore(DateTime.now())) return MedicineStatus.missed;
     if (actualTime != doseTime) return MedicineStatus.postponed;
