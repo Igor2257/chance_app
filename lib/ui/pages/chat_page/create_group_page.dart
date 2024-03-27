@@ -54,7 +54,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                 keyboardType: TextInputType.name,
                 textInputAction: TextInputAction.done,
                 textCapitalization: TextCapitalization.words,
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 22,
                   height: 28 / 22,
@@ -75,7 +75,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                 child: ListView.separated(
                   itemBuilder: (context, index) => Text(
                     widget.selectedUsers[index].fullName,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 16,
                       height: 24 / 16,
@@ -103,19 +103,22 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             16.0,
             16.0 + MediaQuery.of(context).viewInsets.bottom,
           ),
-          child: RoundedButton(
-            color: primary1000,
-            onPress: _controller.text.trim().isNotEmpty
-                ? () => _onCreateGroupBtnTap(context)
-                : null,
-            child: Text(
-              'Створити новий чат',
-              style: TextStyle(
-                fontSize: 16,
-                height: 24 / 16,
-                fontWeight: FontWeight.w500,
-                letterSpacing: 0.15,
-                color: beige0,
+          child: SizedBox(
+            height: 56.0,
+            child: RoundedButton(
+              color: primary1000,
+              onPress: _controller.text.trim().isNotEmpty
+                  ? () => _onCreateGroupBtnTap(context)
+                  : null,
+              child: const Text(
+                'Створити новий чат',
+                style: TextStyle(
+                  fontSize: 16,
+                  height: 24 / 16,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 0.15,
+                  color: beige0,
+                ),
               ),
             ),
           ),

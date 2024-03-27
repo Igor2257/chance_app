@@ -65,7 +65,7 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
                         widget.room.name != null && widget.room.name!.isNotEmpty
                             ? widget.room.name![0]
                             : '',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 32,
                           height: 40 / 32,
                           color: primary1000,
@@ -97,39 +97,43 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              RoundedButton(
+              SizedBox(
                 height: 48.0,
-                color: primary1000,
-                onPress: _controller.text.trim().isNotEmpty &&
-                        _controller.text.trim() != widget.room.name
-                    ? () => _updateRoom(context)
-                    : null,
-                child: Text(
-                  'Готово',
-                  style: TextStyle(
-                    fontSize: 16,
-                    height: 24 / 16,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0.15,
-                    color: primary50,
+                child: RoundedButton(
+                  color: primary1000,
+                  onPress: _controller.text.trim().isNotEmpty &&
+                          _controller.text.trim() != widget.room.name
+                      ? () => _updateRoom(context)
+                      : null,
+                  child: const Text(
+                    'Готово',
+                    style: TextStyle(
+                      fontSize: 16,
+                      height: 24 / 16,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.15,
+                      color: primary50,
+                    ),
                   ),
                 ),
               ),
               const SizedBox(height: 8.0),
-              RoundedButton(
+              SizedBox(
                 height: 48.0,
-                color: red900,
-                child: Text(
-                  'Покинути та видалити групу',
-                  style: TextStyle(
-                    fontSize: 16,
-                    height: 24 / 16,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0.15,
-                    color: primary50,
+                child: RoundedButton(
+                  color: red900,
+                  child: const Text(
+                    'Покинути та видалити групу',
+                    style: TextStyle(
+                      fontSize: 16,
+                      height: 24 / 16,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.15,
+                      color: primary50,
+                    ),
                   ),
+                  onPress: () => _deleteGroup(context),
                 ),
-                onPress: () => _deleteGroup(context),
               ),
             ],
           ),
@@ -146,7 +150,7 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
           children: [
             Text(
               admin.fullName,
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 16,
                 height: 24 / 16,
@@ -154,7 +158,7 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
                 color: darkNeutral1000,
               ),
             ),
-            Text(
+            const Text(
               'Адмін',
               style: TextStyle(
                 fontWeight: FontWeight.w400,
@@ -185,7 +189,7 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
         children: [
           Text(
             usersWithoutAdmin[index].fullName,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.w400,
               fontSize: 16,
               height: 24 / 16,
@@ -195,7 +199,7 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
           ),
           TextButton(
             onPressed: () => _removeUser(context, usersWithoutAdmin[index]),
-            child: Text(
+            child: const Text(
               'Видалити',
               style: TextStyle(
                 fontWeight: FontWeight.w400,

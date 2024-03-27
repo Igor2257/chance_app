@@ -45,7 +45,7 @@ class ChatSettingsPage extends StatelessWidget {
                       room.name != null && room.name!.isNotEmpty
                           ? room.name![0]
                           : '',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 32,
                         height: 40 / 32,
                         color: primary1000,
@@ -65,7 +65,7 @@ class ChatSettingsPage extends StatelessWidget {
               ),
             Text(
               '${room.users.length} контакти',
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 12, height: 16 / 12, color: darkNeutral400),
             ),
             const SizedBox(height: 60.0),
@@ -80,42 +80,47 @@ class ChatSettingsPage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar:
-          room.type == types.RoomType.group && admin?.id == ChatHelper.userId
-              ? RoundedButton(
-                  height: 48.0,
-                  color: Colors.transparent,
-                  border: Border.all(
-                    color: darkNeutral800,
-                  ),
-                  margin: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Змінити',
-                    style: TextStyle(
-                      fontSize: 16,
-                      height: 24 / 16,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 0.15,
-                      color: darkNeutral800,
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: room.type == types.RoomType.group && admin?.id == ChatHelper.userId
+                ? SizedBox(
+                    height: 48.0,
+                    child: RoundedButton(
+                      color: Colors.transparent,
+                      border: Border.all(
+                        color: darkNeutral800,
+                      ),
+                      child: const Text(
+                        'Змінити',
+                        style: TextStyle(
+                          fontSize: 16,
+                          height: 24 / 16,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0.15,
+                          color: darkNeutral800,
+                        ),
+                      ),
+                      onPress: () => _openChangeGroupPage(context),
+                    ),
+                  )
+                : SizedBox(
+                    height: 48.0,
+                    child: RoundedButton(
+                      color: red900,
+                      child: const Text(
+                        'Покинути групу',
+                        style: TextStyle(
+                          fontSize: 16,
+                          height: 24 / 16,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0.15,
+                          color: primary50,
+                        ),
+                      ),
+                      onPress: () => _leaveGroup(context),
                     ),
                   ),
-                  onPress: () => _openChangeGroupPage(context),
-                )
-              : RoundedButton(
-                  height: 48.0,
-                  color: red900,
-                  margin: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Покинути групу',
-                    style: TextStyle(
-                      fontSize: 16,
-                      height: 24 / 16,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 0.15,
-                      color: primary50,
-                    ),
-                  ),
-                  onPress: () => _leaveGroup(context),
-                ),
+          ),
     );
   }
 
@@ -127,7 +132,7 @@ class ChatSettingsPage extends StatelessWidget {
           children: [
             Text(
               admin.fullName,
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 16,
                 height: 24 / 16,
@@ -135,7 +140,7 @@ class ChatSettingsPage extends StatelessWidget {
                 color: darkNeutral1000,
               ),
             ),
-            Text(
+            const Text(
               'Адмін',
               style: TextStyle(
                 fontWeight: FontWeight.w400,
@@ -162,7 +167,7 @@ class ChatSettingsPage extends StatelessWidget {
     return ListView.separated(
       itemBuilder: (context, index) => Text(
         usersWithoutAdmin[index].fullName,
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.w400,
           fontSize: 16,
           height: 24 / 16,

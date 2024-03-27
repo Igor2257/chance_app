@@ -42,6 +42,7 @@ import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
+import 'package:chance_app/ux/helpers/app_router.dart';
 import 'package:chance_app/ux/helpers/background_service_helper.dart';
 import 'package:chance_app/ux/helpers/reminders_helper.dart';
 import 'package:chance_app/ux/hive_crud.dart';
@@ -348,6 +349,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                     Locale('uk'),
                                     Locale('ru'),
                                   ],
+                                  onGenerateRoute: AppRouter.onGenerateRoute,
                                   localizationsDelegates: const [
                                     MyLocalizationsDelegate(),
                                     GlobalWidgetsLocalizations.delegate,
