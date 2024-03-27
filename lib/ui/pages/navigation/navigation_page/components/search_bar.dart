@@ -17,7 +17,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' show ChangeNotifierProvider, MultiProvider;
 import 'package:uuid/uuid.dart';
 
 enum MenuItems {
@@ -475,7 +475,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
 
   Future<PickResult?> _pickPrediction(Prediction prediction) async {
     if (provider == null) return null;
-    provider!.placeSearchingState = SearchingState.Searching;
+    provider!.placeSearchingState = SearchingState.searching;
 
     final PlacesDetailsResponse response =
         await provider!.places.getDetailsByPlaceId(
@@ -492,7 +492,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
 
     provider!.isAutoCompleteSearching = true;
 
-    provider!.placeSearchingState = SearchingState.Idle;
+    provider!.placeSearchingState = SearchingState.idle;
     return provider!.selectedPlace;
   }
 }

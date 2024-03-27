@@ -80,8 +80,7 @@ class _ThirdSubPageState extends State<ThirdSubPage> {
                 BlocProvider.of<RegistrationBloc>(context).add(
                     SavePasswordSecond(
                         passwordSecond: lastPasswordEditingController.text));
-              print("object");
-                },
+              },
             ),
             const SizedBox(
               height: 24,

@@ -64,7 +64,7 @@ class GoogleMapPlacePicker extends StatefulWidget {
     this.hidePlaceDetailsWhenDraggingPin,
     this.onCameraMoveStarted,
     this.onCameraMove,
-    this.onCameraIdle,
+    this.onCameraidle,
     this.selectText,
     this.outsideOfPickAreaText,
     this.zoomGesturesEnabled = true,
@@ -100,7 +100,7 @@ class GoogleMapPlacePicker extends StatefulWidget {
   /// GoogleMap pass-through events:
   final Function(PlaceProvider)? onCameraMoveStarted;
   final CameraPositionCallback? onCameraMove;
-  final Function(PlaceProvider)? onCameraIdle;
+  final Function(PlaceProvider)? onCameraidle;
 
   // strings
   final String? selectText;
@@ -127,17 +127,17 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
             provider.cameraPosition!.target.latitude &&
         provider.prevCameraPosition!.target.longitude ==
             provider.cameraPosition!.target.longitude) {
-      provider.placeSearchingState = SearchingState.Idle;
+      provider.placeSearchingState = SearchingState.idle;
       return;
     }
 
     if (provider.cameraPosition == null) {
       // Camera position cannot be determined for some reason ...
-      provider.placeSearchingState = SearchingState.Idle;
+      provider.placeSearchingState = SearchingState.idle;
       return;
     }
 
-    provider.placeSearchingState = SearchingState.Searching;
+    provider.placeSearchingState = SearchingState.searching;
 
     final GeocodingResponse response =
         await provider.geocoding.searchByLocation(
@@ -153,7 +153,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
       if (widget.onSearchFailed != null) {
         widget.onSearchFailed!(response.status);
       }
-      provider.placeSearchingState = SearchingState.Idle;
+      provider.placeSearchingState = SearchingState.idle;
       return;
     }
 
@@ -170,7 +170,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
         if (widget.onSearchFailed != null) {
           widget.onSearchFailed!(detailResponse.status);
         }
-        provider.placeSearchingState = SearchingState.Idle;
+        provider.placeSearchingState = SearchingState.idle;
         return;
       }
 
@@ -209,7 +209,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
           PickResult.fromGeocodingResult(my.GeocodingResult.fromJson(map));
     }
 
-    provider.placeSearchingState = SearchingState.Idle;
+    provider.placeSearchingState = SearchingState.idle;
   }
 
   @override
@@ -260,7 +260,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
       onMapCreated: (GoogleMapController controller) {
         provider.mapController = controller;
         provider.setCameraPosition(null);
-        provider.pinState = PinState.Idle;
+        provider.pinState = PinState.idle;
 
         // When select initialPosition set to true.
         if (widget.selectInitialPosition!) {
@@ -272,14 +272,14 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
       onCameraIdle: () {
         if (provider.isAutoCompleteSearching) {
           provider.isAutoCompleteSearching = false;
-          provider.pinState = PinState.Idle;
-          provider.placeSearchingState = SearchingState.Idle;
+          provider.pinState = PinState.idle;
+          provider.placeSearchingState = SearchingState.idle;
           return;
         }
         // Perform search only if the setting is to true.
         if (widget.usePinPointingSearch!) {
           // Search current camera location only if camera has moved (dragged) before.
-          if (provider.pinState == PinState.Dragging) {
+          if (provider.pinState == PinState.dragging) {
             // Cancel previous timer.
             if (provider.debounceTimer?.isActive ?? false) {
               provider.debounceTimer!.cancel();
@@ -290,8 +290,8 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
             });
           }
         }
-        provider.pinState = PinState.Idle;
-        widget.onCameraIdle?.call(provider);
+        provider.pinState = PinState.idle;
+        widget.onCameraidle?.call(provider);
       },
       onCameraMoveStarted: () {
         widget.onCameraMoveStarted?.call(provider);
@@ -299,10 +299,10 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
         // Cancel any other timer.
         provider.debounceTimer?.cancel();
         // Update state, dismiss keyboard and clear text.
-        provider.pinState = PinState.Dragging;
+        provider.pinState = PinState.dragging;
         // Begins the search state if the hide details is enabled
         if (widget.hidePlaceDetailsWhenDraggingPin!) {
-          provider.placeSearchingState = SearchingState.Searching;
+          provider.placeSearchingState = SearchingState.searching;
         }
         widget.onMoveStart!();
       },
@@ -342,9 +342,9 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
   }
 
   Widget _defaultPinBuilder(BuildContext context, PinState state) {
-    if (state == PinState.Preparing) {
+    if (state == PinState.preparing) {
       return Container();
-    } else if (state == PinState.Idle) {
+    } else if (state == PinState.idle) {
       return Stack(
         children: <Widget>[
            const Center(
@@ -404,9 +404,9 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
           provider.isSearchBarFocused,
           provider.pinState),
       builder: (context, data, __) {
-        if ((data.item1 == null && data.item2 == SearchingState.Idle) ||
+        if ((data.item1 == null && data.item2 == SearchingState.idle) ||
             data.item3 == true ||
-            data.item4 == PinState.Dragging &&
+            data.item4 == PinState.dragging &&
                 widget.hidePlaceDetailsWhenDraggingPin!) {
           return Container();
         } else {
@@ -432,7 +432,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
       borderRadius: BorderRadius.circular(12.0),
       elevation: 4.0,
       color: Theme.of(context).cardColor,
-      child: state == SearchingState.Searching
+      child: state == SearchingState.searching
           ? _buildLoadingIndicator()
           : _buildSelectionDetails(context, data!),
     );

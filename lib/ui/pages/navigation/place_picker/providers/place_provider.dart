@@ -123,7 +123,7 @@ class PlaceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  SearchingState _placeSearchingState = SearchingState.Idle;
+  SearchingState _placeSearchingState = SearchingState.idle;
   SearchingState get placeSearchingState => _placeSearchingState;
   set placeSearchingState(SearchingState newState) {
     _placeSearchingState = newState;
@@ -137,7 +137,7 @@ class PlaceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  PinState _pinState = PinState.Preparing;
+  PinState _pinState = PinState.preparing;
   PinState get pinState => _pinState;
   set pinState(PinState newState) {
     _pinState = newState;

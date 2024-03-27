@@ -2,7 +2,6 @@ import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -81,11 +80,10 @@ class ContainerButton extends StatelessWidget {
       // }
 
       final uri = Uri(scheme: 'tel', path: contactPhone);
-      final url = uri.toString();
-      if (await canLaunch(url)) {
-        await launch(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
       } else {
-        await launch(url);
+        await launchUrl(uri);
       }
     } else {
       Fluttertoast.showToast(

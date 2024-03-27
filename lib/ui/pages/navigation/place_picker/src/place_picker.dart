@@ -20,9 +20,9 @@ typedef IntroModalWidgetBuilder = Widget Function(
   Function? close,
 );
 
-enum PinState { Preparing, Idle, Dragging }
+enum PinState { preparing, idle, dragging }
 
-enum SearchingState { Idle, Searching }
+enum SearchingState { idle, searching }
 
 class PlacePicker extends StatefulWidget {
   const PlacePicker({
@@ -223,10 +223,10 @@ class PlacePicker extends StatefulWidget {
   final bool zoomGesturesEnabled;
 
   @override
-  _PlacePickerState createState() => _PlacePickerState();
+  PlacePickerState createState() => PlacePickerState();
 }
 
-class _PlacePickerState extends State<PlacePicker> {
+class PlacePickerState extends State<PlacePicker> {
   GlobalKey appBarKey = GlobalKey();
   late final Future<PlaceProvider> _futureProvider;
   PlaceProvider? provider;
@@ -328,7 +328,7 @@ class _PlacePickerState extends State<PlacePicker> {
   }
 
   Widget _buildSearchBar(BuildContext context) {
-    return provider!.placeSearchingState == SearchingState.Idle &&
+    return provider!.placeSearchingState == SearchingState.idle &&
         (widget.automaticallyImplyAppBarLeading ||
             widget.onTapBack != null)
         ? GestureDetector(
@@ -402,7 +402,7 @@ class _PlacePickerState extends State<PlacePicker> {
       onPlacePicked: widget.onPlacePicked,
       onCameraMoveStarted: widget.onCameraMoveStarted,
       onCameraMove: widget.onCameraMove,
-      onCameraIdle: widget.onCameraIdle,
+      onCameraidle: widget.onCameraIdle,
       zoomGesturesEnabled: widget.zoomGesturesEnabled,
     );
   }

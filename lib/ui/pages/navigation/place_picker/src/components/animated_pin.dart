@@ -8,10 +8,10 @@ class AnimatedPin extends StatefulWidget {
   final Widget? child;
 
   @override
-  _AnimatedPinState createState() => _AnimatedPinState();
+  AnimatedPinState createState() => AnimatedPinState();
 }
 
-class _AnimatedPinState extends State<AnimatedPin>
+class AnimatedPinState extends State<AnimatedPin>
     with TickerProviderStateMixin {
   late AnimationController _controller;
 

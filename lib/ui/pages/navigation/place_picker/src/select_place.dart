@@ -452,7 +452,7 @@ class _SelectPlaceState extends State<SelectPlace> {
   }
 
   Future<bool> _pickPrediction(Prediction prediction) async {
-    provider!.placeSearchingState = SearchingState.Searching;
+    provider!.placeSearchingState = SearchingState.searching;
 
     final PlacesDetailsResponse response =
         await provider!.places.getDetailsByPlaceId(
@@ -472,7 +472,7 @@ class _SelectPlaceState extends State<SelectPlace> {
     await saveCoordinates(provider!.selectedPlace);
 
     if (provider == null) return false;
-    provider!.placeSearchingState = SearchingState.Idle;
+    provider!.placeSearchingState = SearchingState.idle;
     return true;
   }
 
