@@ -17,6 +17,12 @@ import 'package:chance_app/ui/pages/navigation/invitations/check_my_invitation/c
 import 'package:chance_app/ui/pages/navigation/invitations/enter_accept_code/enter_accept_code.dart';
 import 'package:chance_app/ui/pages/navigation/my_wards/my_wards_guardians.dart';
 import 'package:chance_app/ui/pages/navigation/navigation_page/navigation_page.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/address_component.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/bounds.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geocoding_result.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/geometry.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/location.dart';
+import 'package:chance_app/ui/pages/navigation/place_picker/src/models/pick_result.dart';
 import 'package:chance_app/ui/pages/onboarding/onboarding_page.dart';
 import 'package:chance_app/ui/pages/onboarding/onboarding_tutorial.dart';
 import 'package:chance_app/ui/pages/reminders_page/add_medicine_page/add_medicine_page.dart';
@@ -42,8 +48,15 @@ import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
+import 'package:chance_app/ux/enum/day_periodicity.dart';
+import 'package:chance_app/ux/enum/instruction.dart';
+import 'package:chance_app/ux/enum/medicine_type.dart';
+import 'package:chance_app/ux/enum/periodicity.dart';
+import 'package:chance_app/ux/helpers/ad_helper.dart';
+import 'package:chance_app/ux/helpers/app_router.dart';
 import 'package:chance_app/ux/helpers/background_service_helper.dart';
 import 'package:chance_app/ux/helpers/reminders_helper.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/internet_connection_stream.dart';
 import 'package:chance_app/ux/model/product_model.dart';
@@ -61,7 +74,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
-
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart'
@@ -72,8 +84,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timezone/data/latest.dart';
 import 'package:timezone/timezone.dart';
-import 'package:timeago/timeago.dart' as timeago;
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
