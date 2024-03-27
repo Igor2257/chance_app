@@ -1,10 +1,10 @@
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/chat/chat_page/widgets/add_new_contect_widget.dart';
-import 'package:chance_app/ui/pages/chat/chat_page/widgets/chat_user_tile.dart';
+import 'package:chance_app/ui/pages/chat_page/widgets/add_new_contect_widget.dart';
+import 'package:chance_app/ui/pages/chat_page/widgets/chat_user_tile.dart';
 import 'package:chance_app/ux/helpers/chat_map_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class NewChatPage extends StatelessWidget {
   const NewChatPage({super.key});

@@ -5,6 +5,35 @@ import 'package:chance_app/firebase_options.dart';
 import 'package:chance_app/ui/components/ad_banner.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
+import 'package:chance_app/ui/pages/doctor_appointment/doctor_appointment.dart';
+import 'package:chance_app/ui/pages/documents/privacy_policy_page.dart';
+import 'package:chance_app/ui/pages/job_search/job_search.dart';
+import 'package:chance_app/ui/pages/main_page/main_page.dart';
+import 'package:chance_app/ui/pages/menu/menu_page.dart';
+import 'package:chance_app/ui/pages/menu/pages/my_information.dart';
+import 'package:chance_app/ui/pages/menu/pages/select_language.dart';
+import 'package:chance_app/ui/pages/navigation/add_ward/add_ward.dart';
+import 'package:chance_app/ui/pages/navigation/invitations/check_my_invitation/check_my_invitation.dart';
+import 'package:chance_app/ui/pages/navigation/invitations/enter_accept_code/enter_accept_code.dart';
+import 'package:chance_app/ui/pages/navigation/my_wards/my_wards_guardians.dart';
+import 'package:chance_app/ui/pages/navigation/navigation_page/navigation_page.dart';
+import 'package:chance_app/ui/pages/onboarding/onboarding_page.dart';
+import 'package:chance_app/ui/pages/onboarding/onboarding_tutorial.dart';
+import 'package:chance_app/ui/pages/reminders_page/add_medicine_page/add_medicine_page.dart';
+import 'package:chance_app/ui/pages/reminders_page/reminders_page.dart';
+import 'package:chance_app/ui/pages/reminders_page/tasks/calendar_task_page.dart';
+import 'package:chance_app/ui/pages/reminders_page/tasks/tasks_for_today.dart';
+import 'package:chance_app/ui/pages/sign_in_up/log_in/log_in_page.dart';
+import 'package:chance_app/ui/pages/sign_in_up/log_in/reset_password.dart';
+import 'package:chance_app/ui/pages/sign_in_up/registration/enter_code_for_register.dart';
+import 'package:chance_app/ui/pages/sign_in_up/registration/registration_page.dart';
+import 'package:chance_app/ui/pages/sign_in_up/sign_in_up_page.dart';
+import 'package:chance_app/ui/pages/sos_page/add_contact_screen.dart';
+import 'package:chance_app/ui/pages/sos_page/add_group_screen.dart';
+import 'package:chance_app/ui/pages/sos_page/delete_contact_sos.dart';
+import 'package:chance_app/ui/pages/sos_page/main_page_sos.dart';
+import 'package:chance_app/ui/pages/sos_page/replace_contact_sos.dart';
+import 'package:chance_app/ux/bloc/add_medicine_bloc/add_medicine_bloc.dart';
 import 'package:chance_app/ux/bloc/add_task_bloc/add_task_bloc.dart';
 import 'package:chance_app/ux/bloc/login_bloc/login_bloc.dart';
 import 'package:chance_app/ux/bloc/navigation_bloc/add_ward/add_ward_bloc.dart';
@@ -13,7 +42,6 @@ import 'package:chance_app/ux/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:chance_app/ux/bloc/registration_bloc/registration_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
-import 'package:chance_app/ux/helpers/app_router.dart';
 import 'package:chance_app/ux/helpers/background_service_helper.dart';
 import 'package:chance_app/ux/helpers/reminders_helper.dart';
 import 'package:chance_app/ux/hive_crud.dart';
@@ -97,7 +125,7 @@ Future<void> main() async {
     final currentTimeZone = await FlutterTimezone.getLocalTimezone();
     initializeTimeZones();
     setLocalLocation(getLocation(currentTimeZone));
-    timeago.setLocaleMessages(AppLocalizations.instance.locale.languageCode, timeago.UkMessages()); // Add uk messages
+    timeago.setLocaleMessages('uk', timeago.UkMessages()); // Add uk messages
   }).whenComplete(() async {
     UserRepository repository = UserRepository();
     String route = "/onboarding_page";
@@ -338,9 +366,62 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                     GlobalMaterialLocalizations.delegate,
                                   ],
                                   initialRoute: route,
-
-
-                                  onGenerateRoute: AppRouter.onGenerateRoute,
+                                  routes: {
+                                    "/": (context) => const MainPage(),
+                                    "/signinup": (context) =>
+                                        const SignInUpPage(),
+                                    "/registration": (context) =>
+                                        const RegistrationPage(),
+                                    "/login": (context) => const LoginPage(),
+                                    "/enter_code": (context) =>
+                                        const EnterCodeForRegister(),
+                                    "/reminders": (context) =>
+                                        const RemindersPage(),
+                                    "/date_picker_for_tasks": (context) =>
+                                        const CalendarTaskPage(),
+                                    "/add_medicine": (context) => BlocProvider(
+                                          create: (context) =>
+                                              AddMedicineBloc(),
+                                          child: const AddMedicinePage(),
+                                        ),
+                                    "/reset_password": (context) =>
+                                        const ResetPassword(),
+                                    "/tasks_for_today": (context) =>
+                                        const TasksForToday(),
+                                    "/menu": (context) => const MenuPage(),
+                                    "/sos": (context) => const MainPageSos(),
+                                    "/add_contact": (context) =>
+                                        const AddContactScreen(),
+                                    "/add_group": (context) =>
+                                        const AddGroupScreen(),
+                                    "/onboarding_page": (context) =>
+                                        const OnboardingPage(),
+                                    "/onboarding_tutorial": (context) =>
+                                        const OnboardingTutorial(),
+                                    "/delete_contact_sos": (context) =>
+                                        const DeleteContactsPage(),
+                                    "/my_information": (context) =>
+                                        const MyInformation(),
+                                    "/replace_contact_sos": (context) =>
+                                        const ReplaceContactSosScreen(),
+                                    "/navigation_page": (context) =>
+                                        const NavigationPage(),
+                                    "/add_ward": (context) => const AddWard(),
+                                    "/check_my_invitation": (context) =>
+                                        const CheckMyInvitation(),
+                                    "/enter_accept_code": (context) =>
+                                        const EnterAcceptCode(),
+                                    "/choose_language": (context) =>
+                                        const ChooseLanguage(),
+                                    "/my_wards": (context) =>
+                                        const MyWardsGuardians(),
+                                    "/doctor_appointment": (context) =>
+                                        const DoctorAppointment(),
+                                    "/job_search": (context) =>
+                                        const JobSearch(),
+                                    "/privacy_policy": (context) =>
+                                        const PrivacyPolicyPage(),
+                                  },
                                   builder: (context, child) {
                                     final locale =
                                         Localizations.localeOf(context);

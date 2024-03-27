@@ -21,15 +21,15 @@ class UserInputChip extends StatelessWidget {
           vertical: 2.0,
           horizontal: 4.0,
         ),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: darkNeutral300,
-          borderRadius: BorderRadius.all(
+          borderRadius: const BorderRadius.all(
             Radius.circular(4.0),
           ),
         ),
         child: Text(
           value.fullName,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 14,
             height: 20 / 14,

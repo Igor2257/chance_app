@@ -1,5 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/pages/chat/chat_page/blocs/search_cubit/search_cubit.dart';
+import 'package:chance_app/ui/pages/chat_page/blocs/search_cubit/search_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,7 +24,7 @@ class _ChatSearchFieldState extends State<ChatSearchField> {
       textInputAction: TextInputAction.search,
       textCapitalization: TextCapitalization.words,
       onChanged: context.read<SearchCubit>().search,
-      style: const TextStyle(
+      style: TextStyle(
         fontWeight: FontWeight.w400,
         fontSize: 16,
         height: 24 / 16,

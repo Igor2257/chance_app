@@ -41,7 +41,7 @@ class ChatTile extends StatelessWidget {
         radius: 24.0,
         child: Text(
           title.isNotEmpty ? title[0] : '',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
             height: 20 / 14,
             fontWeight: FontWeight.w400,
@@ -63,7 +63,7 @@ class ChatTile extends StatelessWidget {
         height: double.infinity,
         child: Text(
           updatedAt != null ? timeago.format(updatedAt, locale: 'uk') : '',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
             height: 20 / 14,
             fontWeight: FontWeight.w400,
@@ -74,14 +74,14 @@ class ChatTile extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
       ),
-      titleTextStyle: const TextStyle(
+      titleTextStyle: TextStyle(
         fontSize: 16,
         height: 24 / 16,
         fontWeight: FontWeight.w400,
         color: darkNeutral800,
         letterSpacing: 0.5,
       ),
-      subtitleTextStyle: const TextStyle(
+      subtitleTextStyle: TextStyle(
         fontSize: 14,
         height: 20 / 14,
         fontWeight: FontWeight.w400,

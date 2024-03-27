@@ -49,7 +49,7 @@ class ChatBubbleWidget extends StatelessWidget {
             if (!isMine) ...[
               Text(
                 message.author.fullName,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 14,
                   height: 20 / 14,
@@ -61,7 +61,7 @@ class ChatBubbleWidget extends StatelessWidget {
             ],
             Text(
               message.text,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 14,
                 height: 20 / 14,

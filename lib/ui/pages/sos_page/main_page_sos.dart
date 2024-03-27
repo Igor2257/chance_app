@@ -254,10 +254,11 @@ class _MainPageSosState extends State<MainPageSos> {
     final callPermissionStatus = await Permission.phone.request();
     if (callPermissionStatus.isGranted) {
       final uri = Uri(scheme: 'tel', path: contactModel.phone);
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri);
+      final url = uri.toString();
+      if (await canLaunch(url)) {
+        await launch(url);
       } else {
-        await launchUrl(uri);
+        await launch(url);
       }
     } else {
       Fluttertoast.showToast(
