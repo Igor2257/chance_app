@@ -61,7 +61,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart'
@@ -71,8 +70,6 @@ import 'package:jiffy/jiffy.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:timezone/data/latest.dart';
-import 'package:timezone/timezone.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -119,9 +116,6 @@ Future<void> main() async {
         unawaited(MobileAds.instance.initialize());
       }
     });
-    final currentTimeZone = await FlutterTimezone.getLocalTimezone();
-    initializeTimeZones();
-    setLocalLocation(getLocation(currentTimeZone));
     timeago.setLocaleMessages(
         AppLocalizations.instance.locale.languageCode, timeago.UkMessages());
   }).whenComplete(() async {

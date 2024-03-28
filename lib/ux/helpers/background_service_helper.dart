@@ -50,18 +50,18 @@ abstract class BackgroundServiceHelper {
     return true;
   }
 
-  static bool isAppShouldSentLocation =
-      HiveCRUD().setting.isAppShouldSentLocation;
-
   @pragma('vm:entry-point')
   static Future<void> _onStart(ServiceInstance service) async {
     DartPluginRegistrant.ensureInitialized();
 
     final hiveIsInitialized = await HiveCRUD().initialize();
+    if (HiveCRUD().setting.isAppShouldSentLocation) runTimer();
+    await Supabase.initialize(
+      url: "https://tnvxszbqdurbkpnvjvgz.supabase.co",
+      anonKey:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudnhzemJxZHVyYmtwbnZqdmd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA4NDU5NjUsImV4cCI6MjAyNjQyMTk2NX0.I_Tf2UAA5Qo05EOSR2HXkv9yMun2NyixOZtCyr3OvoA",
+    );
     await RemindersHelper.initialize();
-    if (isAppShouldSentLocation) {
-      loadTimer();
-    }
 
     _log("Service is started");
 
@@ -91,22 +91,17 @@ abstract class BackgroundServiceHelper {
       });
   }
 
-  static loadTimer() async {
-    await Supabase.initialize(
-            url: "https://tnvxszbqdurbkpnvjvgz.supabase.co",
-            anonKey:
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudnhzemJxZHVyYmtwbnZqdmd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA4NDU5NjUsImV4cCI6MjAyNjQyMTk2NX0.I_Tf2UAA5Qo05EOSR2HXkv9yMun2NyixOZtCyr3OvoA")
-        .whenComplete(() {
-      Timer.periodic(const Duration(seconds: 15), (timer) async {
-        await Geolocator.checkPermission().then((value) async {
-          if (value != LocationPermission.denied &&
-              value != LocationPermission.deniedForever) {
-            final position = await Geolocator.getCurrentPosition();
-            await NavigationRepository()
-                .sendMyLocation(position.latitude, position.longitude);
-          }
-        });
-      });
+  static void runTimer() {
+    Timer.periodic(const Duration(seconds: 15), (timer) async {
+      final status = await Geolocator.checkPermission();
+      if (status != LocationPermission.denied &&
+          status != LocationPermission.deniedForever) {
+        final position = await Geolocator.getCurrentPosition();
+        await NavigationRepository().sendMyLocation(
+          position.latitude,
+          position.longitude,
+        );
+      }
     });
   }
 
