@@ -23,7 +23,7 @@ late final Box<MeUser> userBox;
 late final Box<TaskModel> tasksBox;
 late final Box<MedicineModel> medicineBox;
 late final Box<PickResult> addressesBox;
-late final Box<Settings> settingsBox;
+Box<Settings>? settingsBox;
 late final Box<ProductModel> itemsBox;
 late final Box<SosContactModel> contactBox;
 late final Box<SosGroupModel> groupBox;
@@ -52,7 +52,7 @@ class HiveCRUD {
 
   MeUser? get user => userBox.get('user');
 
-  Settings get setting => settingsBox.get('settings') ?? const Settings();
+  Settings get setting => settingsBox?.get('settings') ?? const Settings();
 
   Future removeLocalContact(String id) async {
     await groupBox.delete(id);
@@ -97,7 +97,7 @@ class HiveCRUD {
       settingsBox = await Hive.openBox("settings");
       contactBox = await Hive.openBox("sosContactModel");
       groupBox = await Hive.openBox("sosGroupModel");
-      final setting = settingsBox.get('settings') ?? const Settings();
+      final setting = settingsBox?.get('settings') ?? const Settings();
       if (setting.firstEnter == null) {
         updateSettings(Settings(firstEnter: DateTime.now()));
       }
@@ -136,11 +136,11 @@ class HiveCRUD {
   }
 
   Future<void> updateSettings(Settings settings) async {
-    await settingsBox.put("settings", settings);
+    await settingsBox?.put("settings", settings);
   }
 
   Future<void> removeSettings(String id) async {
-    await settingsBox.delete(id);
+    await settingsBox?.delete(id);
   }
 
   Future<void> clearTasks() async {

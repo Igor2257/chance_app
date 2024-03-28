@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/add_new_contect_widget.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/chat_user_tile.dart';
 import 'package:chance_app/ux/helpers/chat_helper.dart';
@@ -24,9 +25,9 @@ class _NewChatPageState extends State<NewChatPage> {
       children: [
         Scaffold(
           appBar: AppBar(
-            title: const Text(
-              'Новий Чат',
-              style: TextStyle(
+            title: Text(
+              AppLocalizations.instance.translate('newChat'),
+              style: const TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 22,
                 height: 28 / 22,
@@ -41,15 +42,15 @@ class _NewChatPageState extends State<NewChatPage> {
               const SizedBox(height: 32.0),
               GestureDetector(
                 onTap: () => _onTextFieldTap(context),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Пошук контакту',
-                        style: TextStyle(
+                        AppLocalizations.instance.translate('searchContact'),
+                        style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
                           height: 24 / 16,
@@ -57,8 +58,8 @@ class _NewChatPageState extends State<NewChatPage> {
                           color: Color(0xFFD9D9D9),
                         ),
                       ),
-                      SizedBox(height: 8.0),
-                      Divider(
+                      const SizedBox(height: 8.0),
+                      const Divider(
                         height: 0,
                         thickness: 1,
                         color: Color(0xFFD9D9D9),
@@ -67,25 +68,35 @@ class _NewChatPageState extends State<NewChatPage> {
                   ),
                 ),
               ),
-              const AddNewContactWidget(),
+              // Не потрібні поки
+              //const AddNewContactWidget(),
               Expanded(
-                child: StreamBuilder<List<types.User>>(
-                  stream: _stream,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    }
-                    if (snapshot.hasData) {
-                      return ListView(
-                        children: ChatMapUtils.generateSortMap(snapshot.data!)
-                            .entries
-                            .map(_buildSortedList)
-                            .toList(),
-                      );
-                    }
+                child: Center(
+                  child: StreamBuilder<List<types.User>>(
+                    stream: _stream,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      }
+                      if (snapshot.hasData) {
+                        return ListView(
+                          children: ChatMapUtils.generateSortMap(snapshot.data!)
+                              .entries
+                              .map(_buildSortedList)
+                              .toList(),
+                        );
+                      }
 
-                    return const SizedBox();
-                  },
+                      return Text(
+                        AppLocalizations.instance.translate('NoData'),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 22,
+                          height: 28 / 22,
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ],

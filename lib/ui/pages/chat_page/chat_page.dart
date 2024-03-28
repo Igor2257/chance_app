@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/chat_bubble_widget.dart';
 import 'package:chance_app/ux/helpers/chat_helper.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class _ChatPageState extends State<ChatPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            widget.room.name ?? 'Chat',
+            widget.room.name ?? '',
             style: const TextStyle(
               fontWeight: FontWeight.w400,
               fontSize: 22,
@@ -42,7 +43,7 @@ class _ChatPageState extends State<ChatPage> {
           actions: [
             IconButton(
               onPressed: () => _openChatSettingsPage(context),
-              icon: Icon(
+              icon: const Icon(
                 Icons.more_vert,
                 color: primary800,
               ),
@@ -58,9 +59,9 @@ class _ChatPageState extends State<ChatPage> {
                 return const CircularProgressIndicator();
               } else if (snapshot.hasData) {
                 if (snapshot.data!.isEmpty) {
-                  return const Text(
-                    'Нема повідомлень',
-                    style: TextStyle(
+                  return  Text(
+                    AppLocalizations.instance.translate('NoMessages'),
+                    style: const TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 22,
                       height: 28 / 22,
@@ -81,9 +82,9 @@ class _ChatPageState extends State<ChatPage> {
                 );
               }
 
-              return const Text(
-                'Помилка',
-                style: TextStyle(
+              return  Text(
+                AppLocalizations.instance.translate('error'),
+                style: const TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 22,
                   height: 28 / 22,
@@ -103,16 +104,16 @@ class _ChatPageState extends State<ChatPage> {
       margin: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: darkNeutral800,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(8.0)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(8.0)),
       ),
       child: SafeArea(
         child: TextField(
           controller: _controller,
           textInputAction: TextInputAction.send,
           textCapitalization: TextCapitalization.sentences,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 17,
             height: 22 / 17,
@@ -125,13 +126,13 @@ class _ChatPageState extends State<ChatPage> {
             filled: true,
             suffixIcon: IconButton(
               onPressed: _onSendBtnTap,
-              icon: Icon(
+              icon: const Icon(
                 Icons.send,
                 color: primary1000,
               ),
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
-            hintText: 'Що нового?',
+            hintText: AppLocalizations.instance.translate("chatTextField"),
             hintStyle: const TextStyle(
               fontWeight: FontWeight.w400,
               fontSize: 17,

@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/chat_page/blocs/select_cubit/select_cubit.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/add_new_contect_widget.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/user_checkbox_tile.dart';
@@ -25,9 +26,9 @@ class _NewGroupPageState extends State<NewGroupPage> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text(
-              'Нова група',
-              style: TextStyle(
+            title: Text(
+              AppLocalizations.instance.translate('newGroup'),
+              style: const TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 22,
                 height: 28 / 22,
@@ -38,7 +39,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
               TextButton(
                 onPressed: isEmpty ? null : () => _openCreateGroupPage(context),
                 child: Text(
-                  'Далі',
+                  AppLocalizations.instance.translate('next'),
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 16,
@@ -64,9 +65,9 @@ class _NewGroupPageState extends State<NewGroupPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (isEmpty)
-                        const Text(
-                          'Пошук контакту',
-                          style: TextStyle(
+                        Text(
+                          AppLocalizations.instance.translate('searchContact'),
+                          style: const TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16,
                             height: 24 / 16,
@@ -92,25 +93,36 @@ class _NewGroupPageState extends State<NewGroupPage> {
                   ),
                 ),
               ),
-              const AddNewContactWidget(),
+              // Не потрібні поки
+              // const AddNewContactWidget(),
               Expanded(
-                child: StreamBuilder<List<types.User>>(
-                  stream: ChatHelper.users,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    }
-                    if (snapshot.hasData) {
-                      return ListView(
-                        children: ChatMapUtils.generateSortMap(snapshot.data!)
-                            .entries
-                            .map((entry) => _buildSortedList(entry, state))
-                            .toList(),
-                      );
-                    }
+                child: Center(
+                  child: StreamBuilder<List<types.User>>(
+                    stream: ChatHelper.users,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      }
+                      if (snapshot.hasData) {
+                        return ListView(
+                          children: ChatMapUtils.generateSortMap(snapshot.data!)
+                              .entries
+                              .map((entry) => _buildSortedList(entry, state))
+                              .toList(),
+                        );
+                      }
 
-                    return const SizedBox();
-                  },
+                      return Text(
+                        AppLocalizations.instance.translate('NoData'),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 22,
+                          height: 28 / 22,
+                        ),
+                      );
+                      ;
+                    },
+                  ),
                 ),
               ),
             ],

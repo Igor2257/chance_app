@@ -1,12 +1,13 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class CustomDialog {
   static Future<T?> show<T>({
     required BuildContext context,
     required String title,
-    String cancelText = 'Скасувати',
-    String actionText = 'Покинути',
+    String? cancelText ,
+    String? actionText ,
   }) {
     return showDialog<T>(
       context: context,
@@ -23,7 +24,7 @@ class CustomDialog {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 16,
                     height: 24 / 16,
@@ -38,8 +39,8 @@ class CustomDialog {
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(false),
                       child: Text(
-                        cancelText,
-                        style: TextStyle(
+                        cancelText ?? AppLocalizations.instance.translate('cancel'),
+                        style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
                           height: 24 / 16,
@@ -53,8 +54,8 @@ class CustomDialog {
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(true),
                       child: Text(
-                        actionText,
-                        style: TextStyle(
+                        actionText ?? AppLocalizations.instance.translate('leave'),
+                        style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
                           height: 24 / 16,

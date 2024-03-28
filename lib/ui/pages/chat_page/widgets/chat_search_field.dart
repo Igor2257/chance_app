@@ -24,7 +24,7 @@ class _ChatSearchFieldState extends State<ChatSearchField> {
       textInputAction: TextInputAction.search,
       textCapitalization: TextCapitalization.words,
       onChanged: context.read<SearchCubit>().search,
-      style: TextStyle(
+      style: const TextStyle(
         fontWeight: FontWeight.w400,
         fontSize: 16,
         height: 24 / 16,
