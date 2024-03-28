@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/custom_dialog.dart';
 import 'package:chance_app/ux/extensions/chat_user_name.dart';
 import 'package:chance_app/ux/helpers/chat_helper.dart';
@@ -17,9 +18,9 @@ class ChatSettingsPage extends StatelessWidget {
     types.User? admin = _getAdmin(room.users);
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Група',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.instance.translate('aGroup'),
+          style: const TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 22,
             height: 28 / 22,
@@ -79,10 +80,10 @@ class ChatSettingsPage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar:
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: room.type == types.RoomType.group && admin?.id == ChatHelper.userId
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child:
+            room.type == types.RoomType.group && admin?.id == ChatHelper.userId
                 ? SizedBox(
                     height: 48.0,
                     child: RoundedButton(
@@ -90,9 +91,9 @@ class ChatSettingsPage extends StatelessWidget {
                       border: Border.all(
                         color: darkNeutral800,
                       ),
-                      child: const Text(
-                        'Змінити',
-                        style: TextStyle(
+                      child: Text(
+                        AppLocalizations.instance.translate('toChange'),
+                        style: const TextStyle(
                           fontSize: 16,
                           height: 24 / 16,
                           fontWeight: FontWeight.w500,
@@ -107,9 +108,9 @@ class ChatSettingsPage extends StatelessWidget {
                     height: 48.0,
                     child: RoundedButton(
                       color: red900,
-                      child: const Text(
-                        'Покинути групу',
-                        style: TextStyle(
+                      child: Text(
+                        AppLocalizations.instance.translate('leaveGroup'),
+                        style: const TextStyle(
                           fontSize: 16,
                           height: 24 / 16,
                           fontWeight: FontWeight.w500,
@@ -120,7 +121,7 @@ class ChatSettingsPage extends StatelessWidget {
                       onPress: () => _leaveGroup(context),
                     ),
                   ),
-          ),
+      ),
     );
   }
 
@@ -140,9 +141,9 @@ class ChatSettingsPage extends StatelessWidget {
                 color: darkNeutral1000,
               ),
             ),
-            const Text(
-              'Адмін',
-              style: TextStyle(
+            Text(
+              AppLocalizations.instance.translate('admin'),
+              style: const TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 16,
                 height: 24 / 16,
@@ -200,7 +201,8 @@ class ChatSettingsPage extends StatelessWidget {
 
   void _leaveGroup(BuildContext context) async {
     bool? value = await CustomDialog.show<bool?>(
-        context: context, title: 'Ви впевнені, що хочете покинути групу?');
+        context: context,
+        title: AppLocalizations.instance.translate('leaveGroupDialog'));
     if (value == true) {
       List<types.User> users = List.from(room.users);
       types.User me = _getMe(users);

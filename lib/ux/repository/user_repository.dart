@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
@@ -8,6 +9,7 @@ import 'package:chance_app/ux/model/me_user.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart' show sha256;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,7 +17,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
-
 
 class UserRepository {
   Future<String?> sendLoginData(String email, String password) async {
@@ -44,8 +45,8 @@ class UserRepository {
             .then((value) async {
           final cookie = _parseCookieFromLogin(value);
           Map<String, dynamic> data = json.decode(value.body);
-          UserCredential credential =
-              await FirebaseAuth.instance.signInWithCustomToken(data['token']);
+          // UserCredential credential =
+          //     await FirebaseAuth.instance.signInWithCustomToken(data['token']);
 
           if (value.statusCode > 199 && value.statusCode < 300) {
             var url = Uri.parse('$apiUrl/auth/me');
@@ -69,13 +70,13 @@ class UserRepository {
                   deviceId: map["deviceId"] ?? "",
                 );
 
-                await FirebaseChatCore.instance.createUserInFirestore(
-                  types.User(
-                    firstName: meUser.name,
-                    id: credential.user!.uid,
-                    lastName: meUser.lastName,
-                  ),
-                );
+                // await FirebaseChatCore.instance.createUserInFirestore(
+                //   types.User(
+                //     firstName: meUser.name,
+                //     id: credential.user!.uid,
+                //     lastName: meUser.lastName,
+                //   ),
+                // );
 
                 await HiveCRUD().addUser(meUser);
               } else {
@@ -97,6 +98,7 @@ class UserRepository {
         });
       } catch (errors) {
         error = errors.toString();
+        log(error.toString());
         Fluttertoast.showToast(
             msg: errors.toString(), toastLength: Toast.LENGTH_LONG);
         FlutterError(errors.toString());
@@ -509,6 +511,7 @@ class UserRepository {
     } else {
       try {
         var url = Uri.parse('$apiUrl/auth/logout');
+        await FirebaseAuth.instance.signOut();
         final cookie = await getCookie();
         await http.post(url, headers: <String, String>{
           'Content-Type': 'application/json',

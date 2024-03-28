@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/chat_page/blocs/search_cubit/search_cubit.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/chat_search_field.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/chat_user_tile.dart';
@@ -30,10 +31,29 @@ class _SearchChatPageState extends State<SearchChatPage> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Scaffold(
                 appBar: AppBar(),
-                body: const CircularProgressIndicator(),
+                body: const Center(
+                  child: CircularProgressIndicator(),
+                ),
               );
             }
             if (snapshot.hasData) {
+              if (snapshot.data!.isEmpty) {
+                return Scaffold(
+                  appBar: AppBar(),
+                  body: Center(
+                    child: Text(
+                      AppLocalizations.instance.translate("NoData"),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16,
+                        height: 24 / 16,
+                        color: darkNeutral1000,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ),
+                );
+              }
               return BlocProvider(
                 create: (_) => SearchCubit(snapshot.data!),
                 child: GestureDetector(
@@ -50,8 +70,8 @@ class _SearchChatPageState extends State<SearchChatPage> {
                           TextButton(
                             onPressed: () => _onCloseSearchPage(context),
                             child: Text(
-                              'Скасувати',
-                              style: TextStyle(
+                              AppLocalizations.instance.translate('cancel'),
+                              style: const TextStyle(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 16,
                                 height: 24 / 16,
@@ -94,7 +114,16 @@ class _SearchChatPageState extends State<SearchChatPage> {
             }
             return Scaffold(
               appBar: AppBar(),
-              body: const SizedBox(),
+              body: Center(
+                child: Text(
+                  AppLocalizations.instance.translate('NoData'),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 22,
+                    height: 28 / 22,
+                  ),
+                ),
+              ),
             );
           },
         ),

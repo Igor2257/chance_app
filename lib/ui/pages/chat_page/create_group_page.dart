@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/extensions/chat_user_name.dart';
 import 'package:chance_app/ux/helpers/chat_helper.dart';
 import 'package:flutter/material.dart';
@@ -30,9 +31,9 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       behavior: HitTestBehavior.translucent,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Нова група',
-            style: TextStyle(
+          title: Text(
+            AppLocalizations.instance.translate('newGroup'),
+            style: const TextStyle(
               fontWeight: FontWeight.w400,
               fontSize: 22,
               height: 28 / 22,
@@ -110,9 +111,9 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
               onPress: _controller.text.trim().isNotEmpty
                   ? () => _onCreateGroupBtnTap(context)
                   : null,
-              child: const Text(
-                'Створити новий чат',
-                style: TextStyle(
+              child: Text(
+                AppLocalizations.instance.translate('createNewChat'),
+                style: const TextStyle(
                   fontSize: 16,
                   height: 24 / 16,
                   fontWeight: FontWeight.w500,

@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class CreateChatPage extends StatelessWidget {
@@ -9,9 +10,9 @@ class CreateChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Створити',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.instance.translate('create'),
+          style: const TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 22,
             height: 28 / 22,
@@ -30,9 +31,9 @@ class CreateChatPage extends StatelessWidget {
             RoundedButton(
               height: 44.0,
               color: primary1000,
-              child: Text(
-                'Створити нову групу',
-                style: TextStyle(
+              child:  Text(
+                AppLocalizations.instance.translate('createNewGroup'),
+                style: const TextStyle(
                   fontSize: 16,
                   height: 24 / 16,
                   fontWeight: FontWeight.w500,
@@ -46,9 +47,9 @@ class CreateChatPage extends StatelessWidget {
             RoundedButton(
               height: 44.0,
               color: primary1000,
-              child: Text(
-                'Створити новий чат',
-                style: TextStyle(
+              child:  Text(
+                AppLocalizations.instance.translate('createNewChat'),
+                style: const TextStyle(
                   fontSize: 16,
                   height: 24 / 16,
                   fontWeight: FontWeight.w500,

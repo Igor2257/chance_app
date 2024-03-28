@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/chat_page/blocs/search_cubit/search_cubit.dart';
 import 'package:chance_app/ui/pages/chat_page/blocs/select_cubit/select_cubit.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/chat_search_field.dart';
@@ -39,9 +40,9 @@ class SearchGroupPage extends StatelessWidget {
                       const SizedBox(width: 16.0),
                       TextButton(
                         onPressed: () => _onCloseSearchPage(context),
-                        child: const Text(
-                          'Скасувати',
-                          style: TextStyle(
+                        child: Text(
+                          AppLocalizations.instance.translate('cancel'),
+                          style: const TextStyle(
                             fontWeight: FontWeight.w400,
                             fontSize: 16,
                             height: 24 / 16,
@@ -91,9 +92,9 @@ class SearchGroupPage extends StatelessWidget {
                     height: 56.0,
                     child: RoundedButton(
                       color: primary1000,
-                      child: const Text(
-                        'Додати',
-                        style: TextStyle(
+                      child: Text(
+                        AppLocalizations.instance.translate('add'),
+                        style: const TextStyle(
                           fontSize: 16,
                           height: 24 / 16,
                           fontWeight: FontWeight.w500,
@@ -112,7 +113,16 @@ class SearchGroupPage extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(),
-          body: const SizedBox(),
+          body: Center(
+            child: Text(
+              AppLocalizations.instance.translate('NoData'),
+              style: const TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 22,
+                height: 28 / 22,
+              ),
+            ),
+          ),
         );
       },
     );

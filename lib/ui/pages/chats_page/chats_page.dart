@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/chats_page/widgets/chat_tile.dart';
 import 'package:chance_app/ux/helpers/chat_helper.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +12,9 @@ class ChatsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Спілкування',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.instance.translate('communication'),
+          style: const TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 22,
             height: 28 / 22,
@@ -29,9 +30,9 @@ class ChatsPage extends StatelessWidget {
               return const CircularProgressIndicator();
             } else if (snapshot.hasData) {
               if (snapshot.data!.isEmpty) {
-                return const Text(
-                  'Немає створених чатів!',
-                  style: TextStyle(
+                return Text(
+                  AppLocalizations.instance.translate('NoChats'),
+                  style: const TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 22,
                     height: 28 / 22,
@@ -51,7 +52,15 @@ class ChatsPage extends StatelessWidget {
                 ),
               );
             }
-            return const SizedBox();
+            
+            return Text(
+              AppLocalizations.instance.translate('NoChats'),
+              style: const TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 22,
+                height: 28 / 22,
+              ),
+            );
           },
         ),
       ),

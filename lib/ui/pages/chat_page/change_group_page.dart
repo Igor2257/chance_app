@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/custom_dialog.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/labeled_text_field.dart';
 import 'package:chance_app/ux/extensions/chat_user_name.dart';
@@ -36,9 +37,9 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
       behavior: HitTestBehavior.translucent,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Група',
-            style: TextStyle(
+          title: Text(
+            AppLocalizations.instance.translate('aGroup'),
+            style: const TextStyle(
               fontWeight: FontWeight.w400,
               fontSize: 22,
               height: 28 / 22,
@@ -76,8 +77,8 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
               const SizedBox(height: 24.0),
               LabeledTextField(
                 controller: _controller,
-                label: "Назва",
-                hintText: "ім'я",
+                label: AppLocalizations.instance.translate('labelName'),
+                hintText: AppLocalizations.instance.translate('name'),
                 isPhone: false,
                 onChanged: (value) {},
               ),
@@ -105,9 +106,9 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
                           _controller.text.trim() != widget.room.name
                       ? () => _updateRoom(context)
                       : null,
-                  child: const Text(
-                    'Готово',
-                    style: TextStyle(
+                  child: Text(
+                    AppLocalizations.instance.translate('ready'),
+                    style: const TextStyle(
                       fontSize: 16,
                       height: 24 / 16,
                       fontWeight: FontWeight.w500,
@@ -122,9 +123,9 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
                 height: 48.0,
                 child: RoundedButton(
                   color: red900,
-                  child: const Text(
-                    'Покинути та видалити групу',
-                    style: TextStyle(
+                  child: Text(
+                    AppLocalizations.instance.translate('leaveAndDeleteGroup'),
+                    style: const TextStyle(
                       fontSize: 16,
                       height: 24 / 16,
                       fontWeight: FontWeight.w500,
@@ -158,9 +159,9 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
                 color: darkNeutral1000,
               ),
             ),
-            const Text(
-              'Адмін',
-              style: TextStyle(
+            Text(
+              AppLocalizations.instance.translate('admin'),
+              style: const TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 16,
                 height: 24 / 16,
@@ -199,9 +200,9 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
           ),
           TextButton(
             onPressed: () => _removeUser(context, usersWithoutAdmin[index]),
-            child: const Text(
-              'Видалити',
-              style: TextStyle(
+            child: Text(
+              AppLocalizations.instance.translate('delete'),
+              style: const TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 14,
                 height: 20 / 14,
@@ -232,7 +233,7 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
   void _deleteGroup(BuildContext context) async {
     bool? value = await CustomDialog.show<bool?>(
       context: context,
-      title: 'Ви впевнені, що хочете покинути та видалити групу?',
+      title: AppLocalizations.instance.translate('leaveAndDeleteDialog'),
     );
     if (value == true) {
       await ChatHelper.deleteRoom(widget.room.id);
@@ -247,8 +248,8 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
   void _removeUser(BuildContext context, types.User user) async {
     bool? value = await CustomDialog.show<bool?>(
       context: context,
-      title: 'Ви впевнені, що хочете видалити друга?',
-      actionText: 'Видалити',
+      title: AppLocalizations.instance.translate('deleteUserDialog'),
+      actionText: AppLocalizations.instance.translate('delete'),
     );
     if (value == true) {
       List<types.User> users = List.from(widget.room.users);
