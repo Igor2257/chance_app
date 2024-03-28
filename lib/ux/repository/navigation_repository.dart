@@ -76,6 +76,7 @@ class NavigationRepository {
         if (value != null) {
           try {
             bool isAppShouldSentLocation = bool.parse(value.toString());
+            print("isAppShouldSentLocation $isAppShouldSentLocation");
             HiveCRUD hiveCRUD = HiveCRUD();
             Settings settings = hiveCRUD.setting;
             settings = settings.copyWith(

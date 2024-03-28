@@ -61,6 +61,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart'
@@ -115,9 +116,14 @@ Future<void> main() async {
       if ((!HiveCRUD().setting.blockAd)) {
         unawaited(MobileAds.instance.initialize());
       }
+      _initBackgroundLocation();
+      try {
+        timeago.setLocaleMessages(
+            AppLocalizations.instance.locale.languageCode, timeago.UkMessages());
+      } catch (e) {
+        FlutterError(e.toString());
+      }
     });
-    timeago.setLocaleMessages(
-        AppLocalizations.instance.locale.languageCode, timeago.UkMessages());
   }).whenComplete(() async {
     UserRepository repository = UserRepository();
     String route = "/onboarding_page";
@@ -167,6 +173,14 @@ Future<AndroidMapRenderer?> initializeMapRenderer() async {
   }
 
   return completer.future;
+}
+
+void _initBackgroundLocation() async {
+  HiveCRUD hiveCRUD = HiveCRUD();
+  if (hiveCRUD.setting.isAppShouldSentLocation) {
+    await const MethodChannel('location_service')
+        .invokeMethod('startLocationService', hiveCRUD.user!.email);
+  }
 }
 
 class MyApp extends StatefulWidget {

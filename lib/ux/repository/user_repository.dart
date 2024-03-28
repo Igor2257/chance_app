@@ -6,10 +6,12 @@ import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/me_user.dart';
+import 'package:chance_app/ux/repository/navigation_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart' show sha256;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -45,7 +47,7 @@ class UserRepository {
           final cookie = _parseCookieFromLogin(value);
           Map<String, dynamic> data = json.decode(value.body);
           UserCredential credential =
-              await FirebaseAuth.instance.signInWithCustomToken(data['token']);
+          await FirebaseAuth.instance.signInWithCustomToken(data['token']);
 
           if (value.statusCode > 199 && value.statusCode < 300) {
             var url = Uri.parse('$apiUrl/auth/me');
@@ -76,7 +78,16 @@ class UserRepository {
                     lastName: meUser.lastName,
                   ),
                 );
-
+                await NavigationRepository()
+                    .isAppShouldSentLocation()
+                    .whenComplete(()async {
+                  HiveCRUD hiveCRUD = HiveCRUD();
+                  if (hiveCRUD.setting.isAppShouldSentLocation) {
+                    await const MethodChannel('location_service')
+                        .invokeMethod(
+                        'startLocationService', hiveCRUD.user!.email);
+                  }
+                });
                 await HiveCRUD().addUser(meUser);
               } else {
                 error = jsonDecode(value.body)["message"]
@@ -123,16 +134,16 @@ class UserRepository {
         var hash = sha256.convert(bytes);
         await http
             .post(url,
-                headers: <String, String>{
-                  'Content-Type': 'application/json',
-                },
-                body: jsonEncode({
-                  "password": hash.toString().substring(0, 13),
-                  "email": email,
-                  "name": name,
-                  "lastName": lastName,
-                  "phone": phone,
-                }))
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({
+              "password": hash.toString().substring(0, 13),
+              "email": email,
+              "name": name,
+              "lastName": lastName,
+              "phone": phone,
+            }))
             .then((value) async {
           if (value.statusCode > 199 && value.statusCode < 300) {
             String? cookie = value.headers['set-cookie'];
@@ -154,8 +165,8 @@ class UserRepository {
     return error;
   }
 
-  Future<String?> checkIsCodeValid(
-      String code, String email, String passwordFirst) async {
+  Future<String?> checkIsCodeValid(String code, String email,
+      String passwordFirst) async {
     if (code.length != 4) {
       return "Код має бути із 4 символів";
     }
@@ -212,16 +223,16 @@ class UserRepository {
         await getCookie().then((cookie) async {
           await http
               .patch(url,
-                  headers: <String, String>{
-                    'Content-Type': 'application/json',
-                    'Cookie': cookie.toString(),
-                  },
-                  body: jsonEncode({
-                    if (name != null) "name": name,
-                    if (lastName != null) "lastName": lastName,
-                    if (phone != null) "phone": phone,
-                    if (token != null) "deviceId": token,
-                  }))
+              headers: <String, String>{
+                'Content-Type': 'application/json',
+                'Cookie': cookie.toString(),
+              },
+              body: jsonEncode({
+                if (name != null) "name": name,
+                if (lastName != null) "lastName": lastName,
+                if (phone != null) "phone": phone,
+                if (token != null) "deviceId": token,
+              }))
               .then((value) {
             if (!(value.statusCode > 199 && value.statusCode < 300)) {
               error = jsonDecode(value.body)["message"]
@@ -264,8 +275,7 @@ class UserRepository {
           body: jsonEncode({"email": email}),
         )
             .then((value) {
-          if (value.statusCode > 199 && value.statusCode < 300) {
-          } else {
+          if (value.statusCode > 199 && value.statusCode < 300) {} else {
             error = jsonDecode(value.body)["message"]
                 .toString()
                 .replaceAll("[", "")
@@ -301,8 +311,7 @@ class UserRepository {
           body: jsonEncode({"email": email}),
         )
             .then((value) {
-          if (value.statusCode > 199 && value.statusCode < 300) {
-          } else {
+          if (value.statusCode > 199 && value.statusCode < 300) {} else {
             error = jsonDecode(value.body)["message"]
                 .toString()
                 .replaceAll("[", "")
@@ -319,8 +328,8 @@ class UserRepository {
     return error;
   }
 
-  Future<String?> resetPassword(
-      String email, String code, String newPassword) async {
+  Future<String?> resetPassword(String email, String code,
+      String newPassword) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
@@ -423,11 +432,11 @@ class UserRepository {
   Future<bool> getIdTokenFromAuthCode() async {
     bool error = true;
     final GoogleSignInAccount? googleUser =
-        await GoogleSignIn(signInOption: SignInOption.standard).signIn();
+    await GoogleSignIn(signInOption: SignInOption.standard).signIn();
 
     // Obtain the auth details from the request
     final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+    await googleUser?.authentication;
 
     // Create a new credential
     final credential = GoogleAuthProvider.credential(

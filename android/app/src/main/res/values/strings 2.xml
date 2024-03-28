@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GeoWars</string>
+    <string name="fill_adress">Ввежите адрес:</string>
+    <string name="where_to_route_from">Выберите, откуда проложить маршрут:</string>
+    <string name="select_address">Введите адрес:</string>
+    <string name="submit">Отправить</string>
+    <string name="continue_button">Продолжить</string>
+    <string name="select_region">Пожалуйста, выберите регион</string>
+    <string name="find_button">Знайти</string>
+    <string name="add_to_team">Додати до команди</string>
+    <string name="add_to_craft">Додати до крафту</string>
+    <string name="back_press">Нажмите еще раз для выхода</string>
+    <string name="zachekayte">Зачекайте будь ласка</string>
+    <string name="priynatu_viklik">Прийняти виклик?</string>
+    <string name="yes">Так</string>
+    <string name="no">Ні</string>
+    <string name="pochatu">Начать</string>
+    <string name="zavershite">Завершити</string>
+    <string name="riven">Уровень</string>
+    <string name="misc">Знайти місце</string>
+    <string name="marsh">Прокласти маршрут</string>
+    <string name="mepol">Моє місцезнаходження</string>
+    <string name="vestumisc">Ввести місце</string>
+
+    <string name="craft">Крафт</string>
+    <string name="otrumatu">Отримати</string>
+    <string name="chaskol">Час коли був знайденний</string>
+    <string name="position" >Позиція предмета де був знайденний</string>
+    <string name="price" >Ціна</string>
+    <string name="prodatu">Продати</string>
+    <string name="dodatu">Додати</string>
+    <string name="haracteristika">Характеристика героя</string>
+    <string name="shvudkistataku">Швидкість атаки</string>
+    <string name="dodatkovi">Додаткові характеристики</string>
+</resources>
