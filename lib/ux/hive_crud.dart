@@ -169,6 +169,12 @@ class HiveCRUD {
     }
   }
 
+  Future<void> loadGroups(List<SosGroupModel> groupModels) async {
+    groupModels.forEach((group) async {
+      await groupBox.put(group.id, group);
+    });
+  }
+
   Future<void> addUser(MeUser meUser) async {
     await userBox.put("user", meUser);
   }

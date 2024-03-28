@@ -246,5 +246,6 @@
   "theNameMustContainUpTo300Characters":"Назва має містити до 300 символів",
   "theNameMustContainAtLeast2Characters":"Назва має містити від 2 символів",
   "error":"Помилка",
-  "failedToCallTheNumber": "Не вдалося зателефонувати за номером"
+  "failedToCallTheNumber": "Не вдалося зателефонувати за номером",
+  "failedToGetContactList": "Не вдалося отримати список контактів"
 }

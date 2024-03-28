@@ -232,6 +232,7 @@
   "similarToYourQuery":"Похожие на ваш запрос",
   "recent":"Недавние",
   "myWards": "Мои подопечные",
-  "failedToCallTheNumber": "Не удалось позвонить по номеру"
+  "failedToCallTheNumber": "Не удалось позвонить по номеру",
+  "failedToGetContactList": "Не удалось получить список контактов"
 
 }

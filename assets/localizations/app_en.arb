@@ -240,5 +240,6 @@
   "similarToYourQuery": "Similar to your query",
   "recent": "Recent",
   "myWards": "My wards",
-  "failedToCallTheNumber": "Failed to call the number"
+  "failedToCallTheNumber": "Failed to call the number",
+  "failedToGetContactList": "Failed to get contact list"
 }

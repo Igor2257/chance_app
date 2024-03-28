@@ -1,14 +1,21 @@
 import 'dart:convert';
 
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class SosRepository {
   get convert => null;
+  final Box<SosGroupModel> _storageGroups = groupBox;
+
+  List<SosGroupModel> getLocalGroups() {
+    return _storageGroups.values.toList();
+  }
 
   Future<List<SosGroupModel>?> loadContacts() async {
     List<SosGroupModel> contacts = [];
@@ -17,7 +24,8 @@ class SosRepository {
         msg: "Немає підключення до інтернету",
         toastLength: Toast.LENGTH_LONG,
       );
-      return null;
+
+      return HiveCRUD().myGroupContacts;
     }
 
     final cookie = await UserRepository().getCookie();
@@ -88,6 +96,7 @@ class SosRepository {
               ),
             );
           }
+          await HiveCRUD().loadGroups(contacts);
         } else {
           Fluttertoast.showToast(
             msg: "Не вдалося отримати список контактів",
@@ -115,7 +124,6 @@ class SosRepository {
     String? error;
     SosGroupModel? groupModel;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      // await HiveCRUM().addContact(contactModel);
       Fluttertoast.showToast(
           msg: "Немає підключення до інтернету",
           toastLength: Toast.LENGTH_LONG);
@@ -186,7 +194,6 @@ class SosRepository {
     String? error;
     SosContactModel? groupModel;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      // await HiveCRUM().addContact(contactModel);
       Fluttertoast.showToast(
           msg: "Немає підключення до інтернету",
           toastLength: Toast.LENGTH_LONG);
@@ -213,9 +220,6 @@ class SosRepository {
       if (response.statusCode > 199 && response.statusCode < 300) {
         String bodyString = response.body;
         Map<String, dynamic> data = json.decode(bodyString);
-        List<dynamic> contactList = data['contacts'];
-
-        // await HiveCRUM().addContact(contactModel);
       } else {
         error = jsonDecode(response.body)["message"]
             .toString()
@@ -238,7 +242,6 @@ class SosRepository {
     String? error;
     SosContactModel? groupModel;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      // await HiveCRUM().addContact(contactModel);
       Fluttertoast.showToast(
           msg: "Немає підключення до інтернету",
           toastLength: Toast.LENGTH_LONG);
@@ -267,7 +270,6 @@ class SosRepository {
       if (response.statusCode > 199 && response.statusCode < 300) {
         String bodyString = response.body;
         Map<String, dynamic> data = json.decode(bodyString);
-        // await HiveCRUM().addContact(contactModel);
       } else {
         error = jsonDecode(response.body)["message"]
             .toString()
@@ -289,7 +291,6 @@ class SosRepository {
     String? error;
     SosContactModel? groupModel;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      // await HiveCRUM().addContact(contactModel);
       Fluttertoast.showToast(
           msg: "Немає підключення до інтернету",
           toastLength: Toast.LENGTH_LONG);
@@ -312,8 +313,6 @@ class SosRepository {
         String bodyString = response.body;
         Map<String, dynamic> data = json.decode(bodyString);
         List<dynamic> contactList = data['contacts'];
-
-        // await HiveCRUM().addContact(contactModel);
       } else {
         error = jsonDecode(response.body)["message"]
             .toString()
@@ -338,7 +337,6 @@ class SosRepository {
           msg: "Немає підключення до інтернету",
           toastLength: Toast.LENGTH_LONG);
       error = "Немає підключення до інтернету";
-      // HiveCRUM().removeLocalContact(contactId);
     } else {
       try {
         var url = Uri.parse('$apiUrl/sos/$contactId');
@@ -370,7 +368,6 @@ class SosRepository {
           msg: "Немає підключення до інтернету",
           toastLength: Toast.LENGTH_LONG);
       error = "Немає підключення до інтернету";
-      // HiveCRUM().removeLocalContact(contactId);
     } else {
       try {
         var url = Uri.parse('$apiUrl/sos/group/$groupId');
