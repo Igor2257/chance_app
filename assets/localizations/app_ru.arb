@@ -243,6 +243,8 @@
   "myWards": "Мои подопечные",
   "failedToCallTheNumber": "Не удалось позвонить по номеру",
 
+  "failedToGetContactList": "Не удалось получить список контактов",
+
 
   "youHaveNoWards": "У вас нет подопечных"
 }
