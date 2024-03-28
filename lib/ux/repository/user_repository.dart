@@ -45,8 +45,8 @@ class UserRepository {
             .then((value) async {
           final cookie = _parseCookieFromLogin(value);
           Map<String, dynamic> data = json.decode(value.body);
-          // UserCredential credential =
-          //     await FirebaseAuth.instance.signInWithCustomToken(data['token']);
+          UserCredential credential =
+              await FirebaseAuth.instance.signInWithCustomToken(data['token']);
 
           if (value.statusCode > 199 && value.statusCode < 300) {
             var url = Uri.parse('$apiUrl/auth/me');
@@ -70,13 +70,13 @@ class UserRepository {
                   deviceId: map["deviceId"] ?? "",
                 );
 
-                // await FirebaseChatCore.instance.createUserInFirestore(
-                //   types.User(
-                //     firstName: meUser.name,
-                //     id: credential.user!.uid,
-                //     lastName: meUser.lastName,
-                //   ),
-                // );
+                await FirebaseChatCore.instance.createUserInFirestore(
+                  types.User(
+                    firstName: meUser.name,
+                    id: credential.user!.uid,
+                    lastName: meUser.lastName,
+                  ),
+                );
 
                 await HiveCRUD().addUser(meUser);
               } else {
