@@ -97,10 +97,17 @@ abstract class BackgroundServiceHelper {
             anonKey:
                 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudnhzemJxZHVyYmtwbnZqdmd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA4NDU5NjUsImV4cCI6MjAyNjQyMTk2NX0.I_Tf2UAA5Qo05EOSR2HXkv9yMun2NyixOZtCyr3OvoA")
         .whenComplete(() {
-      Timer.periodic(const Duration(seconds: 60), (timer) async {
-        final position = await Geolocator.getCurrentPosition();
-        await NavigationRepository()
-            .sendMyLocation(position.latitude, position.longitude);
+      Timer.periodic(const Duration(seconds: 15), (timer) async {
+        await Geolocator.checkPermission().then((value) async {
+          print("object");
+          if (value != LocationPermission.denied &&
+              value != LocationPermission.deniedForever) {
+            print("object1");
+            final position = await Geolocator.getCurrentPosition();
+            await NavigationRepository()
+                .sendMyLocation(position.latitude, position.longitude);
+          }
+        });
       });
     });
   }
