@@ -2,17 +2,16 @@ import 'package:chance_app/ui/pages/chat_page/blocs/select_cubit/select_cubit.da
 import 'package:chance_app/ui/pages/chat_page/change_group_page.dart';
 import 'package:chance_app/ui/pages/chat_page/chat_page.dart';
 import 'package:chance_app/ui/pages/chat_page/chat_settings_page.dart';
-import 'package:chance_app/ui/pages/chat_page/create_group_page.dart';
-import 'package:chance_app/ui/pages/main_page/main_page.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:chance_app/ui/pages/add_medicine_page/add_medicine_page.dart';
+
+
 import 'package:chance_app/ui/pages/chat_page/create_chat_page.dart';
+import 'package:chance_app/ui/pages/chat_page/create_group_page.dart';
 import 'package:chance_app/ui/pages/chat_page/new_chat_page.dart';
 import 'package:chance_app/ui/pages/chat_page/new_group_page.dart';
 import 'package:chance_app/ui/pages/chat_page/search_chat_page.dart';
 import 'package:chance_app/ui/pages/chat_page/search_group_page.dart';
 import 'package:chance_app/ui/pages/chats_page/chats_page.dart';
+import 'package:chance_app/ui/pages/main_page/main_page.dart';
 import 'package:chance_app/ui/pages/menu/menu_page.dart';
 import 'package:chance_app/ui/pages/menu/pages/my_information.dart';
 import 'package:chance_app/ui/pages/navigation/add_ward/add_ward.dart';
@@ -28,14 +27,15 @@ import 'package:chance_app/ui/pages/sign_in_up/log_in/log_in_page.dart';
 import 'package:chance_app/ui/pages/sign_in_up/log_in/reset_password.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/enter_code_for_register.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/registration_page.dart';
+
 // import 'package:chance_app/ui/pages/sign_in_up/registration/subscription_page.dart';
 import 'package:chance_app/ui/pages/sign_in_up/sign_in_up_page.dart';
 import 'package:chance_app/ui/pages/sos_page/add_contact_screen.dart';
 import 'package:chance_app/ui/pages/sos_page/add_group_screen.dart';
-// import 'package:chance_app/ui/pages/sos_page/delete_contact_screen.dart';
 import 'package:chance_app/ui/pages/sos_page/main_page_sos.dart';
 import 'package:chance_app/ui/pages/sos_page/replace_contact_sos.dart';
-import 'package:chance_app/ux/bloc/add_medicine_bloc/add_medicine_bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class AppRouter {

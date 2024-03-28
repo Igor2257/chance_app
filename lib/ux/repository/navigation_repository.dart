@@ -40,9 +40,7 @@ class NavigationRepository {
         "latitude": latitude,
         "longitude": longitude,
         "when": DateTime.now().toIso8601String(),
-      }).match({"myEmail": HiveCRUD().user!.email}).then((value) {
-
-      });
+      }).match({"myEmail": HiveCRUD().user!.email}).then((value) {});
     } catch (e) {
       error = e.toString();
       FlutterError(error);
@@ -75,7 +73,6 @@ class NavigationRepository {
     try {
       await Supabase.instance.client.rpc('isappshouldsentlocation',
           params: {"user_email": HiveCRUD().user!.email}).then((value) async {
-        print("isappshouldsentlocation $value");
         if (value != null) {
           try {
             bool isAppShouldSentLocation = bool.parse(value.toString());

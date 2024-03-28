@@ -9,14 +9,13 @@ import 'package:chance_app/ux/model/me_user.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart' show sha256;
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 
 class UserRepository {
   Future<String?> sendLoginData(String email, String password) async {

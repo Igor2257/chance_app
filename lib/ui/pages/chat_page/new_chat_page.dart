@@ -1,6 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
-import 'package:chance_app/ui/pages/chat_page/widgets/add_new_contect_widget.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/chat_user_tile.dart';
 import 'package:chance_app/ux/helpers/chat_helper.dart';
 import 'package:chance_app/ux/helpers/chat_map_utils.dart';

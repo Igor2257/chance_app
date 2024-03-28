@@ -99,10 +99,8 @@ abstract class BackgroundServiceHelper {
         .whenComplete(() {
       Timer.periodic(const Duration(seconds: 15), (timer) async {
         await Geolocator.checkPermission().then((value) async {
-          print("object");
           if (value != LocationPermission.denied &&
               value != LocationPermission.deniedForever) {
-            print("object1");
             final position = await Geolocator.getCurrentPosition();
             await NavigationRepository()
                 .sendMyLocation(position.latitude, position.longitude);

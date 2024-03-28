@@ -1,8 +1,6 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:timeago/timeago.dart' as timeago;
 

@@ -231,7 +231,7 @@ class SosRepository {
     }
 
     if (error != null) {
-      Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+      Fluttertoast.showToast(msg: error, toastLength: Toast.LENGTH_LONG);
     }
 
     return groupModel;
@@ -281,7 +281,7 @@ class SosRepository {
     }
 
     if (error != null) {
-      Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+      Fluttertoast.showToast(msg: error, toastLength: Toast.LENGTH_LONG);
     }
 
     return groupModel;

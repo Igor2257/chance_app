@@ -9,7 +9,6 @@ import 'package:chance_app/ui/pages/reminders_page/tasks/custom_bottom_sheet_not
 import 'package:chance_app/ux/bloc/add_task_bloc/add_task_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/model/task_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';

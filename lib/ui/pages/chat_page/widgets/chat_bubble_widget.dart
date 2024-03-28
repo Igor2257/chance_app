@@ -2,7 +2,7 @@ import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ux/extensions/chat_user_name.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' show DateFormat;
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ChatBubbleWidget extends StatelessWidget {

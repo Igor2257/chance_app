@@ -1,7 +1,6 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/chat_page/blocs/select_cubit/select_cubit.dart';
-import 'package:chance_app/ui/pages/chat_page/widgets/add_new_contect_widget.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/user_checkbox_tile.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/user_input_chip.dart';
 import 'package:chance_app/ux/helpers/chat_helper.dart';
@@ -120,7 +119,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                           height: 28 / 22,
                         ),
                       );
-                      ;
+
                     },
                   ),
                 ),
