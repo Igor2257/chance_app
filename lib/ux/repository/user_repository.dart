@@ -419,13 +419,13 @@ class UserRepository {
   }
 
   Future<bool> getIdTokenFromAuthCode() async {
-    bool error = true;
+    bool error = false;
     final GoogleSignInAccount? googleUser =
-    await GoogleSignIn(signInOption: SignInOption.standard).signIn();
+        await GoogleSignIn(signInOption: SignInOption.standard).signIn();
 
     // Obtain the auth details from the request
     final GoogleSignInAuthentication? googleAuth =
-    await googleUser?.authentication;
+        await googleUser?.authentication;
 
     // Create a new credential
     final credential = GoogleAuthProvider.credential(
@@ -436,8 +436,8 @@ class UserRepository {
     // Once signed in, return the UserCredential
     await FirebaseAuth.instance
         .signInWithCredential(credential)
-        .then((value) async {
-      String? token = await value.user!.getIdToken();
+        .then((firebaseCredential) async {
+      String? token = await firebaseCredential.user!.getIdToken();
       if (token != null) {
         if (await (Connectivity().checkConnectivity()) ==
             ConnectivityResult.none) {
@@ -450,9 +450,6 @@ class UserRepository {
             'Content-Type': 'application/json',
           }).then((value) async {
             final cookie = _parseCookieFromLogin(value);
-            Map<String, dynamic> data = json.decode(value.body);
-            UserCredential credential =
-            await FirebaseAuth.instance.signInWithCustomToken(token);
 
             if (value.statusCode > 199 && value.statusCode < 300) {
               var url = Uri.parse('$apiUrl/auth/me');
@@ -479,7 +476,7 @@ class UserRepository {
                   await FirebaseChatCore.instance.createUserInFirestore(
                     types.User(
                       firstName: meUser.name,
-                      id: credential.user!.uid,
+                      id: firebaseCredential.user!.uid,
                       lastName: meUser.lastName,
                     ),
                   );
