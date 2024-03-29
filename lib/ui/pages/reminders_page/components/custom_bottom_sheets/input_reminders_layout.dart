@@ -8,7 +8,8 @@ class InputRemindersLayout extends StatefulWidget {
       required this.textEditingController,
       required this.title,
       required this.subTitle,
-      required this.saveData, required this.clearData});
+      required this.saveData,
+      required this.clearData});
 
   final TextEditingController textEditingController;
   final String title, subTitle;
@@ -34,11 +35,7 @@ class _InputRemindersLayoutState extends State<InputRemindersLayout> {
     subTitle = widget.subTitle;
     super.initState();
   }
-  @override
-  void dispose() {
-    textEditingController.dispose();
-    super.dispose();
-  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -81,12 +78,11 @@ class _InputRemindersLayoutState extends State<InputRemindersLayout> {
                       },
                       onChanged: widget.saveData,
                       decoration: InputDecoration(
-                        border: InputBorder.none,
-                        labelStyle: TextStyle(
-                            fontSize: 14,
-                            color: isError ? red900 : primaryText),
-                        labelText: title
-                      ),
+                          border: InputBorder.none,
+                          labelStyle: TextStyle(
+                              fontSize: 14,
+                              color: isError ? red900 : primaryText),
+                          labelText: title),
                       autofocus: true,
                       controller: textEditingController,
                     ),
