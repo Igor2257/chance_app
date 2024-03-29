@@ -154,6 +154,8 @@
   "postponedTo": "Postponed to",
   "min": "min",
   "enterEmail": "Enter Email",
+  "changeLanguage": "Change language",
+  "update": "Update",
   "@comment1": "Actions",
   "previous": "Previous",
   "add": "Add",
@@ -268,5 +270,7 @@
   "theNameMustContainAtLeast2Characters": "The name must contain at least 2 characters",
   "error": "Error",
   "failedToCallTheNumber": "Failed to call the number",
-  "failedToGetContactList": "Failed to get contact list"
+  "failedToGetContactList": "Failed to get contact list",
+  "errorName": "Name error",
+  "errorEmail": "Email error"
 }

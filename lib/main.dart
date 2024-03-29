@@ -49,10 +49,10 @@ import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/internet_connection_stream.dart';
 import 'package:chance_app/ux/model/product_model.dart';
 import 'package:chance_app/ux/model/settings.dart';
+import 'package:chance_app/ux/repository/items_repository.dart';
 import 'package:chance_app/ux/repository/navigation_repository.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -75,13 +75,13 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: []);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   final GoogleMapsFlutterPlatform platform = GoogleMapsFlutterPlatform.instance;
   // Default to Hybrid Composition for the example.
   if (Platform.isAndroid) {
     (platform as GoogleMapsFlutterAndroid).useAndroidViewSurface = true;
   }
-  FlutterError("some error");
   initializeMapRenderer();
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   PlatformDispatcher.instance.onError = (error, stack) {
@@ -94,13 +94,12 @@ Future<void> main() async {
 
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
 
-  await HiveCRUD().initialize().then((value) async {
+  await HiveCRUD().initialize().whenComplete(() async {
     await Supabase.initialize(
             url: "https://tnvxszbqdurbkpnvjvgz.supabase.co",
             anonKey:
                 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudnhzemJxZHVyYmtwbnZqdmd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA4NDU5NjUsImV4cCI6MjAyNjQyMTk2NX0.I_Tf2UAA5Qo05EOSR2HXkv9yMun2NyixOZtCyr3OvoA")
         .then((value) async {
-      //value.client.from("invitations").select().match(query)
       await NavigationRepository().isAppShouldSentLocation();
       await Permission.notification.request();
       await RemindersHelper.initialize();
@@ -113,8 +112,8 @@ Future<void> main() async {
       try {
         timeago.setLocaleMessages(AppLocalizations.instance.locale.languageCode,
             timeago.UkMessages());
-      } catch (e) {
-        FlutterError(e.toString());
+      } catch (e, trace) {
+        FirebaseCrashlytics.instance.recordError(e.toString(), trace);
       }
     });
   }).whenComplete(() async {
@@ -226,8 +225,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     internetConnectionStream = InternetConnectionStream(setState);
     try {
       checkIfDocsAreAvailable();
-    } catch (e) {
-      FlutterError("Error ${e.toString()}");
+    } catch (e, trace) {
+      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
     }
   }
 
@@ -252,7 +251,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
           }
         }
         if (newItems != items) {
-          HiveCRUD().rewriteItems(newItems);
+          ItemsRepository().rewriteItems(newItems);
         }
       }
     }

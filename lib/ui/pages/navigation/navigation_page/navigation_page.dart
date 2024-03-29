@@ -3,6 +3,7 @@ import 'package:chance_app/ui/pages/navigation/navigation_page/components/map_vi
 import 'package:chance_app/ui/pages/navigation/navigation_page/components/search_bar.dart';
 
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class NavigationPage extends StatefulWidget {
   const NavigationPage({super.key});

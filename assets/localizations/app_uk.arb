@@ -132,7 +132,7 @@
   "lessThenFiveMinutesAgo": "Менше п`яти хвилин назад",
   "now": "Тільки що",
   "whenUserWereHere": "Коли тут був юзер",
-  "guardians": "Опекуни",
+  "guardians": "Опікуни",
   "wards": "Підопічні",
   "youHaveNoGuardians": "У вас немає опекунів",
   "taskReminder": "Нагадування про виконання завдань",
@@ -154,6 +154,8 @@
   "postponedTo": "Відкладено на",
   "min": "хв",
   "enterEmail": "Введіть електронну пошту",
+  "changeLanguage": "Змінити мову",
+  "update": "Оновити",
   "@comment1": "Действия",
   "previous": "Попередній",
   "add": "Додати",
@@ -269,5 +271,10 @@
   "theNameMustContainAtLeast2Characters": "Назва має містити від 2 символів",
   "error": "Помилка",
   "failedToCallTheNumber": "Не вдалося зателефонувати за номером",
-  "failedToGetContactList": "Не вдалося отримати список контактів"
+  "failedToGetContactList": "Не вдалося отримати список контактів",
+
+
+  "errorName": "Помилка з ім`ям",
+  "errorEmail": "Помилка з поштою"
+
 }

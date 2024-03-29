@@ -24,6 +24,7 @@ class _AddWardState extends State<AddWard> {
       emailTextEditingController = TextEditingController();
   final FocusNode nameFocusNode = FocusNode(), emailFocusNode = FocusNode();
   bool isLoading = false;
+  String? error;
 
   @override
   void initState() {
@@ -96,19 +97,28 @@ class _AddWardState extends State<AddWard> {
                       onPress: () async {
                         nameFocusNode.unfocus();
                         emailFocusNode.unfocus();
-
+                        String? emailError =
+                            validateEmail(emailTextEditingController.text);
+                        String? nameError =
+                            validateName(nameTextEditingController.text);
                         setState(() {
                           isLoading = true;
                         });
-                        bool isError = state.errorEmail == null;
+                        bool isError = emailError != null;
                         if (!isError) {
-                          isError = state.errorName == null;
+                          isError = nameError != null;
                         }
                         if (!isError) {
-                          isError = state.errorEmail!.trim().isNotEmpty;
+                          if (emailError != null) {
+                            isError = emailError.trim().isNotEmpty;
+                          }
                         }
                         if (!isError) {
-                          isError = state.errorName!.trim().isNotEmpty;
+                          if (nameError != null) {
+                            isError = nameError.trim().isNotEmpty;
+                          }
+                        } else {
+                          Fluttertoast.showToast(msg: emailError!);
                         }
                         if (!isError) {
                           await InvitationRepository()
@@ -128,10 +138,14 @@ class _AddWardState extends State<AddWard> {
                                   msg: value, toastLength: Toast.LENGTH_LONG);
                             }
                           });
-                          isLoading = false;
-                          if (mounted) {
-                            setState(() {});
-                          }
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: AppLocalizations.instance
+                                  .translate("errorName"));
+                        }
+                        isLoading = false;
+                        if (mounted) {
+                          setState(() {});
                         }
                       },
                       color: primary1000,
@@ -161,5 +175,47 @@ class _AddWardState extends State<AddWard> {
           )
       ]);
     });
+  }
+
+  String? validateEmail(String text) {
+    if (text.trim().isEmpty) {
+      return AppLocalizations.instance.translate("invalidEmailFormat");
+    }
+
+    if (!RegExp(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b',
+            caseSensitive: false)
+        .hasMatch(text)) {
+      return AppLocalizations.instance.translate("invalidEmailFormat");
+    }
+    if (text.trim().isNotEmpty &&
+        text.trim().length > 4 &&
+        (text.contains(".ru", text.length - 4) ||
+            text.contains(".by", text.length - 4) ||
+            text.contains(".рф", text.length - 4))) {
+      return AppLocalizations.instance.translate("invalidEmailFormat");
+    }
+    return null;
+  }
+
+  String? validateName(String text) {
+    if (text.trim().isEmpty) {
+      return AppLocalizations.instance.translate("nameIsEmpty");
+    }
+
+    if (text.trim().length < 2) {
+      return AppLocalizations.instance
+          .translate("nameMustHaveAtLeast2Characters");
+    }
+
+    if (text.trim().length > 30) {
+      return AppLocalizations.instance
+          .translate("nameMustNotExceed30Characters");
+    }
+    RegExp regex = RegExp(r"^[a-zA-Zа-яА-ЯІіЇїЄєҐґ\s\'-]+$");
+    if (!regex.hasMatch(text)) {
+      return AppLocalizations.instance.translate("invalidCharacters");
+    }
+
+    return null;
   }
 }

@@ -76,7 +76,7 @@ class _RemindersPageState extends State<RemindersPage> {
               title: Text(AppLocalizations.instance.translate("taskAdded")),
               subtitle: Text('"${state.task.message}"'),
             ),
-          ).whenComplete(() => Navigator.of(context).pop());
+          );
         } else if (state is TaskDone) {
           await showDismissibleDialog<void>(
             context: context,

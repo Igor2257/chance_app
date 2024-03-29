@@ -15,12 +15,14 @@ class InvitationRepository {
     } else {
       final user = HiveCRUD().user!;
       final userEmail = user.email;
+      print("object $userEmail");
       await Supabase.instance.client
           .from("invitations")
           .select()
           .eq("toUserEmail", email)
           .eq("fromUserEmail", userEmail)
           .then((value) async {
+        print("object $value");
         if (value.toString() == "[]") {
           final model = InvitationModel(
             id: DateTime.now().microsecondsSinceEpoch.toString(),
@@ -111,6 +113,7 @@ class InvitationRepository {
     }
     return invitations;
   }
+
   Future<dynamic> getMyGuardians() async {
     List<InvitationModel> invitations = [];
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
@@ -143,8 +146,8 @@ class InvitationRepository {
           .update({"invitationStatus": InvitationStatus.accepted.name})
           .eq("id", invitationModel.id)
           .then((value) async {
-        if (value.toString() == "null") {
-          final crud = HiveCRUD();
+            if (value.toString() == "null") {
+              final crud = HiveCRUD();
               Settings settings = crud.setting;
               settings = settings.copyWith(isAppShouldSentLocation: true);
               await crud.updateSettings(settings).then((value) async {
@@ -160,15 +163,16 @@ class InvitationRepository {
                         .toJson());
               });
             }
-      });
+          });
     }
 
     return error;
   }
+
   Future<String?> rejectInvitation(String id) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error= AppLocalizations.instance.translate("noInternet");
+      error = AppLocalizations.instance.translate("noInternet");
     } else {
       try {
         await Supabase.instance.client.from("invitations").update(
@@ -180,10 +184,11 @@ class InvitationRepository {
 
     return error;
   }
+
   Future<String?> removeInvitation(String id) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error= AppLocalizations.instance.translate("noInternet");
+      error = AppLocalizations.instance.translate("noInternet");
     } else {
       try {
         await Supabase.instance.client
@@ -197,19 +202,19 @@ class InvitationRepository {
 
     return error;
   }
+
   Future<String?> deleteWard(String id) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error= AppLocalizations.instance.translate("noInternet");
+      error = AppLocalizations.instance.translate("noInternet");
     } else {
       try {
-        await removeInvitation(id).whenComplete(()async {
+        await removeInvitation(id).whenComplete(() async {
           await Supabase.instance.client
               .from("ward_location")
               .delete()
               .eq("id", id);
         });
-
       } catch (e) {
         error = e.toString();
       }
@@ -217,6 +222,7 @@ class InvitationRepository {
 
     return error;
   }
+
   Future<String?> checkOnValidCode(String code) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {

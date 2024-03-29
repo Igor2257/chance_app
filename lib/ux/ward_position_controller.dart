@@ -20,12 +20,15 @@ class WardPositionController {
           .toList()
           .any((element) => element["toUserEmail"] == HiveCRUD().user!.email)) {
         return list.firstWhere(
-                (element) => element.toUserEmail == HiveCRUD().user!.email);
+            (element) => element.toUserEmail == HiveCRUD().user!.email);
       }
       return null;
     }).listen((event) {
       if (event != null) {
-        BlocProvider.of<NavigationBloc>(context).add(ChangeWardLocation(event));
+        try {
+          BlocProvider.of<NavigationBloc>(context)
+              .add(ChangeWardLocation(event));
+        } catch (_) {}
       }
     })
       ..resume();

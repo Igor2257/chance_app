@@ -29,10 +29,11 @@ class CustomCard extends StatelessWidget {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: beige500)),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,children: [
-            icon,
-            text
-          ],),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [icon, text],
+          ),
         ),
       ),
     );

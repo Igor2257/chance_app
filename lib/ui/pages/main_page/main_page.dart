@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:chance_app/ui/components/custom_card.dart';
 import 'package:chance_app/ui/components/custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:chance_app/ui/components/logo_name.dart';
@@ -65,6 +68,7 @@ class _MainPageState extends State<MainPage> {
                         text: Text(
                           AppLocalizations.instance.translate("reminder"),
                           style: const TextStyle(color: primaryText),
+                          textAlign: TextAlign.center,
                         ),
                         width: cardWidth,
                         margin:
@@ -83,6 +87,7 @@ class _MainPageState extends State<MainPage> {
                         text: Text(
                           AppLocalizations.instance.translate("navigation"),
                           style: const TextStyle(color: primaryText),
+                          textAlign: TextAlign.center,
                         ),
                         width: cardWidth,
                         margin:
@@ -115,6 +120,7 @@ class _MainPageState extends State<MainPage> {
                         text: Text(
                           AppLocalizations.instance.translate("communication"),
                           style: const TextStyle(color: primaryText),
+                          textAlign: TextAlign.center,
                         ),
                         width: cardWidth,
                         margin:
@@ -131,6 +137,7 @@ class _MainPageState extends State<MainPage> {
                           AppLocalizations.instance
                               .translate("appointmentWithDoctor"),
                           style: const TextStyle(color: primaryText),
+                          textAlign: TextAlign.center,
                         ),
                         width: cardWidth,
                         margin:
@@ -151,6 +158,7 @@ class _MainPageState extends State<MainPage> {
                     text: Text(
                       AppLocalizations.instance.translate("jobSearch"),
                       style: const TextStyle(color: primaryText),
+                      textAlign: TextAlign.center,
                     ),
                     width: cardWidth,
                     margin: const EdgeInsets.only(bottom: 8, top: 8),
@@ -229,20 +237,22 @@ class _MainPageState extends State<MainPage> {
         }
       }
     });
-    await NavigationRepository()
-        .isAppShouldSentLocation()
-        .whenComplete(() async {
-      await Geolocator.getCurrentPosition().then((value) async {
-        HiveCRUD hiveCRUD = HiveCRUD();
-        if (hiveCRUD.setting.isAppShouldSentLocation) {
-          await const MethodChannel('location_service')
-              .invokeMethod('startLocationService', hiveCRUD.user!.email)
-              .then((value) {
-            print(value);
-          });
-        }
-      });
-    });
+    if (Platform.isAndroid) {
+      unawaited(NavigationRepository()
+          .isAppShouldSentLocation()
+          .whenComplete(() async {
+        unawaited(Geolocator.getCurrentPosition().then((value) async {
+          HiveCRUD hiveCRUD = HiveCRUD();
+          if (hiveCRUD.setting.isAppShouldSentLocation) {
+            await const MethodChannel('location_service')
+                .invokeMethod('startLocationService', hiveCRUD.user!.email)
+                .then((value) {
+              print(value);
+            });
+          }
+        }));
+      }));
+    }
     return isOkay;
   }
 

@@ -181,11 +181,6 @@ class _MapViewState extends State<MapView>
     _controllerTerrainMap.dispose();
     _controllerHybridMap.dispose();
     _controllerBuildPath.dispose();
-    if (mapController != null) {
-      mapController!.dispose();
-      mapController = null;
-    }
-    wardPositionController.cancel();
     super.dispose();
   }
 
@@ -215,8 +210,10 @@ class _MapViewState extends State<MapView>
             valueListenable: PositionController.myPosition!,
             builder: (context, position, _) {
               if (mapController != null) {
-                mapController!.animateCamera(CameraUpdate.newLatLngZoom(
-                    LatLng(position.latitude, position.longitude), 18));
+                if (!isNotTapedOnMyLocationButton) {
+                  mapController!.animateCamera(CameraUpdate.newLatLngZoom(
+                      LatLng(position.latitude, position.longitude), 18));
+                }
               }
               return SizedBox(
                   width: size.width,

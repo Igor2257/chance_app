@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/navigation/add_ward/components/input_ward_layout.dart';
@@ -80,5 +81,7 @@ class AddWardBloc extends Bloc<AddWardEvent, AddWardState> {
   }
 
   FutureOr<void> _onClearData(ClearData event, Emitter<AddWardState> emit) {
+    emit(state.clear());
   }
+
 }

@@ -45,7 +45,7 @@ class UserRepository {
           final cookie = _parseCookieFromLogin(value);
           Map<String, dynamic> data = json.decode(value.body);
           UserCredential credential =
-          await FirebaseAuth.instance.signInWithCustomToken(data['token']);
+              await FirebaseAuth.instance.signInWithCustomToken(data['token']);
 
           if (value.statusCode > 199 && value.statusCode < 300) {
             var url = Uri.parse('$apiUrl/auth/me');
@@ -124,16 +124,16 @@ class UserRepository {
         var hash = sha256.convert(bytes);
         await http
             .post(url,
-            headers: <String, String>{
-              'Content-Type': 'application/json',
-            },
-            body: jsonEncode({
-              "password": hash.toString().substring(0, 13),
-              "email": email,
-              "name": name,
-              "lastName": lastName,
-              "phone": phone,
-            }))
+                headers: <String, String>{
+                  'Content-Type': 'application/json',
+                },
+                body: jsonEncode({
+                  "password": hash.toString().substring(0, 13),
+                  "email": email,
+                  "name": name,
+                  "lastName": lastName,
+                  "phone": phone,
+                }))
             .then((value) async {
           if (value.statusCode > 199 && value.statusCode < 300) {
             String? cookie = value.headers['set-cookie'];
@@ -155,8 +155,8 @@ class UserRepository {
     return error;
   }
 
-  Future<String?> checkIsCodeValid(String code, String email,
-      String passwordFirst) async {
+  Future<String?> checkIsCodeValid(
+      String code, String email, String passwordFirst) async {
     if (code.length != 4) {
       return "Код має бути із 4 символів";
     }
@@ -191,8 +191,10 @@ class UserRepository {
           }
         });
       } catch (e, trace) {
+        error = e.toString();
         Fluttertoast.showToast(
             msg: e.toString(), toastLength: Toast.LENGTH_LONG);
+        Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
         FirebaseCrashlytics.instance.recordError(e.toString(), trace);
       }
     }
@@ -213,16 +215,16 @@ class UserRepository {
         await getCookie().then((cookie) async {
           await http
               .patch(url,
-              headers: <String, String>{
-                'Content-Type': 'application/json',
-                'Cookie': cookie.toString(),
-              },
-              body: jsonEncode({
-                if (name != null) "name": name,
-                if (lastName != null) "lastName": lastName,
-                if (phone != null) "phone": phone,
-                if (token != null) "deviceId": token,
-              }))
+                  headers: <String, String>{
+                    'Content-Type': 'application/json',
+                    'Cookie': cookie.toString(),
+                  },
+                  body: jsonEncode({
+                    if (name != null) "name": name,
+                    if (lastName != null) "lastName": lastName,
+                    if (phone != null) "phone": phone,
+                    if (token != null) "deviceId": token,
+                  }))
               .then((value) {
             if (!(value.statusCode > 199 && value.statusCode < 300)) {
               error = jsonDecode(value.body)["message"]
@@ -265,7 +267,8 @@ class UserRepository {
           body: jsonEncode({"email": email}),
         )
             .then((value) {
-          if (value.statusCode > 199 && value.statusCode < 300) {} else {
+          if (value.statusCode > 199 && value.statusCode < 300) {
+          } else {
             error = jsonDecode(value.body)["message"]
                 .toString()
                 .replaceAll("[", "")
@@ -301,7 +304,8 @@ class UserRepository {
           body: jsonEncode({"email": email}),
         )
             .then((value) {
-          if (value.statusCode > 199 && value.statusCode < 300) {} else {
+          if (value.statusCode > 199 && value.statusCode < 300) {
+          } else {
             error = jsonDecode(value.body)["message"]
                 .toString()
                 .replaceAll("[", "")
@@ -318,8 +322,8 @@ class UserRepository {
     return error;
   }
 
-  Future<String?> resetPassword(String email, String code,
-      String newPassword) async {
+  Future<String?> resetPassword(
+      String email, String code, String newPassword) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
@@ -556,10 +560,10 @@ class UserRepository {
   void saveCookie(String? header) async {
     try {
       await const FlutterSecureStorage()
-          .write(key: "set-cookie", value: header).whenComplete(()async {
-        print("cookiesave ${ await const FlutterSecureStorage().read(
-            key: "set-cookie")}"
-        );
+          .write(key: "set-cookie", value: header)
+          .whenComplete(() async {
+        print(
+            "cookiesave ${await const FlutterSecureStorage().read(key: "set-cookie")}");
       });
     } catch (e, trace) {
       print("$e\n$trace");
@@ -594,9 +598,8 @@ class UserRepository {
       await const FlutterSecureStorage()
           .write(key: "first-enter", value: DateTime.now().toUtc().toString())
           .whenComplete(() async {
-        print("first-enter ${await const FlutterSecureStorage().read(
-            key: "first-enter")}"
-        );
+        print(
+            "first-enter ${await const FlutterSecureStorage().read(key: "first-enter")}");
       });
     } catch (e, trace) {
       print("$e\n$trace");

@@ -99,7 +99,7 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
                           .checkIsCodeValid(
                               code, state.email, state.passwordFirst)
                           .then((value) {
-                        if (value != null) {
+                        if (value == null) {
                           Navigator.of(context)
                               .pushNamedAndRemoveUntil("/", (route) => false);
                           BlocProvider.of<RegistrationBloc>(context)
@@ -130,7 +130,7 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
                             .checkIsCodeValid(textEditingController.text,
                             state.email, state.passwordFirst)
                             .then((value) {
-                          if (value != null) {
+                          if (value == null) {
                             Navigator.of(context)
                                 .pushNamedAndRemoveUntil("/", (route) => false);
                             BlocProvider.of<RegistrationBloc>(context)

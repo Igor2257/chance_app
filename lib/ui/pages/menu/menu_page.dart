@@ -237,7 +237,7 @@ class _MenuPageState extends State<MenuPage> {
           }
         }
         if (newItems != items) {
-          HiveCRUD().rewriteItems(newItems);
+          ItemsRepository().rewriteItems(newItems);
         }
       }
     }
@@ -247,11 +247,6 @@ class _MenuPageState extends State<MenuPage> {
     try {
       Set<String> ids = <String>{
         'adblocker',
-        'buy_more_seats_on_server',
-        'change_parametrs_on_serv',
-        'one_more_server',
-        'editing_profile',
-        'block_all_ads',
       };
 
       await InAppPurchase.instance

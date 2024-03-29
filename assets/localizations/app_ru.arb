@@ -154,6 +154,8 @@
   "postponedTo": "Перенесено на",
   "min": "мин",
   "enterEmail": "Введите электронную почту",
+  "changeLanguage": "Изменить язык",
+  "update": "Обновить",
   "@comment1": "Действия",
   "previous": "Предыдущий",
   "add": "Добавить",
@@ -269,5 +271,7 @@
   "theNameMustContainAtLeast2Characters": "Назва має містити від 2 символів",
   "error": "Помилка",
   "failedToCallTheNumber": "Не вдалося зателефонувати за номером",
-  "failedToGetContactList": "Не вдалося отримати список контактів"
+  "failedToGetContactList": "Не вдалося отримати список контактів",
+  "errorName": "Ошибка с именем",
+  "errorEmail": "Ошибка с почтой"
 }
