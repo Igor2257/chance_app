@@ -5,7 +5,10 @@ import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/components/sos_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
+import 'package:chance_app/ux/hive_crud.dart';
+import 'package:chance_app/ux/repository/navigation_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -191,7 +194,19 @@ class _MainPageState extends State<MainPage> {
         }
       }
     });
-
+    await NavigationRepository()
+        .isAppShouldSentLocation()
+        .whenComplete(() async {
+      await Geolocator.getCurrentPosition().then((value) async {
+        HiveCRUD hiveCRUD = HiveCRUD();
+        if (hiveCRUD.setting.isAppShouldSentLocation) {
+          await const MethodChannel('location_service')
+              .invokeMethod('startLocationService', hiveCRUD.user!.email).then((value) {
+                print(value);
+          });
+        }
+      });
+    });
     return isOkay;
   }
 

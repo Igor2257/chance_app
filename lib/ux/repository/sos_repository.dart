@@ -5,6 +5,7 @@ import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -110,11 +111,13 @@ class SosRepository {
             .replaceAll("]", "");
         Fluttertoast.showToast(msg: error, toastLength: Toast.LENGTH_LONG);
       }
-    } catch (error) {
+    } catch (e,trace) {
       Fluttertoast.showToast(
-        msg: error.toString(),
+        msg: e.toString(),
         toastLength: Toast.LENGTH_LONG,
       );
+      FirebaseCrashlytics.instance
+          .recordError(e.toString(), trace);
     }
     return contacts;
   }
@@ -178,8 +181,10 @@ class SosRepository {
             .replaceAll("[", "")
             .replaceAll("]", "");
       }
-    } catch (e) {
+    } catch (e,trace) {
       error = e.toString();
+      FirebaseCrashlytics.instance
+          .recordError(e.toString(), trace);
     }
 
     if (error != null) {
@@ -226,8 +231,10 @@ class SosRepository {
             .replaceAll("[", "")
             .replaceAll("]", "");
       }
-    } catch (e) {
+    } catch (e,trace) {
       error = e.toString();
+      FirebaseCrashlytics.instance
+          .recordError(e.toString(), trace);
     }
 
     if (error != null) {
@@ -276,8 +283,10 @@ class SosRepository {
             .replaceAll("[", "")
             .replaceAll("]", "");
       }
-    } catch (e) {
+    } catch (e,trace) {
       error = e.toString();
+      FirebaseCrashlytics.instance
+          .recordError(e.toString(), trace);
     }
 
     if (error != null) {
@@ -319,8 +328,10 @@ class SosRepository {
             .replaceAll("[", "")
             .replaceAll("]", "");
       }
-    } catch (e) {
+    } catch (e,trace) {
       error = e.toString();
+      FirebaseCrashlytics.instance
+          .recordError(e.toString(), trace);
     }
 
     if (error != null) {
@@ -353,9 +364,11 @@ class SosRepository {
             Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
           } else {}
         });
-      } catch (error) {
+      } catch (e,trace) {
+        FirebaseCrashlytics.instance
+            .recordError(e.toString(), trace);
         Fluttertoast.showToast(
-            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+            msg: e.toString(), toastLength: Toast.LENGTH_LONG);
       }
     }
     return error;
@@ -384,9 +397,11 @@ class SosRepository {
             Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
           } else {}
         });
-      } catch (error) {
+      } catch (e,trace) {
         Fluttertoast.showToast(
-            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+            msg: e.toString(), toastLength: Toast.LENGTH_LONG);
+        FirebaseCrashlytics.instance
+            .recordError(e.toString(), trace);
       }
     }
     return error;
@@ -429,9 +444,11 @@ class SosRepository {
             groupId = data["_id"];
           }
         });
-      } catch (error) {
+      } catch (e,trace) {
         Fluttertoast.showToast(
-            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+            msg: e.toString(), toastLength: Toast.LENGTH_LONG);
+        FirebaseCrashlytics.instance
+            .recordError(e.toString(), trace);
       }
     }
     return groupId;

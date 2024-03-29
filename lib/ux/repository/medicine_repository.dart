@@ -2,6 +2,7 @@ import 'package:chance_app/ux/api/api_client.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart' show DateUtils;
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -105,6 +106,7 @@ class MedicineRepository {
 
 extension _MedicineStorage on Box<MedicineModel> {
   Future<void> putMedicine(MedicineModel item) => put(item.id, item);
+
   Future<void> deleteMedicine(MedicineModel item) => delete(item.id);
 }
 
@@ -113,7 +115,9 @@ extension _MedicineClient on ApiClient {
     try {
       final items = await get("/medicine", cookie: cookie) as List<dynamic>;
       return items.cast<Map<String, dynamic>>().map(_modelFromJson).toList();
-    } catch (_) {
+    } catch (e,trace) {
+      FirebaseCrashlytics.instance
+          .recordError(e.toString(), trace);
       return null;
     }
   }
@@ -129,7 +133,9 @@ extension _MedicineClient on ApiClient {
         json: _modelToJson(medicine),
       ) as Map<String, dynamic>;
       return _modelFromJson(json);
-    } catch (_) {
+    } catch (e,trace) {
+      FirebaseCrashlytics.instance
+          .recordError(e.toString(), trace);
       return null;
     }
   }
@@ -145,7 +151,9 @@ extension _MedicineClient on ApiClient {
         json: _modelToJson(medicine),
       ) as Map<String, dynamic>;
       return _modelFromJson(json);
-    } catch (_) {
+    } catch (e,trace) {
+      FirebaseCrashlytics.instance
+          .recordError(e.toString(), trace);
       return null;
     }
   }
@@ -160,9 +168,11 @@ extension _MedicineClient on ApiClient {
         cookie: cookie.toString(),
       );
       return true;
-    } catch (_) {
-      return false;
+    } catch (e,trace) {
+      FirebaseCrashlytics.instance
+          .recordError(e.toString(), trace);
     }
+    return false;
   }
 
   Map<String, dynamic> _modelToJson(MedicineModel medicine) {

@@ -4,6 +4,7 @@ import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/product_model.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -26,9 +27,11 @@ class ItemsRepository {
         if (fetchedItems != null) {
           items = fetchedItems;
         }
-      } catch (e) {
+      } catch (e,trace) {
         Fluttertoast.showToast(
             msg: e.toString(), toastLength: Toast.LENGTH_LONG);
+        FirebaseCrashlytics.instance
+            .recordError(e.toString(), trace);
         FlutterError(e.toString());
       }
     }
@@ -64,10 +67,11 @@ class ItemsRepository {
           }
         }
         await HiveCRUD().rewriteItems(newItems);
-      } catch (e) {
+      } catch (e,trace) {
         Fluttertoast.showToast(
             msg: e.toString(), toastLength: Toast.LENGTH_LONG);
-        FlutterError(e.toString());
+        FirebaseCrashlytics.instance
+            .recordError(e.toString(), trace);
       }
     }
   }

@@ -61,6 +61,7 @@ class LocationService : Service(), LocationListener {
     }
 
     override fun onLocationChanged(location: Location) {
+        println("Latitude: ${location.latitude}, Longitude: ${location.longitude}")
         Log.d(TAG, "Latitude: ${location.latitude}, Longitude: ${location.longitude}")
         Log.d(TAG, "myEmail: ${myEmail}")
         try {

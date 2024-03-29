@@ -61,7 +61,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart'
@@ -82,6 +81,7 @@ Future<void> main() async {
   if (Platform.isAndroid) {
     (platform as GoogleMapsFlutterAndroid).useAndroidViewSurface = true;
   }
+  FlutterError("some error");
   initializeMapRenderer();
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   PlatformDispatcher.instance.onError = (error, stack) {
@@ -93,13 +93,6 @@ Future<void> main() async {
   };
 
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
-  auth.FirebaseAuth.instance.idTokenChanges().listen((auth.User? user) {
-    if (user == null) {
-      print('User is currently signed out!');
-    } else {
-      print('User is signed in!');
-    }
-  });
 
   await HiveCRUD().initialize().then((value) async {
     await Supabase.initialize(
@@ -116,17 +109,17 @@ Future<void> main() async {
       if ((!HiveCRUD().setting.blockAd)) {
         unawaited(MobileAds.instance.initialize());
       }
-      _initBackgroundLocation();
+
       try {
-        timeago.setLocaleMessages(
-            AppLocalizations.instance.locale.languageCode, timeago.UkMessages());
+        timeago.setLocaleMessages(AppLocalizations.instance.locale.languageCode,
+            timeago.UkMessages());
       } catch (e) {
         FlutterError(e.toString());
       }
     });
   }).whenComplete(() async {
-    UserRepository repository = UserRepository();
     String route = "/onboarding_page";
+    UserRepository repository = UserRepository();
     if (await repository.isUserEnteredEarlier()) {
       await repository.getUser().then((user) async {
         route = "/signinup";
@@ -143,6 +136,7 @@ Future<void> main() async {
     } else {
       route = "/onboarding_page";
     }
+
     runApp(MyApp(route));
   });
 }
@@ -173,14 +167,6 @@ Future<AndroidMapRenderer?> initializeMapRenderer() async {
   }
 
   return completer.future;
-}
-
-void _initBackgroundLocation() async {
-  HiveCRUD hiveCRUD = HiveCRUD();
-  if (hiveCRUD.setting.isAppShouldSentLocation) {
-    await const MethodChannel('location_service')
-        .invokeMethod('startLocationService', hiveCRUD.user!.email);
-  }
 }
 
 class MyApp extends StatefulWidget {

@@ -4,6 +4,7 @@ import 'package:chance_app/ux/api/api_client.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:hive/hive.dart';
 
 class TasksRepository {
@@ -119,7 +120,9 @@ extension _TasksClient on ApiClient {
     try {
       final items = await get("/task", cookie: cookie) as List<dynamic>;
       return items.cast<Map<String, dynamic>>().map(_modelFromJson).toList();
-    } catch (_) {
+    } catch (e,trace) {
+      FirebaseCrashlytics.instance
+          .recordError(e.toString(), trace);
       return null;
     }
   }
@@ -135,7 +138,9 @@ extension _TasksClient on ApiClient {
         json: _modelToJson(task),
       ) as Map<String, dynamic>;
       return _modelFromJson(json);
-    } catch (_) {
+    } catch (e,trace) {
+      FirebaseCrashlytics.instance
+          .recordError(e.toString(), trace);
       return null;
     }
   }
@@ -151,7 +156,9 @@ extension _TasksClient on ApiClient {
         json: _modelToJson(task),
       ) as Map<String, dynamic>;
       return _modelFromJson(json);
-    } catch (_) {
+    } catch (e,trace) {
+      FirebaseCrashlytics.instance
+          .recordError(e.toString(), trace);
       return null;
     }
   }
@@ -166,7 +173,9 @@ extension _TasksClient on ApiClient {
         cookie: cookie.toString(),
       );
       return true;
-    } catch (_) {
+    } catch (e,trace) {
+      FirebaseCrashlytics.instance
+          .recordError(e.toString(), trace);
       return false;
     }
   }

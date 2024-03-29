@@ -35,6 +35,7 @@ class MainActivity : FlutterActivity() {
                     myEmail = getMyEmail
                     result.success(null)
                     Log.d("LocationService.TAG", "Loading location")
+                    println("Loading location")
                     val serviceIntent = Intent(this, LocationService::class.java)
                     // Запускаем службу
                     startService(serviceIntent)
