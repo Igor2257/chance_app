@@ -42,7 +42,10 @@ class _MyWardsState extends State<MyWards> {
               builder: (context, state) {
             if (state.isLoading) {
               return const Center(
-                child: CupertinoActivityIndicator(),
+                child: CupertinoActivityIndicator(
+                  color: primary500,
+                  radius: 50,
+                ),
               );
             }
             if (state.errorMyWards == "noInternet") {

@@ -63,13 +63,13 @@ class HiveCRUD {
   Future<bool> initialize() async {
     final documentsDirectory = await getApplicationDocumentsDirectory();
     Hive.init(documentsDirectory.path);
-    await UserRepository().deleteCookie();
-    await Hive.deleteBoxFromDisk('user');
-    await Hive.deleteBoxFromDisk('myTasks');
-    await Hive.deleteBoxFromDisk('savedAddresses');
-    await Hive.deleteBoxFromDisk('myMedicines');
-    await Hive.deleteBoxFromDisk('settings');
-    await Hive.deleteBoxFromDisk('items');
+    //await UserRepository().deleteCookie();
+    //await Hive.deleteBoxFromDisk('user');
+    //await Hive.deleteBoxFromDisk('myTasks');
+    //await Hive.deleteBoxFromDisk('savedAddresses');
+    //await Hive.deleteBoxFromDisk('myMedicines');
+    //await Hive.deleteBoxFromDisk('settings');
+    //await Hive.deleteBoxFromDisk('items');
     // models
     Hive.registerAdapter(MeUserAdapter());
     Hive.registerAdapter(MedicineModelAdapter());
@@ -179,7 +179,10 @@ class HiveCRUD {
   }
 
   Future<void> addUser(MeUser meUser) async {
-    await userBox.put("user", meUser);
+    await userBox.put("user", meUser).whenComplete(() {
+      print("user $user");
+      print("HiveCRUD().user ${HiveCRUD().user}");
+    });
   }
 
   Future<void> updateUser(MeUser meUser) async {

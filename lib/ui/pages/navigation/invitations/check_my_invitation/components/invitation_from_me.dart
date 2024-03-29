@@ -37,7 +37,10 @@ class _InvitationFromMeState extends State<InvitationFromMe> {
             builder: (context, state) {
           if (state.isLoading) {
             return const Center(
-              child: CupertinoActivityIndicator(),
+              child: CupertinoActivityIndicator(
+                color: primary500,
+                radius: 50,
+              ),
             );
           }
           if (state.errorInvitationsFromMe == "noInternet") {
