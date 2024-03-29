@@ -79,7 +79,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                       updatedAt: DateTime.now(),
                       message: name,
                       date: date,
-                      remindBefore: state.oldNotificationsBefore.minutesCount,
+                      remindBefore: state.notificationsBefore.minutesCount,
                     );
 
                     BlocProvider.of<RemindersBloc>(context)
@@ -185,7 +185,7 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
                             const Spacer(),
                             Text(
                               state.notifications[NotificationsBefore.values
-                                  .indexOf(state.newNotificationsBefore)],
+                                  .indexOf(state.notificationsBefore)],
                               style:
                                   const TextStyle(fontSize: 16, color: primary50),
                             ),

@@ -11,10 +11,7 @@ class AddTaskState {
     AppLocalizations.instance.translate("in60Minutes"),
     AppLocalizations.instance.translate("inOneDay"),
   ];
-  final int pageForPills, pageForTasks;
-  final NotificationsBefore oldNotificationsBefore,
-      newNotificationsBefore,
-      fromLastSession;
+  final NotificationsBefore notificationsBefore;
   final TaskModel? taskModel;
   final List<Map<String, dynamic>> daysForTasks;
   final DateTime? selectedDate,
@@ -28,11 +25,7 @@ class AddTaskState {
 
   AddTaskState({
     this.taskTitle = "",
-    this.pageForPills = 0,
-    this.pageForTasks = 0,
-    this.fromLastSession = NotificationsBefore.no,
-    this.oldNotificationsBefore = NotificationsBefore.no,
-    this.newNotificationsBefore = NotificationsBefore.no,
+    this.notificationsBefore = NotificationsBefore.no,
     this.taskModel,
     this.daysForTasks = const [],
     this.selectedDate,
@@ -61,17 +54,13 @@ class AddTaskState {
     int? pageForTasks,
     int? sessionForNotification,
     int? sessionForSelectingDateForTask,
-    NotificationsBefore? oldNotificationsBefore,
-    NotificationsBefore? newNotificationsBefore,
-    NotificationsBefore? fromLastSession,
+    NotificationsBefore? notificationsBefore,
     TaskModel? taskModel,
     bool? isLoading,
   }) {
     return AddTaskState(
       taskTitle: taskTitle ?? this.taskTitle,
       selectedDate: selectedDate ?? this.selectedDate,
-      pageForPills: pageForPills ?? this.pageForPills,
-      pageForTasks: pageForTasks ?? this.pageForTasks,
       oldSelectedDateForTasks:
           oldSelectedDateForTasks ?? this.oldSelectedDateForTasks,
       newSelectedDateForTasks:
@@ -81,13 +70,9 @@ class AddTaskState {
       daysForTasks: daysForTasks ?? this.daysForTasks,
       newDeadlineForTask: newDeadlineForTask ?? this.newDeadlineForTask,
       oldDeadlineForTask: oldDeadlineForTask ?? this.oldDeadlineForTask,
-      oldNotificationsBefore:
-          oldNotificationsBefore ?? this.oldNotificationsBefore,
-      newNotificationsBefore:
-          newNotificationsBefore ?? this.newNotificationsBefore,
+      notificationsBefore: notificationsBefore ?? this.notificationsBefore,
       sessionForNotification:
           sessionForNotification ?? this.sessionForNotification,
-      fromLastSession: fromLastSession ?? this.fromLastSession,
       taskModel: taskModel ?? this.taskModel,
       sessionForSelectingDateForTask:
           sessionForSelectingDateForTask ?? this.sessionForSelectingDateForTask,
@@ -98,16 +83,13 @@ class AddTaskState {
   AddTaskState clear() {
     return AddTaskState(
       selectedDate: DateTime.now(),
-      pageForPills: 0,
-      pageForTasks: 0,
       oldSelectedDateForTasks: DateTime.now(),
       newSelectedDateForTasks: DateTime.now(),
       dateForSwipingForTasks: DateTime.now(),
       daysForTasks: const [],
       newDeadlineForTask: DateTime.now(),
       oldDeadlineForTask: DateTime.now(),
-      oldNotificationsBefore: NotificationsBefore.no,
-      newNotificationsBefore: NotificationsBefore.no,
+      notificationsBefore: NotificationsBefore.no,
       sessionForNotification: 0,
       taskModel: null,
       sessionForSelectingDateForTask: 0,

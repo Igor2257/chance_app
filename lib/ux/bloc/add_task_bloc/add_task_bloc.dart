@@ -121,16 +121,14 @@ class AddTaskBloc extends Bloc<AddTaskEvent, AddTaskState> {
   FutureOr<void> _onSelectNotificationBefore(
       SelectNotificationBefore event, Emitter<AddTaskState> emit) {
     emit(state.copyWith(
-        oldNotificationsBefore: state.newNotificationsBefore,
-        newNotificationsBefore: event.notificationsBefore,
+        notificationsBefore: event.notificationsBefore,
         sessionForNotification: event.session));
   }
 
   FutureOr<void> _onCancelNotificationBefore(
       CancelNotificationBefore event, Emitter<AddTaskState> emit) {
     if (event.session == state.sessionForNotification) {
-      emit(
-          state.copyWith(newNotificationsBefore: state.oldNotificationsBefore));
+      emit(state.copyWith(notificationsBefore: null));
     }
   }
 
@@ -138,7 +136,7 @@ class AddTaskBloc extends Bloc<AddTaskEvent, AddTaskState> {
       CancelAllDataNotificationBefore event, Emitter<AddTaskState> emit) {
     if (event.session == state.sessionForSelectingDateForTask) {
       emit(state.copyWith(
-          newNotificationsBefore: state.fromLastSession,
+          notificationsBefore: state.notificationsBefore,
           newDeadlineForTask: state.oldDeadlineForTask,
           newSelectedDateForTasks: state.oldSelectedDateForTasks));
     }
@@ -159,19 +157,19 @@ class AddTaskBloc extends Bloc<AddTaskEvent, AddTaskState> {
 
       for (int i = 1; i <= daysInMonth; i++) {
         DateTime date = DateTime(year, month, i);
-      String weekDay = getWeekdayName(date.weekday);
-      dates.add({
-        "weekDay": weekDay,
-        "number": (i.toString()).padLeft(2, "0"),
-        "month": month,
-        "year": year,
-        "isSelected": day == i ||
-            (state.selectedDate != null &&
-                DateUtils.isSameDay(date, state.selectedDate)),
-        "hasTasks": checkIfDayHasTask(myTasks, i, month, year)
-      });
-    }
-    myTasks = myTasks
+        String weekDay = getWeekdayName(date.weekday);
+        dates.add({
+          "weekDay": weekDay,
+          "number": (i.toString()).padLeft(2, "0"),
+          "month": month,
+          "year": year,
+          "isSelected": day == i ||
+              (state.selectedDate != null &&
+                  DateUtils.isSameDay(date, state.selectedDate)),
+          "hasTasks": checkIfDayHasTask(myTasks, i, month, year)
+        });
+      }
+      myTasks = myTasks
           .where((element) =>
               DateUtils.isSameDay(element.date, now) &&
               element.isRemoved == false)

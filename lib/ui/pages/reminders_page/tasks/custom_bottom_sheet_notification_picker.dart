@@ -73,9 +73,6 @@ class _CustomBottomSheetNotificationPickerState
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AddTaskBloc, AddTaskState>(builder: (context, state) {
-      NotificationsBefore notificationsBefore = state.newNotificationsBefore;
-      final List<String> notifications = state.notifications;
-
       return SizedBox(
         height: MediaQuery.of(context).size.height,
         child: SingleChildScrollView(
@@ -94,7 +91,7 @@ class _CustomBottomSheetNotificationPickerState
                   itemCount: NotificationsBefore.values.length,
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, position) {
-                    bool isSelected = notificationsBefore ==
+                    bool isSelected = state.notificationsBefore ==
                         NotificationsBefore.values[position];
                     return RoundedButton(
                         margin: const EdgeInsets.only(bottom: 8),
@@ -112,7 +109,7 @@ class _CustomBottomSheetNotificationPickerState
                         child: Row(
                           children: [
                             Text(
-                              notifications[position],
+                              state.notifications[position],
                               style: TextStyle(
                                   fontSize: 16,
                                   color: isSelected ? primary50 : primaryText,

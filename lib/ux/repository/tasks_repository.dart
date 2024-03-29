@@ -39,8 +39,8 @@ class TasksRepository {
             local,
             cookie: cookie.toString(),
           );
-          // if (item == null) continue; // TODO: fix later
-          if (item != null) await _storage.putTask(item);
+          if (item == null) continue;
+          await _storage.putTask(item);
         }
         await _storage.deleteTask(local); // Delete permanently
         result.add(local.id);
@@ -57,13 +57,6 @@ class TasksRepository {
         result.add(local.id);
       } else if (local.updatedAt.isAfter(remote.updatedAt)) {
         await _apiClient.patchTask(local, cookie: cookie.toString());
-      }
-    }
-    // TODO: fix later when POST method will return data
-    final newItems = await _apiClient.fetchTasks(cookie: cookie.toString());
-    if (newItems != null) {
-      for (final item in newItems) {
-        if (!_storage.values.contains(item)) await _storage.putTask(item);
       }
     }
     return result;
