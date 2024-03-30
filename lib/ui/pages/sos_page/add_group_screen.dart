@@ -92,7 +92,8 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                           onChanged: (value) {},
                         ),
                         LabeledTextField(
-                          controller: contacts[index].phoneController,
+                          controller: contacts[index].phoneController
+                            ..text = "+380",
                           label: AppLocalizations.instance.translate("phone"),
                           hintText: '+380',
                           isPhone: true,

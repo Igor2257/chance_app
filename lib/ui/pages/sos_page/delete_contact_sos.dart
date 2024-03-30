@@ -40,36 +40,37 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-                child: BlocSelector<SosContactsBloc, SosContactsState,
-                    List<SosGroupModel>>(
-              selector: (state) => state.contacts,
-              builder: (context, contacts) => ListView.builder(
-                itemCount: contacts.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.only(bottom: 29),
-                itemBuilder: (context, index) {
-                  SosGroupModel contactModel = contacts[index];
-                  return ContainerButtonWithCheckbox(
-                    contactModel: contactModel,
-                    text: contactModel.name.isNotEmpty
-                        ? contactModel.name
-                        : contactModel.contacts[0].name,
-                    isSelected: selectedModels.contains(
-                      contactModel,
-                    ),
-                    isEdit: isEdit,
-                    onChanged: (value) {
-                      handleCheckboxChange(
-                        value,
+              child: BlocSelector<SosContactsBloc, SosContactsState,
+                  List<SosGroupModel>>(
+                selector: (state) => state.contacts,
+                builder: (context, contacts) => ListView.builder(
+                  itemCount: contacts.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.only(bottom: 29),
+                  itemBuilder: (context, index) {
+                    SosGroupModel contactModel = contacts[index];
+                    return ContainerButtonWithCheckbox(
+                      contactModel: contactModel,
+                      text: contactModel.name.isNotEmpty
+                          ? contactModel.name
+                          : contactModel.contacts[0].name,
+                      isSelected: selectedModels.contains(
                         contactModel,
-                      );
-                    },
-                    isGroup: contactModel.name.isNotEmpty ? true : false,
-                  );
-                },
+                      ),
+                      isEdit: isEdit,
+                      onChanged: (value) {
+                        handleCheckboxChange(
+                          value,
+                          contactModel,
+                        );
+                      },
+                      isGroup: contactModel.name.isNotEmpty ? true : false,
+                    );
+                  },
+                ),
               ),
-            )),
+            ),
             if (isEdit)
               SliverFillRemaining(
                 child: Align(
@@ -88,13 +89,11 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
                       onPressed: () {
                         if (isButtonEnable) {
                           if (selectedModels[0].name.isNotEmpty) {
-                            BlocProvider.of<SosContactsBloc>(context).add(
-                              DeleteGroup(ids: [selectedModels[0].id]),
-                            );
+                            BlocProvider.of<SosContactsBloc>(context)
+                                .add(DeleteGroup(ids: [selectedModels[0].id]));
                           } else {
                             BlocProvider.of<SosContactsBloc>(context).add(
-                              DeleteContact(ids: [selectedModels[0].id]),
-                            );
+                                DeleteContact(ids: [selectedModels[0].id]));
                           }
 
                           Navigator.of(context).pushNamedAndRemoveUntil(

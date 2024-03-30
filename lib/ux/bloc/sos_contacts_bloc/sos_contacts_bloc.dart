@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:bloc/bloc.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:chance_app/ux/repository/sos_repository.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +47,7 @@ class SosContactsBloc extends Bloc<SosContactsEvent, SosContactsState> {
 
   FutureOr<void> _onDeleteContact(
       DeleteContact event, Emitter<SosContactsState> emit) {
-    list.removeWhere((element) => element.contacts[0].id == event.ids.first);
+    list.removeWhere((element) => element.id == event.ids.first);
     emit(state.copyWith(contacts: list));
     SosRepository().removeContact(event.ids.first);
   }
