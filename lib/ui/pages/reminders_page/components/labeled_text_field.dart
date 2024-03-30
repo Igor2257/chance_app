@@ -10,7 +10,7 @@ class LabeledTextField extends StatefulWidget {
   final bool isPhone;
 
   const LabeledTextField({
-    super.key,
+    Key? key,
     required this.label,
     required this.hintText,
     required this.isPhone,
@@ -98,6 +98,10 @@ class LabeledTextFieldState extends State<LabeledTextField> {
                   width: 1.0,
                 ),
               ),
+              // prefixText: widget.isPhone ? '+380 ' : null,
+              // prefixStyle: widget.isPhone
+              //     ? const TextStyle(color: Colors.red, fontSize: 18)
+              //     : null,
             ),
             onChanged: (value) {
               setState(() {
@@ -107,7 +111,6 @@ class LabeledTextFieldState extends State<LabeledTextField> {
             onEditingComplete: () {
               if (!validate()) {
                 setState(() {
-                  // errorText = AppLocalizations.instance.translate("checkTheEnteredData");
                   Fluttertoast.showToast(
                       msg: AppLocalizations.instance
                           .translate("checkTheEnteredData"));
