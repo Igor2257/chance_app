@@ -10,7 +10,7 @@ class LabeledTextField extends StatefulWidget {
   final bool isPhone;
 
   const LabeledTextField({
-    Key? key,
+    super.key,
     required this.label,
     required this.hintText,
     required this.isPhone,

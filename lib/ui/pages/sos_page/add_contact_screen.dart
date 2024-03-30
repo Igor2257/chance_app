@@ -59,13 +59,14 @@ class _AddContactScreenState extends State<AddContactScreen> {
               hintText: AppLocalizations.instance.translate("name"),
               isPhone: false,
               onChanged: (value) {},
+              key:  const ValueKey("name"),
             ),
             LabeledTextField(
               controller: phoneController..text = "+380",
               label: AppLocalizations.instance.translate("enterPhoneNumber"),
               hintText: 'Number',
               isPhone: true,
-              onChanged: (value) {},
+              onChanged: (value) {},key:  const ValueKey("phone"),
             ),
             const SizedBox(height: 22),
             SizedBox(

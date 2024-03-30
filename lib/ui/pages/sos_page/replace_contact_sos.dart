@@ -18,6 +18,7 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
   late TextEditingController nameController;
   late TextEditingController phoneController;
   late SosGroupModel contactModel;
+
   SosContactsBloc get _sosContactsBloc {
     return BlocProvider.of<SosContactsBloc>(context);
   }
@@ -49,6 +50,7 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
                   hintText: AppLocalizations.instance.translate("name"),
                   isPhone: false,
                   onChanged: (value) {},
+                  key: const ValueKey("name"),
                 ),
                 const SizedBox(height: 8),
                 LabeledTextField(
@@ -57,6 +59,7 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
                   hintText: '+380',
                   isPhone: true,
                   onChanged: (value) {},
+                  key: const ValueKey("phone"),
                 ),
                 const SizedBox(height: 16),
                 SizedBox(

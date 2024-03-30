@@ -72,7 +72,7 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
                 label: AppLocalizations.instance.translate("enterGroupName"),
                 hintText: AppLocalizations.instance.translate("family"),
                 isPhone: false,
-                onChanged: (value) {},
+                onChanged: (value) {},key:  const ValueKey("groupName"),
               ),
               const SizedBox(height: 8),
               Column(
@@ -98,14 +98,14 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
                           label: AppLocalizations.instance.translate("name"),
                           hintText: AppLocalizations.instance.translate("name"),
                           isPhone: false,
-                          onChanged: (value) {},
+                          onChanged: (value) {},key:  const ValueKey("name"),
                         ),
                         LabeledTextField(
                           controller: contacts[index].phoneController,
                           label: AppLocalizations.instance.translate("phone"),
                           hintText: '+380',
                           isPhone: true,
-                          onChanged: (value) {},
+                          onChanged: (value) {},key:  const ValueKey("phone"),
                         ),
                         InkWell(
                           onTap: () {
