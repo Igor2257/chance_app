@@ -26,8 +26,7 @@ bool isNotTapedOnMyLocationButton = false;
 GoogleMapController? mapController;
 
 String googleAPIKey = "AIzaSyB5JF5kDfQurzWIzGa8JSINevwpxLFHrIM";
-
-late PositionController positionController;
+PositionController? providerPositionController;
 
 Future<PointLatLng?> getPositionOfPoint(PickResult pickResult) async {
   final result = await NavigationRepository().getLocationFromPlaceId(pickResult);

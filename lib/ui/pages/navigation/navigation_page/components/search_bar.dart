@@ -81,7 +81,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
   void initState() {
     _futureProvider = _initPlaceProvider();
     focusNode.addListener(() {
-      setState(() {});
+      if (mounted) setState(() {});
     });
     super.initState();
   }
@@ -158,15 +158,14 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                   //}
                                 },
                                 onTap: () {
-                                  setState(() {
-                                    isPredictionsShow = true;
-                                  });
+                                  isPredictionsShow = true;
+                                  if (mounted) setState(() {});
                                 },
                                 onTapCancel: () {
                                   predictionsForMapView.clear();
                                   predictionsForTapMapView.clear();
                                   isPredictionsShow = false;
-                                  setState(() {});
+                                  if (mounted) setState(() {});
                                 },
                                 prediction: (predictions) {
                                   predictionsForMapView = predictions
@@ -177,7 +176,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                           })
                                       .toList();
                                   predictionsForTapMapView = predictions;
-                                  setState(() {});
+                                  if (mounted) setState(() {});
                                 },
                               ),
                             ),
@@ -430,7 +429,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                           .add(UpdateMarkers(markers: {point}));
                                       focusNode.unfocus();
                                     }
-                                    setState(() {});
+                                    if (mounted) setState(() {});
                                   },
                                   child: Container(
                                     padding:

@@ -8,10 +8,12 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 var myEmail: String = ""
+var isAppSentData: Boolean = true
 
 class MainActivity : FlutterActivity() {
     private val CHANNELCaller = "caller"
     private val CHANNELLocation = "location_service"
+    private val CHANNELLocationDisable = "location_service_disable"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -32,6 +34,7 @@ class MainActivity : FlutterActivity() {
             if (call.method == "startLocationService") {
                 val getMyEmail = call.arguments?.toString()
                 if (getMyEmail != null) {
+                    isAppSentData = true
                     myEmail = getMyEmail
                     result.success(null)
                     Log.d("LocationService.TAG", "Loading location")
@@ -44,6 +47,25 @@ class MainActivity : FlutterActivity() {
                     result.error("MISSING_EMAIL", "Email is missing", null)
                 }
                 // Создаем интент для запуска службы
+
+            } else {
+                result.notImplemented()
+            }
+        }
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNELLocationDisable).setMethodCallHandler { call, result ->
+            if (call.method == "pauseLocationService") {
+                val isAppShouldSentLocation: Boolean = call.arguments?.toString().toBoolean()
+                isAppSentData = false
+                result.success(null)
+                Log.d("LocationService.TAG", "Pause location")
+                println("Pause location")
+                val serviceIntent = Intent(this, LocationService::class.java)
+                // Запускаем службу
+                if (isAppShouldSentLocation) {
+                    stopService(serviceIntent)
+                }
+
+                result.success("Location paused")
 
             } else {
                 result.notImplemented()

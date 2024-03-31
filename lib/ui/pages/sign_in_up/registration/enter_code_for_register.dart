@@ -31,7 +31,7 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
       if (secondsLeft < 1) {
         timer.cancel();
       } else {
-        setState(() {});
+        if (mounted) setState(() {});
       }
     });
     loadTimer();

@@ -218,9 +218,7 @@ class _MenuPageState extends State<MenuPage> {
           });
         });
       }
-      if (mounted) {
-        setState(() {});
-      }
+      if (mounted) setState(() {});
     });
   }
 
@@ -329,9 +327,7 @@ class _MenuPageState extends State<MenuPage> {
     await ItemsRepository().rewriteItems(items);
     idOfPrd = "";
     purchase = [];
-    if (mounted) {
-      setState(() {});
-    }
+    if (mounted) setState(() {});
     Fluttertoast.showToast(
       msg: AppLocalizations.instance.translate("enjoy"),
     );

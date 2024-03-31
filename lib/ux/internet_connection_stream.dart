@@ -1,16 +1,15 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/material.dart';
 
-class InternetConnectionStream {
+class InternetConnectionStream with ChangeNotifier {
   StreamSubscription<ConnectivityResult>? onConnectivityChangedStream;
-  static bool isUserHaveInternetConnection = true,
-      showInternetConnection = false;
-  late Connectivity _connectivity;
-  late Function(VoidCallback fn) setState;
 
-  InternetConnectionStream(void Function(VoidCallback fn) this.setState) {
+  bool isUserHaveInternetConnection = false, showInternetConnection = true;
+  late Connectivity _connectivity;
+
+  InternetConnectionStream() {
     _connectivity = Connectivity();
     onConnectivityChangedStream =
         _connectivity.onConnectivityChanged.listen((result) {
@@ -24,25 +23,30 @@ class InternetConnectionStream {
 
     ///TODO
     if (newResult != ConnectivityResult.none) {
-      changeUserHaveInternetConnection(true);
+      _changeUserHaveInternetConnection(true); // Уведомляем о наличии интернет-соединения
     } else {
-      changeUserHaveInternetConnection(false);
+      _changeUserHaveInternetConnection(false); // Уведомляем об отсутствии интернет-соединения
     }
   }
 
-  void changeUserHaveInternetConnection(bool value) async {
-    setState(() {
-      isUserHaveInternetConnection = value;
+  void _changeUserHaveInternetConnection(bool value) async {
+    isUserHaveInternetConnection = value;
 
-      showInternetConnection = true;
-    });
+    showInternetConnection = true;
+    print("value $value");
+    notifyListeners();
 
     if (value) {
-      await Future.delayed(const Duration(seconds: 2));
-      setState(() {
-        showInternetConnection = false;
-      });
+      _showConnection();
     }
+  }
+
+  void _showConnection() async {
+    await Future.delayed(const Duration(seconds: 2)).whenComplete(() {
+      showInternetConnection = false;
+      print(showInternetConnection);
+      notifyListeners();
+    });
   }
 
   void pause() {

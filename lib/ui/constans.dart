@@ -149,14 +149,15 @@ const Map<String, String> languages = {
 extension DateTimeUtils on DateTime {
   String get sinceDate {
     DateTime dateTimeNow = DateTime.now();
-    if (difference(dateTimeNow) <= const Duration(seconds: 30)) {
+
+    if (-(difference(dateTimeNow)) <= const Duration(seconds: 30)) {
       return AppLocalizations.instance.translate("now");
-    } else if (difference(dateTimeNow) <= const Duration(minutes: 1)) {
+    } else if (-(difference(dateTimeNow)) <= const Duration(minutes: 1)) {
       return AppLocalizations.instance.translate("lessThenMinuteAgo");
-    } else if (difference(dateTimeNow) <= const Duration(minutes: 5)) {
+    } else if (-(difference(dateTimeNow)) <= const Duration(minutes: 5)) {
       return AppLocalizations.instance.translate("lessThenFiveMinuteAgo");
     } else {
-      return "$hour:$minute:$second $day.$month.$year";
+      return "${hour.toString().padLeft(2, "0")}:${minute.toString().padLeft(2, "0")}:${second.toString().padLeft(2, "0")} ${day.toString().padLeft(2, "0")}.${month.toString().padLeft(2, "0")}.$year";
     }
   }
 }

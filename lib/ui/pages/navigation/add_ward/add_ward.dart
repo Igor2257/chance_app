@@ -144,9 +144,7 @@ class _AddWardState extends State<AddWard> {
                                   .translate("errorName"));
                         }
                         isLoading = false;
-                        if (mounted) {
-                          setState(() {});
-                        }
+                        if (mounted) setState(() {});
                       },
                       color: primary1000,
                       child: Text(

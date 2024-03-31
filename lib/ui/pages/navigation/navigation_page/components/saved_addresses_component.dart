@@ -72,7 +72,7 @@ class _SavedAddressesComponentState extends State<SavedAddressesComponent> {
                     LatLng(savedAddresses[position].geometry!.location.lat,
                         savedAddresses[position].geometry!.location.lng),
                     18));
-                setState(() {});
+                if (mounted) setState(() {});
               },
               child: Container(
                 padding:

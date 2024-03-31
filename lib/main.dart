@@ -50,7 +50,6 @@ import 'package:chance_app/ux/internet_connection_stream.dart';
 import 'package:chance_app/ux/model/product_model.dart';
 import 'package:chance_app/ux/model/settings.dart';
 import 'package:chance_app/ux/repository/items_repository.dart';
-import 'package:chance_app/ux/repository/navigation_repository.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -71,11 +70,16 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+String whichToastIsShowing = "";
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: []);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+    SystemUiOverlay.top,
+    SystemUiOverlay.bottom,
+  ]);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   final GoogleMapsFlutterPlatform platform = GoogleMapsFlutterPlatform.instance;
   // Default to Hybrid Composition for the example.
@@ -100,7 +104,6 @@ Future<void> main() async {
             anonKey:
                 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudnhzemJxZHVyYmtwbnZqdmd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA4NDU5NjUsImV4cCI6MjAyNjQyMTk2NX0.I_Tf2UAA5Qo05EOSR2HXkv9yMun2NyixOZtCyr3OvoA")
         .then((value) async {
-      await NavigationRepository().isAppShouldSentLocation();
       await Permission.notification.request();
       await RemindersHelper.initialize();
       await BackgroundServiceHelper.initialize();
@@ -183,9 +186,9 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Key key = UniqueKey();
-  late InternetConnectionStream internetConnectionStream;
   final Settings settings = HiveCRUD().setting;
   late String route;
+  InternetConnectionStream provider = InternetConnectionStream();
 
   void restartApp() async {
     UserRepository repository = UserRepository();
@@ -222,7 +225,6 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     route = widget.route;
-    internetConnectionStream = InternetConnectionStream(setState);
     try {
       checkIfDocsAreAvailable();
     } catch (e, trace) {
@@ -279,211 +281,225 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
           return MediaQuery(
             data: MediaQuery.of(context)
                 .copyWith(textScaler: TextScaler.noScaling),
-            child: FGBGNotifier(
-              onEvent: (event) {
-                if (FGBGType.background == event ||
-                    AppLifecycleState.inactive.name == event.name ||
-                    AppLifecycleState.paused.name == event.name) {
-                  internetConnectionStream.pause();
-                } else if (FGBGType.foreground == event ||
-                    AppLifecycleState.resumed.name == event.name) {
-                  internetConnectionStream.resume();
-                }
-                setState(() {});
-              },
-              child: Stack(
-                children: [
-                  SizedBox(
-                    width: size.width,
-                    height: size.height,
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: KeyedSubtree(
-                            key: key,
-                            child: SizedBox(
-                              width: size.width,
-                              height: size.height,
-                              child: MultiBlocProvider(
-                                providers: [
-                                  BlocProvider(
-                                    create: (context) => RegistrationBloc(),
-                                  ),
-                                  BlocProvider(
-                                    create: (context) => LoginBloc(),
-                                  ),
-                                  BlocProvider(
-                                    create: (context) => RemindersBloc(),
-                                  ),
-                                  BlocProvider(
-                                    create: (context) => SosContactsBloc(),
-                                  ),
-                                  BlocProvider(
-                                    create: (context) => NavigationBloc(),
-                                  ),
-                                  BlocProvider(
-                                    create: (context) => AddWardBloc(),
-                                  ),
-                                  BlocProvider(
-                                    create: (context) => AddTaskBloc(),
-                                  ),
-                                  BlocProvider(
-                                    create: (context) => InvitationBloc(),
-                                  ),
-                                ],
-                                child: MaterialApp(
-                                  debugShowCheckedModeBanner: false,
-                                  theme: ThemeData(
-                                      scaffoldBackgroundColor: beigeBG,
-                                      dialogBackgroundColor: beigeBG,
-                                      dialogTheme: const DialogTheme(
-                                          backgroundColor: beigeBG,
-                                          surfaceTintColor: beigeBG),
-                                      colorScheme: ColorScheme.fromSeed(
-                                          seedColor: primary400),
-                                      useMaterial3: true,
-                                      popupMenuTheme: const PopupMenuThemeData(
-                                          color: beigeTransparent,
-                                          surfaceTintColor: beigeTransparent)),
-                                  supportedLocales: const [
-                                    Locale('en'),
-                                    Locale('uk'),
-                                    Locale('ru'),
-                                  ],
-                                  onGenerateRoute: AppRouter.onGenerateRoute,
-                                  localizationsDelegates: const [
-                                    MyLocalizationsDelegate(),
-                                    GlobalWidgetsLocalizations.delegate,
-                                    GlobalCupertinoLocalizations.delegate,
-                                    GlobalMaterialLocalizations.delegate,
-                                  ],
-                                  initialRoute: route,
-                                  routes: {
-                                    "/": (context) => const MainPage(),
-                                    "/signinup": (context) =>
-                                        const SignInUpPage(),
-                                    "/registration": (context) =>
-                                        const RegistrationPage(),
-                                    "/login": (context) => const LoginPage(),
-                                    "/enter_code": (context) =>
-                                        const EnterCodeForRegister(),
-                                    "/reminders": (context) =>
-                                        const RemindersPage(),
-                                    "/date_picker_for_tasks": (context) =>
-                                        const CalendarTaskPage(),
-                                    "/add_medicine": (context) => BlocProvider(
-                                          create: (context) =>
-                                              AddMedicineBloc(),
-                                          child: const AddMedicinePage(),
-                                        ),
-                                    "/reset_password": (context) =>
-                                        const ResetPassword(),
-                                    "/tasks_for_today": (context) =>
-                                        const TasksForToday(),
-                                    "/menu": (context) => const MenuPage(),
-                                    "/sos": (context) => const MainPageSos(),
-                                    "/add_contact": (context) =>
-                                        const AddContactScreen(),
-                                    "/add_group": (context) =>
-                                        const AddGroupScreen(),
-                                    "/onboarding_page": (context) =>
-                                        const OnboardingPage(),
-                                    "/onboarding_tutorial": (context) =>
-                                        const OnboardingTutorial(),
-                                    "/delete_contact_sos": (context) =>
-                                        const DeleteContactsPage(),
-                                    "/my_information": (context) =>
-                                        const MyInformation(),
-                                    "/replace_contact_sos": (context) =>
-                                        const ReplaceContactSosScreen(),
-                                    "/navigation_page": (context) =>
-                                        const NavigationPage(),
-                                    "/add_ward": (context) => const AddWard(),
-                                    "/check_my_invitation": (context) =>
-                                        const CheckMyInvitation(),
-                                    "/enter_accept_code": (context) =>
-                                        const EnterAcceptCode(),
-                                    "/choose_language": (context) =>
-                                        const ChooseLanguage(),
-                                    "/my_wards": (context) =>
-                                        const MyWardsGuardians(),
-                                    "/doctor_appointment": (context) =>
-                                        const DoctorAppointment(),
-                                    "/job_search": (context) =>
-                                        const JobSearch(),
-                                    "/privacy_policy": (context) =>
-                                        const PrivacyPolicyPage(),
-                                  },
-                                  builder: (context, child) {
-                                    final locale =
-                                        Localizations.localeOf(context);
-                                    Jiffy.setLocale(locale.toLanguageTag());
-                                    return child!;
-                                  },
-                                  localeResolutionCallback:
-                                      (locale, supportedLocales) {
-                                    for (Locale supportedLocale
-                                        in supportedLocales) {
-                                      if (supportedLocale.languageCode ==
-                                              locale?.languageCode ||
-                                          supportedLocale.countryCode ==
-                                              locale?.countryCode) {
-                                        return supportedLocale;
-                                      }
-                                    }
+            child: ListenableBuilder(
+              listenable: provider,
+              builder: (BuildContext context, Widget? child) {
+                return FGBGNotifier(
+                  onEvent: (event) {
+                    if (FGBGType.background == event ||
+                        AppLifecycleState.inactive.name == event.name ||
+                        AppLifecycleState.paused.name == event.name) {
+                      provider.pause();
+                    } else if (FGBGType.foreground == event ||
+                        AppLifecycleState.resumed.name == event.name) {
+                      provider.resume();
+                    }
+                  },
+                  child: Stack(
+                    children: [
+                      SizedBox(
+                        width: size.width,
+                        height: size.height,
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: KeyedSubtree(
+                                key: key,
+                                child: SizedBox(
+                                  width: size.width,
+                                  height: size.height,
+                                  child: MultiBlocProvider(
+                                    providers: [
+                                      BlocProvider(
+                                        create: (context) => RegistrationBloc(),
+                                      ),
+                                      BlocProvider(
+                                        create: (context) => LoginBloc(),
+                                      ),
+                                      BlocProvider(
+                                        create: (context) => RemindersBloc(),
+                                      ),
+                                      BlocProvider(
+                                        create: (context) => SosContactsBloc(),
+                                      ),
+                                      BlocProvider(
+                                        create: (context) => NavigationBloc(),
+                                      ),
+                                      BlocProvider(
+                                        create: (context) => AddWardBloc(),
+                                      ),
+                                      BlocProvider(
+                                        create: (context) => AddTaskBloc(),
+                                      ),
+                                      BlocProvider(
+                                        create: (context) => InvitationBloc(),
+                                      ),
+                                    ],
+                                    child: MaterialApp(
+                                      debugShowCheckedModeBanner: false,
+                                      theme: ThemeData(
+                                          scaffoldBackgroundColor: beigeBG,
+                                          dialogBackgroundColor: beigeBG,
+                                          dialogTheme: const DialogTheme(
+                                              backgroundColor: beigeBG,
+                                              surfaceTintColor: beigeBG),
+                                          colorScheme: ColorScheme.fromSeed(
+                                              seedColor: primary400),
+                                          useMaterial3: true,
+                                          popupMenuTheme:
+                                              const PopupMenuThemeData(
+                                                  color: beigeTransparent,
+                                                  surfaceTintColor:
+                                                      beigeTransparent)),
+                                      supportedLocales: const [
+                                        Locale('en'),
+                                        Locale('uk'),
+                                        Locale('ru'),
+                                      ],
+                                      onGenerateRoute:
+                                          AppRouter.onGenerateRoute,
+                                      localizationsDelegates: const [
+                                        MyLocalizationsDelegate(),
+                                        GlobalWidgetsLocalizations.delegate,
+                                        GlobalCupertinoLocalizations.delegate,
+                                        GlobalMaterialLocalizations.delegate,
+                                      ],
+                                      initialRoute: route,
+                                      routes: {
+                                        "/": (context) => const MainPage(),
+                                        "/signinup": (context) =>
+                                            const SignInUpPage(),
+                                        "/registration": (context) =>
+                                            const RegistrationPage(),
+                                        "/login": (context) =>
+                                            const LoginPage(),
+                                        "/enter_code": (context) =>
+                                            const EnterCodeForRegister(),
+                                        "/reminders": (context) =>
+                                            const RemindersPage(),
+                                        "/date_picker_for_tasks": (context) =>
+                                            const CalendarTaskPage(),
+                                        "/add_medicine": (context) =>
+                                            BlocProvider(
+                                              create: (context) =>
+                                                  AddMedicineBloc(),
+                                              child: const AddMedicinePage(),
+                                            ),
+                                        "/reset_password": (context) =>
+                                            const ResetPassword(),
+                                        "/tasks_for_today": (context) =>
+                                            const TasksForToday(),
+                                        "/menu": (context) => const MenuPage(),
+                                        "/sos": (context) =>
+                                            const MainPageSos(),
+                                        "/add_contact": (context) =>
+                                            const AddContactScreen(),
+                                        "/add_group": (context) =>
+                                            const AddGroupScreen(),
+                                        "/onboarding_page": (context) =>
+                                            const OnboardingPage(),
+                                        "/onboarding_tutorial": (context) =>
+                                            const OnboardingTutorial(),
+                                        "/delete_contact_sos": (context) =>
+                                            const DeleteContactsPage(),
+                                        "/my_information": (context) =>
+                                            const MyInformation(),
+                                        "/replace_contact_sos": (context) =>
+                                            const ReplaceContactSosScreen(),
+                                        "/navigation_page": (context) =>
+                                            const NavigationPage(),
+                                        "/add_ward": (context) =>
+                                            const AddWard(),
+                                        "/check_my_invitation": (context) =>
+                                            const CheckMyInvitation(),
+                                        "/enter_accept_code": (context) =>
+                                            const EnterAcceptCode(),
+                                        "/choose_language": (context) =>
+                                            const ChooseLanguage(),
+                                        "/my_wards": (context) =>
+                                            const MyWardsGuardians(),
+                                        "/doctor_appointment": (context) =>
+                                            const DoctorAppointment(),
+                                        "/job_search": (context) =>
+                                            const JobSearch(),
+                                        "/privacy_policy": (context) =>
+                                            const PrivacyPolicyPage(),
+                                      },
+                                      builder: (context, child) {
+                                        final locale =
+                                            Localizations.localeOf(context);
+                                        Jiffy.setLocale(locale.toLanguageTag());
+                                        return child!;
+                                      },
+                                      localeResolutionCallback:
+                                          (locale, supportedLocales) {
+                                        for (Locale supportedLocale
+                                            in supportedLocales) {
+                                          if (supportedLocale.languageCode ==
+                                                  locale?.languageCode ||
+                                              supportedLocale.countryCode ==
+                                                  locale?.countryCode) {
+                                            return supportedLocale;
+                                          }
+                                        }
 
-                                    return supportedLocales.first;
-                                  },
+                                        return supportedLocales.first;
+                                      },
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+                            provider.showInternetConnection
+                                ? Container(
+                                    color: beigeBG,
+                                    child: SafeArea(
+                                        top: false,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: provider
+                                                      .isUserHaveInternetConnection
+                                                  ? green
+                                                  : darkNeutral1000),
+                                          height: 24,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                provider.isUserHaveInternetConnection
+                                                    ? Icons.wifi
+                                                    : Icons.wifi_off,
+                                                color: primary50,
+                                              ),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                provider.isUserHaveInternetConnection
+                                                    ? AppLocalizations.instance
+                                                        .translate(
+                                                            "connectionRestored")
+                                                    : AppLocalizations.instance
+                                                        .translate(
+                                                            "noInternetConnection"),
+                                                style: const TextStyle(
+                                                    fontSize: 16,
+                                                    color: primary50),
+                                              ),
+                                            ],
+                                          ),
+                                        )),
+                                  )
+                                : const SizedBox(),
+                            if (!settings.blockAd) const AdBanner(),
+                          ],
                         ),
-                        if (InternetConnectionStream.showInternetConnection)
-                          Container(
-                            color: beigeBG,
-                            child: SafeArea(
-                                top: false,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: InternetConnectionStream
-                                              .isUserHaveInternetConnection
-                                          ? green
-                                          : darkNeutral1000),
-                                  height: 24,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        InternetConnectionStream
-                                                .isUserHaveInternetConnection
-                                            ? Icons.wifi
-                                            : Icons.wifi_off,
-                                        color: primary50,
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        InternetConnectionStream
-                                                .isUserHaveInternetConnection
-                                            ? AppLocalizations.instance
-                                                .translate("connectionRestored")
-                                            : AppLocalizations.instance
-                                                .translate("noConnection"),
-                                        style: const TextStyle(
-                                            fontSize: 16, color: primary50),
-                                      ),
-                                    ],
-                                  ),
-                                )),
-                          ),
-                        if (!settings.blockAd) const AdBanner(),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                );
+              },
             ),
           );
         }));

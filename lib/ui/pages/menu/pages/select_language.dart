@@ -52,9 +52,7 @@ class _ChooseLanguageState extends State<ChooseLanguage> {
                             .changeLanguage(key, context)
                             .whenComplete(() {
                           isLoading = false;
-                          if (mounted) {
-                            setState(() {});
-                          }
+                          if (mounted) setState(() {});
                         });
                       }
                     });

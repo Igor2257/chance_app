@@ -64,25 +64,27 @@ class LocationService : Service(), LocationListener {
         println("Latitude: ${location.latitude}, Longitude: ${location.longitude}")
         Log.d(TAG, "Latitude: ${location.latitude}, Longitude: ${location.longitude}")
         Log.d(TAG, "myEmail: ${myEmail}")
-        try {
+        if (isAppSentData) {
+            try {
 
-            GlobalScope.launch {
+                GlobalScope.launch {
 
-                supabase.from("ward_location").update(
-                        {
-                            set("latitude", location.latitude)
-                            set("longitude", location.longitude)
-                            set("when", SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ", Locale.getDefault()).format(Date()))
+                    supabase.from("ward_location").update(
+                            {
+                                set("latitude", location.latitude)
+                                set("longitude", location.longitude)
+                                set("when", SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ", Locale.getDefault()).format(Date()))
+                            }
+                    ) {
+                        filter {
+                            eq("myEmail", myEmail)
                         }
-                ) {
-                    filter {
-                        eq("myEmail", myEmail)
                     }
                 }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error in onLocationChanged: ${e.message}")
+                e.printStackTrace()
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error in onLocationChanged: ${e.message}")
-            e.printStackTrace()
         }
     }
 

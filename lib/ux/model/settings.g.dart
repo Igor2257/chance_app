@@ -21,8 +21,8 @@ class SettingsAdapter extends TypeAdapter<Settings> {
       soundsOn: fields[1] as bool,
       firstEnter: fields[2] as DateTime?,
       isNotificationEnable: fields[3] as bool?,
-      language: fields[4] as String?,
-      languageCode: fields[5] as String?,
+      language: fields[4] as String,
+      languageCode: fields[5] as String,
       isAppShouldSentLocation: fields[6] as bool,
     );
   }
@@ -70,8 +70,8 @@ _$SettingsImpl _$$SettingsImplFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['firstEnter'] as String),
       isNotificationEnable: json['isNotificationEnable'] as bool? ?? false,
-      language: json['language'] as String?,
-      languageCode: json['languageCode'] as String?,
+      language: json['language'] as String? ?? "English",
+      languageCode: json['languageCode'] as String? ?? "en",
       isAppShouldSentLocation:
           json['isAppShouldSentLocation'] as bool? ?? false,
     );

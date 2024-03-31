@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:chance_app/main.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/api/api_exception.dart';
@@ -26,15 +27,29 @@ class ApiClient {
     required String cookie,
     Map<String, dynamic>? queryParameters,
   }) async {
-    try {
-      final response = await http.get(
-        getUrl(path, queryParameters: queryParameters),
-        headers: _getHeaders(cookie: cookie),
-      );
-      return _parseResponse(response);
-    } catch (error, stackTrace) {
-      _onCatchError(error, stackTrace);
-      rethrow;
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      if (whichToastIsShowing != "noInternetConnection") {
+        whichToastIsShowing = "noInternetConnection";
+        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+          whichToastIsShowing = "";
+        }));
+      }else{
+        Fluttertoast.showToast(
+            msg: AppLocalizations.instance.translate("noInternetConnection"),
+            toastLength: Toast.LENGTH_LONG);
+      }
+      return null;
+    } else {
+      try {
+        final response = await http.get(
+          getUrl(path, queryParameters: queryParameters),
+          headers: _getHeaders(cookie: cookie),
+        );
+        return _parseResponse(response);
+      } catch (error, stackTrace) {
+        _onCatchError(error, stackTrace);
+        rethrow;
+      }
     }
   }
 
@@ -44,16 +59,30 @@ class ApiClient {
     required Map<String, dynamic> json,
     Map<String, dynamic>? queryParameters,
   }) async {
-    try {
-      final response = await http.post(
-        getUrl(path, queryParameters: queryParameters),
-        headers: _getHeaders(cookie: cookie),
-        body: jsonEncode(json),
-      );
-      return _parseResponse(response);
-    } catch (error, stackTrace) {
-      _onCatchError(error, stackTrace);
-      rethrow;
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      if (whichToastIsShowing != "noInternetConnection") {
+        whichToastIsShowing = "noInternetConnection";
+        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+          whichToastIsShowing = "";
+        }));
+      }else{
+        Fluttertoast.showToast(
+            msg: AppLocalizations.instance.translate("noInternetConnection"),
+            toastLength: Toast.LENGTH_LONG);
+      }
+      return null;
+    } else {
+      try {
+        final response = await http.post(
+          getUrl(path, queryParameters: queryParameters),
+          headers: _getHeaders(cookie: cookie),
+          body: jsonEncode(json),
+        );
+        return _parseResponse(response);
+      } catch (error, stackTrace) {
+        _onCatchError(error, stackTrace);
+        rethrow;
+      }
     }
   }
 
@@ -63,16 +92,30 @@ class ApiClient {
     required Map<String, dynamic> json,
     Map<String, dynamic>? queryParameters,
   }) async {
-    try {
-      final response = await http.patch(
-        getUrl(path, queryParameters: queryParameters),
-        headers: _getHeaders(cookie: cookie),
-        body: jsonEncode(json),
-      );
-      return _parseResponse(response);
-    } catch (error, stackTrace) {
-      _onCatchError(error, stackTrace);
-      rethrow;
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      if (whichToastIsShowing != "noInternetConnection") {
+        whichToastIsShowing = "noInternetConnection";
+        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+          whichToastIsShowing = "";
+        }));
+      }else{
+        Fluttertoast.showToast(
+            msg: AppLocalizations.instance.translate("noInternetConnection"),
+            toastLength: Toast.LENGTH_LONG);
+      }
+      return null;
+    } else {
+      try {
+        final response = await http.patch(
+          getUrl(path, queryParameters: queryParameters),
+          headers: _getHeaders(cookie: cookie),
+          body: jsonEncode(json),
+        );
+        return _parseResponse(response);
+      } catch (error, stackTrace) {
+        _onCatchError(error, stackTrace);
+        rethrow;
+      }
     }
   }
 
@@ -82,16 +125,30 @@ class ApiClient {
     Map<String, dynamic>? json,
     Map<String, dynamic>? queryParameters,
   }) async {
-    try {
-      final response = await http.delete(
-        getUrl(path, queryParameters: queryParameters),
-        headers: _getHeaders(cookie: cookie),
-        body: (json != null) ? jsonEncode(json) : null,
-      );
-      return _parseResponse(response);
-    } catch (error, stackTrace) {
-      _onCatchError(error, stackTrace);
-      rethrow;
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      if (whichToastIsShowing != "noInternetConnection") {
+        whichToastIsShowing = "noInternetConnection";
+        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+          whichToastIsShowing = "";
+        }));
+      }else{
+        Fluttertoast.showToast(
+            msg: AppLocalizations.instance.translate("noInternetConnection"),
+            toastLength: Toast.LENGTH_LONG);
+      }
+      return null;
+    } else {
+      try {
+        final response = await http.delete(
+          getUrl(path, queryParameters: queryParameters),
+          headers: _getHeaders(cookie: cookie),
+          body: (json != null) ? jsonEncode(json) : null,
+        );
+        return _parseResponse(response);
+      } catch (error, stackTrace) {
+        _onCatchError(error, stackTrace);
+        rethrow;
+      }
     }
   }
 
@@ -120,12 +177,16 @@ class ApiClient {
 
   Future<void> _onCatchError(Object error, [StackTrace? stackTrace]) async {
     if (await Connectivity().checkConnectivity() == ConnectivityResult.none) {
-      unawaited(
+      if (whichToastIsShowing != "noInternetConnection") {
+        whichToastIsShowing = "noInternetConnection";
+        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+          whichToastIsShowing = "";
+        }));
+      }else{
         Fluttertoast.showToast(
-          msg: AppLocalizations.instance.translate("noInternet"),
-          toastLength: Toast.LENGTH_LONG,
-        ),
-      );
+            msg: AppLocalizations.instance.translate("noInternetConnection"),
+            toastLength: Toast.LENGTH_LONG);
+      }
     } else if (error is ApiException) {
       unawaited(
         Fluttertoast.showToast(

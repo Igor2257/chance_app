@@ -210,6 +210,6 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> {
         filterQuality: FilterQuality.high,
       ));
     }
-    setState(() {});
+    if (mounted) setState(() {});
   }
 }

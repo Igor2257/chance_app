@@ -48,7 +48,7 @@ class _MyWardsState extends State<MyWards> {
                 ),
               );
             }
-            if (state.errorMyWards == "noInternet") {
+            if (state.errorMyWards == "noInternetConnection") {
               return Center(
                   child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -86,7 +86,7 @@ class _MyWardsState extends State<MyWards> {
                 InvitationModel myWard = myWards[position];
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: InkWell(
+                  child: InkWell(borderRadius: BorderRadius.circular(16),
                     onTap: () async {
                       ///Todo: Отобразить месторасположение юзера
                       await NavigationRepository()

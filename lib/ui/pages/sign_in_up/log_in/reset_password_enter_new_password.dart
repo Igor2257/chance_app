@@ -229,6 +229,6 @@ class _ResetPasswordEnterNewPasswordState
       }
     }
 
-    setState(() {});
+    if (mounted) setState(() {});
   }
 }

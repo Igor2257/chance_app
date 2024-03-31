@@ -181,7 +181,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
             infoWindow: InfoWindow(
                 title: list[i].myName,
                 snippet:
-                    "${list[i].myEmail}\n\n\n${AppLocalizations.instance.translate("whenUserWereHere")}: ${list[i].when.sinceDate}",
+                    "${AppLocalizations.instance.translate("whenUserWereHere")}: ${list[i].when.sinceDate}",
                 onTap: () {
                   isNotTapedOnMyLocationButton = true;
                   mapController!.animateCamera(CameraUpdate.newLatLngZoom(

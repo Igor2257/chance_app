@@ -113,11 +113,14 @@ extension _MedicineStorage on Box<MedicineModel> {
 extension _MedicineClient on ApiClient {
   Future<List<MedicineModel>?> fetchMedicines({required String cookie}) async {
     try {
-      final items = await get("/medicine", cookie: cookie) as List<dynamic>;
+      final items =
+          await get("/medicine", cookie: cookie) as List<dynamic>?;
+      if(items==null){
+        return [];
+      }
       return items.cast<Map<String, dynamic>>().map(_modelFromJson).toList();
-    } catch (e,trace) {
-      FirebaseCrashlytics.instance
-          .recordError(e.toString(), trace);
+    } catch (e, trace) {
+      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
       return null;
     }
   }
@@ -131,11 +134,13 @@ extension _MedicineClient on ApiClient {
         "/medicine",
         cookie: cookie,
         json: _modelToJson(medicine),
-      ) as Map<String, dynamic>;
+      ) as Map<String, dynamic>?;
+      if(json==null){
+        return null;
+      }
       return _modelFromJson(json);
-    } catch (e,trace) {
-      FirebaseCrashlytics.instance
-          .recordError(e.toString(), trace);
+    } catch (e, trace) {
+      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
       return null;
     }
   }
@@ -149,11 +154,13 @@ extension _MedicineClient on ApiClient {
         "/medicine/${medicine.id}",
         cookie: cookie.toString(),
         json: _modelToJson(medicine),
-      ) as Map<String, dynamic>;
+      ) as Map<String, dynamic>?;
+      if(json==null){
+        return null;
+      }
       return _modelFromJson(json);
-    } catch (e,trace) {
-      FirebaseCrashlytics.instance
-          .recordError(e.toString(), trace);
+    } catch (e, trace) {
+      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
       return null;
     }
   }
@@ -168,9 +175,8 @@ extension _MedicineClient on ApiClient {
         cookie: cookie.toString(),
       );
       return true;
-    } catch (e,trace) {
-      FirebaseCrashlytics.instance
-          .recordError(e.toString(), trace);
+    } catch (e, trace) {
+      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
     }
     return false;
   }

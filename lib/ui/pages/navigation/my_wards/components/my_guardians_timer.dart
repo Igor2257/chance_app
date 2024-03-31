@@ -61,13 +61,13 @@ class _MyGuardiansTimerState extends State<MyGuardiansTimer> {
 
   loadTimer() async {
     secondsLeft = 15;
-    setState(() {});
+    if (mounted) setState(() {});
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       secondsLeft--;
       if (secondsLeft < 1) {
         timer.cancel();
       }
-      setState(() {});
+      if (mounted) setState(() {});
     });
   }
 }

@@ -105,12 +105,12 @@ class _EnterAcceptCodeState extends State<EnterAcceptCode> {
       if (value == null) {
         isError = false;
         error = "";
-        setState(() {});
+        if (mounted) setState(() {});
         //Navigator.of(context).pop();
       } else {
         error = value;
         isError = true;
-        setState(() {});
+        if (mounted) setState(() {});
       }
     });
   }

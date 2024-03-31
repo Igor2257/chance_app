@@ -16,7 +16,8 @@ class ItemsRepository {
     List<ProductModel> items = [];
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: AppLocalizations.instance.translate("noInternet"),
+          msg: AppLocalizations.instance
+              .translate("noInternetConnectionConnection"),
           toastLength: Toast.LENGTH_LONG);
     } else {
       try {
@@ -27,11 +28,10 @@ class ItemsRepository {
         if (fetchedItems != null) {
           items = fetchedItems;
         }
-      } catch (e,trace) {
+      } catch (e, trace) {
         Fluttertoast.showToast(
             msg: e.toString(), toastLength: Toast.LENGTH_LONG);
-        FirebaseCrashlytics.instance
-            .recordError(e.toString(), trace);
+        FirebaseCrashlytics.instance.recordError(e.toString(), trace);
         FlutterError(e.toString());
       }
     }
@@ -42,7 +42,7 @@ class ItemsRepository {
     List<ProductModel> dbItems = await getItems();
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: AppLocalizations.instance.translate("noInternet"),
+          msg: AppLocalizations.instance.translate("noInternetConnection"),
           toastLength: Toast.LENGTH_LONG);
     } else {
       try {
@@ -67,11 +67,10 @@ class ItemsRepository {
           }
         }
         await HiveCRUD().rewriteItems(newItems);
-      } catch (e,trace) {
+      } catch (e, trace) {
         Fluttertoast.showToast(
             msg: e.toString(), toastLength: Toast.LENGTH_LONG);
-        FirebaseCrashlytics.instance
-            .recordError(e.toString(), trace);
+        FirebaseCrashlytics.instance.recordError(e.toString(), trace);
       }
     }
   }
@@ -80,7 +79,10 @@ class ItemsRepository {
 extension _ProductsClient on ApiClient {
   Future<List<ProductModel>?> fetchProducts({required String cookie}) async {
     try {
-      final items = await get("/product", cookie: cookie) as List<dynamic>;
+      final items = await get("/product", cookie: cookie) as List<dynamic>?;
+      if (items == null) {
+        return [];
+      }
       return items.cast<Map<String, dynamic>>().map(_modelFromJson).toList();
     } catch (_) {
       return null;
@@ -96,7 +98,10 @@ extension _ProductsClient on ApiClient {
         "/product",
         cookie: cookie,
         json: _modelToJson(productModel),
-      ) as Map<String, dynamic>;
+      ) as Map<String, dynamic>?;
+      if (json == null) {
+        return null;
+      }
       return _modelFromJson(json);
     } catch (_) {
       return null;

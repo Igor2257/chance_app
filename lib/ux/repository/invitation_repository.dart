@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:chance_app/main.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/enum/invitation_status.dart';
 import 'package:chance_app/ux/hive_crud.dart';
@@ -5,24 +8,23 @@ import 'package:chance_app/ux/model/invitation_model.dart';
 import 'package:chance_app/ux/model/settings.dart';
 import 'package:chance_app/ux/model/ward_location_model.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class InvitationRepository {
   Future<String?> sendConfirmToWard(String name, String email) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error = AppLocalizations.instance.translate("noInternet");
+      error = AppLocalizations.instance.translate("noInternetConnection");
     } else {
       final user = HiveCRUD().user!;
       final userEmail = user.email;
-      print("object $userEmail");
       await Supabase.instance.client
           .from("invitations")
           .select()
           .eq("toUserEmail", email)
           .eq("fromUserEmail", userEmail)
           .then((value) async {
-        print("object $value");
         if (value.toString() == "[]") {
           final model = InvitationModel(
             id: DateTime.now().microsecondsSinceEpoch.toString(),
@@ -44,7 +46,7 @@ class InvitationRepository {
   Future<dynamic> getInvitationForMe() async {
     List<InvitationModel> invitations = [];
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      return "noInternet";
+      return "noInternetConnection";
     } else {
       try {
         await Supabase.instance.client
@@ -68,7 +70,7 @@ class InvitationRepository {
   Future<dynamic> getInvitationFromMe() async {
     List<InvitationModel> invitations = [];
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      return "noInternet";
+      return "noInternetConnection";
     } else {
       try {
         await Supabase.instance.client
@@ -95,7 +97,7 @@ class InvitationRepository {
   Future<dynamic> getMyWards() async {
     List<InvitationModel> invitations = [];
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      return "noInternet";
+      return "noInternetConnection";
     } else {
       try {
         await Supabase.instance.client.from("invitations").select().match({
@@ -117,7 +119,7 @@ class InvitationRepository {
   Future<dynamic> getMyGuardians() async {
     List<InvitationModel> invitations = [];
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      return "noInternet";
+      return "noInternetConnection";
     } else {
       try {
         await Supabase.instance.client.from("invitations").select().match({
@@ -139,7 +141,17 @@ class InvitationRepository {
   Future<String?> acceptInvitation(InvitationModel invitationModel) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error = AppLocalizations.instance.translate("noInternet");
+      if (whichToastIsShowing != "noInternetConnection") {
+        whichToastIsShowing = "noInternetConnection";
+        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+          whichToastIsShowing = "";
+        }));
+      } else {
+        Fluttertoast.showToast(
+            msg: AppLocalizations.instance.translate("noInternetConnection"),
+            toastLength: Toast.LENGTH_LONG);
+      }
+      error = AppLocalizations.instance.translate("noInternetConnection");
     } else {
       await Supabase.instance.client
           .from("invitations")
@@ -172,7 +184,17 @@ class InvitationRepository {
   Future<String?> rejectInvitation(String id) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error = AppLocalizations.instance.translate("noInternet");
+      if (whichToastIsShowing != "noInternetConnection") {
+        whichToastIsShowing = "noInternetConnection";
+        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+          whichToastIsShowing = "";
+        }));
+      } else {
+        Fluttertoast.showToast(
+            msg: AppLocalizations.instance.translate("noInternetConnection"),
+            toastLength: Toast.LENGTH_LONG);
+      }
+      error = AppLocalizations.instance.translate("noInternetConnection");
     } else {
       try {
         await Supabase.instance.client.from("invitations").update(
@@ -188,7 +210,17 @@ class InvitationRepository {
   Future<String?> removeInvitation(String id) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error = AppLocalizations.instance.translate("noInternet");
+      if (whichToastIsShowing != "noInternetConnection") {
+        whichToastIsShowing = "noInternetConnection";
+        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+          whichToastIsShowing = "";
+        }));
+      } else {
+        Fluttertoast.showToast(
+            msg: AppLocalizations.instance.translate("noInternetConnection"),
+            toastLength: Toast.LENGTH_LONG);
+      }
+      error = AppLocalizations.instance.translate("noInternetConnection");
     } else {
       try {
         await Supabase.instance.client
@@ -206,7 +238,17 @@ class InvitationRepository {
   Future<String?> deleteWard(String id) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error = AppLocalizations.instance.translate("noInternet");
+      if (whichToastIsShowing != "noInternetConnection") {
+        whichToastIsShowing = "noInternetConnection";
+        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+          whichToastIsShowing = "";
+        }));
+      } else {
+        Fluttertoast.showToast(
+            msg: AppLocalizations.instance.translate("noInternetConnection"),
+            toastLength: Toast.LENGTH_LONG);
+      }
+      error = AppLocalizations.instance.translate("noInternetConnection");
     } else {
       try {
         await removeInvitation(id).whenComplete(() async {
@@ -226,7 +268,7 @@ class InvitationRepository {
   Future<String?> checkOnValidCode(String code) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      error = AppLocalizations.instance.translate("noInternet");
+      error = AppLocalizations.instance.translate("noInternetConnection");
     } else {
       try {
         //var url = Uri.parse('$apiUrl/medicine');

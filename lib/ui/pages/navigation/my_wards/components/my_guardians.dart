@@ -43,7 +43,7 @@ class _MyGuardiansState extends State<MyGuardians> {
                 ),
               );
             }
-            if (state.errorMyGuardians == "noInternet") {
+            if (state.errorMyGuardians == "noInternetConnection") {
               return Center(
                   child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -123,9 +123,7 @@ class _MyGuardiansState extends State<MyGuardians> {
                                     Fluttertoast.showToast(msg: value);
                                   }
                                   isLoading = false;
-                                  if (mounted) {
-                                    setState(() {});
-                                  }
+                                  if (mounted) setState(() {});
                                 });
                               }
                             },

@@ -22,19 +22,16 @@ class _DoctorAppointmentWebViewState extends State<DoctorAppointmentWebView> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (url) {
-            setState(() {
-              loadingPercentage = 0;
-            });
+            loadingPercentage = 0;
+            if (mounted) setState(() {});
           },
           onProgress: (progress) {
-            setState(() {
-              loadingPercentage = progress;
-            });
+            loadingPercentage = progress;
+            if (mounted) setState(() {});
           },
           onPageFinished: (url) {
-            setState(() {
-              loadingPercentage = 100;
-            });
+            loadingPercentage = 100;
+            if (mounted) setState(() {});
           },
           onNavigationRequest: (navigation) {
             final host = Uri.parse(navigation.url).host;
@@ -67,7 +64,7 @@ class _DoctorAppointmentWebViewState extends State<DoctorAppointmentWebView> {
     return Stack(
       children: [
         WebViewWidget(
-          controller:  widget.controller,
+          controller: widget.controller,
         ),
         if (loadingPercentage < 100)
           LinearProgressIndicator(

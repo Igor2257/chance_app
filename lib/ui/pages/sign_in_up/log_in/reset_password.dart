@@ -182,6 +182,6 @@ class _ResetPasswordState extends State<ResetPassword> {
       }
     }
 
-    setState(() {});
+    if (mounted) setState(() {});
   }
 }

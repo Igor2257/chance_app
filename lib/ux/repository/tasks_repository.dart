@@ -105,17 +105,20 @@ class TasksRepository {
 
 extension _TasksStorage on Box<TaskModel> {
   Future<void> putTask(TaskModel item) => put(item.id, item);
+
   Future<void> deleteTask(TaskModel item) => delete(item.id);
 }
 
 extension _TasksClient on ApiClient {
   Future<List<TaskModel>?> fetchTasks({required String cookie}) async {
     try {
-      final items = await get("/task", cookie: cookie) as List<dynamic>;
+      final items = await get("/task", cookie: cookie) as List<dynamic>?;
+      if (items == null) {
+        return [];
+      }
       return items.cast<Map<String, dynamic>>().map(_modelFromJson).toList();
-    } catch (e,trace) {
-      FirebaseCrashlytics.instance
-          .recordError(e.toString(), trace);
+    } catch (e, trace) {
+      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
       return null;
     }
   }
@@ -129,11 +132,13 @@ extension _TasksClient on ApiClient {
         "/task",
         cookie: cookie,
         json: _modelToJson(task),
-      ) as Map<String, dynamic>;
+      ) as Map<String, dynamic>?;
+      if (json == null) {
+        return null;
+      }
       return _modelFromJson(json);
-    } catch (e,trace) {
-      FirebaseCrashlytics.instance
-          .recordError(e.toString(), trace);
+    } catch (e, trace) {
+      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
       return null;
     }
   }
@@ -147,11 +152,13 @@ extension _TasksClient on ApiClient {
         "/task/${task.id}",
         cookie: cookie.toString(),
         json: _modelToJson(task),
-      ) as Map<String, dynamic>;
+      ) as Map<String, dynamic>?;
+      if (json == null) {
+        return null;
+      }
       return _modelFromJson(json);
-    } catch (e,trace) {
-      FirebaseCrashlytics.instance
-          .recordError(e.toString(), trace);
+    } catch (e, trace) {
+      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
       return null;
     }
   }
@@ -166,9 +173,8 @@ extension _TasksClient on ApiClient {
         cookie: cookie.toString(),
       );
       return true;
-    } catch (e,trace) {
-      FirebaseCrashlytics.instance
-          .recordError(e.toString(), trace);
+    } catch (e, trace) {
+      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
       return false;
     }
   }

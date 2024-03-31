@@ -13,8 +13,8 @@ class Settings with _$Settings {
     @HiveField(1) @Default(true) bool soundsOn,
     @HiveField(2) @Default(null) DateTime? firstEnter,
     @HiveField(3) @Default(false) bool? isNotificationEnable,
-    @HiveField(4) @Default(null) String? language,
-    @HiveField(5) @Default(null) String? languageCode,
+    @HiveField(4) @Default("English") String language,
+    @HiveField(5) @Default("en") String languageCode,
     @HiveField(6) @Default(false) bool isAppShouldSentLocation,
   }) = _Settings;
 

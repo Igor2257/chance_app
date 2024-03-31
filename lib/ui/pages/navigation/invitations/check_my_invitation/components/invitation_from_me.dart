@@ -43,7 +43,7 @@ class _InvitationFromMeState extends State<InvitationFromMe> {
               ),
             );
           }
-          if (state.errorInvitationsFromMe == "noInternet") {
+          if (state.errorInvitationsFromMe == "noInternetConnection") {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -133,9 +133,7 @@ class _InvitationFromMeState extends State<InvitationFromMe> {
                                   Fluttertoast.showToast(msg: value);
                                 }
                                 isLoading = false;
-                                if (mounted) {
-                                  setState(() {});
-                                }
+                                if (mounted) setState(() {});
                               });
                             }
                           },

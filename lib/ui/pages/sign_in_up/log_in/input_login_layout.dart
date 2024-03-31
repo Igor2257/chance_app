@@ -122,9 +122,8 @@ class _InputLoginLayoutState extends State<InputLoginLayout> {
                             password: textEditingController.text));
                         BlocProvider.of<LoginBloc>(context)
                             .add(SaveEmail(email: widget.emailTextEditingController!.text));
-                        setState(() {
-                          obscureText = !obscureText;
-                        });
+                        obscureText = !obscureText;
+                        if (mounted) setState(() {});
                       },
                       icon: Icon(obscureText
                           ? Icons.visibility_off_outlined

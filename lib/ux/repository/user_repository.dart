@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:chance_app/main.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/hive_crud.dart';
@@ -21,10 +22,18 @@ class UserRepository {
   Future<String?> sendLoginData(String email, String password) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      Fluttertoast.showToast(
-          msg: AppLocalizations.instance.translate("noInternet"),
-          toastLength: Toast.LENGTH_LONG);
-      error = AppLocalizations.instance.translate("noInternet");
+      if (whichToastIsShowing != "noInternetConnection") {
+        whichToastIsShowing = "noInternetConnection";
+        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+          whichToastIsShowing = "";
+        }));
+      } else {
+        Fluttertoast.showToast(
+            msg: AppLocalizations.instance.translate("noInternetConnection"),
+            toastLength: Toast.LENGTH_LONG);
+      }
+
+      error = AppLocalizations.instance.translate("noInternetConnection");
     } else {
       try {
         var url = Uri.parse('$apiUrl/auth/login');
@@ -111,10 +120,17 @@ class UserRepository {
       String email, String password) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      Fluttertoast.showToast(
-          msg: AppLocalizations.instance.translate("noInternet"),
-          toastLength: Toast.LENGTH_LONG);
-      error = AppLocalizations.instance.translate("noInternet");
+      if (whichToastIsShowing != "noInternetConnection") {
+        whichToastIsShowing = "noInternetConnection";
+        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+          whichToastIsShowing = "";
+        }));
+      } else {
+        Fluttertoast.showToast(
+            msg: AppLocalizations.instance.translate("noInternetConnection"),
+            toastLength: Toast.LENGTH_LONG);
+      }
+      error = AppLocalizations.instance.translate("noInternetConnection");
     } else {
       try {
         var url = Uri.parse('$apiUrl/auth/register');
@@ -162,10 +178,17 @@ class UserRepository {
     }
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      Fluttertoast.showToast(
-          msg: AppLocalizations.instance.translate("noInternet"),
-          toastLength: Toast.LENGTH_LONG);
-      error = AppLocalizations.instance.translate("noInternet");
+      if (whichToastIsShowing != "noInternetConnection") {
+        whichToastIsShowing = "noInternetConnection";
+        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+          whichToastIsShowing = "";
+        }));
+      } else {
+        Fluttertoast.showToast(
+            msg: AppLocalizations.instance.translate("noInternetConnection"),
+            toastLength: Toast.LENGTH_LONG);
+      }
+      error = AppLocalizations.instance.translate("noInternetConnection");
     } else {
       try {
         var url = Uri.parse('$apiUrl/auth/confirm');
@@ -205,10 +228,17 @@ class UserRepository {
       {String? name, String? lastName, String? phone, String? token}) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      Fluttertoast.showToast(
-          msg: AppLocalizations.instance.translate("noInternet"),
-          toastLength: Toast.LENGTH_LONG);
-      error = AppLocalizations.instance.translate("noInternet");
+      if (whichToastIsShowing != "noInternetConnection") {
+        whichToastIsShowing = "noInternetConnection";
+        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+          whichToastIsShowing = "";
+        }));
+      } else {
+        Fluttertoast.showToast(
+            msg: AppLocalizations.instance.translate("noInternetConnection"),
+            toastLength: Toast.LENGTH_LONG);
+      }
+      error = AppLocalizations.instance.translate("noInternetConnection");
     } else {
       try {
         var url = Uri.parse('$apiUrl/user');
@@ -251,10 +281,17 @@ class UserRepository {
     }
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      Fluttertoast.showToast(
-          msg: AppLocalizations.instance.translate("noInternet"),
-          toastLength: Toast.LENGTH_LONG);
-      error = AppLocalizations.instance.translate("noInternet");
+      if (whichToastIsShowing != "noInternetConnection") {
+        whichToastIsShowing = "noInternetConnection";
+        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+          whichToastIsShowing = "";
+        }));
+      } else {
+        Fluttertoast.showToast(
+            msg: AppLocalizations.instance.translate("noInternetConnection"),
+            toastLength: Toast.LENGTH_LONG);
+      }
+      error = AppLocalizations.instance.translate("noInternetConnection");
     } else {
       try {
         var url = Uri.parse('$apiUrl/auth/resend-code');
@@ -288,10 +325,17 @@ class UserRepository {
   Future<String?> forgotPassword(String email) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      Fluttertoast.showToast(
-          msg: AppLocalizations.instance.translate("noInternet"),
-          toastLength: Toast.LENGTH_LONG);
-      error = AppLocalizations.instance.translate("noInternet");
+      if (whichToastIsShowing != "noInternetConnection") {
+        whichToastIsShowing = "noInternetConnection";
+        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+          whichToastIsShowing = "";
+        }));
+      } else {
+        Fluttertoast.showToast(
+            msg: AppLocalizations.instance.translate("noInternetConnection"),
+            toastLength: Toast.LENGTH_LONG);
+      }
+      error = AppLocalizations.instance.translate("noInternetConnection");
     } else {
       try {
         var url = Uri.parse('$apiUrl/auth/forget-password');
@@ -326,10 +370,17 @@ class UserRepository {
       String email, String code, String newPassword) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      Fluttertoast.showToast(
-          msg: AppLocalizations.instance.translate("noInternet"),
-          toastLength: Toast.LENGTH_LONG);
-      error = AppLocalizations.instance.translate("noInternet");
+      if (whichToastIsShowing != "noInternetConnection") {
+        whichToastIsShowing = "noInternetConnection";
+        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+          whichToastIsShowing = "";
+        }));
+      } else {
+        Fluttertoast.showToast(
+            msg: AppLocalizations.instance.translate("noInternetConnection"),
+            toastLength: Toast.LENGTH_LONG);
+      }
+      error = AppLocalizations.instance.translate("noInternetConnection");
     } else {
       try {
         var salt = 'UVocjgjgXg8P7zIsC93kKlRU8sPbTBhsAMFLnLUPDRYFIWAk';
@@ -374,9 +425,16 @@ class UserRepository {
   Future<MeUser?> getUser() async {
     MeUser? meUser;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      Fluttertoast.showToast(
-          msg: AppLocalizations.instance.translate("noInternet"),
-          toastLength: Toast.LENGTH_LONG);
+      if (whichToastIsShowing != "noInternetConnection") {
+        whichToastIsShowing = "noInternetConnection";
+        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+          whichToastIsShowing = "";
+        }));
+      } else {
+        Fluttertoast.showToast(
+            msg: AppLocalizations.instance.translate("noInternetConnection"),
+            toastLength: Toast.LENGTH_LONG);
+      }
     } else {
       try {
         var url = Uri.parse('$apiUrl/auth/me');
@@ -445,9 +503,18 @@ class UserRepository {
       if (token != null) {
         if (await (Connectivity().checkConnectivity()) ==
             ConnectivityResult.none) {
-          Fluttertoast.showToast(
-              msg: AppLocalizations.instance.translate("noInternet"),
-              toastLength: Toast.LENGTH_LONG);
+          if (whichToastIsShowing != "noInternetConnection") {
+            whichToastIsShowing = "noInternetConnection";
+            unawaited(
+                Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+              whichToastIsShowing = "";
+            }));
+          } else {
+            Fluttertoast.showToast(
+                msg:
+                    AppLocalizations.instance.translate("noInternetConnection"),
+                toastLength: Toast.LENGTH_LONG);
+          }
         } else {
           var url = Uri.parse('$apiUrl/auth/google/$token');
           await http.post(url, headers: <String, String>{
@@ -521,10 +588,17 @@ class UserRepository {
   Future<String?> logout() async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-      Fluttertoast.showToast(
-          msg: AppLocalizations.instance.translate("noInternet"),
-          toastLength: Toast.LENGTH_LONG);
-      error = AppLocalizations.instance.translate("noInternet");
+      if (whichToastIsShowing != "noInternetConnection") {
+        whichToastIsShowing = "noInternetConnection";
+        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+          whichToastIsShowing = "";
+        }));
+      } else {
+        Fluttertoast.showToast(
+            msg: AppLocalizations.instance.translate("noInternetConnection"),
+            toastLength: Toast.LENGTH_LONG);
+      }
+      error = AppLocalizations.instance.translate("noInternetConnection");
     } else {
       try {
         var url = Uri.parse('$apiUrl/auth/logout');
@@ -561,12 +635,8 @@ class UserRepository {
     try {
       await const FlutterSecureStorage()
           .write(key: "set-cookie", value: header)
-          .whenComplete(() async {
-        print(
-            "cookiesave ${await const FlutterSecureStorage().read(key: "set-cookie")}");
-      });
+          .whenComplete(() async {});
     } catch (e, trace) {
-      print("$e\n$trace");
       FirebaseCrashlytics.instance.recordError(e.toString(), trace);
     }
   }
@@ -575,12 +645,10 @@ class UserRepository {
     String? cookie;
     try {
       cookie = await const FlutterSecureStorage().read(key: "set-cookie");
-      print("cookie $cookie");
     } catch (e, trace) {
-      print("$e\n$trace");
       FirebaseCrashlytics.instance.recordError(e.toString(), trace);
     }
-    print("cookie $cookie");
+
     return cookie;
   }
 
@@ -588,7 +656,6 @@ class UserRepository {
     try {
       await const FlutterSecureStorage().delete(key: "set-cookie");
     } catch (e, trace) {
-      print("$e\n$trace");
       FirebaseCrashlytics.instance.recordError(e.toString(), trace);
     }
   }
@@ -597,12 +664,8 @@ class UserRepository {
     try {
       await const FlutterSecureStorage()
           .write(key: "first-enter", value: DateTime.now().toUtc().toString())
-          .whenComplete(() async {
-        print(
-            "first-enter ${await const FlutterSecureStorage().read(key: "first-enter")}");
-      });
+          .whenComplete(() async {});
     } catch (e, trace) {
-      print("$e\n$trace");
       FirebaseCrashlytics.instance.recordError(e.toString(), trace);
     }
   }
@@ -612,12 +675,10 @@ class UserRepository {
     try {
       firstEnter =
           await const FlutterSecureStorage().read(key: "first-enter") != null;
-      print("first-enter $firstEnter");
     } catch (e, trace) {
-      print("$e\n$trace");
       FirebaseCrashlytics.instance.recordError(e.toString(), trace);
     }
-    print("first-enter $firstEnter");
+
     return firstEnter;
   }
 }

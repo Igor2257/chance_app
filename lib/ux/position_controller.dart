@@ -5,14 +5,14 @@ import 'dart:math';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/repository/navigation_repository.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 
-class PositionController {
+class PositionController with ChangeNotifier {
   StreamSubscription<Position>? positionStream;
   Position? _myPreviousPosition;
-  late final Function(VoidCallback fn) _setState;
-  static ValueNotifier<Position>? myPosition;
+  Position? myPosition;
   final List<String> _fakeMessages = [
     'Раз збрехавши, хто тобі повірить?',
     'Хіба порядній людині пристало брехати?',
@@ -26,7 +26,7 @@ class PositionController {
   ];
   late final Timer timer;
 
-  PositionController(void Function(VoidCallback fn) this._setState) {
+  PositionController() {
     Geolocator.getCurrentPosition().then((value) {
       final stream = Geolocator.getPositionStream(
           locationSettings: LocationSettings(
@@ -51,18 +51,10 @@ class PositionController {
                 return;
               }
             }
-            _setState(() {
-              _myPreviousPosition = position;
-              if (myPosition != null) {
-                myPosition!.value = position;
-              } else {
-                myPosition = ValueNotifier<Position>(position);
-              }
-            });
-            if (HiveCRUD.instance.setting.isAppShouldSentLocation) {
-              await NavigationRepository()
-                  .sendMyLocation(position.latitude, position.longitude);
-            }
+
+            _myPreviousPosition = position;
+            myPosition = position;
+            notifyListeners();
           }
         } catch (e) {
           if (e.toString() == 'isMocked') {
@@ -78,7 +70,7 @@ class PositionController {
       });
 
       resume();
-      loadTimer();
+      //loadTimer();
     });
   }
 
@@ -99,6 +91,39 @@ class PositionController {
 
   void resume() {
     positionStream!.resume();
+    unawaited(
+        NavigationRepository().isAppShouldSentLocation().then((error) async {
+      if (error == null) {
+        HiveCRUD hiveCRUD = HiveCRUD();
+        if (hiveCRUD.setting.isAppShouldSentLocation) {
+          try {
+            unawaited(Geolocator.getCurrentPosition().whenComplete(() async {
+              await const MethodChannel('location_service')
+                  .invokeMethod('startLocationService', hiveCRUD.user!.email)
+                  .then((value) {
+                print(value);
+              });
+            }));
+          } catch (_) {}
+        }
+      }
+    }));
+  }
+
+  void pause() {
+    positionStream!.pause();
+    HiveCRUD hiveCRUD = HiveCRUD();
+    if (hiveCRUD.setting.isAppShouldSentLocation) {
+      try {
+        unawaited(Geolocator.getCurrentPosition().whenComplete(() async {
+          await const MethodChannel('location_service_disable')
+              .invokeMethod('pauseLocationService',hiveCRUD.setting.isAppShouldSentLocation)
+              .then((value) {
+            print(value);
+          });
+        }));
+      } catch (_) {}
+    }
   }
 
   loadTimer() async {
