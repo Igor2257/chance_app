@@ -20,6 +20,12 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
   late bool isEdit;
 
   @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<SosContactsBloc>(context).add(LoadSosContactsEvent());
+  }
+
+  @override
   void didChangeDependencies() {
     isEdit = ModalRoute.of(context)!.settings.arguments as bool;
     super.didChangeDependencies();
@@ -113,7 +119,6 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
                             BlocProvider.of<SosContactsBloc>(context).add(
                                 DeleteContact(ids: [selectedModels[0].id]));
                           }
-
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               "/sos", (route) => false);
                         }
