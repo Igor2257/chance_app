@@ -65,14 +65,18 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_validateForm()) {
-                        _sosContactsBloc.add(EditContact(
-                            contactModel: contactModel.copyWith(contacts: [
-                          SosContactModel(
-                              name: nameController.text,
-                              phone: phoneController.text,
-                              id: contactModel.id)
-                        ])));
-
+                        _sosContactsBloc.add(
+                          EditContact(
+                            contactModel: contactModel.copyWith(
+                              contacts: [
+                                SosContactModel(
+                                    name: nameController.text,
+                                    phone: phoneController.text,
+                                    id: contactModel.id)
+                              ],
+                            ),
+                          ),
+                        );
                         Navigator.of(context)
                             .pushNamedAndRemoveUntil("/sos", (route) => false);
                         nameController.clear();

@@ -50,22 +50,40 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
                   padding: const EdgeInsets.only(bottom: 29),
                   itemBuilder: (context, index) {
                     SosGroupModel contactModel = contacts[index];
-                    return ContainerButtonWithCheckbox(
-                      contactModel: contactModel,
-                      text: contactModel.name.isNotEmpty
-                          ? contactModel.name
-                          : contactModel.contacts[0].name,
-                      isSelected: selectedModels.contains(
-                        contactModel,
-                      ),
-                      isEdit: isEdit,
-                      onChanged: (value) {
-                        handleCheckboxChange(
-                          value,
-                          contactModel,
-                        );
+                    return InkWell(
+                      onTap: () {
+                        if (isEdit == false) {
+                          if (contactModel.name.isEmpty) {
+                            Navigator.pushNamed(context, "/replace_contact_sos",
+                                arguments: contactModel);
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditGroupScreenSos(
+                                    groupModel: contactModel),
+                              ),
+                            );
+                          }
+                        }
                       },
-                      isGroup: contactModel.name.isNotEmpty ? true : false,
+                      child: ContainerButtonWithCheckbox(
+                        contactModel: contactModel,
+                        text: contactModel.name.isNotEmpty
+                            ? contactModel.name
+                            : contactModel.contacts[0].name,
+                        isSelected: selectedModels.contains(
+                          contactModel,
+                        ),
+                        isEdit: isEdit,
+                        onChanged: (value) {
+                          handleCheckboxChange(
+                            value,
+                            contactModel,
+                          );
+                        },
+                        isGroup: contactModel.name.isNotEmpty ? true : false,
+                      ),
                     );
                   },
                 ),
@@ -163,70 +181,53 @@ class _ContainerButtonWithCheckboxState
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        if (widget.isEdit == false && widget.isGroup == false) {
-          Navigator.pushNamed(context, "/replace_contact_sos",
-              arguments: widget.contactModel);
-        } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  EditGroupScreenSos(groupModel: widget.contactModel),
-            ),
-          );
-        }
-      },
-      child: Container(
-        width: double.infinity,
-        height: 72,
-        margin: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: containerColor,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          mainAxisAlignment: widget.isEdit
-              ? MainAxisAlignment.start
-              : MainAxisAlignment.center,
-          children: [
-            Visibility(
-              visible: widget.isEdit,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Checkbox(
-                  activeColor: darkNeutral800,
-                  checkColor: primary50,
-                  value: widget.isSelected,
-                  onChanged: (value) {
-                    setState(() {
-                      widget.onChanged?.call(value);
-                      if (value == true) {
-                        containerColor = darkNeutral800;
-                      } else {
-                        containerColor = darkNeutral600;
-                      }
-                    });
-                  },
-                  side: BorderSide(
-                    color: widget.isSelected
-                        ? primary50
-                        : primary50, // Fix the typo here
-                  ),
+    return Container(
+      width: double.infinity,
+      height: 72,
+      margin: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: containerColor,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        mainAxisAlignment:
+            widget.isEdit ? MainAxisAlignment.start : MainAxisAlignment.center,
+        children: [
+          Visibility(
+            visible: widget.isEdit,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Checkbox(
+                activeColor: darkNeutral800,
+                checkColor: primary50,
+                value: widget.isSelected,
+                onChanged: (value) {
+                  setState(() {
+                    widget.onChanged?.call(value);
+                    if (value == true) {
+                      containerColor = darkNeutral800;
+                    } else {
+                      containerColor = darkNeutral600;
+                    }
+                  });
+                },
+                side: BorderSide(
+                  color: widget.isSelected
+                      ? primary50
+                      : primary50, // Fix the typo here
                 ),
               ),
             ),
-            Text(
-              widget.text,
-              style: const TextStyle(
-                color: primary50,
-                fontWeight: FontWeight.w400,
-                fontSize: 16,
-              ),
+          ),
+          Text(
+            widget.text,
+            style: const TextStyle(
+              color: primary50,
+              fontWeight: FontWeight.w400,
+              fontSize: 16,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

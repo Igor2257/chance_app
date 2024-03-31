@@ -21,12 +21,14 @@ class SosContactsBloc extends Bloc<SosContactsEvent, SosContactsState> {
   FutureOr<void> _onLoadContacts(
       LoadSosContactsEvent event, Emitter<SosContactsState> emit) async {
     try {
-      await SosRepository().loadContacts().then((value) {
-        if (value != null) {
-          list = value;
-          emit(state.copyWith(contacts: value));
-        }
-      });
+      await SosRepository().loadContacts().then(
+        (value) {
+          if (value != null) {
+            list = value;
+            emit(state.copyWith(contacts: value));
+          }
+        },
+      );
     } catch (error) {
       // emit(SosContactsError(error.toString())); // Emit error state
     }
@@ -37,9 +39,11 @@ class SosContactsBloc extends Bloc<SosContactsEvent, SosContactsState> {
     list.add(event.contactModel);
     emit(state.copyWith(contacts: list));
     if (event.isGroup) {
-      SosRepository().addGroupName(name: event.contactModel.name).then((value) {
-        SosRepository().saveContact(event.contactModel, groupId: value);
-      });
+      SosRepository().addGroupName(name: event.contactModel.name).then(
+        (value) {
+          SosRepository().saveContact(event.contactModel, groupId: value);
+        },
+      );
     } else {
       SosRepository().saveContact(event.contactModel);
     }

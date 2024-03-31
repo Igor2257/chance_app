@@ -202,7 +202,6 @@ class SosRepository {
     try {
       var url = Uri.parse('$apiUrl/sos/${contactModel.id}');
       final cookie = await UserRepository().getCookie();
-
       var response = await http.patch(
         url,
         headers: <String, String>{
@@ -217,10 +216,7 @@ class SosRepository {
         }),
       );
 
-      if (response.statusCode > 199 && response.statusCode < 300) {
-        String bodyString = response.body;
-        Map<String, dynamic> data = json.decode(bodyString);
-      } else {
+      if (!(response.statusCode > 199 && response.statusCode < 300)) {
         error = jsonDecode(response.body)["message"]
             .toString()
             .replaceAll("[", "")
@@ -231,7 +227,7 @@ class SosRepository {
     }
 
     if (error != null) {
-      Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+      Fluttertoast.showToast(msg: error, toastLength: Toast.LENGTH_LONG);
     }
 
     return groupModel;
@@ -246,7 +242,6 @@ class SosRepository {
           msg: "Немає підключення до інтернету",
           toastLength: Toast.LENGTH_LONG);
     }
-
     try {
       var url = Uri.parse('$apiUrl/sos/${group.contacts[0].contactsId}');
       final cookie = await UserRepository().getCookie();
@@ -267,10 +262,7 @@ class SosRepository {
         body: jsonEncode({"group": group.id, "contacts": contactsData}),
       );
 
-      if (response.statusCode > 199 && response.statusCode < 300) {
-        String bodyString = response.body;
-        Map<String, dynamic> data = json.decode(bodyString);
-      } else {
+      if (!(response.statusCode > 199 && response.statusCode < 300)) {
         error = jsonDecode(response.body)["message"]
             .toString()
             .replaceAll("[", "")
@@ -281,7 +273,7 @@ class SosRepository {
     }
 
     if (error != null) {
-      Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
+      Fluttertoast.showToast(msg: error, toastLength: Toast.LENGTH_LONG);
     }
 
     return groupModel;
@@ -308,12 +300,7 @@ class SosRepository {
         },
         body: jsonEncode({"name": contactModel.name}),
       );
-
-      if (response.statusCode > 199 && response.statusCode < 300) {
-        String bodyString = response.body;
-        Map<String, dynamic> data = json.decode(bodyString);
-        List<dynamic> contactList = data['contacts'];
-      } else {
+      if (!(response.statusCode > 199 && response.statusCode < 300)) {
         error = jsonDecode(response.body)["message"]
             .toString()
             .replaceAll("[", "")
@@ -322,7 +309,6 @@ class SosRepository {
     } catch (e) {
       error = e.toString();
     }
-
     if (error != null) {
       Fluttertoast.showToast(msg: error, toastLength: Toast.LENGTH_LONG);
     }
@@ -336,7 +322,6 @@ class SosRepository {
       Fluttertoast.showToast(
           msg: "Немає підключення до інтернету",
           toastLength: Toast.LENGTH_LONG);
-      error = "Немає підключення до інтернету";
     } else {
       try {
         var url = Uri.parse('$apiUrl/sos/$contactId');
@@ -382,7 +367,7 @@ class SosRepository {
                 .replaceAll("[", "")
                 .replaceAll("]", "");
             Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
-          } else {}
+          }
         });
       } catch (error) {
         Fluttertoast.showToast(
@@ -425,7 +410,6 @@ class SosRepository {
           } else {
             String bodyString = value.body;
             Map<String, dynamic> data = json.decode(bodyString);
-
             groupId = data["_id"];
           }
         });

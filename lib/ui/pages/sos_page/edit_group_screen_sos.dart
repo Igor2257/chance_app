@@ -81,14 +81,40 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          AppLocalizations.instance
-                              .translate("contact ${index + 1}"),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            color: Colors.black,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              AppLocalizations.instance.translate("contact") +
+                                  ("  ${index + 1}"),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: Colors.black,
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  contacts.removeAt(index);
+                                });
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    AppLocalizations.instance
+                                        .translate("deleteContact"),
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: red900,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(
                           height: 5,
@@ -102,44 +128,19 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
                         ),
                         LabeledTextField(
                           controller: contacts[index].phoneController,
-                          label: AppLocalizations.instance.translate("phone"),
+                          label: AppLocalizations.instance
+                              .translate("enterPhoneNumber"),
                           hintText: '+380',
                           isPhone: true,
                           onChanged: (value) {},
-                        ),
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              contacts.removeAt(index);
-                            });
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const Icon(Icons.delete),
-                              const SizedBox(width: 8),
-                              Text(
-                                AppLocalizations.instance
-                                    .translate("deleteContact"),
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: primary800,
-                                ),
-                              ),
-                            ],
-                          ),
                         ),
                         const SizedBox(
                           height: 28,
                         ),
                       ],
                     ),
-                  const SizedBox(
-                    height: 18,
-                  ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 10, bottom: 25),
+                    padding: const EdgeInsets.only(bottom: 40),
                     child: InkWell(
                       onTap: () {
                         setState(() {
@@ -147,7 +148,7 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
                         });
                       },
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           const Icon(Icons.add),
                           const SizedBox(width: 8),
@@ -179,7 +180,7 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
                           ),
                         ),
                         child: Text(
-                          AppLocalizations.instance.translate("saveTheGroup"),
+                          AppLocalizations.instance.translate("saveChanges"),
                           style: const TextStyle(
                             color: primary50,
                             fontWeight: FontWeight.w500,
@@ -235,5 +236,5 @@ class ContactItem {
 
   ContactItem({String? name, String? phone})
       : nameController = TextEditingController(text: name),
-        phoneController = TextEditingController(text: phone);
+        phoneController = TextEditingController(text: phone ?? '+380');
 }
