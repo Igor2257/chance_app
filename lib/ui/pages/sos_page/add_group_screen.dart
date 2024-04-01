@@ -73,10 +73,11 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          AppLocalizations.instance
-                              .translate("contact ${index + 1}"),
+                          AppLocalizations.instance.translate("contact") +
+                              (" ${index + 1}"),
                           style: const TextStyle(
-                            fontWeight: FontWeight.w400,
+                            fontFamily: "Roboto",
+                            fontWeight: FontWeight.w500,
                             fontSize: 14,
                             color: Colors.black,
                           ),
@@ -94,7 +95,8 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                         LabeledTextField(
                           controller: contacts[index].phoneController
                             ..text = "+380",
-                          label: AppLocalizations.instance.translate("phone"),
+                          label: AppLocalizations.instance
+                              .translate("enterPhoneNumber"),
                           hintText: '+380',
                           isPhone: true,
                           onChanged: (value) {},key:  const ValueKey("phone"),
@@ -111,7 +113,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                       });
                     },
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         const Icon(Icons.add),
                         const SizedBox(width: 8),
@@ -130,7 +132,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                     height: 18,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 18),
+                    padding: const EdgeInsets.only(top: 22, bottom: 18),
                     child: SizedBox(
                       width: double.infinity,
                       height: 48,

@@ -65,9 +65,10 @@ class LabeledTextFieldState extends State<LabeledTextField> {
         Text(
           widget.label,
           style: const TextStyle(
+            fontFamily: "Roboto",
             fontWeight: FontWeight.w400,
             fontSize: 14,
-            color: Colors.black,
+            color: Color(0xFF212833),
           ),
         ),
         const SizedBox(
@@ -98,10 +99,6 @@ class LabeledTextFieldState extends State<LabeledTextField> {
                   width: 1.0,
                 ),
               ),
-              // prefixText: widget.isPhone ? '+380 ' : null,
-              // prefixStyle: widget.isPhone
-              //     ? const TextStyle(color: Colors.red, fontSize: 18)
-              //     : null,
             ),
             onChanged: (value) {
               setState(() {

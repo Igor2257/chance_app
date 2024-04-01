@@ -1,14 +1,10 @@
-import 'dart:async';
 import 'dart:convert';
 
-import 'package:chance_app/main.dart';
 import 'package:chance_app/ui/constans.dart';
-import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -24,16 +20,10 @@ class SosRepository {
   Future<List<SosGroupModel>?> loadContacts() async {
     List<SosGroupModel> contacts = [];
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-       if (whichToastIsShowing != "noInternetConnection") {
-        whichToastIsShowing = "noInternetConnection";
-        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
-          whichToastIsShowing = "";
-        }));
-      }else{
-        Fluttertoast.showToast(
-            msg: AppLocalizations.instance.translate("noInternetConnection"),
-            toastLength: Toast.LENGTH_LONG);
-      }
+      Fluttertoast.showToast(
+        msg: "Немає підключення до інтернету",
+        toastLength: Toast.LENGTH_LONG,
+      );
 
       return HiveCRUD().myGroupContacts;
     }
@@ -120,12 +110,11 @@ class SosRepository {
             .replaceAll("]", "");
         Fluttertoast.showToast(msg: error, toastLength: Toast.LENGTH_LONG);
       }
-    } catch (e, trace) {
+    } catch (error) {
       Fluttertoast.showToast(
-        msg: e.toString(),
+        msg: error.toString(),
         toastLength: Toast.LENGTH_LONG,
       );
-      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
     }
     return contacts;
   }
@@ -135,16 +124,9 @@ class SosRepository {
     String? error;
     SosGroupModel? groupModel;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-       if (whichToastIsShowing != "noInternetConnection") {
-        whichToastIsShowing = "noInternetConnection";
-        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
-          whichToastIsShowing = "";
-        }));
-      }else{
-        Fluttertoast.showToast(
-            msg: AppLocalizations.instance.translate("noInternetConnection"),
-            toastLength: Toast.LENGTH_LONG);
-      }
+      Fluttertoast.showToast(
+          msg: "Немає підключення до інтернету",
+          toastLength: Toast.LENGTH_LONG);
     }
 
     try {
@@ -196,9 +178,8 @@ class SosRepository {
             .replaceAll("[", "")
             .replaceAll("]", "");
       }
-    } catch (e, trace) {
+    } catch (e) {
       error = e.toString();
-      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
     }
 
     if (error != null) {
@@ -213,22 +194,14 @@ class SosRepository {
     String? error;
     SosContactModel? groupModel;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-       if (whichToastIsShowing != "noInternetConnection") {
-        whichToastIsShowing = "noInternetConnection";
-        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
-          whichToastIsShowing = "";
-        }));
-      }else{
-        Fluttertoast.showToast(
-            msg: AppLocalizations.instance.translate("noInternetConnection"),
-            toastLength: Toast.LENGTH_LONG);
-      }
+      Fluttertoast.showToast(
+          msg: "Немає підключення до інтернету",
+          toastLength: Toast.LENGTH_LONG);
     }
 
     try {
       var url = Uri.parse('$apiUrl/sos/${contactModel.id}');
       final cookie = await UserRepository().getCookie();
-
       var response = await http.patch(
         url,
         headers: <String, String>{
@@ -243,18 +216,14 @@ class SosRepository {
         }),
       );
 
-      if (response.statusCode > 199 && response.statusCode < 300) {
-        String bodyString = response.body;
-        Map<String, dynamic> data = json.decode(bodyString);
-      } else {
+      if (!(response.statusCode > 199 && response.statusCode < 300)) {
         error = jsonDecode(response.body)["message"]
             .toString()
             .replaceAll("[", "")
             .replaceAll("]", "");
       }
-    } catch (e, trace) {
+    } catch (e) {
       error = e.toString();
-      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
     }
 
     if (error != null) {
@@ -269,18 +238,10 @@ class SosRepository {
     String? error;
     SosContactModel? groupModel;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-       if (whichToastIsShowing != "noInternetConnection") {
-        whichToastIsShowing = "noInternetConnection";
-        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
-          whichToastIsShowing = "";
-        }));
-      }else{
-        Fluttertoast.showToast(
-            msg: AppLocalizations.instance.translate("noInternetConnection"),
-            toastLength: Toast.LENGTH_LONG);
-      }
+      Fluttertoast.showToast(
+          msg: "Немає підключення до інтернету",
+          toastLength: Toast.LENGTH_LONG);
     }
-
     try {
       var url = Uri.parse('$apiUrl/sos/${group.contacts[0].contactsId}');
       final cookie = await UserRepository().getCookie();
@@ -301,18 +262,14 @@ class SosRepository {
         body: jsonEncode({"group": group.id, "contacts": contactsData}),
       );
 
-      if (response.statusCode > 199 && response.statusCode < 300) {
-        String bodyString = response.body;
-        Map<String, dynamic> data = json.decode(bodyString);
-      } else {
+      if (!(response.statusCode > 199 && response.statusCode < 300)) {
         error = jsonDecode(response.body)["message"]
             .toString()
             .replaceAll("[", "")
             .replaceAll("]", "");
       }
-    } catch (e, trace) {
+    } catch (e) {
       error = e.toString();
-      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
     }
 
     if (error != null) {
@@ -326,16 +283,9 @@ class SosRepository {
     String? error;
     SosContactModel? groupModel;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-       if (whichToastIsShowing != "noInternetConnection") {
-        whichToastIsShowing = "noInternetConnection";
-        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
-          whichToastIsShowing = "";
-        }));
-      }else{
-        Fluttertoast.showToast(
-            msg: AppLocalizations.instance.translate("noInternetConnection"),
-            toastLength: Toast.LENGTH_LONG);
-      }
+      Fluttertoast.showToast(
+          msg: "Немає підключення до інтернету",
+          toastLength: Toast.LENGTH_LONG);
     }
 
     try {
@@ -350,22 +300,15 @@ class SosRepository {
         },
         body: jsonEncode({"name": contactModel.name}),
       );
-
-      if (response.statusCode > 199 && response.statusCode < 300) {
-        String bodyString = response.body;
-        Map<String, dynamic> data = json.decode(bodyString);
-        List<dynamic> contactList = data['contacts'];
-      } else {
+      if (!(response.statusCode > 199 && response.statusCode < 300)) {
         error = jsonDecode(response.body)["message"]
             .toString()
             .replaceAll("[", "")
             .replaceAll("]", "");
       }
-    } catch (e, trace) {
+    } catch (e) {
       error = e.toString();
-      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
     }
-
     if (error != null) {
       Fluttertoast.showToast(msg: error, toastLength: Toast.LENGTH_LONG);
     }
@@ -376,17 +319,9 @@ class SosRepository {
   Future<String?> removeContact(String contactId) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-       if (whichToastIsShowing != "noInternetConnection") {
-        whichToastIsShowing = "noInternetConnection";
-        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
-          whichToastIsShowing = "";
-        }));
-      }else{
-        Fluttertoast.showToast(
-            msg: AppLocalizations.instance.translate("noInternetConnection"),
-            toastLength: Toast.LENGTH_LONG);
-      }
-      error = "noInternetConnection";
+      Fluttertoast.showToast(
+          msg: "Немає підключення до інтернету",
+          toastLength: Toast.LENGTH_LONG);
     } else {
       try {
         var url = Uri.parse('$apiUrl/sos/$contactId');
@@ -403,10 +338,9 @@ class SosRepository {
             Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
           } else {}
         });
-      } catch (e, trace) {
-        FirebaseCrashlytics.instance.recordError(e.toString(), trace);
+      } catch (error) {
         Fluttertoast.showToast(
-            msg: e.toString(), toastLength: Toast.LENGTH_LONG);
+            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
       }
     }
     return error;
@@ -415,17 +349,10 @@ class SosRepository {
   Future<String?> removeGroup(String groupId) async {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-       if (whichToastIsShowing != "noInternetConnection") {
-        whichToastIsShowing = "noInternetConnection";
-        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
-          whichToastIsShowing = "";
-        }));
-      }else{
-        Fluttertoast.showToast(
-            msg: AppLocalizations.instance.translate("noInternetConnection"),
-            toastLength: Toast.LENGTH_LONG);
-      }
-      error = "noInternetConnection";
+      Fluttertoast.showToast(
+          msg: "Немає підключення до інтернету",
+          toastLength: Toast.LENGTH_LONG);
+      error = "Немає підключення до інтернету";
     } else {
       try {
         var url = Uri.parse('$apiUrl/sos/group/$groupId');
@@ -440,12 +367,11 @@ class SosRepository {
                 .replaceAll("[", "")
                 .replaceAll("]", "");
             Fluttertoast.showToast(msg: error!, toastLength: Toast.LENGTH_LONG);
-          } else {}
+          }
         });
-      } catch (e, trace) {
+      } catch (error) {
         Fluttertoast.showToast(
-            msg: e.toString(), toastLength: Toast.LENGTH_LONG);
-        FirebaseCrashlytics.instance.recordError(e.toString(), trace);
+            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
       }
     }
     return error;
@@ -457,17 +383,10 @@ class SosRepository {
     String? error;
     String? groupId;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
-       if (whichToastIsShowing != "noInternetConnection") {
-        whichToastIsShowing = "noInternetConnection";
-        unawaited(Future.delayed(const Duration(seconds: 5)).whenComplete(() {
-          whichToastIsShowing = "";
-        }));
-      }else{
-        Fluttertoast.showToast(
-            msg: AppLocalizations.instance.translate("noInternetConnection"),
-            toastLength: Toast.LENGTH_LONG);
-      }
-      error = "noInternetConnection";
+      Fluttertoast.showToast(
+          msg: "Немає підключення до інтернету",
+          toastLength: Toast.LENGTH_LONG);
+      error = "Немає підключення до інтернету";
     } else {
       try {
         var url = Uri.parse('$apiUrl/sos/group');
@@ -491,14 +410,12 @@ class SosRepository {
           } else {
             String bodyString = value.body;
             Map<String, dynamic> data = json.decode(bodyString);
-
             groupId = data["_id"];
           }
         });
-      } catch (e, trace) {
+      } catch (error) {
         Fluttertoast.showToast(
-            msg: e.toString(), toastLength: Toast.LENGTH_LONG);
-        FirebaseCrashlytics.instance.recordError(e.toString(), trace);
+            msg: error.toString(), toastLength: Toast.LENGTH_LONG);
       }
     }
     return groupId;
