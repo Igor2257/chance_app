@@ -38,6 +38,9 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            surfaceTintColor: Colors.transparent,
+            centerTitle: true,
             title: Text(AppLocalizations.instance.translate("editingContact")),
           ),
           body: Padding(

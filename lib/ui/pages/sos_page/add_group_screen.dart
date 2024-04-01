@@ -35,6 +35,9 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        centerTitle: true,
         title: Text(
           AppLocalizations.instance.translate("createAGroup"),
           style: const TextStyle(
@@ -42,8 +45,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
             fontSize: 22,
           ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+        leading: BackButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -63,7 +65,8 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                 label: AppLocalizations.instance.translate("enterGroupName"),
                 hintText: AppLocalizations.instance.translate("family"),
                 isPhone: false,
-                onChanged: (value) {},key:  const ValueKey("groupName"),
+                onChanged: (value) {},
+                key: const ValueKey("groupName"),
               ),
               const SizedBox(height: 8),
               Column(
@@ -90,7 +93,8 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                           label: AppLocalizations.instance.translate("name"),
                           hintText: AppLocalizations.instance.translate("name"),
                           isPhone: false,
-                          onChanged: (value) {},key:  const ValueKey("name"),
+                          onChanged: (value) {},
+                          key: const ValueKey("name"),
                         ),
                         LabeledTextField(
                           controller: contacts[index].phoneController
@@ -99,7 +103,8 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                               .translate("enterPhoneNumber"),
                           hintText: '+380',
                           isPhone: true,
-                          onChanged: (value) {},key:  const ValueKey("phone"),
+                          onChanged: (value) {},
+                          key: const ValueKey("phone"),
                         ),
                         const SizedBox(
                           height: 18,

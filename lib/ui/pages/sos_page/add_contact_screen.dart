@@ -19,6 +19,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
   final SosRepository sosRepository = SosRepository();
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+
   SosContactsBloc get _sosContactsBloc {
     return BlocProvider.of<SosContactsBloc>(context);
   }
@@ -29,6 +30,9 @@ class _AddContactScreenState extends State<AddContactScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        centerTitle: true,
         title: Text(
           AppLocalizations.instance.translate("createAContact"),
           style: const TextStyle(
@@ -37,8 +41,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
             // fontFamily: ,
           ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+        leading: BackButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -59,14 +62,15 @@ class _AddContactScreenState extends State<AddContactScreen> {
               hintText: AppLocalizations.instance.translate("name"),
               isPhone: false,
               onChanged: (value) {},
-              key:  const ValueKey("name"),
+              key: const ValueKey("name"),
             ),
             LabeledTextField(
               controller: phoneController..text = "+380",
               label: AppLocalizations.instance.translate("enterPhoneNumber"),
               hintText: 'Number',
               isPhone: true,
-              onChanged: (value) {},key:  const ValueKey("phone"),
+              onChanged: (value) {},
+              key: const ValueKey("phone"),
             ),
             const SizedBox(height: 22),
             SizedBox(

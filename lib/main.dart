@@ -101,10 +101,7 @@ Future<void> main() async {
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
 
   await HiveCRUD().initialize().whenComplete(() async {
-    await Supabase.initialize(
-            url: supabaseUrl,
-            anonKey:
-                supabaseAnonKey)
+    await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey)
         .then((value) async {
       await Permission.notification.request();
       await RemindersHelper.initialize();
@@ -349,6 +346,10 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                           colorScheme: ColorScheme.fromSeed(
                                               seedColor: primary400),
                                           useMaterial3: true,
+                                          bottomSheetTheme:
+                                              const BottomSheetThemeData(
+                                                  backgroundColor: beigeBG,
+                                                  surfaceTintColor: beigeBG),
                                           popupMenuTheme:
                                               const PopupMenuThemeData(
                                                   color: beigeTransparent,

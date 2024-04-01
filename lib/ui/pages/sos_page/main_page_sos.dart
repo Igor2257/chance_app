@@ -23,9 +23,10 @@ class _MainPageSosState extends State<MainPageSos> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+        leading: BackButton(
           onPressed: () => Navigator.of(context)
               .pushNamedAndRemoveUntil("/", (route) => false),
         ),
@@ -170,84 +171,92 @@ class _MainPageSosState extends State<MainPageSos> {
 
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return SizedBox(
-          height: MediaQuery.of(context).size.height / 4,
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 15,
-              ),
-              Container(
-                height: 4,
-                width: 32,
-                decoration: const BoxDecoration(color: beige400),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 40.0,
-                  // left: 10.0,
-                  // right: 10.0,
-                ),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        width: 164,
-                        height: 56,
-                        decoration: BoxDecoration(
-                          color: darkNeutral600,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/add_contact');
-                          },
-                          child: Text(
-                            AppLocalizations.instance.translate("contact"),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: primary50,
-                              fontSize: 16,
+        context: context,
+        backgroundColor: beigeBG,
+        builder: (BuildContext context) {
+          return BottomSheet(
+            backgroundColor: beigeBG,
+            enableDrag: false,
+            onClosing: () {},
+            builder: (context) {
+              return SizedBox(
+                height: MediaQuery.of(context).size.height / 4,
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      height: 4,
+                      width: 32,
+                      decoration: const BoxDecoration(color: beige400),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 40.0,
+                        // left: 10.0,
+                        // right: 10.0,
+                      ),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Container(
+                              width: 164,
+                              height: 56,
+                              decoration: BoxDecoration(
+                                color: darkNeutral600,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/add_contact');
+                                },
+                                child: Text(
+                                  AppLocalizations.instance
+                                      .translate("contact"),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: primary50,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                      Container(
-                        width: 164,
-                        height: 56,
-                        decoration: BoxDecoration(
-                          color: darkNeutral600,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/add_group');
-                          },
-                          child: Text(
-                            AppLocalizations.instance.translate("group"),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: primary50,
-                              fontSize: 16,
+                            const SizedBox(
+                              width: 15,
                             ),
-                          ),
+                            Container(
+                              width: 164,
+                              height: 56,
+                              decoration: BoxDecoration(
+                                color: darkNeutral600,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/add_group');
+                                },
+                                child: Text(
+                                  AppLocalizations.instance.translate("group"),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: primary50,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+              );
+            },
+          );
+        });
   }
 
   Future<void> _makePhoneCall(SosContactModel contactModel) async {

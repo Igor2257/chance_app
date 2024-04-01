@@ -40,6 +40,9 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
               ? AppLocalizations.instance.translate("deleteContact")
               : AppLocalizations.instance.translate("toChange"),
         ),
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -57,6 +60,7 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
                   itemBuilder: (context, index) {
                     SosGroupModel contactModel = contacts[index];
                     return InkWell(
+                      borderRadius: BorderRadius.circular(16),
                       onTap: () {
                         if (isEdit == false) {
                           if (contactModel.name.isEmpty) {
@@ -189,7 +193,6 @@ class _ContainerButtonWithCheckboxState
     return Container(
       width: double.infinity,
       height: 72,
-      margin: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: containerColor,
         borderRadius: BorderRadius.circular(16),

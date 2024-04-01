@@ -22,12 +22,14 @@ class GroupDetailsScreen extends StatelessWidget {
             fontSize: 22,
           ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+        leading: BackButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.only(

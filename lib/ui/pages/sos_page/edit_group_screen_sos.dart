@@ -51,12 +51,9 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
             fontSize: 22,
           ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
+        leading: BackButton(onPressed: (){
+          Navigator.of(context).pop();
+        },)
       ),
       body: Padding(
         padding: const EdgeInsets.only(
