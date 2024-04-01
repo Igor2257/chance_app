@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer' show log;
 import 'dart:ui' show DartPluginRegistrant;
 
+import 'package:chance_app/api_keys.dart';
 import 'package:chance_app/ux/helpers/reminders_helper.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/repository/navigation_repository.dart';
@@ -57,9 +58,8 @@ abstract class BackgroundServiceHelper {
     final hiveIsInitialized = await HiveCRUD().initialize();
     if (HiveCRUD().setting.isAppShouldSentLocation) {
       await Supabase.initialize(
-        url: "https://tnvxszbqdurbkpnvjvgz.supabase.co",
-        anonKey:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudnhzemJxZHVyYmtwbnZqdmd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA4NDU5NjUsImV4cCI6MjAyNjQyMTk2NX0.I_Tf2UAA5Qo05EOSR2HXkv9yMun2NyixOZtCyr3OvoA",
+        url: supabaseUrl,
+        anonKey: supabaseAnonKey,
       );
     }
 

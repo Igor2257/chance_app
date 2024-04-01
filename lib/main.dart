@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:chance_app/api_keys.dart';
 import 'package:chance_app/firebase_options.dart';
 import 'package:chance_app/ui/components/ad_banner.dart';
 import 'package:chance_app/ui/constans.dart';
@@ -101,9 +102,9 @@ Future<void> main() async {
 
   await HiveCRUD().initialize().whenComplete(() async {
     await Supabase.initialize(
-            url: "https://tnvxszbqdurbkpnvjvgz.supabase.co",
+            url: supabaseUrl,
             anonKey:
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudnhzemJxZHVyYmtwbnZqdmd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA4NDU5NjUsImV4cCI6MjAyNjQyMTk2NX0.I_Tf2UAA5Qo05EOSR2HXkv9yMun2NyixOZtCyr3OvoA")
+                supabaseAnonKey)
         .then((value) async {
       await Permission.notification.request();
       await RemindersHelper.initialize();
