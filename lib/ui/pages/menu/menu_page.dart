@@ -99,7 +99,13 @@ class _MenuPageState extends State<MenuPage> {
             ),
             RoundedButton(
                 onPress: () {
-                  findMatch(products[0], 0);
+                  if (products.isNotEmpty) {
+                    findMatch(products[0]);
+                  } else {
+                    Fluttertoast.showToast(
+                        msg: AppLocalizations.instance.translate("productsAreLoading"),
+                        toastLength: Toast.LENGTH_LONG);
+                  }
                 },
                 padding: const EdgeInsets.all(16),
                 height: 0,
@@ -261,7 +267,7 @@ class _MenuPageState extends State<MenuPage> {
     }
   }
 
-  findMatch(ProductDetails item1, int position) async {
+  findMatch(ProductDetails selectedItem) async {
     List<ProductModel> items = HiveCRUD().myItems;
     if (items.isNotEmpty) {
       bool isAdBlockerValid = items.any((item) =>
@@ -271,11 +277,11 @@ class _MenuPageState extends State<MenuPage> {
               item.id == "block_all_ads" &&
               item.validity!.isAfter(DateTime.now()));
 
-      if (!(item1.id == 'adblocker' && isAdBlockerValid)) {
-        item = item1;
+      if (!(selectedItem.id == 'adblocker' && isAdBlockerValid)) {
+        item = selectedItem;
         idOfPrd = item.id;
         final PurchaseParam purchaseParam =
-            PurchaseParam(productDetails: products[position]);
+            PurchaseParam(productDetails: selectedItem);
         InAppPurchase.instance.buyConsumable(purchaseParam: purchaseParam);
         verifyPurchase();
       } else {
@@ -283,10 +289,10 @@ class _MenuPageState extends State<MenuPage> {
             msg: AppLocalizations.instance.translate("adblockerExists"));
       }
     } else {
-      item = item1;
+      item = selectedItem;
       idOfPrd = item.id;
       final PurchaseParam purchaseParam =
-          PurchaseParam(productDetails: products[position]);
+          PurchaseParam(productDetails: selectedItem);
       InAppPurchase.instance.buyConsumable(purchaseParam: purchaseParam);
       verifyPurchase();
     }

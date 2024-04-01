@@ -99,10 +99,7 @@ class PositionController with ChangeNotifier {
           try {
             unawaited(Geolocator.getCurrentPosition().whenComplete(() async {
               await const MethodChannel('location_service')
-                  .invokeMethod('startLocationService', hiveCRUD.user!.email)
-                  .then((value) {
-                print(value);
-              });
+                  .invokeMethod('startLocationService', hiveCRUD.user!.email);
             }));
           } catch (_) {}
         }
@@ -117,10 +114,7 @@ class PositionController with ChangeNotifier {
       try {
         unawaited(Geolocator.getCurrentPosition().whenComplete(() async {
           await const MethodChannel('location_service_disable')
-              .invokeMethod('pauseLocationService',hiveCRUD.setting.isAppShouldSentLocation)
-              .then((value) {
-            print(value);
-          });
+              .invokeMethod('pauseLocationService',hiveCRUD.setting.isAppShouldSentLocation);
         }));
       } catch (_) {}
     }

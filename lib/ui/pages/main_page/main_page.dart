@@ -187,7 +187,6 @@ class _MainPageState extends State<MainPage> {
   Future<bool> checkLocationPermission(BuildContext context) async {
     bool isOkay = false;
     await Permission.location.request().then((status) async {
-      print(status);
       if (status != PermissionStatus.denied &&
           status != PermissionStatus.permanentlyDenied) {
         isOkay = true;

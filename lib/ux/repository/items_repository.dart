@@ -44,6 +44,7 @@ class ItemsRepository {
       Fluttertoast.showToast(
           msg: AppLocalizations.instance.translate("noInternetConnection"),
           toastLength: Toast.LENGTH_LONG);
+      HiveCRUD().rewriteItems(newItems);
     } else {
       try {
         final cookie = await _userRepository.getCookie();

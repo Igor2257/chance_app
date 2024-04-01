@@ -30,6 +30,8 @@ mixin _$ProductModel {
   String get price => throw _privateConstructorUsedError;
   @HiveField(4)
   DateTime? get validity => throw _privateConstructorUsedError;
+  @HiveField(5)
+  bool get isRemoved => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -48,7 +50,8 @@ abstract class $ProductModelCopyWith<$Res> {
       @HiveField(1) String id,
       @HiveField(2) String description,
       @HiveField(3) String price,
-      @HiveField(4) DateTime? validity});
+      @HiveField(4) DateTime? validity,
+      @HiveField(5) bool isRemoved});
 }
 
 /// @nodoc
@@ -69,6 +72,7 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
     Object? description = null,
     Object? price = null,
     Object? validity = freezed,
+    Object? isRemoved = null,
   }) {
     return _then(_value.copyWith(
       title: null == title
@@ -91,6 +95,10 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
           ? _value.validity
           : validity // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      isRemoved: null == isRemoved
+          ? _value.isRemoved
+          : isRemoved // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -108,7 +116,8 @@ abstract class _$$ProductModelImplCopyWith<$Res>
       @HiveField(1) String id,
       @HiveField(2) String description,
       @HiveField(3) String price,
-      @HiveField(4) DateTime? validity});
+      @HiveField(4) DateTime? validity,
+      @HiveField(5) bool isRemoved});
 }
 
 /// @nodoc
@@ -127,6 +136,7 @@ class __$$ProductModelImplCopyWithImpl<$Res>
     Object? description = null,
     Object? price = null,
     Object? validity = freezed,
+    Object? isRemoved = null,
   }) {
     return _then(_$ProductModelImpl(
       title: null == title
@@ -149,6 +159,10 @@ class __$$ProductModelImplCopyWithImpl<$Res>
           ? _value.validity
           : validity // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      isRemoved: null == isRemoved
+          ? _value.isRemoved
+          : isRemoved // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -161,7 +175,8 @@ class _$ProductModelImpl implements _ProductModel {
       @HiveField(1) this.id = "",
       @HiveField(2) this.description = "",
       @HiveField(3) this.price = "",
-      @HiveField(4) this.validity = null});
+      @HiveField(4) this.validity = null,
+      @HiveField(5) this.isRemoved = false});
 
   factory _$ProductModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProductModelImplFromJson(json);
@@ -186,10 +201,14 @@ class _$ProductModelImpl implements _ProductModel {
   @JsonKey()
   @HiveField(4)
   final DateTime? validity;
+  @override
+  @JsonKey()
+  @HiveField(5)
+  final bool isRemoved;
 
   @override
   String toString() {
-    return 'ProductModel(title: $title, id: $id, description: $description, price: $price, validity: $validity)';
+    return 'ProductModel(title: $title, id: $id, description: $description, price: $price, validity: $validity, isRemoved: $isRemoved)';
   }
 
   @override
@@ -203,13 +222,15 @@ class _$ProductModelImpl implements _ProductModel {
                 other.description == description) &&
             (identical(other.price, price) || other.price == price) &&
             (identical(other.validity, validity) ||
-                other.validity == validity));
+                other.validity == validity) &&
+            (identical(other.isRemoved, isRemoved) ||
+                other.isRemoved == isRemoved));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, title, id, description, price, validity);
+  int get hashCode => Object.hash(
+      runtimeType, title, id, description, price, validity, isRemoved);
 
   @JsonKey(ignore: true)
   @override
@@ -231,7 +252,8 @@ abstract class _ProductModel implements ProductModel {
       @HiveField(1) final String id,
       @HiveField(2) final String description,
       @HiveField(3) final String price,
-      @HiveField(4) final DateTime? validity}) = _$ProductModelImpl;
+      @HiveField(4) final DateTime? validity,
+      @HiveField(5) final bool isRemoved}) = _$ProductModelImpl;
 
   factory _ProductModel.fromJson(Map<String, dynamic> json) =
       _$ProductModelImpl.fromJson;
@@ -251,6 +273,9 @@ abstract class _ProductModel implements ProductModel {
   @override
   @HiveField(4)
   DateTime? get validity;
+  @override
+  @HiveField(5)
+  bool get isRemoved;
   @override
   @JsonKey(ignore: true)
   _$$ProductModelImplCopyWith<_$ProductModelImpl> get copyWith =>

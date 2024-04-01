@@ -87,7 +87,8 @@ class _DoctorAppointmentMenuState extends State<DoctorAppointmentMenu> {
           case _MenuOptions.userAgent:
             final userAgent = await widget.controller
                 .runJavaScriptReturningResult('navigator.userAgent');
-            if (!mounted) return;
+            if (mounted) return;
+            // ignore: use_build_context_synchronously
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text('$userAgent'),
             ));

@@ -1,4 +1,6 @@
+import 'package:chance_app/main.dart';
 import 'package:chance_app/ux/helpers/ad_helper.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -9,31 +11,30 @@ class AdBanner extends StatefulWidget {
   State<AdBanner> createState() => _AdBannerState();
 }
 
-class _AdBannerState extends State<AdBanner> {
+class _AdBannerState extends State<AdBanner> with ChangeNotifier {
   BannerAd? _bannerAd;
 
   @override
   void initState() {
+    if (HiveCRUD()
+        .myItems
+        .any((element) => element.id == "adblocker" && !element.isRemoved)) {
+      provider.addListener(() {
+        if (provider.isUserHaveInternetConnection) {
+          loadBanner();
+        } else {
+          pauseBanner();
+        }
+      });
+    }
     super.initState();
-    BannerAd(
-      size: AdSize.banner,
-      adUnitId: AdHelper.bannerMainScreen,
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          _bannerAd = ad as BannerAd;
-          if (mounted) setState(() {});
-        },
-        onAdFailedToLoad: (ad, error) {
-          debugPrint('BannerAd failed to load: $error');
-          ad.dispose();
-        },
-      ),
-      request: const AdRequest(),
-    ).load();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_bannerAd == null) {
+      return const SizedBox();
+    }
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       constraints: BoxConstraints(
@@ -56,6 +57,29 @@ class _AdBannerState extends State<AdBanner> {
         ),
       ),
     );
+  }
+
+  void loadBanner() {
+    BannerAd(
+      size: AdSize.banner,
+      adUnitId: AdHelper.bannerMainScreen,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          _bannerAd = ad as BannerAd;
+          if (mounted) setState(() {});
+        },
+        onAdFailedToLoad: (ad, error) {
+          debugPrint('BannerAd failed to load: $error');
+          ad.dispose();
+        },
+      ),
+      request: const AdRequest(),
+    ).load();
+    notifyListeners();
+  }
+
+  void pauseBanner() {
+    _bannerAd?.dispose();
   }
 
   @override

@@ -425,8 +425,11 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                       textEditingController.text =
                                           savedAddresses[position]
                                               .formattedAddress!;
-                                      BlocProvider.of<NavigationBloc>(context)
-                                          .add(UpdateMarkers(markers: {point}));
+                                     if(mounted){
+                                       // ignore: use_build_context_synchronously
+                                       BlocProvider.of<NavigationBloc>(context)
+                                           .add(UpdateMarkers(markers: {point}));
+                                     }
                                       focusNode.unfocus();
                                     }
                                     if (mounted) setState(() {});

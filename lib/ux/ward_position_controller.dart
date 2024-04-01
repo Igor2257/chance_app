@@ -22,11 +22,10 @@ class WardPositionController with ChangeNotifier {
         resume();
       }
     } catch (_) {}
-    print("isUserHaveInternetConnection $isUserHaveInternetConnection");
     internetConnectionStream.addListener(() {
       isUserHaveInternetConnection =
           internetConnectionStream.isUserHaveInternetConnection;
-      print("isUserHaveInternetConnection $isUserHaveInternetConnection");
+
       if (isUserHaveInternetConnection) {
         if (_stream == null) {
           _handleChange(context);
@@ -59,7 +58,6 @@ class WardPositionController with ChangeNotifier {
         } catch (_) {}
       }
     });
-    print("isUserHaveInternetConnection");
   }
 
   void cancel() {

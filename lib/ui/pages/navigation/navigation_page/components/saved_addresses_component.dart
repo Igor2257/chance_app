@@ -65,8 +65,11 @@ class _SavedAddressesComponentState extends State<SavedAddressesComponent> {
                                           .lng),
                                   18));
                         }));
-                BlocProvider.of<NavigationBloc>(context)
-                    .add(UpdateMarkers(markers: {point}));
+               if(mounted){
+                 // ignore: use_build_context_synchronously
+                 BlocProvider.of<NavigationBloc>(context)
+                     .add(UpdateMarkers(markers: {point}));
+               }
                 isNotTapedOnMyLocationButton = true;
                 mapController!.animateCamera(CameraUpdate.newLatLngZoom(
                     LatLng(savedAddresses[position].geometry!.location.lat,

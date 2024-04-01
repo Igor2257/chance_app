@@ -26,9 +26,8 @@ class _SosButtonState extends State<SosButton> {
         borderRadius: BorderRadius.circular(67),
         onTap: () async {
           BlocProvider.of<SosContactsBloc>(context).add(LoadSosContactsEvent());
-          // NEED REBORCK
-          await Future.delayed(const Duration(milliseconds: 500));
-          Navigator.of(context).pushNamed("/sos");
+          await Future.delayed(const Duration(milliseconds: 500))
+              .whenComplete(() => Navigator.of(context).pushNamed("/sos"));
         },
         onHover: (_) {},
         splashColor: red1000,

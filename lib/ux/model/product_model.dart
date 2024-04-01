@@ -12,6 +12,7 @@ class ProductModel with _$ProductModel {
     @HiveField(2) @Default("") String description,
     @HiveField(3) @Default("") String price,
     @HiveField(4) @Default(null) DateTime? validity,
+    @HiveField(5) @Default(false) bool isRemoved,
   }) = _ProductModel;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => _$ProductModelFromJson(json);

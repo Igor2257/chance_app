@@ -23,9 +23,11 @@ class InternetConnectionStream with ChangeNotifier {
 
     ///TODO
     if (newResult != ConnectivityResult.none) {
-      _changeUserHaveInternetConnection(true); // Уведомляем о наличии интернет-соединения
+      _changeUserHaveInternetConnection(
+          true); // Уведомляем о наличии интернет-соединения
     } else {
-      _changeUserHaveInternetConnection(false); // Уведомляем об отсутствии интернет-соединения
+      _changeUserHaveInternetConnection(
+          false); // Уведомляем об отсутствии интернет-соединения
     }
   }
 
@@ -33,7 +35,6 @@ class InternetConnectionStream with ChangeNotifier {
     isUserHaveInternetConnection = value;
 
     showInternetConnection = true;
-    print("value $value");
     notifyListeners();
 
     if (value) {
@@ -44,7 +45,6 @@ class InternetConnectionStream with ChangeNotifier {
   void _showConnection() async {
     await Future.delayed(const Duration(seconds: 2)).whenComplete(() {
       showInternetConnection = false;
-      print(showInternetConnection);
       notifyListeners();
     });
   }

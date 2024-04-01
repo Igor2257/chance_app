@@ -255,8 +255,9 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
       mapType: mapType,
       myLocationEnabled: true,
       circles: widget.pickArea != null && widget.pickArea!.radius > 0
+          // ignore: prefer_collection_literals
           ? Set<Circle>.from([widget.pickArea])
-          : Set<Circle>(),
+          : <Circle>{},
       onMapCreated: (GoogleMapController controller) {
         provider.mapController = controller;
         provider.setCameraPosition(null);
@@ -312,7 +313,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
       },
       // gestureRecognizers make it possible to navigate the map when it's a
       // child in a scroll view e.g ListView, SingleChildScrollView...
-      gestureRecognizers: Set()
+      gestureRecognizers: {}
         ..add(Factory<EagerGestureRecognizer>(() => EagerGestureRecognizer())),
     );
   }

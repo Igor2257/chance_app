@@ -19,8 +19,7 @@ class TasksRepository {
   Future<Set<String>> syncTasks() async {
     final cookie = await _userRepository.getCookie();
     final fetchedItems = await _apiClient.fetchTasks(cookie: cookie.toString());
-    if (fetchedItems == null) return {}; // There is nothing to sync
-    // Sync map is a Map of item IDs and pairs of local and remote items
+    if (fetchedItems == null) return {};
     final result = <String>{};
     final syncMap = <String, ({TaskModel? local, TaskModel? remote})>{
       for (final item in fetchedItems) item.id: (local: null, remote: item),
@@ -28,12 +27,11 @@ class TasksRepository {
     for (final item in _storage.values) {
       syncMap[item.id] = (local: item, remote: syncMap[item.id]?.remote);
     }
-    // Start to sync the items
     for (final item in syncMap.values) {
       final local = item.local;
       final remote = item.remote;
       if (local == null) {
-        await _storage.putTask(remote!); // Save remote item
+        await _storage.putTask(remote!);
       } else if (remote == null) {
         if (!local.isRemoved) {
           final item = await _apiClient.postTask(
@@ -43,7 +41,7 @@ class TasksRepository {
           if (item == null) continue;
           await _storage.putTask(item);
         }
-        await _storage.deleteTask(local); // Delete permanently
+        await _storage.deleteTask(local);
         result.add(local.id);
       } else if (local.isRemoved) {
         final deleted = await _apiClient.deleteTask(

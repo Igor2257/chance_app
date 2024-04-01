@@ -71,6 +71,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 String whichToastIsShowing = "";
+late InternetConnectionStream provider;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -188,7 +189,6 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Key key = UniqueKey();
   final Settings settings = HiveCRUD().setting;
   late String route;
-  InternetConnectionStream provider = InternetConnectionStream();
 
   void restartApp() async {
     UserRepository repository = UserRepository();
@@ -230,6 +230,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     } catch (e, trace) {
       FirebaseCrashlytics.instance.recordError(e.toString(), trace);
     }
+    provider = InternetConnectionStream();
   }
 
   checkIfDocsAreAvailable() async {
@@ -239,7 +240,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
         List<ProductModel> newItems = [];
         for (int i = 0; i < items.length; i++) {
           if (items[i].validity != null) {
-            if (items[i].id == "adblocker") {
+            if (items[i].id == "adblocker" && !items[i].isRemoved) {
               if (items[i].validity!.isAfter(DateTime.now())) {
                 adRemove(true);
               } else {
@@ -336,6 +337,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                       ),
                                     ],
                                     child: MaterialApp(
+                                      locale: AppLocalizations.instance.locale,
                                       debugShowCheckedModeBanner: false,
                                       theme: ThemeData(
                                           scaffoldBackgroundColor: beigeBG,

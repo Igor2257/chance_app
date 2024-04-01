@@ -22,13 +22,14 @@ class ProductModelAdapter extends TypeAdapter<ProductModel> {
       description: fields[2] as String,
       price: fields[3] as String,
       validity: fields[4] as DateTime?,
+      isRemoved: fields[5] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, ProductModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class ProductModelAdapter extends TypeAdapter<ProductModel> {
       ..writeByte(3)
       ..write(obj.price)
       ..writeByte(4)
-      ..write(obj.validity);
+      ..write(obj.validity)
+      ..writeByte(5)
+      ..write(obj.isRemoved);
   }
 
   @override
@@ -65,6 +68,7 @@ _$ProductModelImpl _$$ProductModelImplFromJson(Map<String, dynamic> json) =>
       validity: json['validity'] == null
           ? null
           : DateTime.parse(json['validity'] as String),
+      isRemoved: json['isRemoved'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$ProductModelImplToJson(_$ProductModelImpl instance) =>
@@ -74,4 +78,5 @@ Map<String, dynamic> _$$ProductModelImplToJson(_$ProductModelImpl instance) =>
       'description': instance.description,
       'price': instance.price,
       'validity': instance.validity?.toIso8601String(),
+      'isRemoved': instance.isRemoved,
     };
