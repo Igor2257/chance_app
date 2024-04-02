@@ -40,8 +40,6 @@ class _TasksForTodayState extends State<TasksForToday> {
             .sortedBy((e) => e.date);
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            surfaceTintColor: Colors.transparent,
             centerTitle: true,
             title: const Text(
               "Завдання на сьогодні",

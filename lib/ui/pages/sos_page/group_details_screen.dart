@@ -27,8 +27,6 @@ class GroupDetailsScreen extends StatelessWidget {
             Navigator.of(context).pop();
           },
         ),
-        backgroundColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
         centerTitle: true,
       ),
       body: Padding(

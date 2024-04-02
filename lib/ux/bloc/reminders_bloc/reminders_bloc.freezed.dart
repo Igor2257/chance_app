@@ -31,6 +31,7 @@ mixin _$RemindersEvent {
             MedicineModel medicine, DateTime doseTime, int minutes)
         medicineIsPostponed,
     required TResult Function(MedicineModel medicine) deleteMedicine,
+    required TResult Function() cancelAll,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -46,6 +47,7 @@ mixin _$RemindersEvent {
     TResult? Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult? Function(MedicineModel medicine)? deleteMedicine,
+    TResult? Function()? cancelAll,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -61,6 +63,7 @@ mixin _$RemindersEvent {
     TResult Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult Function(MedicineModel medicine)? deleteMedicine,
+    TResult Function()? cancelAll,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -76,6 +79,7 @@ mixin _$RemindersEvent {
     required TResult Function(MedicineIsDone value) medicineIsDone,
     required TResult Function(MedicineIsPostponed value) medicineIsPostponed,
     required TResult Function(DeleteMedicine value) deleteMedicine,
+    required TResult Function(CancelAllReminders value) cancelAll,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -90,6 +94,7 @@ mixin _$RemindersEvent {
     TResult? Function(MedicineIsDone value)? medicineIsDone,
     TResult? Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult? Function(DeleteMedicine value)? deleteMedicine,
+    TResult? Function(CancelAllReminders value)? cancelAll,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -104,6 +109,7 @@ mixin _$RemindersEvent {
     TResult Function(MedicineIsDone value)? medicineIsDone,
     TResult Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult Function(DeleteMedicine value)? deleteMedicine,
+    TResult Function(CancelAllReminders value)? cancelAll,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -178,6 +184,7 @@ class _$LoadDataImpl implements LoadData {
             MedicineModel medicine, DateTime doseTime, int minutes)
         medicineIsPostponed,
     required TResult Function(MedicineModel medicine) deleteMedicine,
+    required TResult Function() cancelAll,
   }) {
     return loadData();
   }
@@ -196,6 +203,7 @@ class _$LoadDataImpl implements LoadData {
     TResult? Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult? Function(MedicineModel medicine)? deleteMedicine,
+    TResult? Function()? cancelAll,
   }) {
     return loadData?.call();
   }
@@ -214,6 +222,7 @@ class _$LoadDataImpl implements LoadData {
     TResult Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult Function(MedicineModel medicine)? deleteMedicine,
+    TResult Function()? cancelAll,
     required TResult orElse(),
   }) {
     if (loadData != null) {
@@ -235,6 +244,7 @@ class _$LoadDataImpl implements LoadData {
     required TResult Function(MedicineIsDone value) medicineIsDone,
     required TResult Function(MedicineIsPostponed value) medicineIsPostponed,
     required TResult Function(DeleteMedicine value) deleteMedicine,
+    required TResult Function(CancelAllReminders value) cancelAll,
   }) {
     return loadData(this);
   }
@@ -252,6 +262,7 @@ class _$LoadDataImpl implements LoadData {
     TResult? Function(MedicineIsDone value)? medicineIsDone,
     TResult? Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult? Function(DeleteMedicine value)? deleteMedicine,
+    TResult? Function(CancelAllReminders value)? cancelAll,
   }) {
     return loadData?.call(this);
   }
@@ -269,6 +280,7 @@ class _$LoadDataImpl implements LoadData {
     TResult Function(MedicineIsDone value)? medicineIsDone,
     TResult Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult Function(DeleteMedicine value)? deleteMedicine,
+    TResult Function(CancelAllReminders value)? cancelAll,
     required TResult orElse(),
   }) {
     if (loadData != null) {
@@ -359,6 +371,7 @@ class _$SelectDayImpl implements SelectDay {
             MedicineModel medicine, DateTime doseTime, int minutes)
         medicineIsPostponed,
     required TResult Function(MedicineModel medicine) deleteMedicine,
+    required TResult Function() cancelAll,
   }) {
     return selectDay(dayDate);
   }
@@ -377,6 +390,7 @@ class _$SelectDayImpl implements SelectDay {
     TResult? Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult? Function(MedicineModel medicine)? deleteMedicine,
+    TResult? Function()? cancelAll,
   }) {
     return selectDay?.call(dayDate);
   }
@@ -395,6 +409,7 @@ class _$SelectDayImpl implements SelectDay {
     TResult Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult Function(MedicineModel medicine)? deleteMedicine,
+    TResult Function()? cancelAll,
     required TResult orElse(),
   }) {
     if (selectDay != null) {
@@ -416,6 +431,7 @@ class _$SelectDayImpl implements SelectDay {
     required TResult Function(MedicineIsDone value) medicineIsDone,
     required TResult Function(MedicineIsPostponed value) medicineIsPostponed,
     required TResult Function(DeleteMedicine value) deleteMedicine,
+    required TResult Function(CancelAllReminders value) cancelAll,
   }) {
     return selectDay(this);
   }
@@ -433,6 +449,7 @@ class _$SelectDayImpl implements SelectDay {
     TResult? Function(MedicineIsDone value)? medicineIsDone,
     TResult? Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult? Function(DeleteMedicine value)? deleteMedicine,
+    TResult? Function(CancelAllReminders value)? cancelAll,
   }) {
     return selectDay?.call(this);
   }
@@ -450,6 +467,7 @@ class _$SelectDayImpl implements SelectDay {
     TResult Function(MedicineIsDone value)? medicineIsDone,
     TResult Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult Function(DeleteMedicine value)? deleteMedicine,
+    TResult Function(CancelAllReminders value)? cancelAll,
     required TResult orElse(),
   }) {
     if (selectDay != null) {
@@ -555,6 +573,7 @@ class _$AddTaskImpl implements AddTask {
             MedicineModel medicine, DateTime doseTime, int minutes)
         medicineIsPostponed,
     required TResult Function(MedicineModel medicine) deleteMedicine,
+    required TResult Function() cancelAll,
   }) {
     return addTask(task);
   }
@@ -573,6 +592,7 @@ class _$AddTaskImpl implements AddTask {
     TResult? Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult? Function(MedicineModel medicine)? deleteMedicine,
+    TResult? Function()? cancelAll,
   }) {
     return addTask?.call(task);
   }
@@ -591,6 +611,7 @@ class _$AddTaskImpl implements AddTask {
     TResult Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult Function(MedicineModel medicine)? deleteMedicine,
+    TResult Function()? cancelAll,
     required TResult orElse(),
   }) {
     if (addTask != null) {
@@ -612,6 +633,7 @@ class _$AddTaskImpl implements AddTask {
     required TResult Function(MedicineIsDone value) medicineIsDone,
     required TResult Function(MedicineIsPostponed value) medicineIsPostponed,
     required TResult Function(DeleteMedicine value) deleteMedicine,
+    required TResult Function(CancelAllReminders value) cancelAll,
   }) {
     return addTask(this);
   }
@@ -629,6 +651,7 @@ class _$AddTaskImpl implements AddTask {
     TResult? Function(MedicineIsDone value)? medicineIsDone,
     TResult? Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult? Function(DeleteMedicine value)? deleteMedicine,
+    TResult? Function(CancelAllReminders value)? cancelAll,
   }) {
     return addTask?.call(this);
   }
@@ -646,6 +669,7 @@ class _$AddTaskImpl implements AddTask {
     TResult Function(MedicineIsDone value)? medicineIsDone,
     TResult Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult Function(DeleteMedicine value)? deleteMedicine,
+    TResult Function(CancelAllReminders value)? cancelAll,
     required TResult orElse(),
   }) {
     if (addTask != null) {
@@ -751,6 +775,7 @@ class _$TaskIsDoneImpl implements TaskIsDone {
             MedicineModel medicine, DateTime doseTime, int minutes)
         medicineIsPostponed,
     required TResult Function(MedicineModel medicine) deleteMedicine,
+    required TResult Function() cancelAll,
   }) {
     return taskIsDone(task);
   }
@@ -769,6 +794,7 @@ class _$TaskIsDoneImpl implements TaskIsDone {
     TResult? Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult? Function(MedicineModel medicine)? deleteMedicine,
+    TResult? Function()? cancelAll,
   }) {
     return taskIsDone?.call(task);
   }
@@ -787,6 +813,7 @@ class _$TaskIsDoneImpl implements TaskIsDone {
     TResult Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult Function(MedicineModel medicine)? deleteMedicine,
+    TResult Function()? cancelAll,
     required TResult orElse(),
   }) {
     if (taskIsDone != null) {
@@ -808,6 +835,7 @@ class _$TaskIsDoneImpl implements TaskIsDone {
     required TResult Function(MedicineIsDone value) medicineIsDone,
     required TResult Function(MedicineIsPostponed value) medicineIsPostponed,
     required TResult Function(DeleteMedicine value) deleteMedicine,
+    required TResult Function(CancelAllReminders value) cancelAll,
   }) {
     return taskIsDone(this);
   }
@@ -825,6 +853,7 @@ class _$TaskIsDoneImpl implements TaskIsDone {
     TResult? Function(MedicineIsDone value)? medicineIsDone,
     TResult? Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult? Function(DeleteMedicine value)? deleteMedicine,
+    TResult? Function(CancelAllReminders value)? cancelAll,
   }) {
     return taskIsDone?.call(this);
   }
@@ -842,6 +871,7 @@ class _$TaskIsDoneImpl implements TaskIsDone {
     TResult Function(MedicineIsDone value)? medicineIsDone,
     TResult Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult Function(DeleteMedicine value)? deleteMedicine,
+    TResult Function(CancelAllReminders value)? cancelAll,
     required TResult orElse(),
   }) {
     if (taskIsDone != null) {
@@ -956,6 +986,7 @@ class _$TaskIsPostponedImpl implements TaskIsPostponed {
             MedicineModel medicine, DateTime doseTime, int minutes)
         medicineIsPostponed,
     required TResult Function(MedicineModel medicine) deleteMedicine,
+    required TResult Function() cancelAll,
   }) {
     return taskIsPostponed(task, minutes);
   }
@@ -974,6 +1005,7 @@ class _$TaskIsPostponedImpl implements TaskIsPostponed {
     TResult? Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult? Function(MedicineModel medicine)? deleteMedicine,
+    TResult? Function()? cancelAll,
   }) {
     return taskIsPostponed?.call(task, minutes);
   }
@@ -992,6 +1024,7 @@ class _$TaskIsPostponedImpl implements TaskIsPostponed {
     TResult Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult Function(MedicineModel medicine)? deleteMedicine,
+    TResult Function()? cancelAll,
     required TResult orElse(),
   }) {
     if (taskIsPostponed != null) {
@@ -1013,6 +1046,7 @@ class _$TaskIsPostponedImpl implements TaskIsPostponed {
     required TResult Function(MedicineIsDone value) medicineIsDone,
     required TResult Function(MedicineIsPostponed value) medicineIsPostponed,
     required TResult Function(DeleteMedicine value) deleteMedicine,
+    required TResult Function(CancelAllReminders value) cancelAll,
   }) {
     return taskIsPostponed(this);
   }
@@ -1030,6 +1064,7 @@ class _$TaskIsPostponedImpl implements TaskIsPostponed {
     TResult? Function(MedicineIsDone value)? medicineIsDone,
     TResult? Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult? Function(DeleteMedicine value)? deleteMedicine,
+    TResult? Function(CancelAllReminders value)? cancelAll,
   }) {
     return taskIsPostponed?.call(this);
   }
@@ -1047,6 +1082,7 @@ class _$TaskIsPostponedImpl implements TaskIsPostponed {
     TResult Function(MedicineIsDone value)? medicineIsDone,
     TResult Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult Function(DeleteMedicine value)? deleteMedicine,
+    TResult Function(CancelAllReminders value)? cancelAll,
     required TResult orElse(),
   }) {
     if (taskIsPostponed != null) {
@@ -1154,6 +1190,7 @@ class _$DeleteTaskImpl implements DeleteTask {
             MedicineModel medicine, DateTime doseTime, int minutes)
         medicineIsPostponed,
     required TResult Function(MedicineModel medicine) deleteMedicine,
+    required TResult Function() cancelAll,
   }) {
     return deleteTask(task);
   }
@@ -1172,6 +1209,7 @@ class _$DeleteTaskImpl implements DeleteTask {
     TResult? Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult? Function(MedicineModel medicine)? deleteMedicine,
+    TResult? Function()? cancelAll,
   }) {
     return deleteTask?.call(task);
   }
@@ -1190,6 +1228,7 @@ class _$DeleteTaskImpl implements DeleteTask {
     TResult Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult Function(MedicineModel medicine)? deleteMedicine,
+    TResult Function()? cancelAll,
     required TResult orElse(),
   }) {
     if (deleteTask != null) {
@@ -1211,6 +1250,7 @@ class _$DeleteTaskImpl implements DeleteTask {
     required TResult Function(MedicineIsDone value) medicineIsDone,
     required TResult Function(MedicineIsPostponed value) medicineIsPostponed,
     required TResult Function(DeleteMedicine value) deleteMedicine,
+    required TResult Function(CancelAllReminders value) cancelAll,
   }) {
     return deleteTask(this);
   }
@@ -1228,6 +1268,7 @@ class _$DeleteTaskImpl implements DeleteTask {
     TResult? Function(MedicineIsDone value)? medicineIsDone,
     TResult? Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult? Function(DeleteMedicine value)? deleteMedicine,
+    TResult? Function(CancelAllReminders value)? cancelAll,
   }) {
     return deleteTask?.call(this);
   }
@@ -1245,6 +1286,7 @@ class _$DeleteTaskImpl implements DeleteTask {
     TResult Function(MedicineIsDone value)? medicineIsDone,
     TResult Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult Function(DeleteMedicine value)? deleteMedicine,
+    TResult Function(CancelAllReminders value)? cancelAll,
     required TResult orElse(),
   }) {
     if (deleteTask != null) {
@@ -1351,6 +1393,7 @@ class _$AddMedicineImpl implements AddMedicine {
             MedicineModel medicine, DateTime doseTime, int minutes)
         medicineIsPostponed,
     required TResult Function(MedicineModel medicine) deleteMedicine,
+    required TResult Function() cancelAll,
   }) {
     return addMedicine(medicine);
   }
@@ -1369,6 +1412,7 @@ class _$AddMedicineImpl implements AddMedicine {
     TResult? Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult? Function(MedicineModel medicine)? deleteMedicine,
+    TResult? Function()? cancelAll,
   }) {
     return addMedicine?.call(medicine);
   }
@@ -1387,6 +1431,7 @@ class _$AddMedicineImpl implements AddMedicine {
     TResult Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult Function(MedicineModel medicine)? deleteMedicine,
+    TResult Function()? cancelAll,
     required TResult orElse(),
   }) {
     if (addMedicine != null) {
@@ -1408,6 +1453,7 @@ class _$AddMedicineImpl implements AddMedicine {
     required TResult Function(MedicineIsDone value) medicineIsDone,
     required TResult Function(MedicineIsPostponed value) medicineIsPostponed,
     required TResult Function(DeleteMedicine value) deleteMedicine,
+    required TResult Function(CancelAllReminders value) cancelAll,
   }) {
     return addMedicine(this);
   }
@@ -1425,6 +1471,7 @@ class _$AddMedicineImpl implements AddMedicine {
     TResult? Function(MedicineIsDone value)? medicineIsDone,
     TResult? Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult? Function(DeleteMedicine value)? deleteMedicine,
+    TResult? Function(CancelAllReminders value)? cancelAll,
   }) {
     return addMedicine?.call(this);
   }
@@ -1442,6 +1489,7 @@ class _$AddMedicineImpl implements AddMedicine {
     TResult Function(MedicineIsDone value)? medicineIsDone,
     TResult Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult Function(DeleteMedicine value)? deleteMedicine,
+    TResult Function(CancelAllReminders value)? cancelAll,
     required TResult orElse(),
   }) {
     if (addMedicine != null) {
@@ -1557,6 +1605,7 @@ class _$MedicineIsDoneImpl implements MedicineIsDone {
             MedicineModel medicine, DateTime doseTime, int minutes)
         medicineIsPostponed,
     required TResult Function(MedicineModel medicine) deleteMedicine,
+    required TResult Function() cancelAll,
   }) {
     return medicineIsDone(medicine, at);
   }
@@ -1575,6 +1624,7 @@ class _$MedicineIsDoneImpl implements MedicineIsDone {
     TResult? Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult? Function(MedicineModel medicine)? deleteMedicine,
+    TResult? Function()? cancelAll,
   }) {
     return medicineIsDone?.call(medicine, at);
   }
@@ -1593,6 +1643,7 @@ class _$MedicineIsDoneImpl implements MedicineIsDone {
     TResult Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult Function(MedicineModel medicine)? deleteMedicine,
+    TResult Function()? cancelAll,
     required TResult orElse(),
   }) {
     if (medicineIsDone != null) {
@@ -1614,6 +1665,7 @@ class _$MedicineIsDoneImpl implements MedicineIsDone {
     required TResult Function(MedicineIsDone value) medicineIsDone,
     required TResult Function(MedicineIsPostponed value) medicineIsPostponed,
     required TResult Function(DeleteMedicine value) deleteMedicine,
+    required TResult Function(CancelAllReminders value) cancelAll,
   }) {
     return medicineIsDone(this);
   }
@@ -1631,6 +1683,7 @@ class _$MedicineIsDoneImpl implements MedicineIsDone {
     TResult? Function(MedicineIsDone value)? medicineIsDone,
     TResult? Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult? Function(DeleteMedicine value)? deleteMedicine,
+    TResult? Function(CancelAllReminders value)? cancelAll,
   }) {
     return medicineIsDone?.call(this);
   }
@@ -1648,6 +1701,7 @@ class _$MedicineIsDoneImpl implements MedicineIsDone {
     TResult Function(MedicineIsDone value)? medicineIsDone,
     TResult Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult Function(DeleteMedicine value)? deleteMedicine,
+    TResult Function(CancelAllReminders value)? cancelAll,
     required TResult orElse(),
   }) {
     if (medicineIsDone != null) {
@@ -1775,6 +1829,7 @@ class _$MedicineIsPostponedImpl implements MedicineIsPostponed {
             MedicineModel medicine, DateTime doseTime, int minutes)
         medicineIsPostponed,
     required TResult Function(MedicineModel medicine) deleteMedicine,
+    required TResult Function() cancelAll,
   }) {
     return medicineIsPostponed(medicine, doseTime, minutes);
   }
@@ -1793,6 +1848,7 @@ class _$MedicineIsPostponedImpl implements MedicineIsPostponed {
     TResult? Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult? Function(MedicineModel medicine)? deleteMedicine,
+    TResult? Function()? cancelAll,
   }) {
     return medicineIsPostponed?.call(medicine, doseTime, minutes);
   }
@@ -1811,6 +1867,7 @@ class _$MedicineIsPostponedImpl implements MedicineIsPostponed {
     TResult Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult Function(MedicineModel medicine)? deleteMedicine,
+    TResult Function()? cancelAll,
     required TResult orElse(),
   }) {
     if (medicineIsPostponed != null) {
@@ -1832,6 +1889,7 @@ class _$MedicineIsPostponedImpl implements MedicineIsPostponed {
     required TResult Function(MedicineIsDone value) medicineIsDone,
     required TResult Function(MedicineIsPostponed value) medicineIsPostponed,
     required TResult Function(DeleteMedicine value) deleteMedicine,
+    required TResult Function(CancelAllReminders value) cancelAll,
   }) {
     return medicineIsPostponed(this);
   }
@@ -1849,6 +1907,7 @@ class _$MedicineIsPostponedImpl implements MedicineIsPostponed {
     TResult? Function(MedicineIsDone value)? medicineIsDone,
     TResult? Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult? Function(DeleteMedicine value)? deleteMedicine,
+    TResult? Function(CancelAllReminders value)? cancelAll,
   }) {
     return medicineIsPostponed?.call(this);
   }
@@ -1866,6 +1925,7 @@ class _$MedicineIsPostponedImpl implements MedicineIsPostponed {
     TResult Function(MedicineIsDone value)? medicineIsDone,
     TResult Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult Function(DeleteMedicine value)? deleteMedicine,
+    TResult Function(CancelAllReminders value)? cancelAll,
     required TResult orElse(),
   }) {
     if (medicineIsPostponed != null) {
@@ -1977,6 +2037,7 @@ class _$DeleteMedicineImpl implements DeleteMedicine {
             MedicineModel medicine, DateTime doseTime, int minutes)
         medicineIsPostponed,
     required TResult Function(MedicineModel medicine) deleteMedicine,
+    required TResult Function() cancelAll,
   }) {
     return deleteMedicine(medicine);
   }
@@ -1995,6 +2056,7 @@ class _$DeleteMedicineImpl implements DeleteMedicine {
     TResult? Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult? Function(MedicineModel medicine)? deleteMedicine,
+    TResult? Function()? cancelAll,
   }) {
     return deleteMedicine?.call(medicine);
   }
@@ -2013,6 +2075,7 @@ class _$DeleteMedicineImpl implements DeleteMedicine {
     TResult Function(MedicineModel medicine, DateTime doseTime, int minutes)?
         medicineIsPostponed,
     TResult Function(MedicineModel medicine)? deleteMedicine,
+    TResult Function()? cancelAll,
     required TResult orElse(),
   }) {
     if (deleteMedicine != null) {
@@ -2034,6 +2097,7 @@ class _$DeleteMedicineImpl implements DeleteMedicine {
     required TResult Function(MedicineIsDone value) medicineIsDone,
     required TResult Function(MedicineIsPostponed value) medicineIsPostponed,
     required TResult Function(DeleteMedicine value) deleteMedicine,
+    required TResult Function(CancelAllReminders value) cancelAll,
   }) {
     return deleteMedicine(this);
   }
@@ -2051,6 +2115,7 @@ class _$DeleteMedicineImpl implements DeleteMedicine {
     TResult? Function(MedicineIsDone value)? medicineIsDone,
     TResult? Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult? Function(DeleteMedicine value)? deleteMedicine,
+    TResult? Function(CancelAllReminders value)? cancelAll,
   }) {
     return deleteMedicine?.call(this);
   }
@@ -2068,6 +2133,7 @@ class _$DeleteMedicineImpl implements DeleteMedicine {
     TResult Function(MedicineIsDone value)? medicineIsDone,
     TResult Function(MedicineIsPostponed value)? medicineIsPostponed,
     TResult Function(DeleteMedicine value)? deleteMedicine,
+    TResult Function(CancelAllReminders value)? cancelAll,
     required TResult orElse(),
   }) {
     if (deleteMedicine != null) {
@@ -2085,6 +2151,167 @@ abstract class DeleteMedicine implements RemindersEvent {
   @JsonKey(ignore: true)
   _$$DeleteMedicineImplCopyWith<_$DeleteMedicineImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$CancelAllRemindersImplCopyWith<$Res> {
+  factory _$$CancelAllRemindersImplCopyWith(_$CancelAllRemindersImpl value,
+          $Res Function(_$CancelAllRemindersImpl) then) =
+      __$$CancelAllRemindersImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$CancelAllRemindersImplCopyWithImpl<$Res>
+    extends _$RemindersEventCopyWithImpl<$Res, _$CancelAllRemindersImpl>
+    implements _$$CancelAllRemindersImplCopyWith<$Res> {
+  __$$CancelAllRemindersImplCopyWithImpl(_$CancelAllRemindersImpl _value,
+      $Res Function(_$CancelAllRemindersImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$CancelAllRemindersImpl implements CancelAllReminders {
+  const _$CancelAllRemindersImpl();
+
+  @override
+  String toString() {
+    return 'RemindersEvent.cancelAll()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$CancelAllRemindersImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() loadData,
+    required TResult Function(DateTime dayDate) selectDay,
+    required TResult Function(TaskModel task) addTask,
+    required TResult Function(TaskModel task) taskIsDone,
+    required TResult Function(TaskModel task, int minutes) taskIsPostponed,
+    required TResult Function(TaskModel task) deleteTask,
+    required TResult Function(MedicineModel medicine) addMedicine,
+    required TResult Function(MedicineModel medicine, DateTime at)
+        medicineIsDone,
+    required TResult Function(
+            MedicineModel medicine, DateTime doseTime, int minutes)
+        medicineIsPostponed,
+    required TResult Function(MedicineModel medicine) deleteMedicine,
+    required TResult Function() cancelAll,
+  }) {
+    return cancelAll();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loadData,
+    TResult? Function(DateTime dayDate)? selectDay,
+    TResult? Function(TaskModel task)? addTask,
+    TResult? Function(TaskModel task)? taskIsDone,
+    TResult? Function(TaskModel task, int minutes)? taskIsPostponed,
+    TResult? Function(TaskModel task)? deleteTask,
+    TResult? Function(MedicineModel medicine)? addMedicine,
+    TResult? Function(MedicineModel medicine, DateTime at)? medicineIsDone,
+    TResult? Function(MedicineModel medicine, DateTime doseTime, int minutes)?
+        medicineIsPostponed,
+    TResult? Function(MedicineModel medicine)? deleteMedicine,
+    TResult? Function()? cancelAll,
+  }) {
+    return cancelAll?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? loadData,
+    TResult Function(DateTime dayDate)? selectDay,
+    TResult Function(TaskModel task)? addTask,
+    TResult Function(TaskModel task)? taskIsDone,
+    TResult Function(TaskModel task, int minutes)? taskIsPostponed,
+    TResult Function(TaskModel task)? deleteTask,
+    TResult Function(MedicineModel medicine)? addMedicine,
+    TResult Function(MedicineModel medicine, DateTime at)? medicineIsDone,
+    TResult Function(MedicineModel medicine, DateTime doseTime, int minutes)?
+        medicineIsPostponed,
+    TResult Function(MedicineModel medicine)? deleteMedicine,
+    TResult Function()? cancelAll,
+    required TResult orElse(),
+  }) {
+    if (cancelAll != null) {
+      return cancelAll();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LoadData value) loadData,
+    required TResult Function(SelectDay value) selectDay,
+    required TResult Function(AddTask value) addTask,
+    required TResult Function(TaskIsDone value) taskIsDone,
+    required TResult Function(TaskIsPostponed value) taskIsPostponed,
+    required TResult Function(DeleteTask value) deleteTask,
+    required TResult Function(AddMedicine value) addMedicine,
+    required TResult Function(MedicineIsDone value) medicineIsDone,
+    required TResult Function(MedicineIsPostponed value) medicineIsPostponed,
+    required TResult Function(DeleteMedicine value) deleteMedicine,
+    required TResult Function(CancelAllReminders value) cancelAll,
+  }) {
+    return cancelAll(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadData value)? loadData,
+    TResult? Function(SelectDay value)? selectDay,
+    TResult? Function(AddTask value)? addTask,
+    TResult? Function(TaskIsDone value)? taskIsDone,
+    TResult? Function(TaskIsPostponed value)? taskIsPostponed,
+    TResult? Function(DeleteTask value)? deleteTask,
+    TResult? Function(AddMedicine value)? addMedicine,
+    TResult? Function(MedicineIsDone value)? medicineIsDone,
+    TResult? Function(MedicineIsPostponed value)? medicineIsPostponed,
+    TResult? Function(DeleteMedicine value)? deleteMedicine,
+    TResult? Function(CancelAllReminders value)? cancelAll,
+  }) {
+    return cancelAll?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LoadData value)? loadData,
+    TResult Function(SelectDay value)? selectDay,
+    TResult Function(AddTask value)? addTask,
+    TResult Function(TaskIsDone value)? taskIsDone,
+    TResult Function(TaskIsPostponed value)? taskIsPostponed,
+    TResult Function(DeleteTask value)? deleteTask,
+    TResult Function(AddMedicine value)? addMedicine,
+    TResult Function(MedicineIsDone value)? medicineIsDone,
+    TResult Function(MedicineIsPostponed value)? medicineIsPostponed,
+    TResult Function(DeleteMedicine value)? deleteMedicine,
+    TResult Function(CancelAllReminders value)? cancelAll,
+    required TResult orElse(),
+  }) {
+    if (cancelAll != null) {
+      return cancelAll(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class CancelAllReminders implements RemindersEvent {
+  const factory CancelAllReminders() = _$CancelAllRemindersImpl;
 }
 
 /// @nodoc

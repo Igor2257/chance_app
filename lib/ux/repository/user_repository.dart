@@ -451,10 +451,10 @@ class UserRepository {
               Map<String, dynamic> map = jsonDecode(value.body);
               meUser = MeUser(
                 id: map["_id"],
-                email: map["email"],
-                name: map["name"],
-                lastName: map["lastName"],
-                phone: map["phone"],
+                email: map["email"] ?? "",
+                name: map["name"] ?? "",
+                lastName: map["lastName"] ?? "",
+                phone: map["phone"] ?? "",
                 isGoogle: map["isGoogle"],
                 isConfirmed: map["isConfirmed"],
                 deviceId: map["deviceId"],

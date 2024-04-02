@@ -25,8 +25,6 @@ class _EnterAcceptCodeState extends State<EnterAcceptCode> {
       backgroundColor: beigeBG,
 
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
         centerTitle: true,
         title: const Text("Код підтвердження"),
       ),

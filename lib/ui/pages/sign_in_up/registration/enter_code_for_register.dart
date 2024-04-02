@@ -53,8 +53,6 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
         builder: (context, state) {
       return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
           centerTitle: true,
           title: Text(AppLocalizations.instance.translate("registration")),
         ),

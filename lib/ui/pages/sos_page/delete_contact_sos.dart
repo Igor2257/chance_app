@@ -40,8 +40,6 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
               ? AppLocalizations.instance.translate("deleteContact")
               : AppLocalizations.instance.translate("toChange"),
         ),
-        backgroundColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
         centerTitle: true,
       ),
       body: Padding(

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
+import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/product_model.dart';
 import 'package:chance_app/ux/repository/items_repository.dart';
@@ -10,6 +11,7 @@ import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
@@ -47,8 +49,6 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
         centerTitle: true,
         title: Text(
           AppLocalizations.instance.translate("menu"),
@@ -103,7 +103,8 @@ class _MenuPageState extends State<MenuPage> {
                     findMatch(products[0]);
                   } else {
                     Fluttertoast.showToast(
-                        msg: AppLocalizations.instance.translate("productsAreLoading"),
+                        msg: AppLocalizations.instance
+                            .translate("productsAreLoading"),
                         toastLength: Toast.LENGTH_LONG);
                   }
                 },
@@ -194,6 +195,9 @@ class _MenuPageState extends State<MenuPage> {
                   onPress: () async {
                     await UserRepository().logout().then((value) {
                       if (value == null) {
+                        context
+                            .read<RemindersBloc>()
+                            .add(const CancelAllReminders());
                         Navigator.of(context).pushNamedAndRemoveUntil(
                             "/signinup", (route) => false);
                       }

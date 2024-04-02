@@ -35,8 +35,6 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
         centerTitle: true,
         title: Text(
           AppLocalizations.instance.translate("createAGroup"),

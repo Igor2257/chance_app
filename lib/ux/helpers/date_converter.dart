@@ -8,5 +8,9 @@ class DateConverter implements JsonConverter<DateTime, String> {
   DateTime fromJson(String json) => DateUtils.dateOnly(DateTime.parse(json));
 
   @override
-  String toJson(DateTime value) => DateUtils.dateOnly(value).toIso8601String();
+  String toJson(DateTime value) => DateTime.utc(
+        value.year,
+        value.month,
+        value.day,
+      ).toString();
 }

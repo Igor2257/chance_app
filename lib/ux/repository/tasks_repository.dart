@@ -111,10 +111,7 @@ extension _TasksClient on ApiClient {
   Future<List<TaskModel>?> fetchTasks({required String cookie}) async {
     try {
       final items = await get("/task", cookie: cookie) as List<dynamic>?;
-      if (items == null) {
-        return [];
-      }
-      return items.cast<Map<String, dynamic>>().map(_modelFromJson).toList();
+      return items?.cast<Map<String, dynamic>>().map(_modelFromJson).toList();
     } catch (e, trace) {
       FirebaseCrashlytics.instance.recordError(e.toString(), trace);
       return null;
@@ -177,16 +174,13 @@ extension _TasksClient on ApiClient {
     }
   }
 
-  Map<String, dynamic> _modelToJson(TaskModel task) {
-    return {
-      "message": task.message,
-      "date": task.date.toUtc().toIso8601String(),
-      "isDone": task.isDone,
-      "remindBefore": task.remindBefore,
-    };
-  }
+  Map<String, dynamic> _modelToJson(TaskModel task) => {
+        "message": task.message,
+        "date": task.date.toUtc().toString(),
+        "isDone": task.isDone,
+        "remindBefore": task.remindBefore,
+      };
 
-  TaskModel _modelFromJson(Map<String, dynamic> json) {
-    return TaskModel.fromJson(json);
-  }
+  TaskModel _modelFromJson(Map<String, dynamic> json) =>
+      TaskModel.fromJson(json);
 }

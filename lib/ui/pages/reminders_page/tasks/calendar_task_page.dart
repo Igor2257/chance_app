@@ -35,8 +35,6 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
       DateTime? deadlineForTask = state.newDeadlineForTask;
       return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
           centerTitle: true,
           title: Text(
             "${AppLocalizations.instance.translate("whenYouNeedToDoIt")}?",

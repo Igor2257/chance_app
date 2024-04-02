@@ -78,7 +78,7 @@ abstract class RemindersHelper {
       title: task.message,
       body: [
         AppLocalizations.instance.translate("today"),
-        Jiffy.parseFromDateTime(task.date).Hm,
+        Jiffy.parseFromDateTime(task.date.toLocal()).Hm,
       ].join(" "),
       payload: jsonEncode({
         categoryId: "tasks",
@@ -147,7 +147,7 @@ abstract class RemindersHelper {
       doseCount,
       medicine.type.toDoseString(doseCount).toLowerCase(),
       AppLocalizations.instance.translate("todayAt").toLowerCase(),
-      Jiffy.parseFromDateTime(reminderTime).Hm,
+      Jiffy.parseFromDateTime(reminderTime.toLocal()).Hm,
     ].join(' ');
     final shouldShowInstruction = medicine.instruction != Instruction.noMatter;
 
@@ -160,7 +160,10 @@ abstract class RemindersHelper {
       body: (Platform.isIOS && !shouldShowInstruction)
           ? null
           : [
-              if (Platform.isIOS) AppLocalizations.instance.translate("accept") else reminderText,
+              if (Platform.isIOS)
+                AppLocalizations.instance.translate("accept")
+              else
+                reminderText,
               if (shouldShowInstruction)
                 medicine.instruction.toLocalizedString().toLowerCase(),
             ].join(' '),

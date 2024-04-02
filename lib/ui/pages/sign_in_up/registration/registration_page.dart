@@ -104,8 +104,6 @@ class _RegistrationPageState extends State<RegistrationPage>
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              surfaceTintColor: Colors.transparent,
               centerTitle: true,
               title:  Text(AppLocalizations.instance.translate("registration")),
               leading: BackButton(

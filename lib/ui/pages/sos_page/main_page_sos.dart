@@ -23,8 +23,6 @@ class _MainPageSosState extends State<MainPageSos> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
         centerTitle: true,
         leading: BackButton(
           onPressed: () => Navigator.of(context)

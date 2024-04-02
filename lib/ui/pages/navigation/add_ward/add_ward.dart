@@ -48,8 +48,6 @@ class _AddWardState extends State<AddWard> {
       return Stack(children: [
         Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            surfaceTintColor: Colors.transparent,
             centerTitle: true,
             title: Text(AppLocalizations.instance.translate("addWard")),
             leading: BackButton(

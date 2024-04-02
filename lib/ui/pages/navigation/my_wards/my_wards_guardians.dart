@@ -39,8 +39,6 @@ class _MyWardsGuardiansState extends State<MyWardsGuardians> {
     return Scaffold(
       backgroundColor: beigeBG,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
         centerTitle: true,
         title: Text(AppLocalizations.instance.translate("myWards")),
       ),

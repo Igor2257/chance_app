@@ -3,7 +3,6 @@ import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/material.dart' show DateUtils;
 import 'package:hive_flutter/hive_flutter.dart';
 
 class MedicineRepository {
@@ -113,12 +112,8 @@ extension _MedicineStorage on Box<MedicineModel> {
 extension _MedicineClient on ApiClient {
   Future<List<MedicineModel>?> fetchMedicines({required String cookie}) async {
     try {
-      final items =
-          await get("/medicine", cookie: cookie) as List<dynamic>?;
-      if(items==null){
-        return [];
-      }
-      return items.cast<Map<String, dynamic>>().map(_modelFromJson).toList();
+      final items = await get("/medicine", cookie: cookie) as List<dynamic>?;
+      return items?.cast<Map<String, dynamic>>().map(_modelFromJson).toList();
     } catch (e, trace) {
       FirebaseCrashlytics.instance.recordError(e.toString(), trace);
       return null;
@@ -135,7 +130,7 @@ extension _MedicineClient on ApiClient {
         cookie: cookie,
         json: _modelToJson(medicine),
       ) as Map<String, dynamic>?;
-      if(json==null){
+      if (json == null) {
         return null;
       }
       return _modelFromJson(json);
@@ -155,7 +150,7 @@ extension _MedicineClient on ApiClient {
         cookie: cookie.toString(),
         json: _modelToJson(medicine),
       ) as Map<String, dynamic>?;
-      if(json==null){
+      if (json == null) {
         return null;
       }
       return _modelFromJson(json);
@@ -181,25 +176,23 @@ extension _MedicineClient on ApiClient {
     return false;
   }
 
-  Map<String, dynamic> _modelToJson(MedicineModel medicine) {
-    return {
-      "name": medicine.name,
-      "type": medicine.type.name,
-      "periodicity": medicine.periodicity.name,
-      "startDate": medicine.startDate.toUtc().toIso8601String(),
-      "weekdays": medicine.weekdays,
-      "doses": medicine.doses.map((k, e) => MapEntry(k.toString(), e)),
-      "instruction": medicine.instruction.name,
-      "doneAt":
-          medicine.doneAt.map((e) => e.toUtc().toIso8601String()).toList(),
-      "rescheduledOn": medicine.rescheduledOn
-          .map((key, value) => MapEntry(key.toUtc().toIso8601String(), value)),
-    };
-  }
+  Map<String, dynamic> _modelToJson(MedicineModel medicine) => {
+        "name": medicine.name,
+        "type": medicine.type.name,
+        "periodicity": medicine.periodicity.name,
+        "startDate": DateTime.utc(
+          medicine.startDate.year,
+          medicine.startDate.month,
+          medicine.startDate.day,
+        ).toString(),
+        "weekdays": medicine.weekdays,
+        "doses": medicine.doses.map((k, e) => MapEntry(k.toString(), e)),
+        "instruction": medicine.instruction.name,
+        "doneAt": medicine.doneAt.map((e) => e.toUtc().toString()).toList(),
+        "rescheduledOn": medicine.rescheduledOn
+            .map((k, e) => MapEntry(k.toUtc().toString(), e)),
+      };
 
-  MedicineModel _modelFromJson(Map<String, dynamic> json) {
-    return MedicineModel.fromJson(json).copyWith(
-      startDate: DateUtils.dateOnly(DateTime.parse(json["startDate"])),
-    );
-  }
+  MedicineModel _modelFromJson(Map<String, dynamic> json) =>
+      MedicineModel.fromJson(json);
 }

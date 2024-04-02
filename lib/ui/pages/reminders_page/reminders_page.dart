@@ -151,8 +151,6 @@ class _RemindersPageState extends State<RemindersPage> {
         key: _scaffoldKey,
         backgroundColor: beigeBG,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
           centerTitle: true,
           scrolledUnderElevation: 0,
           titleTextStyle: const TextStyle(fontSize: 22, color: primaryText),

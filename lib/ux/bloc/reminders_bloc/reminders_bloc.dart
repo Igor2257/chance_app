@@ -33,6 +33,7 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
     on<MedicineIsDone>(_onMedicineIsDone);
     on<MedicineIsPostponed>(_onMedicineIsPostponed);
     on<DeleteMedicine>(_onDeleteMedicine);
+    on<CancelAllReminders>(_onCancelAllReminders);
   }
 
   final _tasksRepository = TasksRepository();
@@ -247,5 +248,10 @@ class RemindersBloc extends Bloc<RemindersEvent, RemindersState> {
         ),
       ),
     );
+  }
+
+  Future<void> _onCancelAllReminders(
+      CancelAllReminders event, Emitter<RemindersState> emit) async {
+    await RemindersHelper.cancelAll();
   }
 }

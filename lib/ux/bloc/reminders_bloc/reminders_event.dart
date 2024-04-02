@@ -43,4 +43,6 @@ class RemindersEvent with _$RemindersEvent {
   const factory RemindersEvent.deleteMedicine(
     MedicineModel medicine,
   ) = DeleteMedicine;
+
+  const factory RemindersEvent.cancelAll() = CancelAllReminders;
 }

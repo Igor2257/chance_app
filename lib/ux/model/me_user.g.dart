@@ -76,7 +76,7 @@ _$MeUserImpl _$$MeUserImplFromJson(Map<String, dynamic> json) => _$MeUserImpl(
       email: json['email'] as String? ?? "",
       isGoogle: json['isGoogle'] as bool? ?? false,
       isConfirmed: json['isConfirmed'] as bool? ?? false,
-      deviceId: json['deviceId'] as String?,
+      deviceId: json['deviceId'] as String? ?? null,
       mapType: json['mapType'] as int? ?? 0,
     );
 

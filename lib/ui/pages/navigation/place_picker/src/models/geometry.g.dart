@@ -56,7 +56,7 @@ class GeometryAdapter extends TypeAdapter<Geometry> {
 _$GeometryImpl _$$GeometryImplFromJson(Map<String, dynamic> json) =>
     _$GeometryImpl(
       location: Location.fromJson(json['location'] as Map<String, dynamic>),
-      locationType: json['location_type'] as String?,
+      locationType: json['location_type'] as String? ?? null,
       viewport: json['viewport'] == null
           ? null
           : Bounds.fromJson(json['viewport'] as Map<String, dynamic>),

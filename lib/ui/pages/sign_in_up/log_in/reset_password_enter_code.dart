@@ -42,8 +42,6 @@ class _ResetPasswordEnterCodeState extends State<ResetPasswordEnterCode> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
         centerTitle: true,
         title: Text(AppLocalizations.instance.translate("resetPassword")),
       ),
