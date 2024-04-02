@@ -42,7 +42,7 @@ class MedicineModel with _$MedicineModel {
   /// Checks whether the medicine has planned doses at the [dayDate].
   bool shouldBeTakenAt(DateTime dayDate) {
     for (final entry in rescheduledOn.entries) {
-      final date = entry.key.add(Duration(minutes: entry.value));
+      final date = entry.key.add(Duration(minutes: entry.value)).toLocal();
       if (DateUtils.isSameDay(date, dayDate)) return true;
     }
     dayDate = DateUtils.dateOnly(dayDate); // Ensure it's a date only

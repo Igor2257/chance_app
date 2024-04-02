@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jiffy/jiffy.dart';
 
 class TasksForToday extends StatefulWidget {
   const TasksForToday({super.key});
@@ -36,8 +37,8 @@ class _TasksForTodayState extends State<TasksForToday> {
     return BlocBuilder<RemindersBloc, RemindersState>(
       builder: (context, state) {
         final tasksForToday = state.tasks
-            .where((e) => DateUtils.isSameDay(e.date, state.selectedDay))
-            .sortedBy((e) => e.date);
+            .where((e) => DateUtils.isSameDay(e.date.toLocal(), state.selectedDay))
+            .sortedBy((e) => e.date.toLocal());
         return Scaffold(
           appBar: AppBar(
             centerTitle: true,
@@ -130,7 +131,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                               width: 10,
                                             ),
                                             Text(
-                                              "${task.date.hour.toString().padLeft(2, "0")}:${task.date.minute.toString().padLeft(2, "0")}",
+                                              Jiffy.parseFromDateTime(task.date.toLocal()).Hm,
                                               style: const TextStyle(
                                                   fontSize: 24,
                                                   color: primaryText),

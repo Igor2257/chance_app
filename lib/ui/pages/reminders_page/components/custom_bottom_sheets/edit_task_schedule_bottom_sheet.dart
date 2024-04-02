@@ -27,7 +27,7 @@ class EditTaskScheduleBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final now = DateTime.now();
     final hasActiveReminder = task.reminderTime?.isAfter(now) ?? false;
-    final parsedDate = Jiffy.parseFromDateTime(task.date);
+    final parsedDate = Jiffy.parseFromDateTime(task.date.toLocal());
     return SafeArea(
       child: Stack(
         clipBehavior: Clip.none,
@@ -42,7 +42,7 @@ class EditTaskScheduleBottomSheet extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   [
-                    DateUtils.isSameDay(task.date, DateTime.now())
+                    DateUtils.isSameDay(task.date.toLocal(), DateTime.now())
                         ? "Сьогодні"
                         : parsedDate.MMMMd,
                     parsedDate.Hm,

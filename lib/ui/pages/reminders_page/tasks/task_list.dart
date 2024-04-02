@@ -91,7 +91,7 @@ class TaskList extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final items = tasks
-        .where((e) => DateUtils.isSameDay(e.date, dayDate))
+        .where((e) => DateUtils.isSameDay(e.date.toLocal(), dayDate))
         .sortedBy((e) => e.date);
 
     if (items.isEmpty) return _emptyListPlaceholder();

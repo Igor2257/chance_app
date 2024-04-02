@@ -213,7 +213,7 @@ class _ExpandableCalendarState extends State<ExpandableCalendar> {
   Widget _mainBody() {
     final myTasks = groupBy(
       widget.tasks,
-      (e) => DateUtils.dateOnly(e.date),
+      (e) => DateUtils.dateOnly(e.date.toLocal()),
     );
     return ValueListenableBuilder(
       valueListenable: _isExpanded,

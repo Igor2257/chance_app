@@ -40,7 +40,7 @@ class EditMedicineScheduleBottomSheet extends StatelessWidget {
                   [
                     count,
                     medicine.type.toDoseString(count).toLowerCase(),
-                    DateUtils.isSameDay(doseTime, DateTime.now())
+                    DateUtils.isSameDay(doseTime.toLocal(), DateTime.now())
                         ? "сьогодні"
                         : parsedDate.MMMMd,
                     "на",

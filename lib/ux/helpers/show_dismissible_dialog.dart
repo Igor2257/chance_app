@@ -1,3 +1,5 @@
+import 'dart:async' show Timer;
+
 import 'package:flutter/material.dart';
 
 Future<T?> showDismissibleDialog<T>({
@@ -18,12 +20,14 @@ Future<T?> showDismissibleDialog<T>({
     Navigator.of(context, rootNavigator: useRootNavigator).pop();
   }
 
+  Timer? timer;
+
   return showDialog<T>(
     context: context,
     builder: (context) {
-      if (dismissAfter != null) {
-        Future<void>.delayed(dismissAfter, () => dismissCallback(context));
-      }
+      timer = (dismissAfter != null)
+          ? Timer(dismissAfter, () => dismissCallback(context))
+          : null;
       return builder(context);
     },
     barrierDismissible: barrierDismissible,
@@ -34,5 +38,7 @@ Future<T?> showDismissibleDialog<T>({
     routeSettings: routeSettings,
     anchorPoint: anchorPoint,
     traversalEdgeBehavior: traversalEdgeBehavior,
-  );
+  ).whenComplete(() {
+    if (timer?.isActive ?? false) timer!.cancel();
+  });
 }

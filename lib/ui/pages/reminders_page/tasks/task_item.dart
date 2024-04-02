@@ -1,6 +1,7 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 
 class TaskItem extends StatelessWidget {
   const TaskItem(
@@ -38,10 +39,7 @@ class TaskItem extends StatelessWidget {
       ),
       trailing: Text.rich(
         TextSpan(
-          text: [
-            task.date.hour.toString().padLeft(2, "0"),
-            task.date.minute.toString().padLeft(2, "0"),
-          ].join(":"),
+          text: Jiffy.parseFromDateTime(task.date.toLocal()).Hm,
           children: [
             if (hasActiveReminder)
               WidgetSpan(
