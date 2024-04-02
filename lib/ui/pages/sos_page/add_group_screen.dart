@@ -97,7 +97,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                             ..text = "+380",
                           label: AppLocalizations.instance
                               .translate("enterPhoneNumber"),
-                          hintText: '+380',
+                          hintText: '',
                           isPhone: true,
                           onChanged: (value) {},
                         ),

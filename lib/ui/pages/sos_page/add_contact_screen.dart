@@ -63,7 +63,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
             LabeledTextField(
               controller: phoneController..text = "+380",
               label: AppLocalizations.instance.translate("enterPhoneNumber"),
-              hintText: 'Number',
+              hintText: '',
               isPhone: true,
               onChanged: (value) {},
             ),

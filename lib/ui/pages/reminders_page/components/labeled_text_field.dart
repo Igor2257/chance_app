@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
+import 'package:country_icons/country_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -80,6 +81,12 @@ class LabeledTextFieldState extends State<LabeledTextField> {
           child: TextField(
             controller: widget.controller,
             decoration: InputDecoration(
+              prefixIcon: widget.isPhone
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(child: CountryIcons.getSvgFlag("ua")),
+                    )
+                  : null,
               hintText: widget.hintText,
               errorText: errorText,
               border: OutlineInputBorder(
