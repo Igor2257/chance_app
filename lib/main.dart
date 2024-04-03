@@ -345,6 +345,9 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                               surfaceTintColor: beigeBG),
                                           colorScheme: ColorScheme.fromSeed(
                                               seedColor: primary400),
+                                          appBarTheme: const AppBarTheme(
+                                              backgroundColor: beigeBG,
+                                              elevation: 0),
                                           useMaterial3: true,
                                           bottomSheetTheme:
                                               const BottomSheetThemeData(
