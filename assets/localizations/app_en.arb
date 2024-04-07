@@ -222,6 +222,7 @@
   "createNewGroup": "Create new group",
   "aGroup": "A group",
   "leaveGroup": "Leave group",
+  "leaveChat": "Leave chat",
   "leaveAndDeleteGroup": "Leave and delete group",
   "leaveGroupDialog": "Are you sure you want to leave the group?",
   "leaveAndDeleteDialog": "Are you sure you want to leave and delete the group?",

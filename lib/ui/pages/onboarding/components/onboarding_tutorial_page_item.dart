@@ -31,24 +31,27 @@ class OnboardingTutorialPageItem extends StatelessWidget {
                     topRight: Radius.circular(16)),
                 color: beigeBG,
               ),
-              child: Column(
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(fontSize: 32, color: primaryText),
-                  ),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  Text(
-                    subtitle,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: primaryText,
+              child: Center(
+                child: Column(
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(fontSize: 32, color: primaryText),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
-                ],
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    Text(
+                      subtitle,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: primaryText,
+                      ),
+                    ),
+                  ],
+                ),
               ))
         ]),
       ]

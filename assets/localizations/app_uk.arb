@@ -222,6 +222,7 @@
   "createNewGroup": "Створити нову групу",
   "aGroup": "Група",
   "leaveGroup": "Покинути групу",
+  "leaveChat": "Покинути чат",
   "leaveAndDeleteGroup": "Покинути та видалити групу",
   "leaveGroupDialog": "Ви впевнені, що хочете покинути групу?",
   "leaveAndDeleteDialog": "Ви впевнені, що хочете покинути та видалити групу?",

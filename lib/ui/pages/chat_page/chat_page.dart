@@ -42,7 +42,9 @@ class _ChatPageState extends State<ChatPage> {
           centerTitle: true,
           actions: [
             IconButton(
-              onPressed: () => _openChatSettingsPage(context),
+              onPressed: () => widget.room.type == types.RoomType.group
+                  ? _openGroupSettingsPage(context)
+                  : _openChatSettingsPage(context),
               icon: const Icon(
                 Icons.more_vert,
                 color: primary800,
@@ -59,7 +61,7 @@ class _ChatPageState extends State<ChatPage> {
                 return const CircularProgressIndicator();
               } else if (snapshot.hasData) {
                 if (snapshot.data!.isEmpty) {
-                  return  Text(
+                  return Text(
                     AppLocalizations.instance.translate('NoMessages'),
                     style: const TextStyle(
                       fontWeight: FontWeight.w400,
@@ -82,7 +84,7 @@ class _ChatPageState extends State<ChatPage> {
                 );
               }
 
-              return  Text(
+              return Text(
                 AppLocalizations.instance.translate('error'),
                 style: const TextStyle(
                   fontWeight: FontWeight.w400,
@@ -160,4 +162,7 @@ class _ChatPageState extends State<ChatPage> {
 
   void _openChatSettingsPage(BuildContext context) =>
       Navigator.of(context).pushNamed('/chat_settings', arguments: widget.room);
+
+  void _openGroupSettingsPage(BuildContext context) => Navigator.of(context)
+      .pushNamed('/group_settings', arguments: widget.room);
 }
