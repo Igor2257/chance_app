@@ -17,8 +17,8 @@ class ChatTile extends StatelessWidget {
     types.Message? lastMessage =
         room.lastMessages?.isEmpty ?? true ? null : room.lastMessages!.first;
 
-    String title = '';
-    String subtitle = '';
+    String title = room.name ?? '';
+    String subtitle = AppLocalizations.instance.translate('NoMessages');
     DateTime? updatedAt;
 
     if (lastMessage != null) {
