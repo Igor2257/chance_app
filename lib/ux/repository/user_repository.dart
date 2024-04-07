@@ -52,11 +52,11 @@ class UserRepository {
         )
             .then((value) async {
           final cookie = _parseCookieFromLogin(value);
-          Map<String, dynamic> data = json.decode(value.body);
-          UserCredential credential =
-              await FirebaseAuth.instance.signInWithCustomToken(data['token']);
 
           if (value.statusCode > 199 && value.statusCode < 300) {
+            Map<String, dynamic> data = json.decode(value.body);
+            UserCredential credential = await FirebaseAuth.instance
+                .signInWithCustomToken(data['token']);
             var url = Uri.parse('$apiUrl/auth/me');
             await http.get(
               url,
@@ -83,6 +83,9 @@ class UserRepository {
                     firstName: meUser.name,
                     id: credential.user!.uid,
                     lastName: meUser.lastName,
+                    metadata: {
+                      'phone': map['phone'],
+                    },
                   ),
                 );
                 await HiveCRUD().addUser(meUser);

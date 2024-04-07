@@ -2,7 +2,7 @@ import 'package:chance_app/ui/pages/chat_page/blocs/select_cubit/select_cubit.da
 import 'package:chance_app/ui/pages/chat_page/change_group_page.dart';
 import 'package:chance_app/ui/pages/chat_page/chat_page.dart';
 import 'package:chance_app/ui/pages/chat_page/chat_settings_page.dart';
-
+import 'package:chance_app/ui/pages/chat_page/group_settings_page.dart';
 
 import 'package:chance_app/ui/pages/chat_page/create_chat_page.dart';
 import 'package:chance_app/ui/pages/chat_page/create_group_page.dart';
@@ -225,6 +225,13 @@ class AppRouter {
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => ChatSettingsPage(
+            room: args as types.Room,
+          ),
+        );
+      case "/group_settings":
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => GroupSettingsPage(
             room: args as types.Room,
           ),
         );
