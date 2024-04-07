@@ -19,7 +19,7 @@ class GroupSettingsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.instance.translate('aGroup'),
+          AppLocalizations.instance.translate('settingsGroup'),
           style: const TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 22,
