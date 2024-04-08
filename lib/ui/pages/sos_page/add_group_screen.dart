@@ -5,6 +5,7 @@ import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AddGroupScreen extends StatefulWidget {
   const AddGroupScreen({super.key});
@@ -147,25 +148,36 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                               index++) {
                             String name = contacts[index].nameController.text;
                             String phone = contacts[index].phoneController.text;
-                            SosContactModel contactModel = SosContactModel(
-                              name: name,
-                              phone: phone,
-                              groupName: groupNameController.text,
-                            );
-                            contactModels.add(contactModel);
+                            if (validateInput(name, isPhone: false) &&
+                                validateInput(phone)) {
+                              SosContactModel contactModel = SosContactModel(
+                                name: name,
+                                phone: phone,
+                                groupName: groupNameController.text,
+                              );
+                              contactModels.add(contactModel);
+                            } else {
+                              Fluttertoast.showToast(
+                                msg: AppLocalizations.instance
+                                    .translate("checkTheCorrectnessOfTheData"),
+                              );
+                            }
                           }
                           SosGroupModel sosGroupModel = SosGroupModel(
                             name: groupNameController.text,
                             contacts: contactModels,
                           );
-                          _sosContactsBloc.add(
-                            SaveContact(
-                              contactModel: sosGroupModel,
-                              isGroup: true,
-                            ),
-                          );
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              "/sos", (route) => false);
+
+                          if (sosGroupModel.contacts.isNotEmpty) {
+                            _sosContactsBloc.add(
+                              SaveContact(
+                                contactModel: sosGroupModel,
+                                isGroup: true,
+                              ),
+                            );
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                "/sos", (route) => false);
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: primary1000,
@@ -191,6 +203,16 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
         ),
       ),
     );
+  }
+
+  bool validateInput(String input, {bool isPhone = true}) {
+    if (isPhone) {
+      final RegExp phoneRegex = RegExp(r'^\+380\d*$');
+      return phoneRegex.hasMatch(input);
+    } else {
+      final RegExp nameRegex = RegExp(r'^[а-яА-Яa-zA-Z\s]{3,}$');
+      return nameRegex.hasMatch(input);
+    }
   }
 }
 

@@ -75,7 +75,7 @@ class ContainerButton extends StatelessWidget {
       } on PlatformException catch (e) {
         Fluttertoast.showToast(
           msg: AppLocalizations.instance
-              .translate("failedToCallTheNumber $contactPhone, ${e.message}"),
+              .translate("failedToCallTheNumber") + ("$contactPhone, ${e.message}"),
         );
       }
     } else {
