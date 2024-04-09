@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
+import 'package:chance_app/ux/extensions/chat_user_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:timeago/timeago.dart' as timeago;
@@ -24,13 +25,13 @@ class ChatTile extends StatelessWidget {
     if (lastMessage != null) {
       title = room.name != null
           ? room.name!
-          : '${lastMessage.author.firstName} ${lastMessage.author.lastName}';
+          : lastMessage.author.fullName;
       if (lastMessage.updatedAt != null) {
         updatedAt = DateTime.fromMillisecondsSinceEpoch(lastMessage.updatedAt!);
       }
       if (lastMessage is types.TextMessage) {
         subtitle = room.name != null
-            ? '${lastMessage.author.firstName} ${lastMessage.author.lastName}: ${lastMessage.text}'
+            ? '${lastMessage.author.fullName}: ${lastMessage.text}'
             : lastMessage.text;
       }
     }

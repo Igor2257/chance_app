@@ -1,3 +1,4 @@
+import 'package:chance_app/ui/pages/chat_page/blocs/room_cubit/room_cubit.dart';
 import 'package:chance_app/ui/pages/chat_page/blocs/select_cubit/select_cubit.dart';
 import 'package:chance_app/ui/pages/chat_page/change_group_page.dart';
 import 'package:chance_app/ui/pages/chat_page/chat_page.dart';
@@ -179,11 +180,14 @@ class AppRouter {
           builder: (_) => const CreateChatPage(),
         );
       case "/new_group":
+        types.Room? room = args as types.Room?;
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => BlocProvider(
-            create: (_) => SelectCubit(),
-            child: const NewGroupPage(),
+            create: (_) => SelectCubit(
+              list: room?.users ?? [],
+            ),
+            child: NewGroupPage(room: room),
           ),
         );
       case "/new_chat":
@@ -194,7 +198,10 @@ class AppRouter {
       case "/chat":
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => ChatPage(room: args as types.Room),
+          builder: (_) => BlocProvider(
+            create: (_) => RoomCubit(args as types.Room),
+            child: const ChatPage(),
+          ),
         );
       case "/search_chat":
         return MaterialPageRoute(
@@ -231,15 +238,17 @@ class AppRouter {
       case "/group_settings":
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => GroupSettingsPage(
-            room: args as types.Room,
+          builder: (_) => BlocProvider.value(
+            value: args as RoomCubit,
+            child: const GroupSettingsPage(),
           ),
         );
       case "/change_group":
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => ChangeGroupPage(
-            room: args as types.Room,
+          builder: (_) => BlocProvider.value(
+            value: args as RoomCubit,
+            child: const ChangeGroupPage(),
           ),
         );
       default:

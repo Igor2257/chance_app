@@ -2,7 +2,9 @@ import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/custom_dialog.dart';
+import 'package:chance_app/ux/extensions/chat_user_name.dart';
 import 'package:chance_app/ux/helpers/chat_helper.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
@@ -13,6 +15,11 @@ class ChatSettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String roomName = room.name ??
+        room.users
+            .firstWhereOrNull((u) => u.id != ChatHelper.userId)
+            ?.fullName ??
+        '-';
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -41,9 +48,7 @@ class ChatSettingsPage extends StatelessWidget {
                 backgroundColor: darkNeutral300,
                 child: room.imageUrl == null
                     ? Text(
-                        room.name != null && room.name!.isNotEmpty
-                            ? room.name![0]
-                            : '',
+                        roomName.isNotEmpty ? roomName[0] : '',
                         style: const TextStyle(
                           fontSize: 32,
                           height: 40 / 32,
@@ -72,7 +77,7 @@ class ChatSettingsPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 8.0),
                     Text(
-                      room.name ?? '-',
+                      roomName,
                       style: const TextStyle(
                         fontSize: 24,
                         height: 32 / 24,
