@@ -1,23 +1,26 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
+import 'package:chance_app/ui/pages/chat_page/blocs/room_cubit/room_cubit.dart';
 import 'package:chance_app/ui/pages/chat_page/widgets/chat_bubble_widget.dart';
+import 'package:chance_app/ux/extensions/chat_user_name.dart';
 import 'package:chance_app/ux/helpers/chat_helper.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key, required this.room});
-
-  final types.Room room;
+  const ChatPage({super.key});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
+  late final RoomCubit _cubit = context.read<RoomCubit>();
   final TextEditingController _controller = TextEditingController();
   late final Stream<List<types.Message>> _messagesStream =
-      ChatHelper.messages(widget.room);
+      ChatHelper.messages(_cubit.room);
 
   @override
   void dispose() {
@@ -30,28 +33,38 @@ class _ChatPageState extends State<ChatPage> {
     return GestureDetector(
       onTap: () => _unFocus(context),
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            widget.room.name ?? '',
-            style: const TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 22,
-              height: 28 / 22,
-            ),
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: BlocBuilder<RoomCubit, types.Room>(
+            builder: (context, room) {
+              return AppBar(
+                title: Text(
+                  room.name ??
+                      room.users
+                          .firstWhereOrNull((u) => u.id != ChatHelper.userId)
+                          ?.fullName ?? '-',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 22,
+                    height: 28 / 22,
+                  ),
+                ),
+                centerTitle: true,
+                actions: [
+                  IconButton(
+                    onPressed: () => room.type == types.RoomType.group
+                        ? _openGroupSettingsPage(context)
+                        : _openChatSettingsPage(context),
+                    icon: const Icon(
+                      Icons.more_vert,
+                      color: primary800,
+                    ),
+                    iconSize: 24.0,
+                  )
+                ],
+              );
+            },
           ),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              onPressed: () => widget.room.type == types.RoomType.group
-                  ? _openGroupSettingsPage(context)
-                  : _openChatSettingsPage(context),
-              icon: const Icon(
-                Icons.more_vert,
-                color: primary800,
-              ),
-              iconSize: 24.0,
-            )
-          ],
         ),
         body: Center(
           child: StreamBuilder<List<types.Message>>(
@@ -153,7 +166,7 @@ class _ChatPageState extends State<ChatPage> {
 
   void _onSendBtnTap() {
     if (_controller.text.isNotEmpty) {
-      ChatHelper.sendMessage(_controller.text, widget.room.id);
+      ChatHelper.sendMessage(_controller.text, _cubit.room.id);
       _controller.clear();
     }
   }
@@ -161,8 +174,8 @@ class _ChatPageState extends State<ChatPage> {
   void _unFocus(BuildContext context) => FocusScope.of(context).unfocus();
 
   void _openChatSettingsPage(BuildContext context) =>
-      Navigator.of(context).pushNamed('/chat_settings', arguments: widget.room);
+      Navigator.of(context).pushNamed('/chat_settings', arguments: _cubit.room);
 
-  void _openGroupSettingsPage(BuildContext context) => Navigator.of(context)
-      .pushNamed('/group_settings', arguments: widget.room);
+  void _openGroupSettingsPage(BuildContext context) =>
+      Navigator.of(context).pushNamed('/group_settings', arguments: _cubit);
 }
