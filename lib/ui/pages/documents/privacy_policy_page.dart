@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:pdfx/pdfx.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class PrivacyPolicyPage extends StatefulWidget {
   const PrivacyPolicyPage({super.key});
@@ -46,14 +47,21 @@ class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
             if (snapshot.data == null) return const SizedBox.shrink();
             return LayoutBuilder(
               builder: (context, constraints) => SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
                 clipBehavior: Clip.none,
                 child: ConstrainedBox(
                   constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                  child: HtmlWidget(
-                    snapshot.data!,
-                    onLoadingBuilder: (context, element, progress) => Center(
-                      child: CircularProgressIndicator(value: progress),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: HtmlWidget(
+                      snapshot.data!,
+                      onLoadingBuilder: (context, element, progress) => Center(
+                        child: CircularProgressIndicator(value: progress),
+                      ),
+                      onTapUrl: (urlString) async {
+                        final canHandle = await canLaunchUrlString(urlString);
+                        if (canHandle) return launchUrlString(urlString);
+                        return false;
+                      },
                     ),
                   ),
                 ),
