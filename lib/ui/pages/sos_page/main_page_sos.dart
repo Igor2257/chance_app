@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/sos_page/group_details_screen.dart';
@@ -6,6 +8,7 @@ import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -258,22 +261,35 @@ class _MainPageSosState extends State<MainPageSos> {
   }
 
   Future<void> _makePhoneCall(SosContactModel contactModel) async {
-    final callPermissionStatus = await Permission.phone.request();
-    if (callPermissionStatus.isGranted) {
-      final String userPhone = contactModel.phone;
-      try {
-        const MethodChannel('caller').invokeMethod('makeCall', userPhone);
-      } on PlatformException catch (e) {
+    if (Platform.isAndroid) {
+      final callPermissionStatus = await Permission.phone.request();
+      if (callPermissionStatus.isGranted) {
+        final String userPhone = contactModel.phone;
+        try {
+          const MethodChannel('caller').invokeMethod('makeCall', userPhone);
+        } on PlatformException catch (e) {
+          Fluttertoast.showToast(
+            msg: AppLocalizations.instance.translate("failedToCallTheNumber") +
+                ("$userPhone, ${e.message}"),
+          );
+        }
+      } else {
+        final String userPhone = contactModel.phone;
         Fluttertoast.showToast(
-          msg: AppLocalizations.instance
-              .translate("failedToCallTheNumber $userPhone, ${e.message}"),
+          msg: AppLocalizations.instance.translate("failedToCallTheNumber") +
+              (" $userPhone"),
         );
       }
-    } else {
-      Fluttertoast.showToast(
-        msg: AppLocalizations.instance
-            .translate("failedToCallTheNumber $contactModel.phone"),
-      );
+    } else if (Platform.isIOS) {
+      final String userPhone = contactModel.phone;
+      try {
+        await FlutterPhoneDirectCaller.callNumber(userPhone);
+      } on PlatformException catch (e) {
+        Fluttertoast.showToast(
+          msg: AppLocalizations.instance.translate("failedToCallTheNumber") +
+              (" $contactModel.phone, ${e.message}"),
+        );
+      }
     }
   }
 }

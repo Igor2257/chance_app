@@ -57,40 +57,44 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
                   padding: const EdgeInsets.only(bottom: 29),
                   itemBuilder: (context, index) {
                     SosGroupModel contactModel = contacts[index];
-                    return InkWell(
-                      borderRadius: BorderRadius.circular(16),
-                      onTap: () {
-                        if (isEdit == false) {
-                          if (contactModel.name.isEmpty) {
-                            Navigator.pushNamed(context, "/replace_contact_sos",
-                                arguments: contactModel);
-                          } else {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditGroupScreenSos(
-                                    groupModel: contactModel),
-                              ),
-                            );
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onTap: () {
+                          if (isEdit == false) {
+                            if (contactModel.name.isEmpty) {
+                              Navigator.pushNamed(
+                                  context, "/replace_contact_sos",
+                                  arguments: contactModel);
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditGroupScreenSos(
+                                      groupModel: contactModel),
+                                ),
+                              );
+                            }
                           }
-                        }
-                      },
-                      child: ContainerButtonWithCheckbox(
-                        contactModel: contactModel,
-                        text: contactModel.name.isNotEmpty
-                            ? contactModel.name
-                            : contactModel.contacts[0].name,
-                        isSelected: selectedModels.contains(
-                          contactModel,
-                        ),
-                        isEdit: isEdit,
-                        onChanged: (value) {
-                          handleCheckboxChange(
-                            value,
-                            contactModel,
-                          );
                         },
-                        isGroup: contactModel.name.isNotEmpty ? true : false,
+                        child: ContainerButtonWithCheckbox(
+                          contactModel: contactModel,
+                          text: contactModel.name.isNotEmpty
+                              ? contactModel.name
+                              : contactModel.contacts[0].name,
+                          isSelected: selectedModels.contains(
+                            contactModel,
+                          ),
+                          isEdit: isEdit,
+                          onChanged: (value) {
+                            handleCheckboxChange(
+                              value,
+                              contactModel,
+                            );
+                          },
+                          isGroup: contactModel.name.isNotEmpty ? true : false,
+                        ),
                       ),
                     );
                   },
@@ -101,39 +105,40 @@ class _DeleteContactsPageState extends State<DeleteContactsPage> {
               SliverFillRemaining(
                 child: Align(
                   alignment: Alignment.bottomCenter,
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor:
-                            red900.withOpacity(isButtonEnable ? 1 : 0.4),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor:
+                              red900.withOpacity(isButtonEnable ? 1 : 0.4),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                         ),
-                      ),
-                      onPressed: () {
-                        if (isButtonEnable) {
-                          if (selectedModels[0].name.isNotEmpty) {
-                            BlocProvider.of<SosContactsBloc>(context)
-                                .add(DeleteGroup(ids: [selectedModels[0].id]));
-                          } else {
-                            BlocProvider.of<SosContactsBloc>(context).add(
-                                DeleteContact(ids: [selectedModels[0].id]));
+                        onPressed: () {
+                          if (isButtonEnable) {
+                            if (selectedModels[0].name.isNotEmpty) {
+                              BlocProvider.of<SosContactsBloc>(context).add(
+                                  DeleteGroup(ids: [selectedModels[0].id]));
+                            } else {
+                              BlocProvider.of<SosContactsBloc>(context).add(
+                                  DeleteContact(ids: [selectedModels[0].id]));
+                            }
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                "/sos", (route) => false);
                           }
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              "/sos", (route) => false);
-                        }
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 44, vertical: 10),
-                        child: Text(
-                          AppLocalizations.instance.translate("delete"),
-                          style: const TextStyle(
-                            color: primary50,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
+                        },
+                        child: Center(
+                          child: Text(
+                            AppLocalizations.instance.translate("delete"),
+                            style: const TextStyle(
+                              color: primary50,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ),
                       ),
