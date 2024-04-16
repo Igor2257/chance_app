@@ -113,8 +113,8 @@ class PositionController with ChangeNotifier {
     if (hiveCRUD.setting.isAppShouldSentLocation) {
       try {
         unawaited(Geolocator.getCurrentPosition().whenComplete(() async {
-          await const MethodChannel('location_service_disable')
-              .invokeMethod('pauseLocationService',hiveCRUD.setting.isAppShouldSentLocation);
+          await const MethodChannel('location_service_disable').invokeMethod(
+              'pauseLocationService', hiveCRUD.setting.isAppShouldSentLocation);
         }));
       } catch (_) {}
     }

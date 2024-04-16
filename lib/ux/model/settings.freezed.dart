@@ -29,11 +29,14 @@ mixin _$Settings {
   @HiveField(3)
   bool? get isNotificationEnable => throw _privateConstructorUsedError;
   @HiveField(4)
-  String get language => throw _privateConstructorUsedError;
+  String? get language => throw _privateConstructorUsedError;
   @HiveField(5)
-  String get languageCode => throw _privateConstructorUsedError;
+  String? get languageCode => throw _privateConstructorUsedError;
   @HiveField(6)
   bool get isAppShouldSentLocation => throw _privateConstructorUsedError;
+  @HiveField(7)
+  bool get dontShowInformationDialogBeforeOpenMap =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -51,9 +54,10 @@ abstract class $SettingsCopyWith<$Res> {
       @HiveField(1) bool soundsOn,
       @HiveField(2) DateTime? firstEnter,
       @HiveField(3) bool? isNotificationEnable,
-      @HiveField(4) String language,
-      @HiveField(5) String languageCode,
-      @HiveField(6) bool isAppShouldSentLocation});
+      @HiveField(4) String? language,
+      @HiveField(5) String? languageCode,
+      @HiveField(6) bool isAppShouldSentLocation,
+      @HiveField(7) bool dontShowInformationDialogBeforeOpenMap});
 }
 
 /// @nodoc
@@ -73,9 +77,10 @@ class _$SettingsCopyWithImpl<$Res, $Val extends Settings>
     Object? soundsOn = null,
     Object? firstEnter = freezed,
     Object? isNotificationEnable = freezed,
-    Object? language = null,
-    Object? languageCode = null,
+    Object? language = freezed,
+    Object? languageCode = freezed,
     Object? isAppShouldSentLocation = null,
+    Object? dontShowInformationDialogBeforeOpenMap = null,
   }) {
     return _then(_value.copyWith(
       blockAd: null == blockAd
@@ -94,17 +99,22 @@ class _$SettingsCopyWithImpl<$Res, $Val extends Settings>
           ? _value.isNotificationEnable
           : isNotificationEnable // ignore: cast_nullable_to_non_nullable
               as bool?,
-      language: null == language
+      language: freezed == language
           ? _value.language
           : language // ignore: cast_nullable_to_non_nullable
-              as String,
-      languageCode: null == languageCode
+              as String?,
+      languageCode: freezed == languageCode
           ? _value.languageCode
           : languageCode // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       isAppShouldSentLocation: null == isAppShouldSentLocation
           ? _value.isAppShouldSentLocation
           : isAppShouldSentLocation // ignore: cast_nullable_to_non_nullable
+              as bool,
+      dontShowInformationDialogBeforeOpenMap: null ==
+              dontShowInformationDialogBeforeOpenMap
+          ? _value.dontShowInformationDialogBeforeOpenMap
+          : dontShowInformationDialogBeforeOpenMap // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -123,9 +133,10 @@ abstract class _$$SettingsImplCopyWith<$Res>
       @HiveField(1) bool soundsOn,
       @HiveField(2) DateTime? firstEnter,
       @HiveField(3) bool? isNotificationEnable,
-      @HiveField(4) String language,
-      @HiveField(5) String languageCode,
-      @HiveField(6) bool isAppShouldSentLocation});
+      @HiveField(4) String? language,
+      @HiveField(5) String? languageCode,
+      @HiveField(6) bool isAppShouldSentLocation,
+      @HiveField(7) bool dontShowInformationDialogBeforeOpenMap});
 }
 
 /// @nodoc
@@ -143,9 +154,10 @@ class __$$SettingsImplCopyWithImpl<$Res>
     Object? soundsOn = null,
     Object? firstEnter = freezed,
     Object? isNotificationEnable = freezed,
-    Object? language = null,
-    Object? languageCode = null,
+    Object? language = freezed,
+    Object? languageCode = freezed,
     Object? isAppShouldSentLocation = null,
+    Object? dontShowInformationDialogBeforeOpenMap = null,
   }) {
     return _then(_$SettingsImpl(
       blockAd: null == blockAd
@@ -164,17 +176,22 @@ class __$$SettingsImplCopyWithImpl<$Res>
           ? _value.isNotificationEnable
           : isNotificationEnable // ignore: cast_nullable_to_non_nullable
               as bool?,
-      language: null == language
+      language: freezed == language
           ? _value.language
           : language // ignore: cast_nullable_to_non_nullable
-              as String,
-      languageCode: null == languageCode
+              as String?,
+      languageCode: freezed == languageCode
           ? _value.languageCode
           : languageCode // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       isAppShouldSentLocation: null == isAppShouldSentLocation
           ? _value.isAppShouldSentLocation
           : isAppShouldSentLocation // ignore: cast_nullable_to_non_nullable
+              as bool,
+      dontShowInformationDialogBeforeOpenMap: null ==
+              dontShowInformationDialogBeforeOpenMap
+          ? _value.dontShowInformationDialogBeforeOpenMap
+          : dontShowInformationDialogBeforeOpenMap // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -188,9 +205,10 @@ class _$SettingsImpl implements _Settings {
       @HiveField(1) this.soundsOn = true,
       @HiveField(2) this.firstEnter = null,
       @HiveField(3) this.isNotificationEnable = false,
-      @HiveField(4) this.language = "English",
-      @HiveField(5) this.languageCode = "en",
-      @HiveField(6) this.isAppShouldSentLocation = false});
+      @HiveField(4) this.language,
+      @HiveField(5) this.languageCode,
+      @HiveField(6) this.isAppShouldSentLocation = false,
+      @HiveField(7) this.dontShowInformationDialogBeforeOpenMap = false});
 
   factory _$SettingsImpl.fromJson(Map<String, dynamic> json) =>
       _$$SettingsImplFromJson(json);
@@ -212,21 +230,23 @@ class _$SettingsImpl implements _Settings {
   @HiveField(3)
   final bool? isNotificationEnable;
   @override
-  @JsonKey()
   @HiveField(4)
-  final String language;
+  final String? language;
   @override
-  @JsonKey()
   @HiveField(5)
-  final String languageCode;
+  final String? languageCode;
   @override
   @JsonKey()
   @HiveField(6)
   final bool isAppShouldSentLocation;
+  @override
+  @JsonKey()
+  @HiveField(7)
+  final bool dontShowInformationDialogBeforeOpenMap;
 
   @override
   String toString() {
-    return 'Settings(blockAd: $blockAd, soundsOn: $soundsOn, firstEnter: $firstEnter, isNotificationEnable: $isNotificationEnable, language: $language, languageCode: $languageCode, isAppShouldSentLocation: $isAppShouldSentLocation)';
+    return 'Settings(blockAd: $blockAd, soundsOn: $soundsOn, firstEnter: $firstEnter, isNotificationEnable: $isNotificationEnable, language: $language, languageCode: $languageCode, isAppShouldSentLocation: $isAppShouldSentLocation, dontShowInformationDialogBeforeOpenMap: $dontShowInformationDialogBeforeOpenMap)';
   }
 
   @override
@@ -247,13 +267,25 @@ class _$SettingsImpl implements _Settings {
                 other.languageCode == languageCode) &&
             (identical(
                     other.isAppShouldSentLocation, isAppShouldSentLocation) ||
-                other.isAppShouldSentLocation == isAppShouldSentLocation));
+                other.isAppShouldSentLocation == isAppShouldSentLocation) &&
+            (identical(other.dontShowInformationDialogBeforeOpenMap,
+                    dontShowInformationDialogBeforeOpenMap) ||
+                other.dontShowInformationDialogBeforeOpenMap ==
+                    dontShowInformationDialogBeforeOpenMap));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, blockAd, soundsOn, firstEnter,
-      isNotificationEnable, language, languageCode, isAppShouldSentLocation);
+  int get hashCode => Object.hash(
+      runtimeType,
+      blockAd,
+      soundsOn,
+      firstEnter,
+      isNotificationEnable,
+      language,
+      languageCode,
+      isAppShouldSentLocation,
+      dontShowInformationDialogBeforeOpenMap);
 
   @JsonKey(ignore: true)
   @override
@@ -271,13 +303,15 @@ class _$SettingsImpl implements _Settings {
 
 abstract class _Settings implements Settings {
   const factory _Settings(
-      {@HiveField(0) final bool blockAd,
-      @HiveField(1) final bool soundsOn,
-      @HiveField(2) final DateTime? firstEnter,
-      @HiveField(3) final bool? isNotificationEnable,
-      @HiveField(4) final String language,
-      @HiveField(5) final String languageCode,
-      @HiveField(6) final bool isAppShouldSentLocation}) = _$SettingsImpl;
+          {@HiveField(0) final bool blockAd,
+          @HiveField(1) final bool soundsOn,
+          @HiveField(2) final DateTime? firstEnter,
+          @HiveField(3) final bool? isNotificationEnable,
+          @HiveField(4) final String? language,
+          @HiveField(5) final String? languageCode,
+          @HiveField(6) final bool isAppShouldSentLocation,
+          @HiveField(7) final bool dontShowInformationDialogBeforeOpenMap}) =
+      _$SettingsImpl;
 
   factory _Settings.fromJson(Map<String, dynamic> json) =
       _$SettingsImpl.fromJson;
@@ -296,13 +330,16 @@ abstract class _Settings implements Settings {
   bool? get isNotificationEnable;
   @override
   @HiveField(4)
-  String get language;
+  String? get language;
   @override
   @HiveField(5)
-  String get languageCode;
+  String? get languageCode;
   @override
   @HiveField(6)
   bool get isAppShouldSentLocation;
+  @override
+  @HiveField(7)
+  bool get dontShowInformationDialogBeforeOpenMap;
   @override
   @JsonKey(ignore: true)
   _$$SettingsImplCopyWith<_$SettingsImpl> get copyWith =>

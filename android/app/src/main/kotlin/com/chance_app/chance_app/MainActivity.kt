@@ -11,25 +11,12 @@ var myEmail: String = ""
 var isAppSentData: Boolean = true
 
 class MainActivity : FlutterActivity() {
-    private val CHANNELCaller = "caller"
     private val CHANNELLocation = "location_service"
     private val CHANNELLocationDisable = "location_service_disable"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNELCaller).setMethodCallHandler { call, result ->
-            if (call.method == "makeCall") {
-                val phoneNumber = call.arguments?.toString()
-                if (phoneNumber != null) {
-                    makeCall(phoneNumber)
-                    result.success(null)
-                } else {
-                    result.error("MISSING_PHONE_NUMBER", "Phone number is missing", null)
-                }
-            } else {
-                result.notImplemented()
-            }
-        }
+
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNELLocation).setMethodCallHandler { call, result ->
             if (call.method == "startLocationService") {
                 val getMyEmail = call.arguments?.toString()
@@ -71,14 +58,6 @@ class MainActivity : FlutterActivity() {
                 result.notImplemented()
             }
         }
-    }
-
-    private fun makeCall(phoneNumber: String) {
-        // Ваша логика для совершения звонка на переданный номер телефона
-        // Например:
-        val intent = Intent(Intent.ACTION_CALL)
-        intent.data = Uri.parse("tel:$phoneNumber")
-        startActivity(intent)
     }
 
 }

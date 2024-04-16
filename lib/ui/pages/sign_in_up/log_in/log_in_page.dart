@@ -81,6 +81,18 @@ class _LoginPageState extends State<LoginPage> {
                 emailTextEditingController: emailTextEditingController,
                 key: const ValueKey("password"),
               ),
+              const SizedBox(height: 24),
+              SizedBox(
+                  height: 24,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed("/privacy_policy");
+                    },
+                    child: Text(
+                      AppLocalizations.instance.translate("privacyPolicy"),
+                      style: const TextStyle(color: primary700),
+                    ),
+                  )),
               const Spacer(),
               RoundedButton(
                   onPress: () {

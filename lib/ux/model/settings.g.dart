@@ -21,16 +21,17 @@ class SettingsAdapter extends TypeAdapter<Settings> {
       soundsOn: fields[1] as bool,
       firstEnter: fields[2] as DateTime?,
       isNotificationEnable: fields[3] as bool?,
-      language: fields[4] as String,
-      languageCode: fields[5] as String,
+      language: fields[4] as String?,
+      languageCode: fields[5] as String?,
       isAppShouldSentLocation: fields[6] as bool,
+      dontShowInformationDialogBeforeOpenMap: fields[7] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, Settings obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.blockAd)
       ..writeByte(1)
@@ -44,7 +45,9 @@ class SettingsAdapter extends TypeAdapter<Settings> {
       ..writeByte(5)
       ..write(obj.languageCode)
       ..writeByte(6)
-      ..write(obj.isAppShouldSentLocation);
+      ..write(obj.isAppShouldSentLocation)
+      ..writeByte(7)
+      ..write(obj.dontShowInformationDialogBeforeOpenMap);
   }
 
   @override
@@ -70,10 +73,12 @@ _$SettingsImpl _$$SettingsImplFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['firstEnter'] as String),
       isNotificationEnable: json['isNotificationEnable'] as bool? ?? false,
-      language: json['language'] as String? ?? "English",
-      languageCode: json['languageCode'] as String? ?? "en",
+      language: json['language'] as String?,
+      languageCode: json['languageCode'] as String?,
       isAppShouldSentLocation:
           json['isAppShouldSentLocation'] as bool? ?? false,
+      dontShowInformationDialogBeforeOpenMap:
+          json['dontShowInformationDialogBeforeOpenMap'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$SettingsImplToJson(_$SettingsImpl instance) =>
@@ -85,4 +90,6 @@ Map<String, dynamic> _$$SettingsImplToJson(_$SettingsImpl instance) =>
       'language': instance.language,
       'languageCode': instance.languageCode,
       'isAppShouldSentLocation': instance.isAppShouldSentLocation,
+      'dontShowInformationDialogBeforeOpenMap':
+          instance.dontShowInformationDialogBeforeOpenMap,
     };

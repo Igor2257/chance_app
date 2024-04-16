@@ -145,6 +145,7 @@ class _ExpandableCalendarState extends State<ExpandableCalendar> {
             valueListenable: _selectedMonth,
             builder: (context, month, child) {
               final parsedDate = Jiffy.parseFromDateTime(month);
+              print(parsedDate);
               return Text(
                 [
                   parsedDate.MMMM.characters.first.toUpperCase(),

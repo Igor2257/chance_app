@@ -56,12 +56,7 @@ abstract class BackgroundServiceHelper {
     DartPluginRegistrant.ensureInitialized();
 
     final hiveIsInitialized = await HiveCRUD().initialize();
-    if (HiveCRUD().setting.isAppShouldSentLocation) {
-      await Supabase.initialize(
-        url: supabaseUrl,
-        anonKey: supabaseAnonKey,
-      );
-    }
+
 
     await RemindersHelper.initialize();
 
@@ -93,7 +88,13 @@ abstract class BackgroundServiceHelper {
       });
   }
 
-  static void runTimer() {
+  static void runTimer()async {
+    if (HiveCRUD().setting.isAppShouldSentLocation) {
+      await Supabase.initialize(
+        url: supabaseUrl,
+        anonKey: supabaseAnonKey,
+      );
+    }
     Timer.periodic(const Duration(seconds: 15), (timer) async {
       final status = await Geolocator.checkPermission();
       if (status != LocationPermission.denied &&
