@@ -125,11 +125,11 @@ Future<void> main() async {
       await repository.getUser().then((user) async {
         route = "/signinup";
         if (user != null) {
-          route = "/";
+          route = "/main_page";
         } else {
           await repository.getCookie().then((value) {
             if (value != null) {
-              route = "/";
+              route = "/main_page";
             }
           });
         }
@@ -137,7 +137,7 @@ Future<void> main() async {
     } else {
       route = "/onboarding_page";
     }
-
+    print("route $route");
     runApp(MyApp(route));
   });
 }
@@ -194,12 +194,12 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
       await repository.getUser().then((user) async {
         route = "/signinup";
         if (user != null) {
-          route = "/";
+          route = "/main_page";
         } else {
           await repository.getCookie().then((value) {
             ///TODO: проверить как это работает, чтобы при логауте и перезагрузки не кидало сюда опять
             if (value != null) {
-              route = "/";
+              route = "/main_page";
             }
           });
         }
@@ -231,7 +231,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     provider = InternetConnectionStream();
   }
 
-  checkIfDocsAreAvailable() async {
+  void checkIfDocsAreAvailable() async {
     if (await Connectivity().checkConnectivity() == ConnectivityResult.none) {
       List<ProductModel> items = List.of(HiveCRUD().myItems);
       if (items.isNotEmpty) {
@@ -258,17 +258,14 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     }
   }
 
-  adRemove(bool value) {
+  void adRemove(bool value) async {
     Settings settings = HiveCRUD().setting;
-    setState(() {
-      if (value) {
-        settings = settings.copyWith(blockAd: true);
-        HiveCRUD().updateSettings(settings);
-      } else {
-        settings = settings.copyWith(blockAd: false);
-        HiveCRUD().updateSettings(settings);
-      }
-    });
+    if (value) {
+      settings = settings.copyWith(blockAd: true);
+    } else {
+      settings = settings.copyWith(blockAd: false);
+    }
+    await HiveCRUD().updateSettings(settings);
   }
 
   @override
@@ -373,7 +370,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                       ],
                                       initialRoute: route,
                                       routes: {
-                                        "/": (context) => const MainPage(),
+                                        "/main_page": (context) =>
+                                            const MainPage(),
                                         "/signinup": (context) =>
                                             const SignInUpPage(),
                                         "/registration": (context) =>
@@ -434,7 +432,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                       },
                                       builder: (context, child) {
                                         final locale =
-                                            Localizations.localeOf(context);
+                                            AppLocalizations.instance.locale;
                                         Jiffy.setLocale(locale.toLanguageTag());
                                         return child!;
                                       },

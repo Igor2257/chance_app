@@ -56,7 +56,7 @@ class _MenuPageState extends State<MenuPage> {
         ),
         leading: BackButton(
           onPressed: () {
-            Navigator.of(context).pushNamed("/");
+            Navigator.of(context).pushNamed("/main_page");
           },
         ),
       ),

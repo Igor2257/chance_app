@@ -33,29 +33,34 @@ class _GivePermissionState extends State<GivePermission> {
           const SizedBox(
             width: 20,
           ),
-          Flex(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            direction: Axis.vertical,
-            children: [
-              Text(
-                AppLocalizations.instance.translate("iGivePermission"),
-                style: const TextStyle(color: primaryText),
-                maxLines: 5,
-                textAlign: TextAlign.justify,
-              ),
-              SizedBox(
-                  height: 24,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pushNamed("/privacy_policy");
-                    },
-                    child: Text(
-                      AppLocalizations.instance.translate("privacyPolicy"),
-                      style: const TextStyle(color: primary700),
-                    ),
-                  )),
-            ],
+          Container(
+            constraints: const BoxConstraints(maxHeight: 100),
+            child: Flex(
+              direction: Axis.vertical,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: Text(
+                    AppLocalizations.instance.translate("iGivePermission"),
+                    style: const TextStyle(color: primaryText),
+                    maxLines: 2,
+                    textAlign: TextAlign.justify,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                SizedBox(
+                    height: 24,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushNamed("/privacy_policy");
+                      },
+                      child: Text(
+                        AppLocalizations.instance.translate("privacyPolicy"),
+                        style: const TextStyle(color: primary700),
+                      ),
+                    )),
+              ],
+            ),
           ),
         ],
       );

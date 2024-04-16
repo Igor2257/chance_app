@@ -15,10 +15,6 @@ class BuildRouteBottomSheet extends StatefulWidget {
 }
 
 class _BuildRouteBottomSheetState extends State<BuildRouteBottomSheet> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

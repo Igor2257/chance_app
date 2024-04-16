@@ -29,7 +29,7 @@ class _MainPageSosState extends State<MainPageSos> {
         centerTitle: true,
         leading: BackButton(
           onPressed: () => Navigator.of(context)
-              .pushNamedAndRemoveUntil("/", (route) => false),
+              .pushNamedAndRemoveUntil("/main_page", (route) => false),
         ),
         title: Text(
           AppLocalizations.instance.translate("emergencyCall"),

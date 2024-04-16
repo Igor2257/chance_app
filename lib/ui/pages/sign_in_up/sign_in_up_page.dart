@@ -75,7 +75,7 @@ class _SignInUpPageState extends State<SignInUpPage> {
                           .then((value) {
                         if (!value) {
                           Navigator.of(context)
-                              .pushNamedAndRemoveUntil("/", (route) => false);
+                              .pushNamedAndRemoveUntil("/main_page", (route) => false);
                         }
                       }).whenComplete(() {
                         isLoading = false;

@@ -98,7 +98,7 @@ class HiveCRUD {
       settingsBox = await Hive.openBox("settings");
       contactBox = await Hive.openBox("sosContactModel");
       groupBox = await Hive.openBox("sosGroupModel");
-      final setting = settingsBox?.get('settings') ?? const Settings();
+      final setting = settingsBox.get('settings') ?? const Settings();
       if (setting.firstEnter == null) {
         updateSettings(Settings(firstEnter: DateTime.now()));
       }
@@ -138,12 +138,11 @@ class HiveCRUD {
   }
 
   Future<void> updateSettings(Settings settings) async {
-    print(settings.dontShowInformationDialogBeforeOpenMap);
-    await settingsBox?.put("settings", settings);
+    await settingsBox.put("settings", settings);
   }
 
   Future<void> removeSettings(String id) async {
-    await settingsBox?.delete(id);
+    await settingsBox.delete(id);
   }
 
   Future<void> clearTasks() async {
@@ -188,15 +187,23 @@ class HiveCRUD {
   }
 
   Future<void> removeUser() async {
-    await userBox.deleteFromDisk();
-    await itemsBox.deleteFromDisk();
-    await addressesBox.deleteFromDisk();
-    await groupBox.deleteFromDisk();
-    await tasksBox.deleteFromDisk();
-    await medicineBox.deleteFromDisk();
-    await settingsBox?.deleteFromDisk();
-    await addressesBox.deleteFromDisk();
-    await contactBox.deleteFromDisk();
+    await userBox.clear();
+    await itemsBox.clear();
+    await addressesBox.clear();
+    await groupBox.clear();
+    await tasksBox.clear();
+    await medicineBox.clear();
+    await addressesBox.clear();
+    await contactBox.clear();
+    await clearSettings();
+  }
+
+  Future<void> clearSettings() async {
+    Settings settings = setting.copyWith(
+        blockAd: false,
+        isAppShouldSentLocation: false,
+        dontShowInformationDialogBeforeOpenMap: false);
+    await updateSettings(settings);
   }
 
   Future<void> addSavedAddresses(PickResult savedAddress) async {

@@ -2,14 +2,10 @@ import 'dart:async';
 import 'dart:developer' show log;
 import 'dart:ui' show DartPluginRegistrant;
 
-import 'package:chance_app/api_keys.dart';
 import 'package:chance_app/ux/helpers/reminders_helper.dart';
 import 'package:chance_app/ux/hive_crud.dart';
-import 'package:chance_app/ux/repository/navigation_repository.dart';
 import 'package:flutter/material.dart' show DateTimeRange, DateUtils;
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class BackgroundTasks {
   static const scheduleTasks = "schedule-tasks";
@@ -57,7 +53,6 @@ abstract class BackgroundServiceHelper {
 
     final hiveIsInitialized = await HiveCRUD().initialize();
 
-
     await RemindersHelper.initialize();
 
     _log("Service is started");
@@ -88,25 +83,25 @@ abstract class BackgroundServiceHelper {
       });
   }
 
-  static void runTimer()async {
-    if (HiveCRUD().setting.isAppShouldSentLocation) {
-      await Supabase.initialize(
-        url: supabaseUrl,
-        anonKey: supabaseAnonKey,
-      );
-    }
-    Timer.periodic(const Duration(seconds: 15), (timer) async {
-      final status = await Geolocator.checkPermission();
-      if (status != LocationPermission.denied &&
-          status != LocationPermission.deniedForever) {
-        final position = await Geolocator.getCurrentPosition();
-        await NavigationRepository().sendMyLocation(
-          position.latitude,
-          position.longitude,
-        );
-      }
-    });
-  }
+  //static void runTimer()async {
+  //  if (HiveCRUD().setting.isAppShouldSentLocation) {
+  //    await Supabase.initialize(
+  //      url: supabaseUrl,
+  //      anonKey: supabaseAnonKey,
+  //    );
+  //  }
+  //  Timer.periodic(const Duration(seconds: 15), (timer) async {
+  //    final status = await Geolocator.checkPermission();
+  //    if (status != LocationPermission.denied &&
+  //        status != LocationPermission.deniedForever) {
+  //      final position = await Geolocator.getCurrentPosition();
+  //      await NavigationRepository().sendMyLocation(
+  //        position.latitude,
+  //        position.longitude,
+  //      );
+  //    }
+  //  });
+  //}
 
   static void _log(String message) => log(message, name: "BackgroundService");
 }

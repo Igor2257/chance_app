@@ -22,11 +22,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  @override
-  void initState() {
-    checkLocationPermission(context);
-    super.initState();
-  }
 
   bool isLoading = false;
   bool dontShowDialogAgain = false;
@@ -59,7 +54,7 @@ class _MainPageState extends State<MainPage> {
                   Row(
                     children: [
                       CustomCard(
-                        key: const ValueKey("reminder"),
+                        key: const ValueKey("reminder_page"),
                         icon: Image.asset(
                           "assets/menu_icons/reminders.png",
                           height: 44,
@@ -79,7 +74,7 @@ class _MainPageState extends State<MainPage> {
                         },
                       ),
                       CustomCard(
-                        key: const ValueKey("navigation"),
+                        key: const ValueKey("navigation_page"),
                         icon: Image.asset(
                           "assets/menu_icons/navigation.png",
                           height: 45,
@@ -172,7 +167,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                   Row(
                     children: [
-                      CustomCard(key: const ValueKey("communication"),
+                      CustomCard(key: const ValueKey("communication_page"),
                         icon: Image.asset(
                           "assets/menu_icons/chat.png",
                           height: 44,
@@ -188,7 +183,7 @@ class _MainPageState extends State<MainPage> {
                             const EdgeInsets.only(bottom: 8, top: 8, right: 8),
                         onPress: () => _onChatsBtnTap(context),
                       ),
-                      CustomCard(key: const ValueKey("appointmentWithDoctor"),
+                      CustomCard(key: const ValueKey("appointmentWithDoctor_page"),
                         icon: Image.asset(
                           "assets/menu_icons/appointment.png",
                           height: 44,
@@ -210,7 +205,7 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ],
                   ),
-                  CustomCard(key: const ValueKey("jobSearch"),
+                  CustomCard(key: const ValueKey("jobSearch_page"),
                     icon: Image.asset(
                       "assets/menu_icons/job_search.png",
                       height: 44,

@@ -99,7 +99,7 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
                           .then((value) {
                         if (value == null) {
                           Navigator.of(context)
-                              .pushNamedAndRemoveUntil("/", (route) => false);
+                              .pushNamedAndRemoveUntil("/main_page", (route) => false);
                           BlocProvider.of<RegistrationBloc>(context)
                               .add(ClearData());
                         }
@@ -130,7 +130,7 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
                             .then((value) {
                           if (value == null) {
                             Navigator.of(context)
-                                .pushNamedAndRemoveUntil("/", (route) => false);
+                                .pushNamedAndRemoveUntil("/main_page", (route) => false);
                             BlocProvider.of<RegistrationBloc>(context)
                                 .add(ClearData());
                           }

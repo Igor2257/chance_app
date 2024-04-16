@@ -52,7 +52,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             .then((value) {
           if (value == null) {
             Navigator.of(event.context)
-                .pushNamedAndRemoveUntil("/", (route) => false);
+                .pushNamedAndRemoveUntil("/main_page", (route) => false);
             emit(state.clear());
           } else {
             emit(state.copyWith(

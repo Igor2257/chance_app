@@ -157,7 +157,7 @@ class _RemindersPageState extends State<RemindersPage> {
           title: Text(AppLocalizations.instance.translate("reminder")),
           leading: BackButton(
             onPressed: () {
-              Navigator.of(context).pushNamed("/");
+              Navigator.of(context).pushNamed("/main_page");
             },
           ),
         ),

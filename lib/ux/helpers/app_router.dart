@@ -45,7 +45,7 @@ class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final args = settings.arguments;
     switch (settings.name) {
-      case "/":
+      case "/main_page":
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => const MainPage(),
