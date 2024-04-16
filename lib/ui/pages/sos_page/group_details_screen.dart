@@ -75,7 +75,7 @@ class ContainerButton extends StatelessWidget {
       if (callPermissionStatus.isGranted) {
         final String userPhone = contactPhone;
         try {
-          const MethodChannel('caller').invokeMethod('makeCall', userPhone);
+          await FlutterPhoneDirectCaller.callNumber(userPhone);
         } on PlatformException catch (e) {
           Fluttertoast.showToast(
             msg: AppLocalizations.instance.translate("failedToCallTheNumber") +
