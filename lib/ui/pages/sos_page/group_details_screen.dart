@@ -5,7 +5,7 @@ import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -91,7 +91,7 @@ class ContainerButton extends StatelessWidget {
     } else if (Platform.isIOS) {
       final String userPhone = contactPhone;
       try {
-        await FlutterPhoneDirectCaller.callNumber(userPhone);
+        //await FlutterPhoneDirectCaller.callNumber(userPhone);
       } on PlatformException catch (e) {
         Fluttertoast.showToast(
           msg: AppLocalizations.instance.translate("failedToCallTheNumber") +
