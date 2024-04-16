@@ -8,6 +8,7 @@ import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/components/sos_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
+import 'package:chance_app/ux/hive_crud.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -28,6 +29,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   bool isLoading = false;
+  bool dontShowDialogAgain = false;
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +59,7 @@ class _MainPageState extends State<MainPage> {
                   Row(
                     children: [
                       CustomCard(
+                        key: const ValueKey("reminder"),
                         icon: Image.asset(
                           "assets/menu_icons/reminders.png",
                           height: 44,
@@ -76,6 +79,7 @@ class _MainPageState extends State<MainPage> {
                         },
                       ),
                       CustomCard(
+                        key: const ValueKey("navigation"),
                         icon: Image.asset(
                           "assets/menu_icons/navigation.png",
                           height: 45,
@@ -93,22 +97,82 @@ class _MainPageState extends State<MainPage> {
                           setState(() {
                             isLoading = true;
                           });
-                          await checkLocationPermission(context).then((value) {
-                            if (value) {
-                              Navigator.of(context)
-                                  .pushNamed("/navigation_page");
-                            }
-                          }).whenComplete(() {
-                            isLoading = false;
-                            if (mounted) setState(() {});
-                          });
+                          bool? choose = HiveCRUD.instance.setting.dontShowInformationDialogBeforeOpenMap;
+                          print("choose $choose");
+                          if (!choose) {
+                            choose = await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text("Chance App"),
+                                    content: StatefulBuilder(
+                                        builder: (context, setState1) {
+                                      return Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(AppLocalizations.instance.translate(
+                                              "allowTheAppToUseGeodataToDetermineYourCurrentLocation")),
+                                          CheckboxListTile(
+                                              title: Text(AppLocalizations
+                                                  .instance
+                                                  .translate("dontShowAgain")),
+                                              value: dontShowDialogAgain,
+                                              onChanged: (value) async {
+                                                if (value != null) {
+                                                  setState1(() {
+                                                    dontShowDialogAgain = value;
+                                                  });
+                                                  await HiveCRUD().updateSettings(
+                                                      HiveCRUD().setting.copyWith(
+                                                          dontShowInformationDialogBeforeOpenMap:
+                                                              value));
+                                                }
+                                              }),
+                                          Row(
+                                            children: [
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.of(context)
+                                                        .pop(false),
+                                                child: Text(AppLocalizations
+                                                    .instance
+                                                    .translate("cancel")),
+                                              ),
+                                              const Spacer(),
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.of(context)
+                                                        .pop(true),
+                                                child: Text(AppLocalizations
+                                                    .instance
+                                                    .translate("toAgree")),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      );
+                                    }),
+                                  );
+                                });
+                          }
+                          if (choose!=null&&choose) {
+                            await checkLocationPermission(context)
+                                .then((value) {
+                              if (value) {
+                                Navigator.of(context)
+                                    .pushNamed("/navigation_page");
+                              }
+                            });
+                          }
+                          isLoading = false;
+                          if (mounted) setState(() {});
                         },
                       ),
                     ],
                   ),
                   Row(
                     children: [
-                      CustomCard(
+                      CustomCard(key: const ValueKey("communication"),
                         icon: Image.asset(
                           "assets/menu_icons/chat.png",
                           height: 44,
@@ -124,7 +188,7 @@ class _MainPageState extends State<MainPage> {
                             const EdgeInsets.only(bottom: 8, top: 8, right: 8),
                         onPress: () => _onChatsBtnTap(context),
                       ),
-                      CustomCard(
+                      CustomCard(key: const ValueKey("appointmentWithDoctor"),
                         icon: Image.asset(
                           "assets/menu_icons/appointment.png",
                           height: 44,
@@ -146,7 +210,7 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ],
                   ),
-                  CustomCard(
+                  CustomCard(key: const ValueKey("jobSearch"),
                     icon: Image.asset(
                       "assets/menu_icons/job_search.png",
                       height: 44,

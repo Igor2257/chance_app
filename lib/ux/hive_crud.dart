@@ -24,7 +24,7 @@ late final Box<MeUser> userBox;
 late final Box<TaskModel> tasksBox;
 late final Box<MedicineModel> medicineBox;
 late final Box<PickResult> addressesBox;
-Box<Settings>? settingsBox;
+late final Box<Settings> settingsBox;
 late final Box<ProductModel> itemsBox;
 late final Box<SosContactModel> contactBox;
 late final Box<SosGroupModel> groupBox;
@@ -53,7 +53,7 @@ class HiveCRUD {
 
   MeUser? get user => userBox.get('user');
 
-  Settings get setting => settingsBox?.get('settings') ?? const Settings();
+  Settings get setting => settingsBox.values.first;
 
   Future removeLocalContact(String id) async {
     await groupBox.delete(id);
@@ -138,6 +138,7 @@ class HiveCRUD {
   }
 
   Future<void> updateSettings(Settings settings) async {
+    print(settings.dontShowInformationDialogBeforeOpenMap);
     await settingsBox?.put("settings", settings);
   }
 
@@ -187,7 +188,15 @@ class HiveCRUD {
   }
 
   Future<void> removeUser() async {
-    await userBox.delete("user");
+    await userBox.deleteFromDisk();
+    await itemsBox.deleteFromDisk();
+    await addressesBox.deleteFromDisk();
+    await groupBox.deleteFromDisk();
+    await tasksBox.deleteFromDisk();
+    await medicineBox.deleteFromDisk();
+    await settingsBox?.deleteFromDisk();
+    await addressesBox.deleteFromDisk();
+    await contactBox.deleteFromDisk();
   }
 
   Future<void> addSavedAddresses(PickResult savedAddress) async {

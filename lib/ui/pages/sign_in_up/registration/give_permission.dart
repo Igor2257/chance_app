@@ -24,7 +24,7 @@ class _GivePermissionState extends State<GivePermission> {
       return Row(
         children: [
           GestureDetector(
-            onTap: (){
+            onTap: () {
               widget.onTap();
             },
             child: SvgPicture.asset(
@@ -47,7 +47,9 @@ class _GivePermissionState extends State<GivePermission> {
               SizedBox(
                   height: 24,
                   child: GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).pushNamed("/privacy_policy");
+                    },
                     child: Text(
                       AppLocalizations.instance.translate("privacyPolicy"),
                       style: const TextStyle(color: primary700),

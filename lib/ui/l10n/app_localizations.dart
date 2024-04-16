@@ -24,14 +24,15 @@ class AppLocalizations {
 
   static Future<AppLocalizations> load(Locale locale) async {
     String jsonString = "";
-    if (const MyLocalizationsDelegate()
-            .isSupportedCode(HiveCRUD().setting.languageCode)) {
+    if (HiveCRUD().setting.languageCode != null &&
+        const MyLocalizationsDelegate()
+            .isSupportedCode(HiveCRUD().setting.languageCode!)) {
       jsonString = await rootBundle.loadString(
           'assets/localizations/app_${HiveCRUD().setting.languageCode}.arb');
       final jsonMap = json.decode(jsonString) as Map<String, dynamic>;
 
       final instance =
-          AppLocalizations(Locale(HiveCRUD().setting.languageCode));
+          AppLocalizations(Locale(HiveCRUD().setting.languageCode!));
       instance._localizedValues = jsonMap.map(
         (key, value) => MapEntry(
           key,
@@ -39,7 +40,7 @@ class AppLocalizations {
         ),
       );
       _instance = instance;
-      return AppLocalizations(Locale(HiveCRUD().setting.languageCode));
+      return AppLocalizations(Locale(HiveCRUD().setting.languageCode!));
     } else {
       if (const MyLocalizationsDelegate()
           .isSupportedCode(locale.languageCode)) {

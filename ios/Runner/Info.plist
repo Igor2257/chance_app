@@ -250,6 +250,10 @@
 			<string>3qcr597p9d.skadnetwork</string>
 		</dict>
 	</array>
+	<key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>mailto</string>
+    </array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

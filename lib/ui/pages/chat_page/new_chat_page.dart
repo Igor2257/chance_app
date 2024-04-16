@@ -152,6 +152,8 @@ class _NewChatPageState extends State<NewChatPage> {
 
     final room = await ChatHelper.createRoom(user);
 
+    print(room);
+
     if (!context.mounted) return;
 
     Navigator.of(context).pushNamedAndRemoveUntil(

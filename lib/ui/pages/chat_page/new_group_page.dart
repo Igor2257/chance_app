@@ -10,13 +10,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class NewGroupPage extends StatefulWidget {
-  const NewGroupPage({super.key});
+  const NewGroupPage({super.key, this.room});
+
+  final types.Room? room;
 
   @override
   State<NewGroupPage> createState() => _NewGroupPageState();
 }
 
 class _NewGroupPageState extends State<NewGroupPage> {
+  final Stream<List<types.User>> _usersStream = ChatHelper.users;
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SelectCubit, List<types.User>>(
@@ -38,7 +41,9 @@ class _NewGroupPageState extends State<NewGroupPage> {
               TextButton(
                 onPressed: isEmpty ? null : () => _openCreateGroupPage(context),
                 child: Text(
-                  AppLocalizations.instance.translate('next'),
+                  widget.room == null
+                      ? AppLocalizations.instance.translate('next')
+                      : AppLocalizations.instance.translate('done'),
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 16,
@@ -97,7 +102,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
               Expanded(
                 child: Center(
                   child: StreamBuilder<List<types.User>>(
-                    stream: ChatHelper.users,
+                    stream: _usersStream,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const CircularProgressIndicator();
@@ -119,7 +124,6 @@ class _NewGroupPageState extends State<NewGroupPage> {
                           height: 28 / 22,
                         ),
                       );
-
                     },
                   ),
                 ),
@@ -161,7 +165,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                       child: UserCheckboxTile(
                         isSelected: list.contains(val),
                         value: val,
-                        onChanged: _changeCheckbox,
+                        onChanged: widget.room?.users.any((u) => u == val) ?? false ? null : _changeCheckbox,
                       ),
                     ))
                 .toList(),
@@ -191,6 +195,16 @@ class _NewGroupPageState extends State<NewGroupPage> {
     }
   }
 
-  void _openCreateGroupPage(BuildContext context) => Navigator.of(context)
-      .pushNamed('/create_group', arguments: context.read<SelectCubit>().state);
+  void _openCreateGroupPage(BuildContext context) {
+    if (widget.room == null) {
+      Navigator.of(context).pushNamed('/create_group',
+          arguments: context.read<SelectCubit>().state);
+    } else {
+      SelectCubit cubit = context.read<SelectCubit>();
+
+      print(cubit.state);
+
+      Navigator.of(context).pop(cubit.state);
+    }
+  }
 }
