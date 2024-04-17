@@ -265,7 +265,7 @@ class _MainPageSosState extends State<MainPageSos> {
       if (callPermissionStatus.isGranted) {
         final String userPhone = contactModel.phone;
         try {
-          const MethodChannel('caller').invokeMethod('makeCall', userPhone);
+          await FlutterPhoneDirectCaller.callNumber(userPhone);
         } on PlatformException catch (e) {
           Fluttertoast.showToast(
             msg: AppLocalizations.instance.translate("failedToCallTheNumber") +
