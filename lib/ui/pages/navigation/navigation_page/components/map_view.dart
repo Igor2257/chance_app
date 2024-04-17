@@ -55,41 +55,38 @@ class _MapViewState extends State<MapView>
               barrierDismissible: false,
               context: context,
               builder: (context) {
-                return PopScope(
-                    canPop: false,
-                    onPopInvoked: (value) {},
-                    child: AlertDialog(
-                      title: Text(
-                        AppLocalizations.instance
-                            .translate("allowTheAppToUseTheLocation"),
-                        style:
-                            const TextStyle(fontSize: 24, color: primaryText),
-                      ),
-                      content: Text(
-                        AppLocalizations.instance.translate(
-                            "forTheAppToWorkCorrectlyYouNeedToAllowThisPermissionToBeUsed"),
-                        style:
-                            const TextStyle(fontSize: 16, color: primaryText),
-                      ),
-                      actions: [
-                        RoundedButton(
-                          onPress: () async {
-                            await Geolocator.openAppSettings().whenComplete(() {
-                              if (mounted) {
-                                Navigator.of(context).pop();
-                              }
-                            });
-
-                            return true;
-                          },
-                          color: primary1000,
-                          child: Text(
-                            AppLocalizations.instance.translate("goTo"),
-                            style: const TextStyle(color: primary50),
-                          ),
-                        ),
-                      ],
-                    ));
+                return AlertDialog(
+                  title: Text(
+                    AppLocalizations.instance
+                        .translate("allowTheAppToUseTheLocation"),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 24, color: primaryText),
+                  ),
+                  content: Text(
+                    AppLocalizations.instance.translate(
+                        "forTheAppToWorkCorrectlyYouNeedToAllowThisPermissionToBeUsed"),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 16, color: primaryText),
+                  ),
+                  actionsAlignment: MainAxisAlignment.spaceBetween,
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child:
+                      Text(AppLocalizations.instance.translate("cancel")),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        await Geolocator.openLocationSettings().then((value) {
+                          if (mounted) {
+                            Navigator.of(context).pop();
+                          }
+                        });
+                      },
+                      child: Text(AppLocalizations.instance.translate("goTo")),
+                    ),
+                  ],
+                );
               }).then((value) => checkLocationPermission(context));
         }
       }

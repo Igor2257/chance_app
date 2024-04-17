@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:chance_app/ui/components/custom_card.dart';
 import 'package:chance_app/ui/components/custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:chance_app/ui/components/logo_name.dart';
-import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/components/sos_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
@@ -22,7 +21,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-
   bool isLoading = false;
   bool dontShowDialogAgain = false;
 
@@ -92,7 +90,8 @@ class _MainPageState extends State<MainPage> {
                           setState(() {
                             isLoading = true;
                           });
-                          bool? choose = HiveCRUD.instance.setting.dontShowInformationDialogBeforeOpenMap;
+                          bool? choose = HiveCRUD.instance.setting
+                              .dontShowInformationDialogBeforeOpenMap;
                           print("choose $choose");
                           if (!choose) {
                             choose = await showDialog(
@@ -150,7 +149,7 @@ class _MainPageState extends State<MainPage> {
                                   );
                                 });
                           }
-                          if (choose!=null&&choose) {
+                          if (choose != null && choose) {
                             await checkLocationPermission(context)
                                 .then((value) {
                               if (value) {
@@ -167,7 +166,8 @@ class _MainPageState extends State<MainPage> {
                   ),
                   Row(
                     children: [
-                      CustomCard(key: const ValueKey("communication_page"),
+                      CustomCard(
+                        key: const ValueKey("communication_page"),
                         icon: Image.asset(
                           "assets/menu_icons/chat.png",
                           height: 44,
@@ -183,7 +183,8 @@ class _MainPageState extends State<MainPage> {
                             const EdgeInsets.only(bottom: 8, top: 8, right: 8),
                         onPress: () => _onChatsBtnTap(context),
                       ),
-                      CustomCard(key: const ValueKey("appointmentWithDoctor_page"),
+                      CustomCard(
+                        key: const ValueKey("appointmentWithDoctor_page"),
                         icon: Image.asset(
                           "assets/menu_icons/appointment.png",
                           height: 44,
@@ -205,7 +206,8 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ],
                   ),
-                  CustomCard(key: const ValueKey("jobSearch_page"),
+                  CustomCard(
+                    key: const ValueKey("jobSearch_page"),
                     icon: Image.asset(
                       "assets/menu_icons/job_search.png",
                       height: 44,
@@ -269,26 +271,30 @@ class _MainPageState extends State<MainPage> {
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 16, color: primaryText),
                   ),
+                  actionsAlignment: MainAxisAlignment.spaceBetween,
                   actions: [
-                    RoundedButton(
-                      onPress: () async {
-                        await Geolocator.openAppSettings().whenComplete(() {
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child:
+                          Text(AppLocalizations.instance.translate("cancel")),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        await Geolocator.openLocationSettings().then((value) {
                           if (mounted) {
                             Navigator.of(context).pop();
                           }
                         });
-
-                        return true;
                       },
-                      color: primary1000,
-                      child: Text(
-                        AppLocalizations.instance.translate("goTo"),
-                        style: const TextStyle(color: primary50),
-                      ),
+                      child: Text(AppLocalizations.instance.translate("goTo")),
                     ),
                   ],
                 );
-              }).then((value) => checkLocationPermission(context));
+              }).then((value) {
+            if (value == null) {
+              checkLocationPermission(context);
+            }
+          });
         }
       }
     });
