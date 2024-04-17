@@ -8,9 +8,9 @@ import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MainPageSos extends StatefulWidget {
   const MainPageSos({super.key});
@@ -283,7 +283,17 @@ class _MainPageSosState extends State<MainPageSos> {
     } else if (Platform.isIOS) {
       final String userPhone = contactModel.phone;
       try {
-        await FlutterPhoneDirectCaller.callNumber(userPhone);
+        final Uri launchUri = Uri(
+          scheme: 'tel',
+          path: userPhone,
+        );
+        await launchUrl(launchUri);
+        if (!await launchUrl(launchUri)) {
+          Fluttertoast.showToast(
+            msg: AppLocalizations.instance.translate("failedToCallTheNumber") +
+                (" $userPhone"),
+          );
+        }
       } on PlatformException catch (e) {
         Fluttertoast.showToast(
           msg: AppLocalizations.instance.translate("failedToCallTheNumber") +
