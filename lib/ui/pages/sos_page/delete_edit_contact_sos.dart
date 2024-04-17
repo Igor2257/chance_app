@@ -6,14 +6,15 @@ import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DeleteContactsPage extends StatefulWidget {
-  const DeleteContactsPage({super.key});
+class DeleteEditContactsSosPage extends StatefulWidget {
+  const DeleteEditContactsSosPage({super.key});
 
   @override
-  State<DeleteContactsPage> createState() => _DeleteContactsPageState();
+  State<DeleteEditContactsSosPage> createState() =>
+      _DeleteEditContactsSosPage();
 }
 
-class _DeleteContactsPageState extends State<DeleteContactsPage> {
+class _DeleteEditContactsSosPage extends State<DeleteEditContactsSosPage> {
   List<SosGroupModel> selectedModels = [];
 
   bool isButtonEnable = false;
@@ -230,14 +231,26 @@ class _ContainerButtonWithCheckboxState
               ),
             ),
           ),
-          Text(
-            widget.text,
-            style: const TextStyle(
-              color: primary50,
-              fontWeight: FontWeight.w400,
-              fontSize: 16,
+          Padding(
+            padding: const EdgeInsets.only(left: 12.0),
+            child: Text(
+              widget.text,
+              style: const TextStyle(
+                color: primary50,
+                fontWeight: FontWeight.w400,
+                fontSize: 16,
+              ),
             ),
           ),
+          const Spacer(),
+          if (widget.isGroup)
+            const Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(
+                Icons.group,
+                color: primary50,
+              ),
+            ),
         ],
       ),
     );

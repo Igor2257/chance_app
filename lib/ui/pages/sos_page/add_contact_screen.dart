@@ -41,7 +41,8 @@ class _AddContactScreenState extends State<AddContactScreen> {
         ),
         leading: BackButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil("/sos", (route) => false);
           },
         ),
       ),
@@ -61,14 +62,16 @@ class _AddContactScreenState extends State<AddContactScreen> {
               isPhone: false,
               onChanged: (value) {},
               key: const ValueKey("name"),
+              prefixText: '',
             ),
             LabeledTextField(
-              controller: phoneController..text = "+380",
+              controller: phoneController,
               label: AppLocalizations.instance.translate("enterPhoneNumber"),
-              hintText: 'Number',
+              hintText: '',
               isPhone: true,
               onChanged: (value) {},
               key: const ValueKey("phone"),
+              prefixText: '+380',
             ),
             const SizedBox(height: 22),
             SizedBox(
@@ -85,7 +88,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                           contactModel: SosGroupModel(name: "", contacts: [
                             SosContactModel(
                               name: nameController.text,
-                              phone: phoneController.text,
+                              phone: "+380${phoneController.text}",
                             )
                           ]),
                           isGroup: false,

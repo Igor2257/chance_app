@@ -134,7 +134,7 @@ class AppRouter {
           settings: settings,
           builder: (_) => const OnboardingTutorial(),
         );
-      // case "/delete_contact_sos":
+      // case "/delete_edit_contact_sos":
       //   return MaterialPageRoute(
       //     settings: settings,
       //     builder: (_) => const DeleteContactsPage(),

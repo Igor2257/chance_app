@@ -78,7 +78,7 @@ class _MainPageSosState extends State<MainPageSos> {
               ];
             },
             onSelected: (String value) {
-              Navigator.pushNamed(context, "/delete_contact_sos",
+              Navigator.pushNamed(context, "/delete_edit_contact_sos",
                   arguments: value == 'replace' ? false : true);
             },
           )

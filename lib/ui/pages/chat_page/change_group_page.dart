@@ -88,6 +88,7 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
                     isPhone: false,
                     onChanged: (value) {},
                     key: const ValueKey("name"),
+                    prefixText: '',
                   ),
                   const SizedBox(height: 60.0),
                   if (admin != null) ...[
