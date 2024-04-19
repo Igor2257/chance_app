@@ -67,16 +67,7 @@ class UserRepository {
             ).then((value) async {
               if (value.statusCode > 199 && value.statusCode < 300) {
                 Map<String, dynamic> map = jsonDecode(value.body);
-                MeUser meUser = MeUser(
-                  id: map["_id"],
-                  email: map["email"],
-                  name: map["name"],
-                  lastName: map["lastName"],
-                  phone: map["phone"],
-                  isGoogle: map["isGoogle"],
-                  isConfirmed: map["isConfirmed"],
-                  deviceId: map["deviceId"] ?? "",
-                );
+                MeUser meUser = MeUser.fromAPIJson(map);
 
                 await FirebaseChatCore.instance.createUserInFirestore(
                   types.User(
@@ -452,16 +443,8 @@ class UserRepository {
           ).then((value) async {
             if (value.statusCode > 199 && value.statusCode < 300) {
               Map<String, dynamic> map = jsonDecode(value.body);
-              meUser = MeUser(
-                id: map["_id"],
-                email: map["email"] ?? "",
-                name: map["name"] ?? "",
-                lastName: map["lastName"] ?? "",
-                phone: map["phone"] ?? "",
-                isGoogle: map["isGoogle"],
-                isConfirmed: map["isConfirmed"],
-                deviceId: map["deviceId"],
-              );
+              meUser = MeUser.fromAPIJson(map);
+
               await HiveCRUD().addUser(meUser!);
               return meUser;
             } else {
@@ -496,7 +479,7 @@ class UserRepository {
     await FirebaseAuth.instance
         .signInWithCredential(credential)
         .then((firebaseCredential) async {
-      String? token = await firebaseCredential.user!.getIdToken();
+      String? token = await firebaseCredential.user?.getIdToken();
       if (token != null) {
         if (await (Connectivity().checkConnectivity()) ==
             ConnectivityResult.none) {
@@ -530,21 +513,12 @@ class UserRepository {
               ).then((value) async {
                 if (value.statusCode > 199 && value.statusCode < 300) {
                   Map<String, dynamic> map = jsonDecode(value.body);
-                  MeUser meUser = MeUser(
-                    id: map["_id"],
-                    email: map["email"],
-                    name: map["name"],
-                    lastName: map["lastName"],
-                    phone: map["phone"],
-                    isGoogle: map["isGoogle"],
-                    isConfirmed: map["isConfirmed"],
-                    deviceId: map["deviceId"] ?? "",
-                  );
+                  MeUser meUser = MeUser.fromAPIJson(map);
 
                   await FirebaseChatCore.instance.createUserInFirestore(
                     types.User(
                       firstName: meUser.name,
-                      id: firebaseCredential.user!.uid,
+                      id: firebaseCredential.user?.uid ?? '',
                       lastName: meUser.lastName,
                     ),
                   );

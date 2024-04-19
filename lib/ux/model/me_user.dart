@@ -21,4 +21,17 @@ class MeUser with _$MeUser {
   }) = _MeUser;
 
   factory MeUser.fromJson(Map<String, dynamic> json) => _$MeUserFromJson(json);
+
+  factory MeUser.fromAPIJson(Map<String, dynamic> json) {
+    return MeUser(
+      id: json["_id"],
+      email: json["email"] ?? "",
+      name: json["name"] ?? "",
+      lastName: json["lastName"] ?? "",
+      phone: json["phone"] ?? "",
+      isGoogle: json["isGoogle"] ?? false,
+      isConfirmed: json["isConfirmed"] ?? false,
+      deviceId: json["deviceId"],
+    );
+  }
 }
