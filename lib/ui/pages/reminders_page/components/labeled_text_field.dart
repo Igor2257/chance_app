@@ -1,22 +1,22 @@
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
+import 'package:country_icons/country_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:country_icons/country_icons.dart';
 
 class LabeledTextField extends StatefulWidget {
   final TextEditingController controller;
   final String label;
   final String hintText;
-  final bool isPhone;
   final String prefixText;
+  final bool isPhone;
 
   const LabeledTextField({
     Key? key,
     required this.label,
     required this.hintText,
-    required this.isPhone,
     required this.prefixText,
+    required this.isPhone,
     required this.controller,
     required Null Function(dynamic value) onChanged,
   });
