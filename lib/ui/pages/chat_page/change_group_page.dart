@@ -81,7 +81,8 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
                 hintText: AppLocalizations.instance.translate('name'),
                 isPhone: false,
                 onChanged: (value) {},
-                key:  const ValueKey("name"),
+                key: const ValueKey("name"),
+                prefixText: '',
               ),
               const SizedBox(height: 60.0),
               if (admin != null) ...[
