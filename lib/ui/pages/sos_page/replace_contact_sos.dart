@@ -28,8 +28,8 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
     contactModel = ModalRoute.of(context)!.settings.arguments as SosGroupModel;
     super.didChangeDependencies();
     nameController = TextEditingController(text: contactModel.contacts[0].name);
-    phoneController = TextEditingController(
-        text: contactModel.contacts[0].phone.substring(4));
+    phoneController =
+        TextEditingController(text: contactModel.contacts[0].phone);
   }
 
   @override
@@ -52,17 +52,15 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
                   isPhone: false,
                   onChanged: (value) {},
                   key: const ValueKey("name"),
-                  prefixText: '',
                 ),
                 const SizedBox(height: 8),
                 LabeledTextField(
                   controller: phoneController,
                   label: AppLocalizations.instance.translate("phone"),
-                  hintText: '',
+                  hintText: '+380',
                   isPhone: true,
                   onChanged: (value) {},
                   key: const ValueKey("phone"),
-                  prefixText: '+380',
                 ),
                 const SizedBox(height: 16),
                 SizedBox(
@@ -77,7 +75,7 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
                               contacts: [
                                 SosContactModel(
                                     name: nameController.text,
-                                    phone: "+380${phoneController.text}",
+                                    phone: phoneController.text,
                                     id: contactModel.id)
                               ],
                             ),
@@ -119,12 +117,8 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
   }
 
   bool _validateForm() {
-    bool isNameValid = nameController.text.isNotEmpty &&
-        nameController.text.length >= 2 &&
-        nameController.text.length <= 30;
-    bool isPhoneValid = phoneController.text.isNotEmpty &&
-        phoneController.text.length == 9 &&
-        RegExp(r'^\d{9}$').hasMatch(phoneController.text);
-    return isNameValid && isPhoneValid;
+    bool isValid =
+        nameController.text.isNotEmpty && phoneController.text.isNotEmpty;
+    return isValid;
   }
 }
