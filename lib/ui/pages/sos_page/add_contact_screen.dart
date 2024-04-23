@@ -61,16 +61,14 @@ class _AddContactScreenState extends State<AddContactScreen> {
               isPhone: false,
               onChanged: (value) {},
               key: const ValueKey("name"),
-              prefixText: '',
             ),
             LabeledTextField(
-              controller: phoneController,
+              controller: phoneController..text = "+380",
               label: AppLocalizations.instance.translate("enterPhoneNumber"),
-              hintText: '',
+              hintText: 'Number',
               isPhone: true,
               onChanged: (value) {},
               key: const ValueKey("phone"),
-              prefixText: '+380',
             ),
             const SizedBox(height: 22),
             SizedBox(
@@ -87,7 +85,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                           contactModel: SosGroupModel(name: "", contacts: [
                             SosContactModel(
                               name: nameController.text,
-                              phone: "+380${phoneController.text}",
+                              phone: phoneController.text,
                             )
                           ]),
                           isGroup: false,
