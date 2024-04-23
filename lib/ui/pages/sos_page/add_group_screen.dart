@@ -47,7 +47,8 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
         ),
         leading: BackButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil("/sos", (route) => false);
           },
         ),
       ),
