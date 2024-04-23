@@ -4,6 +4,7 @@ import 'package:chance_app/ui/pages/reminders_page/components/labeled_text_field
 import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -66,6 +67,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                 isPhone: false,
                 onChanged: (value) {},
                 key: const ValueKey("groupName"),
+                prefixText: '',
               ),
               const SizedBox(height: 8),
               Column(
@@ -94,16 +96,17 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                           isPhone: false,
                           onChanged: (value) {},
                           key: const ValueKey("name"),
+                          prefixText: '',
                         ),
                         LabeledTextField(
-                          controller: contacts[index].phoneController
-                            ..text = "+380",
+                          controller: contacts[index].phoneController,
                           label: AppLocalizations.instance
                               .translate("enterPhoneNumber"),
-                          hintText: '+380',
+                          hintText: '',
                           isPhone: true,
                           onChanged: (value) {},
                           key: const ValueKey("phone"),
+                          prefixText: '+380',
                         ),
                         const SizedBox(
                           height: 18,
@@ -152,7 +155,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                                 validateInput(phone)) {
                               SosContactModel contactModel = SosContactModel(
                                 name: name,
-                                phone: phone,
+                                phone: "+380$phone",
                                 groupName: groupNameController.text,
                               );
                               contactModels.add(contactModel);
@@ -207,10 +210,10 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
 
   bool validateInput(String input, {bool isPhone = true}) {
     if (isPhone) {
-      final RegExp phoneRegex = RegExp(r'^\+380\d*$');
+      final RegExp phoneRegex = RegExp(r'^\d{9}$');
       return phoneRegex.hasMatch(input);
     } else {
-      final RegExp nameRegex = RegExp(r'^[а-яА-Яa-zA-Z\s]{3,}$');
+      final RegExp nameRegex = RegExp(r'^[а-яА-Яa-zA-Z\s]{2,30}$');
       return nameRegex.hasMatch(input);
     }
   }
