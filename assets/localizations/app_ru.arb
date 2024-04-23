@@ -227,6 +227,7 @@
   "leaveChat": "Покинуть чат",
   "leaveAndDeleteGroup": "Покинуть и удалить группу",
   "leaveGroupDialog": "Вы уверены, что хотите покинуть группу?",
+  "leaveChatDialog": "Вы уверены, что хотите покинуть чат?",
   "leaveAndDeleteDialog": "Вы уверены, что хотите покинуть и удалить группу?",
   "deleteUserDialog": "Вы уверены, что хотите удалить друга?",
   "addNewContact": "Додати новий контакт",

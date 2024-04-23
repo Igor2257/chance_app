@@ -42,7 +42,8 @@ class _ChatPageState extends State<ChatPage> {
                   room.name ??
                       room.users
                           .firstWhereOrNull((u) => u.id != ChatHelper.userId)
-                          ?.fullName ?? '-',
+                          ?.fullName ??
+                      '-',
                   style: const TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 22,

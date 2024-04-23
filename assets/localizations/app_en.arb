@@ -227,6 +227,7 @@
   "leaveChat": "Leave chat",
   "leaveAndDeleteGroup": "Leave and delete group",
   "leaveGroupDialog": "Are you sure you want to leave the group?",
+  "leaveChatDialog": "Are you sure you want to leave the chat?",
   "leaveAndDeleteDialog": "Are you sure you want to leave and delete the group?",
   "deleteUserDialog": "Are you sure you want to delete the contact?",
   "addNewContact": "Додати новий контакт",

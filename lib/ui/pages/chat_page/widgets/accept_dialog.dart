@@ -3,9 +3,12 @@ import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class AcceptDialog {
-  static Future<T?> show<T>(BuildContext context) {
-    return showDialog<T>(
+  static const Duration _dialogDuration = Duration(milliseconds: 1000);
+  
+  static Future<void> show(BuildContext context) async {
+    showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (_) {
         return Dialog(
           backgroundColor: beige100,
@@ -38,5 +41,11 @@ class AcceptDialog {
         );
       },
     );
+
+    await Future.delayed(_dialogDuration);
+
+    if (!context.mounted) return;
+
+    Navigator.of(context).pop();
   }
 }

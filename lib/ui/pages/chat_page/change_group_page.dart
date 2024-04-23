@@ -172,7 +172,7 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
               ),
             ),
             GestureDetector(
-              onTap: () => _removeUser(context, usersWithoutAdmin[index]),
+              onTap: () => _removeUser(context, room, usersWithoutAdmin[index]),
               child: Text(
                 AppLocalizations.instance.translate('delete'),
                 style: const TextStyle(
@@ -221,19 +221,21 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
     }
   }
 
-  void _removeUser(BuildContext context, types.User user) async {
-    RoomCubit cubit = context.read<RoomCubit>();
-
+  void _removeUser(
+      BuildContext context, types.Room room, types.User user) async {
     bool? value = await CustomDialog.show<bool?>(
       context: context,
       title: AppLocalizations.instance.translate('deleteUserDialog'),
       actionText: AppLocalizations.instance.translate('delete'),
     );
     if (value == true) {
-      List<types.User> users = List.from(cubit.room.users);
-      users.remove(user);
+      List<types.User> users = List.from(room.users);
 
-      cubit.updateRoom(cubit.room.copyWith(users: users));
+      users.removeWhere((u) => u.id == user.id);
+
+      if (!context.mounted) return;
+
+      context.read<RoomCubit>().updateRoom(room.copyWith(users: users));
 
       if (!context.mounted) return;
 

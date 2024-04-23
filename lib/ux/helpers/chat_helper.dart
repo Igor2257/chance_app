@@ -8,7 +8,7 @@ class ChatHelper {
 
   static Stream<List<types.User>> get users => _instance.users();
 
-  static Stream<List<types.Room>> get rooms => _instance.rooms();
+  static Stream<List<types.Room>> get rooms => _instance.rooms(orderByUpdatedAt: true);
 
   static Stream<List<types.Message>> messages(types.Room room) =>
       _instance.messages(room);
@@ -33,6 +33,14 @@ class ChatHelper {
   static Future<void> deleteRoom(String roomId) => _instance.deleteRoom(roomId);
 
   static void updateRoom(types.Room room) => _instance.updateRoom(room);
+
+  static bool isSeenByMe(types.Message message) {
+    if (message.metadata != null && message.metadata!['seen'] is Map) {
+      Map<String, dynamic> seenMap = message.metadata!['seen'];
+      return seenMap.entries.any((en) => en.key == userId && en.value);
+    }
+    return false;
+  }
 
   const ChatHelper._();
 }

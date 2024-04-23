@@ -144,7 +144,7 @@ class ChatSettingsPage extends StatelessWidget {
   void _leaveGroup(BuildContext context) async {
     bool? value = await CustomDialog.show<bool?>(
         context: context,
-        title: AppLocalizations.instance.translate('leaveGroupDialog'));
+        title: AppLocalizations.instance.translate('leaveChatDialog'));
     if (value == true) {
       List<types.User> users = List.from(room.users);
       types.User me = _getMe(users);
