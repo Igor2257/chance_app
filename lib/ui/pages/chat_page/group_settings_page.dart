@@ -218,7 +218,7 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
 
       if (!context.mounted) return;
 
-      await AcceptDialog.show(context);
+      AcceptDialog.show(context);
     }
   }
 }

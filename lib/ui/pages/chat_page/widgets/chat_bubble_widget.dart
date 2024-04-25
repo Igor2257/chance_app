@@ -70,7 +70,7 @@ class ChatBubbleWidget extends StatelessWidget {
             if (updatedAt != null) ...[
               const SizedBox(height: 2.0),
               Text(
-                DateFormat('hh:mm').format(updatedAt),
+                DateFormat('HH:mm').format(updatedAt),
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 11,

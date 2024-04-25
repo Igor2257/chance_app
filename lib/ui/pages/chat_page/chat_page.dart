@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/chat_page/blocs/room_cubit/room_cubit.dart';
@@ -23,6 +25,12 @@ class _ChatPageState extends State<ChatPage> {
       ChatHelper.messages(_cubit.room);
 
   @override
+  void initState() {
+    super.initState();
+    ChatHelper.updateLastMessageToSeen(_cubit.room.id);
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -30,85 +38,91 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _unFocus(context),
-      child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: BlocBuilder<RoomCubit, types.Room>(
-            builder: (context, room) {
-              return AppBar(
-                title: Text(
-                  room.name ??
-                      room.users
-                          .firstWhereOrNull((u) => u.id != ChatHelper.userId)
-                          ?.fullName ?? '-',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 22,
-                    height: 28 / 22,
-                  ),
-                ),
-                centerTitle: true,
-                actions: [
-                  IconButton(
-                    onPressed: () => room.type == types.RoomType.group
-                        ? _openGroupSettingsPage(context)
-                        : _openChatSettingsPage(context),
-                    icon: const Icon(
-                      Icons.more_vert,
-                      color: primary800,
-                    ),
-                    iconSize: 24.0,
-                  )
-                ],
-              );
-            },
-          ),
-        ),
-        body: Center(
-          child: StreamBuilder<List<types.Message>>(
-            stream: _messagesStream,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasData) {
-                if (snapshot.data!.isEmpty) {
-                  return Text(
-                    AppLocalizations.instance.translate('NoMessages'),
+    return PopScope(
+      onPopInvoked: (_) {
+        ChatHelper.updateLastMessageToSeen(_cubit.room.id);
+      },
+      child: GestureDetector(
+        onTap: () => _unFocus(context),
+        child: Scaffold(
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(kToolbarHeight),
+            child: BlocBuilder<RoomCubit, types.Room>(
+              builder: (context, room) {
+                return AppBar(
+                  title: Text(
+                    room.name ??
+                        room.users
+                            .firstWhereOrNull((u) => u.id != ChatHelper.userId)
+                            ?.fullName ??
+                        '-',
                     style: const TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 22,
                       height: 28 / 22,
                     ),
+                  ),
+                  centerTitle: true,
+                  actions: [
+                    IconButton(
+                      onPressed: () => room.type == types.RoomType.group
+                          ? _openGroupSettingsPage(context)
+                          : _openChatSettingsPage(context),
+                      icon: const Icon(
+                        Icons.more_vert,
+                        color: primary800,
+                      ),
+                      iconSize: 24.0,
+                    )
+                  ],
+                );
+              },
+            ),
+          ),
+          body: Center(
+            child: StreamBuilder<List<types.Message>>(
+              stream: _messagesStream,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasData) {
+                  if (snapshot.data!.isEmpty) {
+                    return Text(
+                      AppLocalizations.instance.translate('NoMessages'),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 22,
+                        height: 28 / 22,
+                      ),
+                    );
+                  }
+                  return ListView.builder(
+                    reverse: true,
+                    padding: const EdgeInsets.all(16.0),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      types.Message message = snapshot.data![index];
+                      if (message is types.TextMessage) {
+                        return ChatBubbleWidget(message: message);
+                      }
+                      return const SizedBox();
+                    },
                   );
                 }
-                return ListView.builder(
-                  reverse: true,
-                  padding: const EdgeInsets.all(16.0),
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    types.Message message = snapshot.data![index];
-                    if (message is types.TextMessage) {
-                      return ChatBubbleWidget(message: message);
-                    }
-                    return const SizedBox();
-                  },
-                );
-              }
 
-              return Text(
-                AppLocalizations.instance.translate('error'),
-                style: const TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 22,
-                  height: 28 / 22,
-                ),
-              );
-            },
+                return Text(
+                  AppLocalizations.instance.translate('error'),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 22,
+                    height: 28 / 22,
+                  ),
+                );
+              },
+            ),
           ),
+          bottomNavigationBar: _buildMessageTextField(context),
         ),
-        bottomNavigationBar: _buildMessageTextField(context),
       ),
     );
   }
