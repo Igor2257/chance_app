@@ -19,9 +19,8 @@ class ChatTile extends StatelessWidget {
     types.Message? lastMessage =
         room.lastMessages?.isEmpty ?? true ? null : room.lastMessages!.first;
 
-    Iterable<types.Message> unreadMessages = room.lastMessages?.where((m) =>
-            !ChatHelper.isSeenByMe(m)) ??
-        [];
+    Iterable<types.Message> unreadMessages =
+        room.lastMessages?.where((m) => !ChatHelper.isSeenByMe(m)) ?? [];
 
     String title = room.name ?? '';
     String subtitle = AppLocalizations.instance.translate('NoMessages');
@@ -87,10 +86,10 @@ class ChatTile extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             if (unreadMessages.isNotEmpty)
-              Badge.count(
-                count: unreadMessages.length,
+              const Badge(
                 backgroundColor: primary100,
                 textColor: darkNeutral800,
+                smallSize: 8,
               )
           ],
         ),
