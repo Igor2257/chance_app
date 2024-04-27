@@ -282,6 +282,7 @@
   "theNameMustContainAtLeast2Characters": "Назва має містити від 2 символів",
   "error": "Помилка",
   "failedToCallTheNumber": "Не вдалося зателефонувати за номером",
+    "givePermissionToMakeCalls": "Дайте разрешение на совершение звонков",
   "failedToGetContactList": "Не вдалося отримати список контактів",
   "errorName": "Ошибка с именем",
   "errorEmail": "Ошибка с почтой"

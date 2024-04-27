@@ -262,8 +262,26 @@ class _MainPageSosState extends State<MainPageSos> {
 
   Future<void> _makePhoneCall(SosContactModel contactModel) async {
     if (Platform.isAndroid) {
-      final callPermissionStatus = await Permission.phone.request();
-      if (callPermissionStatus.isGranted) {
+      final callPermissionStatus = await Permission.phone.status;
+      if (callPermissionStatus.isDenied) {
+        final permissionStatus = await Permission.phone.request();
+        if (permissionStatus.isGranted) {
+          final String userPhone = contactModel.phone;
+          try {
+            const MethodChannel('caller').invokeMethod('makeCall', userPhone);
+          } on PlatformException catch (e) {
+            Fluttertoast.showToast(
+              msg:
+                  AppLocalizations.instance.translate("failedToCallTheNumber") +
+                      ("$userPhone, ${e.message}"),
+            );
+          }
+        } else {
+          Fluttertoast.showToast(
+              msg: AppLocalizations.instance
+                  .translate("givePermissionToMakeCalls"));
+        }
+      } else if (callPermissionStatus.isGranted) {
         final String userPhone = contactModel.phone;
         try {
           const MethodChannel('caller').invokeMethod('makeCall', userPhone);
@@ -273,12 +291,6 @@ class _MainPageSosState extends State<MainPageSos> {
                 ("$userPhone, ${e.message}"),
           );
         }
-      } else {
-        final String userPhone = contactModel.phone;
-        Fluttertoast.showToast(
-          msg: AppLocalizations.instance.translate("failedToCallTheNumber") +
-              (" $userPhone"),
-        );
       }
     } else if (Platform.isIOS) {
       final String userPhone = contactModel.phone;

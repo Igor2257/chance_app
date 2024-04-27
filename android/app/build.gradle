@@ -35,6 +35,7 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 android {
+    compileSdkVersion 33
     namespace "com.chance_app.chance_app"
     ndkVersion flutter.ndkVersion
 

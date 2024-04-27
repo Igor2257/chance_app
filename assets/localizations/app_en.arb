@@ -295,6 +295,7 @@
   "theNameMustContainAtLeast2Characters": "The name must contain at least 2 characters",
   "error": "Error",
   "failedToCallTheNumber": "Failed to call the number",
+  "givePermissionToMakeCalls": "Give permission to make calls",
   "failedToGetContactList": "Failed to get contact list",
   "errorName": "Name error",
   "errorEmail": "Email error",

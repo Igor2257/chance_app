@@ -297,6 +297,7 @@
   "theNameMustContainAtLeast2Characters": "Назва має містити від 2 символів",
   "error": "Помилка",
   "failedToCallTheNumber": "Не вдалося зателефонувати за номером",
+  "givePermissionToMakeCalls": "Дайте дозвіл на здійснення дзвінків",
   "failedToGetContactList": "Не вдалося отримати список контактів",
   "errorName": "Помилка з ім`ям",
   "errorEmail": "Помилка з поштою",
