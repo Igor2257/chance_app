@@ -71,22 +71,35 @@ class ContainerButton extends StatelessWidget {
 
   Future<void> _makePhoneCall() async {
     if (Platform.isAndroid) {
-      final callPermissionStatus = await Permission.phone.request();
-      if (callPermissionStatus.isGranted) {
+      final callPermissionStatus = await Permission.phone.status;
+      if (callPermissionStatus.isDenied) {
+        final permissionStatus = await Permission.phone.request();
+        if (permissionStatus.isGranted) {
+          final String userPhone = contactPhone;
+          try {
+            const MethodChannel('caller').invokeMethod('makeCall', userPhone);
+          } on PlatformException catch (e) {
+            Fluttertoast.showToast(
+              msg:
+                  AppLocalizations.instance.translate("failedToCallTheNumber") +
+                      ("$userPhone, ${e.message}"),
+            );
+          }
+        } else {
+          Fluttertoast.showToast(
+              msg: AppLocalizations.instance
+                  .translate("givePermissionToMakeCalls"));
+        }
+      } else if (callPermissionStatus.isGranted) {
         final String userPhone = contactPhone;
         try {
           const MethodChannel('caller').invokeMethod('makeCall', userPhone);
         } on PlatformException catch (e) {
           Fluttertoast.showToast(
             msg: AppLocalizations.instance.translate("failedToCallTheNumber") +
-                ("$contactPhone, ${e.message}"),
+                ("$userPhone, ${e.message}"),
           );
         }
-      } else {
-        Fluttertoast.showToast(
-          msg: AppLocalizations.instance.translate("failedToCallTheNumber") +
-              ("$contactPhone"),
-        );
       }
     } else if (Platform.isIOS) {
       final String userPhone = contactPhone;
