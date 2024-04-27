@@ -157,7 +157,18 @@
   "changeLanguage": "Змінити мову",
   "productsAreLoading": "Товари завантажуються",
   "allowTheAppToUseGeodataToDetermineYourCurrentLocation": "Дозвольте застосунку використовувати геодані для визначення поточного місцерозташування. Навіть коли ви не користуєтесь додатком. Цей дозвіл має домогти вам у роботі з сервісом Google Map. Також відстеження поточного місцерозташування для опікунів",
- "dontShowAgain": "Не показувати більше",
+  "dontShowAgain": "Не показувати більше",
+  "youHaveUnsavedData": "У Вас є незбережені зміни",
+  "necessaryToAccept": "Потрібно прийняти",
+  "skipped": "Пропущено",
+  "postponeTo": "Перенесено на",
+  "acceptedBy": "Прийнято о",
+  "areYouSureYouWantToRemoveTheMedication": "Ви впевнені, що хочете видалити медикамент?",
+
+  "on": "На",
+  "by": "За",
+  "added": "Додано",
+  "deleted": "Видалено",
   "@comment1": "Действия",
   "previous": "Попередній",
   "add": "Додати",
@@ -251,6 +262,10 @@
   "search": "Пошук",
   "saveChanges": "Зберегти зміни",
   "update": "Оновити",
+  "addAnotherDrug": "Додати інший препарат",
+  "noEverythingIsAdded": "Ні, все додано",
+  "postponeOn": "Відкласти на",
+  "postpone": "Перенести",
   "@comment2": "Ошибки",
   "error400": "Некоректний запит",
   "error401": "Не авторизовано",
@@ -284,5 +299,6 @@
   "failedToCallTheNumber": "Не вдалося зателефонувати за номером",
   "failedToGetContactList": "Не вдалося отримати список контактів",
   "errorName": "Помилка з ім`ям",
-  "errorEmail": "Помилка з поштою"
+  "errorEmail": "Помилка з поштою",
+  "theCodeMustBe4CharactersLong": "Код має бути із 4 символів"
 }

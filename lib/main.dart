@@ -356,9 +356,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                                   surfaceTintColor:
                                                       beigeTransparent)),
                                       supportedLocales: const [
-                                        Locale('en'),
                                         Locale('uk'),
-                                        Locale('ru'),
+                                        Locale('en'),
                                       ],
                                       onGenerateRoute:
                                           AppRouter.onGenerateRoute,
@@ -417,8 +416,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                             const AddWard(),
                                         "/check_my_invitation": (context) =>
                                             const CheckMyInvitation(),
-                                        "/enter_accept_code": (context) =>
-                                            const EnterAcceptCode(),
+                                        //"/enter_accept_code": (context) =>
+                                        //    const EnterAcceptCode(),
                                         "/choose_language": (context) =>
                                             const ChooseLanguage(),
                                         "/my_wards": (context) =>

@@ -1,3 +1,4 @@
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/repository/files_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,7 +35,7 @@ class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Політика конфіденційності"),
+        title: Text(AppLocalizations.instance.translate("privacyPolicy")),
       ),
       body: SafeArea(
         child: FutureBuilder(
@@ -72,18 +73,18 @@ class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
       ),
     );
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Політика конфіденційності"),
-      ),
-      body: SafeArea(
-        child: PdfView(
-          controller: _pdfController,
-          pageSnapping: false,
-          scrollDirection: Axis.vertical,
-          physics: const RangeMaintainingScrollPhysics(),
-        ),
-      ),
-    );
+    //return Scaffold(
+    //  appBar: AppBar(
+    //    title: const Text("Політика конфіденційності"),
+    //  ),
+    //  body: SafeArea(
+    //    child: PdfView(
+    //      controller: _pdfController,
+    //      pageSnapping: false,
+    //      scrollDirection: Axis.vertical,
+    //      physics: const RangeMaintainingScrollPhysics(),
+    //    ),
+    //  ),
+    //);
   }
 }

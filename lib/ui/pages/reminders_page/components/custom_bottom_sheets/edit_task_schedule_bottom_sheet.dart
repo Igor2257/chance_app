@@ -1,4 +1,5 @@
 import 'package:chance_app/resources/app_icons.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/reminder_actions.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/task_header.dart';
 import 'package:chance_app/ux/enum/reminder_action_result.dart';
@@ -17,10 +18,10 @@ class EditTaskScheduleBottomSheet extends StatelessWidget {
   final TaskModel task;
 
   String _reminderText(int minutes) {
-    if (minutes == 0) return "Вчасно";
-    if (minutes == Duration.minutesPerDay) return "За 1 день";
-    if (minutes == Duration.minutesPerHour) return "За 1 год";
-    return "За $minutes хв";
+    if (minutes == 0) return AppLocalizations.instance.translate("inTime");
+    if (minutes == Duration.minutesPerDay) return AppLocalizations.instance.translate("inOneDay");
+    if (minutes == Duration.minutesPerHour) return AppLocalizations.instance.translate("in60Minutes");
+    return "${AppLocalizations.instance.translate("by")} $minutes ${AppLocalizations.instance.translate("min")}";
   }
 
   @override
@@ -43,7 +44,7 @@ class EditTaskScheduleBottomSheet extends StatelessWidget {
                 Text(
                   [
                     DateUtils.isSameDay(task.date.toLocal(), DateTime.now())
-                        ? "Сьогодні"
+                        ?AppLocalizations.instance.translate("today")
                         : parsedDate.MMMMd,
                     parsedDate.Hm,
                   ].join(" "),
@@ -94,7 +95,7 @@ class EditTaskScheduleBottomSheet extends StatelessWidget {
   Widget _deleteButton(BuildContext context) {
     return IconButton(
       onPressed: () => Navigator.of(context).pop(ReminderState.deleted),
-      tooltip: "Видалити",
+      tooltip: AppLocalizations.instance.translate("delete"),
       icon: SvgPicture.asset(
         AppIcons.trash,
         color: Colors.black,

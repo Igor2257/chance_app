@@ -135,7 +135,7 @@ const Map<String, String> languages = {
   //"pl": "Polski",
   //"pt": "Português",
   //"ro": "Română",
-  "ru": "Русский",
+  //"ru": "Русский",
   //"sk": "Slovenský",
   //"sl": "Slovenščina",
   //"sq": "Shqiptare",

@@ -22,6 +22,13 @@ class AppLocalizations {
 
   static Future<AppLocalizations> load(Locale locale) async {
     String jsonString = "";
+    print(HiveCRUD().setting.languageCode != null);
+    print(HiveCRUD().setting.languageCode != null &&
+        const MyLocalizationsDelegate()
+            .isSupportedCode(HiveCRUD().setting.languageCode!));
+    print(const MyLocalizationsDelegate()
+        .isSupportedCode(locale.languageCode));
+    print(locale);
     if (HiveCRUD().setting.languageCode != null &&
         const MyLocalizationsDelegate()
             .isSupportedCode(HiveCRUD().setting.languageCode!)) {
@@ -42,6 +49,7 @@ class AppLocalizations {
     } else {
       if (const MyLocalizationsDelegate()
           .isSupportedCode(locale.languageCode)) {
+        print('assets/localizations/app_${locale.languageCode}.arb');
         jsonString = await rootBundle
             .loadString('assets/localizations/app_${locale.languageCode}.arb');
         final jsonMap = json.decode(jsonString) as Map<String, dynamic>;
@@ -57,7 +65,7 @@ class AppLocalizations {
         return AppLocalizations(locale);
       } else {
         jsonString =
-            await rootBundle.loadString('assets/localizations/app_en.arb');
+            await rootBundle.loadString('assets/localizations/app_uk.arb');
         final jsonMap = json.decode(jsonString) as Map<String, dynamic>;
 
         final instance = AppLocalizations(const Locale("en"));
@@ -68,7 +76,7 @@ class AppLocalizations {
           ),
         );
         _instance = instance;
-        return AppLocalizations(const Locale("en"));
+        return AppLocalizations(const Locale("uk"));
       }
     }
   }
@@ -101,7 +109,6 @@ class MyLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
     return [
       'uk',
       'en',
-      'ru',
     ].contains(languageCode);
   }
 
@@ -115,6 +122,9 @@ class MyLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
 
   @override
   bool isSupported(Locale locale) {
-    return true;
+    return [
+      'uk',
+      'en',
+    ].contains(locale.languageCode);
   }
 }

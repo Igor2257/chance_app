@@ -21,7 +21,7 @@ class _EnterCodeForRegisterState extends State<EnterCodeForRegister> {
 
   FocusNode focusNode = FocusNode();
   int secondsLeft = 60;
-  late final Timer timer;
+  late Timer timer;
   bool isTaped = false;
 
   @override

@@ -1,8 +1,11 @@
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/api/api_client.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class MedicineRepository {
@@ -21,6 +24,7 @@ class MedicineRepository {
     );
     if (fetchedItems == null) return {}; // There is nothing to sync
     // Sync map is a Map of item IDs and pairs of local and remote items
+    _storage.clear();
     final result = <String>{};
     final syncMap = <String, ({MedicineModel? local, MedicineModel? remote})>{
       for (final item in fetchedItems) item.id: (local: null, remote: item),
@@ -124,19 +128,27 @@ extension _MedicineClient on ApiClient {
     MedicineModel medicine, {
     required String cookie,
   }) async {
-    try {
-      final json = await post(
-        "/medicine",
-        cookie: cookie,
-        json: _modelToJson(medicine),
-      ) as Map<String, dynamic>?;
-      if (json == null) {
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      Fluttertoast.showToast(
+          msg: AppLocalizations.instance
+              .translate("noInternetConnectionConnection"),
+          toastLength: Toast.LENGTH_LONG);
+      return null;
+    } else {
+      try {
+        final json = await post(
+          "/medicine",
+          cookie: cookie,
+          json: _modelToJson(medicine),
+        ) as Map<String, dynamic>?;
+        if (json == null) {
+          return null;
+        }
+        return _modelFromJson(json);
+      } catch (e, trace) {
+        FirebaseCrashlytics.instance.recordError(e.toString(), trace);
         return null;
       }
-      return _modelFromJson(json);
-    } catch (e, trace) {
-      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
-      return null;
     }
   }
 
@@ -144,19 +156,27 @@ extension _MedicineClient on ApiClient {
     MedicineModel medicine, {
     required String cookie,
   }) async {
-    try {
-      final json = await patch(
-        "/medicine/${medicine.id}",
-        cookie: cookie.toString(),
-        json: _modelToJson(medicine),
-      ) as Map<String, dynamic>?;
-      if (json == null) {
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      Fluttertoast.showToast(
+          msg: AppLocalizations.instance
+              .translate("noInternetConnectionConnection"),
+          toastLength: Toast.LENGTH_LONG);
+      return null;
+    } else {
+      try {
+        final json = await patch(
+          "/medicine/${medicine.id}",
+          cookie: cookie.toString(),
+          json: _modelToJson(medicine),
+        ) as Map<String, dynamic>?;
+        if (json == null) {
+          return null;
+        }
+        return _modelFromJson(json);
+      } catch (e, trace) {
+        FirebaseCrashlytics.instance.recordError(e.toString(), trace);
         return null;
       }
-      return _modelFromJson(json);
-    } catch (e, trace) {
-      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
-      return null;
     }
   }
 
@@ -164,16 +184,24 @@ extension _MedicineClient on ApiClient {
     MedicineModel medicine, {
     required String cookie,
   }) async {
-    try {
-      await delete(
-        "/medicine/${medicine.id}",
-        cookie: cookie.toString(),
-      );
-      return true;
-    } catch (e, trace) {
-      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      Fluttertoast.showToast(
+          msg: AppLocalizations.instance
+              .translate("noInternetConnectionConnection"),
+          toastLength: Toast.LENGTH_LONG);
+      return false;
+    } else {
+      try {
+        await delete(
+          "/medicine/${medicine.id}",
+          cookie: cookie.toString(),
+        );
+        return true;
+      } catch (e, trace) {
+        FirebaseCrashlytics.instance.recordError(e.toString(), trace);
+      }
+      return false;
     }
-    return false;
   }
 
   Map<String, dynamic> _modelToJson(MedicineModel medicine) => {

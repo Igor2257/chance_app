@@ -1,4 +1,5 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository/tasks_repository.dart';
@@ -33,18 +34,21 @@ class _TasksForTodayState extends State<TasksForToday> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery
+        .of(context)
+        .size;
     return BlocBuilder<RemindersBloc, RemindersState>(
       builder: (context, state) {
         final tasksForToday = state.tasks
-            .where((e) => DateUtils.isSameDay(e.date.toLocal(), state.selectedDay))
+            .where((e) =>
+            DateUtils.isSameDay(e.date.toLocal(), state.selectedDay))
             .sortedBy((e) => e.date.toLocal());
         return Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            title: const Text(
-              "Завдання на сьогодні",
-              style: TextStyle(fontSize: 22, color: primaryText),
+            title: Text(
+              AppLocalizations.instance.translate("tasksForToday"),
+              style: const TextStyle(fontSize: 22, color: primaryText),
             ),
             leading: CloseButton(
               onPressed: () {
@@ -65,10 +69,10 @@ class _TasksForTodayState extends State<TasksForToday> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                const Text(
-                  "Не забутьте відмітити завдання як виконане",
+                Text(AppLocalizations.instance.translate(
+                    "doNotForgetToMarkTheTaskAsCompleted"),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 22,
                     color: primaryText,
                   ),
@@ -87,7 +91,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                               width: size.width,
                               height: size.height,
                               margin:
-                                  const EdgeInsets.symmetric(horizontal: 10),
+                              const EdgeInsets.symmetric(horizontal: 10),
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                   color: primary100,
@@ -105,39 +109,42 @@ class _TasksForTodayState extends State<TasksForToday> {
                                   const Spacer(),
                                   task.isDone
                                       ? Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            SvgPicture.asset(
-                                                "assets/icons/alarm_icon.svg"),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            const Text(
-                                              "Виконано",
-                                              style: TextStyle(
-                                                  fontSize: 24,
-                                                  color: primaryText),
-                                            ),
-                                          ],
-                                        )
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                          "assets/icons/alarm_icon.svg"),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(AppLocalizations.instance.translate(
+                                          "done"),
+                                        style: const TextStyle(
+                                            fontSize: 24,
+                                            color: primaryText),
+                                      ),
+                                    ],
+                                  )
                                       : Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            SvgPicture.asset(
-                                                "assets/icons/clock.svg"),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text(
-                                              Jiffy.parseFromDateTime(task.date.toLocal()).Hm,
-                                              style: const TextStyle(
-                                                  fontSize: 24,
-                                                  color: primaryText),
-                                            ),
-                                          ],
-                                        ),
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                          "assets/icons/clock.svg"),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        Jiffy
+                                            .parseFromDateTime(
+                                            task.date.toLocal())
+                                            .Hm,
+                                        style: const TextStyle(
+                                            fontSize: 24,
+                                            color: primaryText),
+                                      ),
+                                    ],
+                                  ),
                                   const Spacer(),
                                 ],
                               ),
@@ -146,14 +153,14 @@ class _TasksForTodayState extends State<TasksForToday> {
                               alignment: Alignment.bottomCenter,
                               child: Container(
                                 margin:
-                                    const EdgeInsets.symmetric(horizontal: 10),
+                                const EdgeInsets.symmetric(horizontal: 10),
                                 padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(16),
                                     color: darkNeutral800),
                                 child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Column(
                                       mainAxisSize: MainAxisSize.min,
@@ -161,7 +168,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                         GestureDetector(
                                           onTap: () {
                                             BlocProvider.of<RemindersBloc>(
-                                                    context)
+                                                context)
                                                 .add(TaskIsDone(task));
                                             if (!task.isDone) {
                                               delay(context);
@@ -172,50 +179,55 @@ class _TasksForTodayState extends State<TasksForToday> {
                                                     return SizedBox(
                                                       height: 160,
                                                       width:
-                                                          MediaQuery.of(context)
-                                                              .size
-                                                              .width,
+                                                      MediaQuery
+                                                          .of(context)
+                                                          .size
+                                                          .width,
                                                       child: AlertDialog(
                                                         backgroundColor:
-                                                            beige100,
+                                                        beige100,
                                                         content: Padding(
                                                           padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  horizontal:
-                                                                      24,
-                                                                  vertical: 16),
+                                                          const EdgeInsets
+                                                              .symmetric(
+                                                              horizontal:
+                                                              24,
+                                                              vertical: 16),
                                                           child: Column(
                                                             mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
+                                                            MainAxisSize
+                                                                .min,
                                                             children: <Widget>[
                                                               const Icon(
                                                                   Icons.done),
                                                               const SizedBox(
                                                                 height: 40,
                                                               ),
-                                                              const Text(
-                                                                "Завдання виконано",
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        24,
-                                                                    color:
-                                                                        primaryText),
-                                                              ),
                                                               Text(
-                                                                "”${task.message}”",
+                                                                AppLocalizations
+                                                                    .instance
+                                                                    .translate(
+                                                                    "taskCompleted"),
                                                                 textAlign:
-                                                                    TextAlign
-                                                                        .center,
+                                                                TextAlign
+                                                                    .center,
                                                                 style: const TextStyle(
                                                                     fontSize:
-                                                                        16,
+                                                                    24,
                                                                     color:
-                                                                        primaryText),
+                                                                    primaryText),
+                                                              ),
+                                                              Text(
+                                                                "”${task
+                                                                    .message}”",
+                                                                textAlign:
+                                                                TextAlign
+                                                                    .center,
+                                                                style: const TextStyle(
+                                                                    fontSize:
+                                                                    16,
+                                                                    color:
+                                                                    primaryText),
                                                               ),
                                                             ],
                                                           ),
@@ -230,7 +242,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                             width: 56,
                                             decoration: BoxDecoration(
                                                 borderRadius:
-                                                    BorderRadius.circular(90),
+                                                BorderRadius.circular(90),
                                                 color: primary300),
                                             child: Center(
                                               child: Icon(task.isDone
@@ -244,8 +256,10 @@ class _TasksForTodayState extends State<TasksForToday> {
                                         ),
                                         Text(
                                           task.isDone
-                                              ? "Не виконано"
-                                              : "Виконано",
+                                              ? AppLocalizations.instance
+                                              .translate("notDone")
+                                              : AppLocalizations.instance
+                                              .translate("done"),
                                           style: const TextStyle(
                                               fontSize: 16, color: primary50),
                                         ),
@@ -257,68 +271,101 @@ class _TasksForTodayState extends State<TasksForToday> {
                                         GestureDetector(
                                           onTap: () async {
                                             final delete =
-                                                await showDialog<bool>(
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return SizedBox(
-                                                          height: 160,
-                                                          width: MediaQuery.of(
-                                                                  context)
-                                                              .size
-                                                              .width,
-                                                          child: AlertDialog(
-                                                              backgroundColor:
-                                                                  beige100,
-                                                              content: Padding(
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .zero,
-                                                                  child: Column(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .min,
+                                            await showDialog<bool>(
+                                                context: context,
+                                                builder: (context) {
+                                                  return SizedBox(
+                                                      height: 160,
+                                                      width: MediaQuery
+                                                          .of(
+                                                          context)
+                                                          .size
+                                                          .width,
+                                                      child: AlertDialog(
+                                                          backgroundColor:
+                                                          beige100,
+                                                          content: Padding(
+                                                              padding:
+                                                              EdgeInsets
+                                                                  .zero,
+                                                              child: Column(
+                                                                mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                                children: [
+                                                                  Text(
+                                                                    "${AppLocalizations
+                                                                        .instance
+                                                                        .translate(
+                                                                        "areYouSureYouWantToDeleteTheTask")}?",
+                                                                    textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                    style: const TextStyle(
+                                                                        color:
+                                                                        primaryText,
+                                                                        fontSize:
+                                                                        16),
+                                                                  ),
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .end,
                                                                     children: [
-                                                                      const Text(
-                                                                        "Ви впевнені, що хочете видалити завдання?",
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                primaryText,
-                                                                            fontSize:
-                                                                                16),
-                                                                      ),
-                                                                      Row(
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.end,
-                                                                        children: [
-                                                                          TextButton(
-                                                                              onPressed: () {
-                                                                                Navigator.of(context).pop(false);
-                                                                              },
-                                                                              child: const Text(
-                                                                                "Скасувати",
-                                                                                textAlign: TextAlign.center,
-                                                                                style: TextStyle(fontSize: 16, color: primary700, decoration: TextDecoration.underline, decorationColor: primary700),
-                                                                              )),
-                                                                          TextButton(
-                                                                              onPressed: () {
-                                                                                Navigator.of(context).pop(true);
-                                                                              },
-                                                                              child: const Text(
-                                                                                "Видалити",
-                                                                                textAlign: TextAlign.center,
-                                                                                style: TextStyle(fontSize: 16, color: primary700, decoration: TextDecoration.underline, decorationColor: primary700),
-                                                                              )),
-                                                                        ],
-                                                                      )
+                                                                      TextButton(
+                                                                          onPressed: () {
+                                                                            Navigator
+                                                                                .of(
+                                                                                context)
+                                                                                .pop(
+                                                                                false);
+                                                                          },
+                                                                          child: Text(
+                                                                            AppLocalizations
+                                                                                .instance
+                                                                                .translate(
+                                                                                "cancel"),
+
+                                                                            textAlign: TextAlign
+                                                                                .center,
+                                                                            style: const TextStyle(
+                                                                                fontSize: 16,
+                                                                                color: primary700,
+                                                                                decoration: TextDecoration
+                                                                                    .underline,
+                                                                                decorationColor: primary700),
+                                                                          )),
+                                                                      TextButton(
+                                                                          onPressed: () {
+                                                                            Navigator
+                                                                                .of(
+                                                                                context)
+                                                                                .pop(
+                                                                                true);
+                                                                          },
+                                                                          child: Text(
+                                                                            AppLocalizations
+                                                                                .instance
+                                                                                .translate(
+                                                                                "delete"),
+                                                                            textAlign: TextAlign
+                                                                                .center,
+                                                                            style: const TextStyle(
+                                                                                fontSize: 16,
+                                                                                color: primary700,
+                                                                                decoration: TextDecoration
+                                                                                    .underline,
+                                                                                decorationColor: primary700),
+                                                                          )),
                                                                     ],
-                                                                  ))));
-                                                    });
+                                                                  )
+                                                                ],
+                                                              ))));
+                                                });
                                             if ((delete ?? false) &&
                                                 context.mounted) {
                                               BlocProvider.of<RemindersBloc>(
-                                                      context)
+                                                  context)
                                                   .add(DeleteTask(task));
                                             }
                                           },
@@ -327,7 +374,7 @@ class _TasksForTodayState extends State<TasksForToday> {
                                             width: 56,
                                             decoration: BoxDecoration(
                                                 borderRadius:
-                                                    BorderRadius.circular(90),
+                                                BorderRadius.circular(90),
                                                 border: Border.all(
                                                     color: primary300)),
                                             child: const Center(
@@ -340,9 +387,11 @@ class _TasksForTodayState extends State<TasksForToday> {
                                         const SizedBox(
                                           height: 10,
                                         ),
-                                        const Text(
-                                          "Видалити",
-                                          style: TextStyle(
+                                        Text(
+                                          AppLocalizations.instance.translate(
+                                              "delete")
+                                          ,
+                                          style: const TextStyle(
                                               fontSize: 16, color: primary50),
                                         ),
                                       ],

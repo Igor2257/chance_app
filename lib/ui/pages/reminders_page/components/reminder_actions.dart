@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/components/separated_list.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class ReminderActions extends StatelessWidget {
@@ -34,7 +35,7 @@ class ReminderActions extends StatelessWidget {
           children: [
             _labeledIconButton(
               onPressed: onMissedPressed,
-              label: missedText ?? "Пропустити",
+              label: missedText ?? AppLocalizations.instance.translate("miss"),
               icon: Icons.close,
             ),
             _labeledIconButton(
@@ -43,12 +44,12 @@ class ReminderActions extends StatelessWidget {
                 backgroundColor: primary300,
                 foregroundColor: primaryText,
               ),
-              label: doneText ?? "Виконано",
+              label: doneText ?? AppLocalizations.instance.translate("done"),
               icon: Icons.check,
             ),
             _labeledIconButton(
               onPressed: onReschedulePressed,
-              label: rescheduleText ?? "Перенести",
+              label: rescheduleText ?? AppLocalizations.instance.translate("postpone"),
               icon: Icons.alarm,
             ),
           ],

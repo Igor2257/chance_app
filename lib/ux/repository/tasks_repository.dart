@@ -1,10 +1,13 @@
 import 'dart:async';
 
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/api/api_client.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/task_model.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
 
 class TasksRepository {
@@ -20,6 +23,7 @@ class TasksRepository {
     final cookie = await _userRepository.getCookie();
     final fetchedItems = await _apiClient.fetchTasks(cookie: cookie.toString());
     if (fetchedItems == null) return {};
+    _storage.clear();
     final result = <String>{};
     final syncMap = <String, ({TaskModel? local, TaskModel? remote})>{
       for (final item in fetchedItems) item.id: (local: null, remote: item),
@@ -109,12 +113,20 @@ extension _TasksStorage on Box<TaskModel> {
 
 extension _TasksClient on ApiClient {
   Future<List<TaskModel>?> fetchTasks({required String cookie}) async {
-    try {
-      final items = await get("/task", cookie: cookie) as List<dynamic>?;
-      return items?.cast<Map<String, dynamic>>().map(_modelFromJson).toList();
-    } catch (e, trace) {
-      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      Fluttertoast.showToast(
+          msg: AppLocalizations.instance
+              .translate("noInternetConnectionConnection"),
+          toastLength: Toast.LENGTH_LONG);
       return null;
+    } else {
+      try {
+        final items = await get("/task", cookie: cookie) as List<dynamic>?;
+        return items?.cast<Map<String, dynamic>>().map(_modelFromJson).toList();
+      } catch (e, trace) {
+        FirebaseCrashlytics.instance.recordError(e.toString(), trace);
+        return null;
+      }
     }
   }
 
@@ -122,19 +134,27 @@ extension _TasksClient on ApiClient {
     TaskModel task, {
     required String cookie,
   }) async {
-    try {
-      final json = await post(
-        "/task",
-        cookie: cookie,
-        json: _modelToJson(task),
-      ) as Map<String, dynamic>?;
-      if (json == null) {
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      Fluttertoast.showToast(
+          msg: AppLocalizations.instance
+              .translate("noInternetConnectionConnection"),
+          toastLength: Toast.LENGTH_LONG);
+      return null;
+    } else {
+      try {
+        final json = await post(
+          "/task",
+          cookie: cookie,
+          json: _modelToJson(task),
+        ) as Map<String, dynamic>?;
+        if (json == null) {
+          return null;
+        }
+        return _modelFromJson(json);
+      } catch (e, trace) {
+        FirebaseCrashlytics.instance.recordError(e.toString(), trace);
         return null;
       }
-      return _modelFromJson(json);
-    } catch (e, trace) {
-      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
-      return null;
     }
   }
 
@@ -142,19 +162,27 @@ extension _TasksClient on ApiClient {
     TaskModel task, {
     required String cookie,
   }) async {
-    try {
-      final json = await patch(
-        "/task/${task.id}",
-        cookie: cookie.toString(),
-        json: _modelToJson(task),
-      ) as Map<String, dynamic>?;
-      if (json == null) {
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      Fluttertoast.showToast(
+          msg: AppLocalizations.instance
+              .translate("noInternetConnectionConnection"),
+          toastLength: Toast.LENGTH_LONG);
+      return null;
+    } else {
+      try {
+        final json = await patch(
+          "/task/${task.id}",
+          cookie: cookie.toString(),
+          json: _modelToJson(task),
+        ) as Map<String, dynamic>?;
+        if (json == null) {
+          return null;
+        }
+        return _modelFromJson(json);
+      } catch (e, trace) {
+        FirebaseCrashlytics.instance.recordError(e.toString(), trace);
         return null;
       }
-      return _modelFromJson(json);
-    } catch (e, trace) {
-      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
-      return null;
     }
   }
 
@@ -162,15 +190,23 @@ extension _TasksClient on ApiClient {
     TaskModel task, {
     required String cookie,
   }) async {
-    try {
-      await delete(
-        "/task/${task.id}",
-        cookie: cookie.toString(),
-      );
-      return true;
-    } catch (e, trace) {
-      FirebaseCrashlytics.instance.recordError(e.toString(), trace);
+    if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
+      Fluttertoast.showToast(
+          msg: AppLocalizations.instance
+              .translate("noInternetConnectionConnection"),
+          toastLength: Toast.LENGTH_LONG);
       return false;
+    } else {
+      try {
+        await delete(
+          "/task/${task.id}",
+          cookie: cookie.toString(),
+        );
+        return true;
+      } catch (e, trace) {
+        FirebaseCrashlytics.instance.recordError(e.toString(), trace);
+        return false;
+      }
     }
   }
 

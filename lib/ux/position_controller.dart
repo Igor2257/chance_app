@@ -24,7 +24,7 @@ class PositionController with ChangeNotifier {
     'Хто бреше, той не гідний бути людиною.',
     'Хто хоче брехати з користю, повинен брехати рідко.'
   ];
-  late final Timer timer;
+  late Timer timer;
 
   PositionController() {
     Geolocator.getCurrentPosition().then((value) {

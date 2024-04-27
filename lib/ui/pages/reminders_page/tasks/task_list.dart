@@ -1,7 +1,7 @@
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/edit_task_schedule_bottom_sheet.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/custom_bottom_sheets/reschedule_time_picker.dart';
-import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/tasks/task_item.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
 import 'package:chance_app/ux/enum/reminder_action_result.dart';
@@ -26,7 +26,8 @@ class TaskList extends StatelessWidget {
     final accepted = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        content: const Text("Ви впевнені, що хочете видалити завдання?"),
+        content: Text(
+            "${AppLocalizations.instance.translate("areYouSureYouWantToDeleteTheTask")}?"),
         contentTextStyle: const TextStyle(
           fontSize: 16,
           letterSpacing: 0.5,
@@ -36,11 +37,11 @@ class TaskList extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text("Скасувати"),
+            child: Text(AppLocalizations.instance.translate("cancel")),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text("Видалити"),
+            child: Text(AppLocalizations.instance.translate("delete")),
           ),
         ],
       ),
@@ -109,7 +110,7 @@ class TaskList extends StatelessWidget {
               Expanded(
                 child: Text(
                   DateUtils.isSameDay(dayDate, DateTime.now())
-                      ? "Сьогодні"
+                      ? AppLocalizations.instance.translate("today")
                       : Jiffy.parseFromDateTime(dayDate).MMMMd,
                   style: const TextStyle(fontSize: 28, color: primaryText),
                 ),
@@ -118,9 +119,9 @@ class TaskList extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pushNamed("/tasks_for_today");
                 },
-                child: const Text(
-                  "Всі завдання",
-                  style: TextStyle(
+                child: Text(
+                  AppLocalizations.instance.translate("allTasks"),
+                  style: const TextStyle(
                     fontSize: 16,
                     color: primary700,
                     decorationColor: primary700,
@@ -143,7 +144,7 @@ class TaskList extends StatelessWidget {
   }
 
   Widget _emptyListPlaceholder() {
-    return  Padding(
+    return Padding(
       padding: const EdgeInsets.all(16),
       child: Text(
         AppLocalizations.instance.translate("addTask"),

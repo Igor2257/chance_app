@@ -168,7 +168,7 @@ class UserRepository {
   Future<String?> checkIsCodeValid(
       String code, String email, String passwordFirst) async {
     if (code.length != 4) {
-      return "Код має бути із 4 символів";
+      return AppLocalizations.instance.translate("theCodeMustBe4CharactersLong");
     }
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {

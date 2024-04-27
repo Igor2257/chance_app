@@ -13,8 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MedicineList extends StatelessWidget {
-  const MedicineList(
-    this.medicines, {
+  const MedicineList(this.medicines, {
     required this.dayDate,
     super.key,
   });
@@ -25,31 +24,34 @@ class MedicineList extends StatelessWidget {
   Future<bool> _onDeleteConfirmation(BuildContext context) async {
     final accepted = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        content: const Text("Ви впевнені, що хочете видалити медикамент?"),
-        contentTextStyle: const TextStyle(
-          fontSize: 16,
-          letterSpacing: 0.5,
-          color: primaryText,
-        ),
-        actionsPadding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text("Скасувати"),
+      builder: (context) =>
+          AlertDialog(
+            content: Text(AppLocalizations.instance.translate("areYouSureYouWantToRemoveTheMedication")),
+            contentTextStyle: const TextStyle(
+              fontSize: 16,
+              letterSpacing: 0.5,
+              color: primaryText,
+            ),
+            actionsPadding: const EdgeInsets.symmetric(
+                vertical: 4, horizontal: 12),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(
+                    AppLocalizations.instance.translate("cancel")),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(
+                    AppLocalizations.instance.translate("delete")),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text("Видалити"),
-          ),
-        ],
-      ),
     );
     return accepted ?? false;
   }
 
-  Future<void> _onItemPressed(
-    BuildContext context, {
+  Future<void> _onItemPressed(BuildContext context, {
     required MedicineModel item,
     required DateTime doseTime,
   }) async {
@@ -57,10 +59,11 @@ class MedicineList extends StatelessWidget {
       context: context,
       backgroundColor: beige100,
       showDragHandle: true,
-      builder: (context) => EditMedicineScheduleBottomSheet(
-        item,
-        doseTime: doseTime,
-      ),
+      builder: (context) =>
+          EditMedicineScheduleBottomSheet(
+            item,
+            doseTime: doseTime,
+          ),
     );
     if (result == null || !context.mounted) return;
 
@@ -86,12 +89,12 @@ class MedicineList extends StatelessWidget {
         );
         if (minutes == null || !context.mounted) return;
         context.read<RemindersBloc>().add(
-              MedicineIsPostponed(
-                item,
-                doseTime: doseTime,
-                minutes: minutes,
-              ),
-            );
+          MedicineIsPostponed(
+            item,
+            doseTime: doseTime,
+            minutes: minutes,
+          ),
+        );
     }
   }
 
@@ -121,7 +124,10 @@ class MedicineList extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       sectionCount: groupedItems.length,
-      itemInSectionCount: (i) => groupedItems.values.elementAt(i).length,
+      itemInSectionCount: (i) =>
+      groupedItems.values
+          .elementAt(i)
+          .length,
       sectionBuilder: (context, sectionPath, _) {
         final doseTime = groupedItems.keys.elementAt(sectionPath.section);
         return Container(
@@ -142,11 +148,12 @@ class MedicineList extends StatelessWidget {
           child: MedicineItem(
             medicine,
             doseTime: doseTime,
-            onTap: () => _onItemPressed(
-              context,
-              item: medicine,
-              doseTime: doseTime,
-            ),
+            onTap: () =>
+                _onItemPressed(
+                  context,
+                  item: medicine,
+                  doseTime: doseTime,
+                ),
           ),
         );
       },
@@ -154,7 +161,7 @@ class MedicineList extends StatelessWidget {
   }
 
   Widget _emptyListPlaceholder() {
-    return  Padding(
+    return Padding(
       padding: const EdgeInsets.all(16),
       child: Text(
         AppLocalizations.instance.translate("addMedicationReminders"),

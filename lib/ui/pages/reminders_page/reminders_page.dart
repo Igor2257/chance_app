@@ -142,7 +142,7 @@ class _RemindersPageState extends State<RemindersPage> {
             context: context,
             dismissAfter: dialogDismissDuration,
             builder: (context) => SuccessDialog(
-              title: Text("${state.medicine.name} видалено"),
+              title: Text("${state.medicine.name} ${AppLocalizations.instance.translate("deleted").toLowerCase()}"),
             ),
           );
         }

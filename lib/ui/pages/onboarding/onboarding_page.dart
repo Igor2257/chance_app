@@ -28,10 +28,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 style: const TextStyle(fontSize: 28.0, color: primaryText)),
             const Spacer(),
             RoundedButton(
-              onPress: ()async{
-
-                Navigator.of(context).pushNamedAndRemoveUntil("/onboarding_tutorial", (route) => true);
-              await UserRepository().firstEnter();
+                onPress: () async {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      "/onboarding_tutorial", (route) => true);
+                  await UserRepository().firstEnter();
                 },
                 color: primary1000,
                 child: Text(AppLocalizations.instance.translate("letsStart"),
@@ -42,12 +42,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
               children: [
                 SizedBox(
                   height: 44,
-                  child: Text("${AppLocalizations.instance.translate("alreadyHaveAccount")}?",
-                      style: const TextStyle(fontSize: 16.0, color: primary700)),
+                  child: Text(
+                      "${AppLocalizations.instance.translate("alreadyHaveAccount")}?",
+                      style:
+                          const TextStyle(fontSize: 16.0, color: primary700)),
                 ),
                 const SizedBox(width: 10),
                 GestureDetector(
-                  onTap: ()async {
+                  onTap: () async {
                     Navigator.of(context)
                         .pushNamedAndRemoveUntil("/signinup", (route) => false);
                     await UserRepository().firstEnter();

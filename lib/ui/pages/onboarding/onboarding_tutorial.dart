@@ -50,9 +50,8 @@ class _OnboardingTutorialState extends State<OnboardingTutorial> {
     return PopScope(
         canPop: false,
         onPopInvoked: (value) {
-          if (page == 0) {
-            Navigator.of(context).pop();
-          } else {
+          print(page);
+          if (page != 0) {
             pageController.jumpToPage(
               page - 1,
             );

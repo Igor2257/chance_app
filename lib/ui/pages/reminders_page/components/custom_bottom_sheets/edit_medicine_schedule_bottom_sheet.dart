@@ -1,4 +1,5 @@
 import 'package:chance_app/resources/app_icons.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/medicine_header.dart';
 import 'package:chance_app/ui/pages/reminders_page/components/reminder_actions.dart';
 import 'package:chance_app/ux/enum/instruction.dart';
@@ -41,9 +42,9 @@ class EditMedicineScheduleBottomSheet extends StatelessWidget {
                     count,
                     medicine.type.toDoseString(count).toLowerCase(),
                     DateUtils.isSameDay(doseTime.toLocal(), DateTime.now())
-                        ? "сьогодні"
+                        ? AppLocalizations.instance.translate("today").toLowerCase()
                         : parsedDate.MMMMd,
-                    "на",
+                    AppLocalizations.instance.translate("on").toLowerCase(),
                     parsedDate.Hm,
                   ].join(" "),
                   style: const TextStyle(fontSize: 22),
@@ -53,7 +54,6 @@ class EditMedicineScheduleBottomSheet extends StatelessWidget {
                   const SizedBox(height: 6),
                   Text(
                     [
-                      "Прийняти",
                       medicine.instruction.toLocalizedString().toLowerCase(),
                     ].join(" "),
                     style: const TextStyle(fontSize: 16, letterSpacing: 0.5),
@@ -62,7 +62,7 @@ class EditMedicineScheduleBottomSheet extends StatelessWidget {
                 ],
                 const SizedBox(height: 24),
                 ReminderActions(
-                  doneText: "Прийняти",
+                  doneText: AppLocalizations.instance.translate("accept"),
                   onMissedPressed: Navigator.of(context).pop,
                   onDonePressed: () =>
                       Navigator.of(context).pop(ReminderState.done),
@@ -85,7 +85,7 @@ class EditMedicineScheduleBottomSheet extends StatelessWidget {
   Widget _deleteButton(BuildContext context) {
     return IconButton(
       onPressed: () => Navigator.of(context).pop(ReminderState.deleted),
-      tooltip: "Видалити",
+      tooltip: AppLocalizations.instance.translate("delete"),
       icon: SvgPicture.asset(
         AppIcons.trash,
         color: Colors.black,

@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -28,7 +29,7 @@ class MedicineAddedBottomSheet extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '${medicine.name} додано',
+              '${medicine.name} ${AppLocalizations.instance.translate("added")}',
               style: const TextStyle(fontSize: 24),
               textAlign: TextAlign.center,
             ),
@@ -36,22 +37,22 @@ class MedicineAddedBottomSheet extends StatelessWidget {
             RoundedButton(
               onPress: () => Navigator.of(context).pop(true),
               color: primary1000,
-              child: const Row(
+              child:  Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "Додати інший препарат",
-                    style: TextStyle(color: primary50, fontSize: 16),
+                    AppLocalizations.instance.translate("addAnotherDrug"),
+                    style: const TextStyle(color: primary50, fontSize: 16),
                   ),
-                  SizedBox(width: 8),
-                  Icon(Icons.add, color: primary50),
+                  const SizedBox(width: 8),
+                  const Icon(Icons.add, color: primary50),
                 ],
               ),
             ),
             const SizedBox(height: 8),
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text("Ні, все додано"),
+              child:  Text(AppLocalizations.instance.translate("noEverythingIsAdded")),
             ),
           ],
         ),

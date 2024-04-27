@@ -22,13 +22,14 @@ class _ResetPasswordEnterCodeState extends State<ResetPasswordEnterCode> {
 
   FocusNode focusNode = FocusNode();
   int secondsLeft = 60;
-  late final Timer timer;
+  late Timer timer;
 
   @override
   void initState() {
     loadTimer();
     super.initState();
   }
+
   @override
   void dispose() {
     //textEditingController.dispose();
@@ -79,15 +80,14 @@ class _ResetPasswordEnterCodeState extends State<ResetPasswordEnterCode> {
                 controller: textEditingController,
                 appContext: context,
                 length: 4,
-                onSaved: (value)async {
-                  String code =
-                      textEditingController.text;
-                  if(code.length==4) {
+                onSaved: (value) async {
+                  String code = textEditingController.text;
+                  if (code.length == 4) {
                     Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                             builder: (context) => ResetPasswordEnterNewPassword(
                                 email: widget.email, code: code)),
-                            (route) => true);
+                        (route) => true);
                   }
                 },
               ),
@@ -103,14 +103,13 @@ class _ResetPasswordEnterCodeState extends State<ResetPasswordEnterCode> {
             const Spacer(),
             RoundedButton(
                 onPress: () async {
-                  String code =
-                      textEditingController.text;
-                       if(code.length==4) {
+                  String code = textEditingController.text;
+                  if (code.length == 4) {
                     Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                          builder: (context) => ResetPasswordEnterNewPassword(
-                              email: widget.email, code: code)),
-                      (route) => true);
+                        MaterialPageRoute(
+                            builder: (context) => ResetPasswordEnterNewPassword(
+                                email: widget.email, code: code)),
+                        (route) => true);
                   }
                 },
                 color: primary1000,
