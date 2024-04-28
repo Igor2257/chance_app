@@ -344,16 +344,12 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   String? validatePhone(String text) {
     text = text.replaceAll(" ", "");
-    print(text);
     if (text.contains("+380")) {
-      print("invalidPhoneNumberFormat0");
       if (!RegExp(r'^\+380\d{9}$').hasMatch(text)) {
-        print("invalidPhoneNumberFormat1");
         return AppLocalizations.instance.translate("invalidPhoneNumberFormat");
       }
     }else{
       if (!RegExp(r'^\d{9}$').hasMatch(text)) {
-        print("invalidPhoneNumberFormat2");
         return AppLocalizations.instance.translate("invalidPhoneNumberFormat");
       }
     }
