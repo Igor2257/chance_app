@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
@@ -69,7 +68,7 @@ class ContainerButton extends StatelessWidget {
     required this.contactPhone,
   });
 
-  Future<void> _makePhoneCall() async {
+  Future<void> _makePhoneCall(BuildContext context) async {
     if (Platform.isAndroid) {
       final callPermissionStatus = await Permission.phone.status;
       if (callPermissionStatus.isDenied) {
@@ -100,6 +99,47 @@ class ContainerButton extends StatelessWidget {
                 ("$userPhone, ${e.message}"),
           );
         }
+      } else if (callPermissionStatus.isPermanentlyDenied) {
+        showDialog<void>(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(AppLocalizations.instance.translate('attention')),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text(AppLocalizations.instance
+                        .translate('permissionToMakeCalls')),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  style: ButtonStyle(
+                    overlayColor: MaterialStateColor.resolveWith(
+                        (states) => darkNeutral300),
+                    shape: MaterialStateProperty.resolveWith(
+                      (states) => RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        side: const BorderSide(
+                          color: primary100,
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                  child:
+                      Text(AppLocalizations.instance.translate('toSettings')),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    openAppSettings();
+                  },
+                ),
+              ],
+            );
+          },
+        );
       }
     } else if (Platform.isIOS) {
       final String userPhone = contactPhone;
@@ -144,7 +184,7 @@ class ContainerButton extends StatelessWidget {
             ),
           ),
         ),
-        onTap: () async => await _makePhoneCall(),
+        onTap: () async => await _makePhoneCall(context),
       ),
     );
   }

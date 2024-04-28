@@ -291,6 +291,47 @@ class _MainPageSosState extends State<MainPageSos> {
                 ("$userPhone, ${e.message}"),
           );
         }
+      } else if (callPermissionStatus.isPermanentlyDenied) {
+        showDialog<void>(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(AppLocalizations.instance.translate('attention')),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text(AppLocalizations.instance
+                        .translate('permissionToMakeCalls')),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  style: ButtonStyle(
+                    overlayColor: MaterialStateColor.resolveWith(
+                        (states) => darkNeutral300),
+                    shape: MaterialStateProperty.resolveWith(
+                      (states) => RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        side: const BorderSide(
+                          color: primary100,
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                  child:
+                      Text(AppLocalizations.instance.translate('toSettings')),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    openAppSettings();
+                  },
+                ),
+              ],
+            );
+          },
+        );
       }
     } else if (Platform.isIOS) {
       final String userPhone = contactModel.phone;

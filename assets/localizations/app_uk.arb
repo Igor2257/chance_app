@@ -284,6 +284,9 @@
   "failedToCallTheNumber": "Не вдалося зателефонувати за номером",
   "givePermissionToMakeCalls": "Дайте дозвіл на здійснення дзвінків",
   "failedToGetContactList": "Не вдалося отримати список контактів",
+  "permissionToMakeCalls": "Щоб мати змогу дзвонити перейдіть до налаштувань і увімкніть дозвіл здійснювати дзвінки.",
+  "attention": "Увага!",
+  "toSettings": "До налаштувань",
   "errorName": "Помилка з ім`ям",
   "errorEmail": "Помилка з поштою"
 }
