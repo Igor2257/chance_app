@@ -220,20 +220,8 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
       height: size.height,
       child: Stack(
         children: <Widget>[
-          if (widget.fullMotion)
-            SingleChildScrollView(
-                physics: const NeverScrollableScrollPhysics(),
-                child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    child: Stack(
-                      alignment: AlignmentDirectional.center,
-                      children: [
-                        _buildGoogleMap(context),
-                        _buildPin(),
-                      ],
-                    ))),
-          if (!widget.fullMotion) ...[_buildGoogleMap(context), _buildPin()],
+          _buildGoogleMap(context),
+          _buildPin(),
           _buildFloatingCard(),
           _buildMapIcons(context, size),
         ],
@@ -557,7 +545,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                     .whenComplete(() => setState(() {}));
               },
               child: Container(
-                margin: const EdgeInsets.all(10),
+                margin: const EdgeInsets.symmetric(vertical: 10),
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
@@ -577,7 +565,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                     .whenComplete(() => setState(() {}));
               },
               child: Container(
-                margin: const EdgeInsets.all(10),
+                margin: const EdgeInsets.symmetric(vertical: 10),
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
@@ -597,7 +585,7 @@ class _GoogleMapPlacePickerState extends State<GoogleMapPlacePicker> {
                     .whenComplete(() => setState(() {}));
               },
               child: Container(
-                margin: const EdgeInsets.all(10),
+                margin: const EdgeInsets.symmetric(vertical: 10),
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
