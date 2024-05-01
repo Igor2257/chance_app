@@ -104,9 +104,9 @@ class HiveCRUD {
       _initialized = false;
       FlutterError(e.toString());
     }
-    if(isInitialized){
+    if (isInitialized) {
       final setting = getSettings();
-      if (setting!=null&&setting.firstEnter == null) {
+      if (setting != null && setting.firstEnter == null) {
         updateSettings(Settings(firstEnter: DateTime.now()));
       }
     }
@@ -250,8 +250,10 @@ class HiveCRUD {
     try {
       settings = settingsBox.get("settings");
     } catch (_) {
-      settings =const Settings();
+      settings = const Settings();
     }
+    settings ??= const Settings();
+    updateSettings(settings);
     return settings;
   }
 }

@@ -279,10 +279,10 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                             color: isSelected ? primary100 : Colors.transparent,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
-                              side: const BorderSide(color: darkNeutral800),
+                              side: const BorderSide(color: beigeBG),
                             ),
                             textStyle: const TextStyle(
-                                fontSize: 22, color: primary800),
+                                fontSize: 18, color: beigeBG),
                             clipBehavior: Clip.hardEdge,
                             child: InkWell(
                               onTap: () {
