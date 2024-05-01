@@ -12,12 +12,11 @@ part 'task_model.g.dart';
 class TaskModel with _$TaskModel {
   const factory TaskModel({
     @HiveField(0) @JsonKey(name: "_id") required String id,
-    @HiveField(1) required DateTime updatedAt,
-    @HiveField(2) required String message,
-    @HiveField(3) required DateTime date,
-    @HiveField(4) @Default(false) bool isDone,
-    @HiveField(5) int? remindBefore, // in minutes
-    @HiveField(6) @Default(false) bool isRemoved, // local parameter
+    @HiveField(1) required String message,
+    @HiveField(2) required DateTime date,
+    @HiveField(3) @Default(false) bool isDone,
+    @HiveField(4) int? remindBefore, // in minutes
+    @HiveField(5) @Default(false) bool isRemoved, // local parameter
   }) = _TaskModel;
 
   const TaskModel._();

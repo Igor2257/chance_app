@@ -95,7 +95,7 @@ class PositionController with ChangeNotifier {
         NavigationRepository().isAppShouldSentLocation().then((error) async {
       if (error == null) {
         HiveCRUD hiveCRUD = HiveCRUD();
-        if (hiveCRUD.setting.isAppShouldSentLocation) {
+        if (hiveCRUD.setting!.isAppShouldSentLocation) {
           try {
             unawaited(Geolocator.getCurrentPosition().whenComplete(() async {
               await const MethodChannel('location_service')
@@ -110,11 +110,11 @@ class PositionController with ChangeNotifier {
   void pause() {
     positionStream!.pause();
     HiveCRUD hiveCRUD = HiveCRUD();
-    if (hiveCRUD.setting.isAppShouldSentLocation) {
+    if (hiveCRUD.setting!.isAppShouldSentLocation) {
       try {
         unawaited(Geolocator.getCurrentPosition().whenComplete(() async {
           await const MethodChannel('location_service_disable').invokeMethod(
-              'pauseLocationService', hiveCRUD.setting.isAppShouldSentLocation);
+              'pauseLocationService', hiveCRUD.setting!.isAppShouldSentLocation);
         }));
       } catch (_) {}
     }

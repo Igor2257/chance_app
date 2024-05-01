@@ -22,22 +22,14 @@ class AppLocalizations {
 
   static Future<AppLocalizations> load(Locale locale) async {
     String jsonString = "";
-    print(HiveCRUD().setting.languageCode != null);
-    print(HiveCRUD().setting.languageCode != null &&
-        const MyLocalizationsDelegate()
-            .isSupportedCode(HiveCRUD().setting.languageCode!));
-    print(const MyLocalizationsDelegate()
-        .isSupportedCode(locale.languageCode));
-    print(locale);
-    if (HiveCRUD().setting.languageCode != null &&
-        const MyLocalizationsDelegate()
-            .isSupportedCode(HiveCRUD().setting.languageCode!)) {
-      jsonString = await rootBundle.loadString(
-          'assets/localizations/app_${HiveCRUD().setting.languageCode}.arb');
+    String? languageCode = HiveCRUD().setting?.languageCode;
+    if (languageCode != null &&
+        const MyLocalizationsDelegate().isSupportedCode(languageCode)) {
+      jsonString = await rootBundle
+          .loadString('assets/localizations/app_$languageCode.arb');
       final jsonMap = json.decode(jsonString) as Map<String, dynamic>;
 
-      final instance =
-          AppLocalizations(Locale(HiveCRUD().setting.languageCode!));
+      final instance = AppLocalizations(Locale(languageCode));
       instance._localizedValues = jsonMap.map(
         (key, value) => MapEntry(
           key,
@@ -45,11 +37,10 @@ class AppLocalizations {
         ),
       );
       _instance = instance;
-      return AppLocalizations(Locale(HiveCRUD().setting.languageCode!));
+      return AppLocalizations(Locale(languageCode));
     } else {
       if (const MyLocalizationsDelegate()
           .isSupportedCode(locale.languageCode)) {
-        print('assets/localizations/app_${locale.languageCode}.arb');
         jsonString = await rootBundle
             .loadString('assets/localizations/app_${locale.languageCode}.arb');
         final jsonMap = json.decode(jsonString) as Map<String, dynamic>;

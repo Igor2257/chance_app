@@ -74,7 +74,6 @@ class _CalendarTaskPageState extends State<CalendarTaskPage> {
 
                     TaskModel taskModel = TaskModel(
                       id: const Uuid().v1(),
-                      updatedAt: DateTime.now(),
                       message: name,
                       date: date,
                       remindBefore: state.notificationsBefore.minutesCount,

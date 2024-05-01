@@ -53,7 +53,7 @@ class HiveCRUD {
 
   MeUser? get user => userBox.get('user');
 
-  Settings get setting => settingsBox.values.first;
+  Settings? get setting => getSettings();
 
   Future removeLocalContact(String id) async {
     await groupBox.delete(id);
@@ -98,14 +98,17 @@ class HiveCRUD {
       settingsBox = await Hive.openBox("settings");
       contactBox = await Hive.openBox("sosContactModel");
       groupBox = await Hive.openBox("sosGroupModel");
-      final setting = settingsBox.get('settings') ?? const Settings();
-      if (setting.firstEnter == null) {
-        updateSettings(Settings(firstEnter: DateTime.now()));
-      }
+
       _initialized = true;
     } catch (e) {
       _initialized = false;
       FlutterError(e.toString());
+    }
+    if(isInitialized){
+      final setting = getSettings();
+      if (setting!=null&&setting.firstEnter == null) {
+        updateSettings(Settings(firstEnter: DateTime.now()));
+      }
     }
 
     return _initialized;
@@ -166,7 +169,7 @@ class HiveCRUD {
     } else {
       await tasksBox.put(
         taskModel.id,
-        taskModel.copyWith(isRemoved: true, updatedAt: DateTime.now()),
+        taskModel.copyWith(isRemoved: true),
       );
     }
   }
@@ -199,11 +202,14 @@ class HiveCRUD {
   }
 
   Future<void> clearSettings() async {
-    Settings settings = setting.copyWith(
-        blockAd: false,
-        isAppShouldSentLocation: false,
-        dontShowInformationDialogBeforeOpenMap: false);
-    await updateSettings(settings);
+    Settings? settings = setting;
+    if (settings != null) {
+      settings = settings.copyWith(
+          blockAd: false,
+          isAppShouldSentLocation: false,
+          dontShowInformationDialogBeforeOpenMap: false);
+      await updateSettings(settings);
+    }
   }
 
   Future<void> addSavedAddresses(PickResult savedAddress) async {
@@ -237,5 +243,15 @@ class HiveCRUD {
         unawaited(itemsBox.put(item.id, item));
       }
     });
+  }
+
+  Settings? getSettings() {
+    Settings? settings;
+    try {
+      settings = settingsBox.get("settings");
+    } catch (_) {
+      settings =const Settings();
+    }
+    return settings;
   }
 }

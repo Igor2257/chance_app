@@ -106,7 +106,6 @@ class _TasksSheetsState extends State<TasksSheets> {
 
                                 TaskModel taskModel = TaskModel(
                                   id: const Uuid().v1(),
-                                  updatedAt: DateTime.now(),
                                   message: name,
                                   date: date,
                                   remindBefore:

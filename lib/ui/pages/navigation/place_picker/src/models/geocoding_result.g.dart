@@ -69,7 +69,7 @@ _$GeocodingResultImpl _$$GeocodingResultImplFromJson(
       placeId: json['place_id'] as String?,
       formattedAddress: json['formatted_address'] as String? ?? null,
       addressComponents: (json['address_components'] as List<dynamic>?)
-              ?.map((e) => e as AddressComponent)
+              ?.map((e) => AddressComponent.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       postcodeLocalities: (json['postcode_localities'] as List<dynamic>?)

@@ -55,11 +55,6 @@ class TasksRepository {
         if (!deleted) continue;
         await _storage.deleteTask(local);
         result.add(local.id);
-      } else if (local.updatedAt.isBefore(remote.updatedAt)) {
-        await _storage.putTask(remote);
-        result.add(local.id);
-      } else if (local.updatedAt.isAfter(remote.updatedAt)) {
-        await _apiClient.patchTask(local, cookie: cookie.toString());
       }
     }
     return result;
@@ -71,7 +66,6 @@ class TasksRepository {
       task,
       cookie: cookie.toString(),
     );
-    task = model ?? task.copyWith(updatedAt: DateTime.now());
     await _storage.putTask(task);
     return task;
   }
@@ -82,7 +76,6 @@ class TasksRepository {
       task,
       cookie: cookie.toString(),
     );
-    task = model ?? task.copyWith(updatedAt: DateTime.now());
     await _storage.putTask(task);
     return task;
   }

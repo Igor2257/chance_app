@@ -135,12 +135,14 @@ class NavigationRepository {
               }).then((value) async {
             if (value != null) {
               try {
-                bool isAppShouldSentLocation = bool.parse(value.toString());
                 HiveCRUD hiveCRUD = HiveCRUD();
-                Settings settings = hiveCRUD.setting;
-                settings = settings.copyWith(
-                    isAppShouldSentLocation: isAppShouldSentLocation);
-                await hiveCRUD.updateSettings(settings);
+                Settings? settings = hiveCRUD.setting;
+                if (settings != null) {
+                  bool isAppShouldSentLocation = bool.parse(value.toString());
+                  settings = settings.copyWith(
+                      isAppShouldSentLocation: isAppShouldSentLocation);
+                  await hiveCRUD.updateSettings(settings);
+                }
               } catch (e, trace) {
                 FirebaseCrashlytics.instance.recordError(e.toString(), trace);
               }
