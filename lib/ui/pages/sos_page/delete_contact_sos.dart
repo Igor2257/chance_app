@@ -233,11 +233,17 @@ class _ContainerButtonWithCheckboxState
           Text(
             widget.text,
             style: const TextStyle(
-              color: primary50,
-              fontWeight: FontWeight.w400,
-              fontSize: 16,
-            ),
+                color: primary50, fontWeight: FontWeight.w400, fontSize: 16),
           ),
+          const Spacer(),
+          if (widget.isGroup)
+            const Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(
+                Icons.group,
+                color: primary50,
+              ),
+            ),
         ],
       ),
     );

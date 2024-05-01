@@ -78,6 +78,9 @@ class LabeledTextFieldState extends State<LabeledTextField> {
           width: double.infinity,
           height: 56,
           child: TextField(
+            onTapOutside: (PointerDownEvent event) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
             controller: widget.controller,
             decoration: InputDecoration(
               hintText: widget.hintText,
