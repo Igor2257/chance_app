@@ -297,6 +297,9 @@
   "failedToCallTheNumber": "Failed to call the number",
   "givePermissionToMakeCalls": "Give permission to make calls",
   "failedToGetContactList": "Failed to get contact list",
+  "permissionToMakeCalls": "To make calls, go to settings and enable permission to make calls.",
+  "attention": "Attention!",
+  "toSettings": "To settings",
   "errorName": "Name error",
   "errorEmail": "Email error",
   "theCodeMustBe4CharactersLong": "The code must be 4 characters long"

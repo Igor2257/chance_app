@@ -282,8 +282,11 @@
   "theNameMustContainAtLeast2Characters": "Назва має містити від 2 символів",
   "error": "Помилка",
   "failedToCallTheNumber": "Не вдалося зателефонувати за номером",
-    "givePermissionToMakeCalls": "Дайте разрешение на совершение звонков",
+  "givePermissionToMakeCalls": "Дайте разрешение на совершение звонков",
   "failedToGetContactList": "Не вдалося отримати список контактів",
+  "permissionToMakeCalls": "Чтобы совершать звонки перейдите в настройки и включите разрешение совершать вызовы.",
+  "attention": "Внимание!",
+  "toSettings": "В настройки",
   "errorName": "Ошибка с именем",
   "errorEmail": "Ошибка с почтой"
 }
