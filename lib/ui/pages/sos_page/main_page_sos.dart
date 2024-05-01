@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/sos_page/group_details_screen.dart';
@@ -307,23 +308,23 @@ class _MainPageSosState extends State<MainPageSos> {
                 ),
               ),
               actions: <Widget>[
-                TextButton(
-                  style: ButtonStyle(
-                    overlayColor: MaterialStateColor.resolveWith(
-                        (states) => darkNeutral300),
-                    shape: MaterialStateProperty.resolveWith(
-                      (states) => RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        side: const BorderSide(
-                          color: primary100,
-                          width: 1,
-                        ),
-                      ),
+                RoundedButton(
+                  color: Colors.transparent,
+                  border: Border.all(
+                    color: darkNeutral800,
+                  ),
+                  tapColor: primary100,
+                  child: Text(
+                    AppLocalizations.instance.translate('toSettings'),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      height: 24 / 16,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.15,
+                      color: darkNeutral800,
                     ),
                   ),
-                  child:
-                      Text(AppLocalizations.instance.translate('toSettings')),
-                  onPressed: () {
+                  onPress: () {
                     Navigator.of(context).pop();
                     openAppSettings();
                   },
