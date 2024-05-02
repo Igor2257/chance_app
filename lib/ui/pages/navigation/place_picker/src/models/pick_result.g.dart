@@ -103,32 +103,30 @@ class PickResultAdapter extends TypeAdapter<PickResult> {
 
 _$PickResultImpl _$$PickResultImplFromJson(Map<String, dynamic> json) =>
     _$PickResultImpl(
-      placeId: json['place_id'] as String? ?? null,
+      placeId: json['place_id'] as String?,
       geometry: json['geometry'] == null
           ? null
           : Geometry.fromJson(json['geometry'] as Map<String, dynamic>),
-      formattedAddress: json['formatted_address'] as String? ?? null,
+      formattedAddress: json['formatted_address'] as String?,
       types:
-          (json['types'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-              null,
+          (json['types'] as List<dynamic>?)?.map((e) => e as String).toList(),
       addressComponents: (json['address_components'] as List<dynamic>?)
-              ?.map((e) => AddressComponent.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          null,
-      adrAddress: json['adr_address'] as String? ?? null,
-      formattedPhoneNumber: json['formatted_phone_number'] as String? ?? null,
+              ?.map((e) => e as AddressComponent)
+              .toList(),
+      adrAddress: json['adr_address'] as String?,
+      formattedPhoneNumber: json['formatted_phone_number'] as String?,
       id: json['id'] as String,
-      reference: json['reference'] as String? ?? null,
-      icon: json['icon'] as String? ?? null,
-      name: json['name'] as String? ?? null,
+      reference: json['reference'] as String?,
+      icon: json['icon'] as String?,
+      name: json['name'] as String?,
       internationalPhoneNumber:
-          json['international_phone_number'] as String? ?? null,
-      rating: json['rating'] as num? ?? null,
-      scope: json['scope'] as String? ?? null,
-      url: json['url'] as String? ?? null,
-      vicinity: json['vicinity'] as String? ?? null,
-      utcOffset: json['utc_offset'] as num? ?? null,
-      website: json['website'] as String? ?? null,
+          json['international_phone_number'] as String?,
+      rating: json['rating'] as num?,
+      scope: json['scope'] as String?,
+      url: json['url'] as String?,
+      vicinity: json['vicinity'] as String?,
+      utcOffset: json['utc_offset'] as num?,
+      website: json['website'] as String?,
       star: json['star'] as bool? ?? false,
       isRecentlySearched: json['is_recently_searched'] as bool? ?? true,
     );

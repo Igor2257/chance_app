@@ -20,8 +20,9 @@ class SaveLastName extends RegistrationEvent{
 
 class SavePhone extends RegistrationEvent{
   final String phone;
+  final bool isCorrect;
 
-  SavePhone({required this.phone});
+  SavePhone({required this.phone, required this.isCorrect});
 }
 
 class SaveEmail extends RegistrationEvent{

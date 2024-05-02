@@ -22,15 +22,14 @@ class AppLocalizations {
 
   static Future<AppLocalizations> load(Locale locale) async {
     String jsonString = "";
-    if (HiveCRUD().setting.languageCode != null &&
-        const MyLocalizationsDelegate()
-            .isSupportedCode(HiveCRUD().setting.languageCode!)) {
-      jsonString = await rootBundle.loadString(
-          'assets/localizations/app_${HiveCRUD().setting.languageCode}.arb');
+    String? languageCode = HiveCRUD().setting?.languageCode;
+    if (languageCode != null &&
+        const MyLocalizationsDelegate().isSupportedCode(languageCode)) {
+      jsonString = await rootBundle
+          .loadString('assets/localizations/app_$languageCode.arb');
       final jsonMap = json.decode(jsonString) as Map<String, dynamic>;
 
-      final instance =
-          AppLocalizations(Locale(HiveCRUD().setting.languageCode!));
+      final instance = AppLocalizations(Locale(languageCode));
       instance._localizedValues = jsonMap.map(
         (key, value) => MapEntry(
           key,
@@ -38,7 +37,7 @@ class AppLocalizations {
         ),
       );
       _instance = instance;
-      return AppLocalizations(Locale(HiveCRUD().setting.languageCode!));
+      return AppLocalizations(Locale(languageCode));
     } else {
       if (const MyLocalizationsDelegate()
           .isSupportedCode(locale.languageCode)) {
@@ -57,7 +56,7 @@ class AppLocalizations {
         return AppLocalizations(locale);
       } else {
         jsonString =
-            await rootBundle.loadString('assets/localizations/app_en.arb');
+            await rootBundle.loadString('assets/localizations/app_uk.arb');
         final jsonMap = json.decode(jsonString) as Map<String, dynamic>;
 
         final instance = AppLocalizations(const Locale("en"));
@@ -68,7 +67,7 @@ class AppLocalizations {
           ),
         );
         _instance = instance;
-        return AppLocalizations(const Locale("en"));
+        return AppLocalizations(const Locale("uk"));
       }
     }
   }
@@ -101,7 +100,6 @@ class MyLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
     return [
       'uk',
       'en',
-      'ru',
     ].contains(languageCode);
   }
 
@@ -115,6 +113,9 @@ class MyLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
 
   @override
   bool isSupported(Locale locale) {
-    return true;
+    return [
+      'uk',
+      'en',
+    ].contains(locale.languageCode);
   }
 }

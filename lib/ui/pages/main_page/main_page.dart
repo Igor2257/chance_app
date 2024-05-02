@@ -8,6 +8,7 @@ import 'package:chance_app/ui/components/sos_button.dart';
 import 'package:chance_app/ui/constans.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/hive_crud.dart';
+import 'package:chance_app/ux/model/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -91,9 +92,9 @@ class _MainPageState extends State<MainPage> {
                             isLoading = true;
                           });
                           bool? choose = HiveCRUD.instance.setting
-                              .dontShowInformationDialogBeforeOpenMap;
+                              ?.dontShowInformationDialogBeforeOpenMap;
                           print("choose $choose");
-                          if (!choose) {
+                          if (choose==null||choose==false) {
                             choose = await showDialog(
                                 context: context,
                                 builder: (context) {
@@ -104,8 +105,11 @@ class _MainPageState extends State<MainPage> {
                                       return Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Text(AppLocalizations.instance.translate(
-                                              "allowTheAppToUseGeodataToDetermineYourCurrentLocation")),
+                                          Text(
+                                            AppLocalizations.instance.translate(
+                                                "allowTheAppToUseGeodataToDetermineYourCurrentLocation"),
+                                            textAlign: TextAlign.justify,
+                                          ),
                                           CheckboxListTile(
                                               title: Text(AppLocalizations
                                                   .instance
@@ -116,10 +120,14 @@ class _MainPageState extends State<MainPage> {
                                                   setState1(() {
                                                     dontShowDialogAgain = value;
                                                   });
-                                                  await HiveCRUD().updateSettings(
-                                                      HiveCRUD().setting.copyWith(
-                                                          dontShowInformationDialogBeforeOpenMap:
-                                                              value));
+                                                  Settings? settings =
+                                                      HiveCRUD().setting;
+                                                  if (settings != null) {
+                                                    await HiveCRUD().updateSettings(
+                                                        settings.copyWith(
+                                                            dontShowInformationDialogBeforeOpenMap:
+                                                                value));
+                                                  }
                                                 }
                                               }),
                                           Row(

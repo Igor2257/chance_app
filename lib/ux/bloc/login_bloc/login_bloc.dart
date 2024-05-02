@@ -108,7 +108,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       }
     } else {
       return AppLocalizations.instance
-          .translate("passwordMustBeLessThan14Characters");
+          .translate("passwordMustBe8OrMoreCharacters");
     }
   }
 }

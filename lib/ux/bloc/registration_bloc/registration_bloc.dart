@@ -1,14 +1,15 @@
 import 'dart:async';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/input_register_layout.dart';
 import 'package:chance_app/ui/pages/sign_in_up/registration/registration_page.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 part 'registration_event.dart';
+
 part 'registration_state.dart';
 
 class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
@@ -51,12 +52,14 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   FutureOr<void> _onSavePasswordFirst(
       SavePasswordFirst event, Emitter<RegistrationState> emit) {
-    emit(state.copyWith(passwordFirst: event.passwordFirst.replaceAll(" ", "")));
+    emit(
+        state.copyWith(passwordFirst: event.passwordFirst.replaceAll(" ", "")));
   }
 
   FutureOr<void> _onSavePasswordSecond(
       SavePasswordSecond event, Emitter<RegistrationState> emit) {
-    emit(state.copyWith(passwordSecond: event.passwordSecond.replaceAll(" ", "")));
+    emit(state.copyWith(
+        passwordSecond: event.passwordSecond.replaceAll(" ", "")));
   }
 
   FutureOr<void> _onIncreaseCurrentStep(
@@ -87,7 +90,8 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       }
     } else {
       emit(state.copyWith(
-          passwordSecond: event.second.replaceAll(" ", ""), passwordFirst: event.first.replaceAll(" ", "")));
+          passwordSecond: event.second.replaceAll(" ", ""),
+          passwordFirst: event.first.replaceAll(" ", "")));
       if (validate(emit)) {
         await UserRepository()
             .sendRegisterData(state.lastName, state.firstName, state.phone,
@@ -152,16 +156,15 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
         break;
       case InputLayouts.firstPassword:
-        text=text.replaceAll(" ", "");
+        text = text.replaceAll(" ", "");
         emit(state.copyWith(
             passwordFirst: text,
             errorFirstPassword: validateFirstPassword(text) ?? ""));
 
         break;
       case InputLayouts.lastPassword:
-        text=text.replaceAll(" ", "");
+        text = text.replaceAll(" ", "");
         emit(state.copyWith(
-
             passwordSecond: text,
             errorSecondPassword: validateSecondPassword(text) ?? ""));
         break;
@@ -177,7 +180,8 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       ChangeUserGrantPermissionForProcessingPersonalData event,
       Emitter<RegistrationState> emit) {
     emit(state.copyWith(
-        isUserGrantPermissionForProcessingPersonalData: !state.isUserGrantPermissionForProcessingPersonalData));
+        isUserGrantPermissionForProcessingPersonalData:
+            !state.isUserGrantPermissionForProcessingPersonalData));
   }
 
   bool validate(Emitter<RegistrationState> emit) {
@@ -209,18 +213,18 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     int index = RegistrationPages.values.indexOf(state.registrationPages);
     if (index == 0) {
       emit(state.copyWith(
-        errorLastName: errorTextLN??"",
-        errorFirstName: errorTextFN??"",
+        errorLastName: errorTextLN ?? "",
+        errorFirstName: errorTextFN ?? "",
       ));
     } else if (index == 1) {
       emit(state.copyWith(
-        errorEmail: errorTextEmail??"",
-        errorPhone: errorTextPhone??"",
+        errorEmail: errorTextEmail ?? "",
+        errorPhone: errorTextPhone ?? "",
       ));
     } else if (index == 2) {
       emit(state.copyWith(
-        errorFirstPassword: errorTextFP??"",
-        errorSecondPassword: errorTextLP??"",
+        errorFirstPassword: errorTextFP ?? "",
+        errorSecondPassword: errorTextLP ?? "",
       ));
     }
 
@@ -339,9 +343,17 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   }
 
   String? validatePhone(String text) {
-    if (!RegExp(r'^\+380\d{9}$').hasMatch(text)) {
-      return AppLocalizations.instance.translate("invalidPhoneNumberFormat");
+    text = text.replaceAll(" ", "");
+    if (text.contains("+380")) {
+      if (!RegExp(r'^\+380\d{9}$').hasMatch(text)) {
+        return AppLocalizations.instance.translate("invalidPhoneNumberFormat");
+      }
+    }else{
+      if (!RegExp(r'^\d{9}$').hasMatch(text)) {
+        return AppLocalizations.instance.translate("invalidPhoneNumberFormat");
+      }
     }
+
     return null;
   }
 

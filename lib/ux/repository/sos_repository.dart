@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/hive_crud.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:chance_app/ux/repository/user_repository.dart';
@@ -21,7 +22,7 @@ class SosRepository {
     List<SosGroupModel> contacts = [];
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-        msg: "Немає підключення до інтернету",
+        msg: AppLocalizations.instance.translate("noInternetConnection"),
         toastLength: Toast.LENGTH_LONG,
       );
 
@@ -99,7 +100,7 @@ class SosRepository {
           await HiveCRUD().loadGroups(contacts);
         } else {
           Fluttertoast.showToast(
-            msg: "Не вдалося отримати список контактів",
+            msg: AppLocalizations.instance.translate("failedToGetContactList"),
             toastLength: Toast.LENGTH_LONG,
           );
         }
@@ -125,7 +126,7 @@ class SosRepository {
     SosGroupModel? groupModel;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
+          msg: AppLocalizations.instance.translate("noInternetConnection"),
           toastLength: Toast.LENGTH_LONG);
     }
 
@@ -195,7 +196,7 @@ class SosRepository {
     SosContactModel? groupModel;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
+          msg: AppLocalizations.instance.translate("noInternetConnection"),
           toastLength: Toast.LENGTH_LONG);
     }
 
@@ -239,7 +240,7 @@ class SosRepository {
     SosContactModel? groupModel;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
+          msg: AppLocalizations.instance.translate("noInternetConnection"),
           toastLength: Toast.LENGTH_LONG);
     }
     try {
@@ -284,7 +285,7 @@ class SosRepository {
     SosContactModel? groupModel;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
+          msg: AppLocalizations.instance.translate("noInternetConnection"),
           toastLength: Toast.LENGTH_LONG);
     }
 
@@ -320,7 +321,7 @@ class SosRepository {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
+          msg: AppLocalizations.instance.translate("noInternetConnection"),
           toastLength: Toast.LENGTH_LONG);
     } else {
       try {
@@ -350,9 +351,9 @@ class SosRepository {
     String? error;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
+          msg: AppLocalizations.instance.translate("noInternetConnection"),
           toastLength: Toast.LENGTH_LONG);
-      error = "Немає підключення до інтернету";
+      error = AppLocalizations.instance.translate("noInternetConnection");
     } else {
       try {
         var url = Uri.parse('$apiUrl/sos/group/$groupId');
@@ -384,9 +385,9 @@ class SosRepository {
     String? groupId;
     if (await (Connectivity().checkConnectivity()) == ConnectivityResult.none) {
       Fluttertoast.showToast(
-          msg: "Немає підключення до інтернету",
+          msg: AppLocalizations.instance.translate("noInternetConnection"),
           toastLength: Toast.LENGTH_LONG);
-      error = "Немає підключення до інтернету";
+      error = AppLocalizations.instance.translate("noInternetConnection");
     } else {
       try {
         var url = Uri.parse('$apiUrl/sos/group');

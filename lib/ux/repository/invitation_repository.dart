@@ -160,20 +160,22 @@ class InvitationRepository {
           .then((value) async {
             if (value.toString() == "null") {
               final crud = HiveCRUD();
-              Settings settings = crud.setting;
-              settings = settings.copyWith(isAppShouldSentLocation: true);
-              await crud.updateSettings(settings).then((value) async {
-                await Supabase.instance.client.from("ward_location").insert(
-                    WardLocationModel(
-                            id: invitationModel.id,
-                            myEmail: invitationModel.toUserEmail,
-                            myName: invitationModel.toUserName,
-                            latitude: 0,
-                            longitude: 0,
-                            when: DateTime.now(),
-                            toUserEmail: invitationModel.fromUserEmail)
-                        .toJson());
-              });
+              Settings?settings = crud.setting;
+              if(settings!=null){
+                settings = settings.copyWith(isAppShouldSentLocation: true);
+                await crud.updateSettings(settings).then((value) async {
+                  await Supabase.instance.client.from("ward_location").insert(
+                      WardLocationModel(
+                          id: invitationModel.id,
+                          myEmail: invitationModel.toUserEmail,
+                          myName: invitationModel.toUserName,
+                          latitude: 0,
+                          longitude: 0,
+                          when: DateTime.now(),
+                          toUserEmail: invitationModel.fromUserEmail)
+                          .toJson());
+                });
+              }
             }
           });
     }

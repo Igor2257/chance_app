@@ -125,12 +125,16 @@ class _AddWardState extends State<AddWard> {
                               .then((value) async {
                             if (value == null || value == "null") {
                               final crud = HiveCRUD();
-                              Settings settings = crud.setting;
-                              settings = settings.copyWith(
-                                  isAppShouldSentLocation: true);
-                              await crud.updateSettings(settings).then((value) {
-                                Navigator.of(context).pop(true);
-                              });
+                              Settings? settings = crud.setting;
+                              if (settings != null) {
+                                settings = settings.copyWith(
+                                    isAppShouldSentLocation: true);
+                                await crud
+                                    .updateSettings(settings)
+                                    .then((value) {
+                                  Navigator.of(context).pop(true);
+                                });
+                              }
                             } else {
                               Fluttertoast.showToast(
                                   msg: value, toastLength: Toast.LENGTH_LONG);

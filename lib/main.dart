@@ -107,7 +107,7 @@ Future<void> main() async {
       await RemindersHelper.initialize();
       await BackgroundServiceHelper.initialize();
 
-      if ((!HiveCRUD().setting.blockAd)) {
+      if ((HiveCRUD().setting?.blockAd==false)??true) {
         unawaited(MobileAds.instance.initialize());
       }
 
@@ -185,7 +185,6 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Key key = UniqueKey();
-  final Settings settings = HiveCRUD().setting;
   late String route;
 
   void restartApp() async {
@@ -259,13 +258,15 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   void adRemove(bool value) async {
-    Settings settings = HiveCRUD().setting;
-    if (value) {
-      settings = settings.copyWith(blockAd: true);
-    } else {
-      settings = settings.copyWith(blockAd: false);
+    Settings? settings = HiveCRUD().setting;
+    if(settings!=null){
+      if (value) {
+        settings = settings.copyWith(blockAd: true);
+      } else {
+        settings = settings.copyWith(blockAd: false);
+      }
+      await HiveCRUD().updateSettings(settings);
     }
-    await HiveCRUD().updateSettings(settings);
   }
 
   @override
@@ -356,9 +357,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                                   surfaceTintColor:
                                                       beigeTransparent)),
                                       supportedLocales: const [
-                                        Locale('en'),
                                         Locale('uk'),
-                                        Locale('ru'),
+                                        Locale('en'),
                                       ],
                                       onGenerateRoute:
                                           AppRouter.onGenerateRoute,
@@ -417,8 +417,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                             const AddWard(),
                                         "/check_my_invitation": (context) =>
                                             const CheckMyInvitation(),
-                                        "/enter_accept_code": (context) =>
-                                            const EnterAcceptCode(),
+                                        //"/enter_accept_code": (context) =>
+                                        //    const EnterAcceptCode(),
                                         "/choose_language": (context) =>
                                             const ChooseLanguage(),
                                         "/my_wards": (context) =>
@@ -497,7 +497,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                         )),
                                   )
                                 : const SizedBox(),
-                            if (!settings.blockAd) const AdBanner(),
+                            const AdBanner(),
                           ],
                         ),
                       ),

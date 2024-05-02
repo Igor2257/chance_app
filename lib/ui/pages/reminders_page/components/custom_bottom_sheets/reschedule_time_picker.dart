@@ -2,6 +2,7 @@ import 'dart:math' show pow;
 
 import 'package:chance_app/ui/components/separated_list.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class RescheduleTimePicker extends StatefulWidget {
@@ -28,9 +29,9 @@ class _RescheduleTimePickerState extends State<RescheduleTimePicker> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              "Відкласти на",
-              style: TextStyle(fontSize: 24),
+            Text(
+              AppLocalizations.instance.translate("postponeOn"),
+              style: const TextStyle(fontSize: 24),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 40),
@@ -60,7 +61,7 @@ class _RescheduleTimePickerState extends State<RescheduleTimePicker> {
                 TextButton(
                   onPressed: Navigator.of(context).pop,
                   style: actionButtonStyle,
-                  child: const Text("Скасувати"),
+                  child: Text(AppLocalizations.instance.translate("cancel")),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(_selectedValue),
@@ -92,7 +93,7 @@ class _RescheduleTimePickerState extends State<RescheduleTimePicker> {
           onTap: () => setState(() => _selectedValue = value),
           child: Center(
             child: Text(
-              "$valueхв",
+              "$value${AppLocalizations.instance.translate("min")}",
               style: TextStyle(
                 fontSize: 24,
                 color: isSelected ? primary50 : primaryText,

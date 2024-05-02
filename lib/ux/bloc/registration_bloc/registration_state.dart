@@ -1,4 +1,5 @@
 part of 'registration_bloc.dart';
+
 @immutable
 class RegistrationState {
   final String firstName, lastName, phone, email, passwordFirst, passwordSecond;
@@ -6,8 +7,14 @@ class RegistrationState {
   final double percentage;
   final PageController? pageController;
 
-  final String? errorLastName,errorFirstName,errorPhone,errorEmail,errorFirstPassword,errorSecondPassword;
-  final bool isUserGrantPermissionForProcessingPersonalData,isLoading;
+  final String? errorLastName,
+      errorFirstName,
+      errorPhone,
+      errorEmail,
+      errorFirstPassword,
+      errorSecondPassword;
+  final bool isUserGrantPermissionForProcessingPersonalData, isLoading;
+
   const RegistrationState({
     this.firstName = "",
     this.lastName = "",
@@ -24,22 +31,28 @@ class RegistrationState {
     this.errorFirstPassword,
     this.errorSecondPassword,
     this.pageController,
-    this.isUserGrantPermissionForProcessingPersonalData=false,
-    this.isLoading=false,
+    this.isUserGrantPermissionForProcessingPersonalData = false,
+    this.isLoading = false,
   });
 
   RegistrationState copyWith({
     String? firstName,
-    lastName,
-    phone,
-    email,
-    passwordFirst,
-    passwordSecond,
+    String? lastName,
+    String? phone,
+    String? email,
+    String? passwordFirst,
+    String? passwordSecond,
     RegistrationPages? registrationPages,
     double? percentage,
-    String? errorLastName,errorFirstName,errorPhone,errorEmail,errorFirstPassword,errorSecondPassword,
+    String? errorLastName,
+    String? errorFirstName,
+    String? errorPhone,
+    String? errorEmail,
+    String? errorFirstPassword,
+    String? errorSecondPassword,
     PageController? pageController,
-    bool? isUserGrantPermissionForProcessingPersonalData,isLoading,
+    bool? isUserGrantPermissionForProcessingPersonalData,
+    isLoading,
   }) {
     return RegistrationState(
       firstName: firstName ?? this.firstName,
@@ -58,17 +71,20 @@ class RegistrationState {
       errorSecondPassword: errorSecondPassword ?? this.errorSecondPassword,
       pageController: pageController ?? this.pageController,
       isLoading: isLoading ?? this.isLoading,
-      isUserGrantPermissionForProcessingPersonalData: isUserGrantPermissionForProcessingPersonalData ?? this.isUserGrantPermissionForProcessingPersonalData,
+      isUserGrantPermissionForProcessingPersonalData:
+          isUserGrantPermissionForProcessingPersonalData ??
+              this.isUserGrantPermissionForProcessingPersonalData,
     );
   }
-  RegistrationState clear(){
+
+  RegistrationState clear() {
     return const RegistrationState(
       firstName: "",
-      lastName:"",
+      lastName: "",
       phone: "",
       email: "",
       passwordFirst: "",
-      passwordSecond:"",
+      passwordSecond: "",
       registrationPages: RegistrationPages.first,
       percentage: 0.33,
       errorLastName: null,
@@ -76,10 +92,10 @@ class RegistrationState {
       errorPhone: null,
       errorEmail: null,
       errorFirstPassword: null,
-      errorSecondPassword:null,
-      pageController:null,
-      isUserGrantPermissionForProcessingPersonalData:false,
-        isLoading:false,
+      errorSecondPassword: null,
+      pageController: null,
+      isUserGrantPermissionForProcessingPersonalData: false,
+      isLoading: false,
     );
   }
 }

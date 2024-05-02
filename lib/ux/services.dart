@@ -10,7 +10,7 @@ class Services {
         .changeLocale(languageCode)
         .whenComplete(() async {
       HiveCRUD hiveCRUD = HiveCRUD();
-      Settings settings = hiveCRUD.setting.copyWith(languageCode: languageCode);
+      Settings settings = hiveCRUD.setting!.copyWith(languageCode: languageCode);
       hiveCRUD.updateSettings(settings);
     }).whenComplete(() =>
         MyApp.restartApp(context));

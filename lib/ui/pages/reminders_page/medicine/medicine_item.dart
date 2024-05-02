@@ -1,5 +1,6 @@
 import 'package:chance_app/ui/components/separated_list.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/model/medicine_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -118,22 +119,22 @@ class MedicineItem extends StatelessWidget {
     final timeText = Jiffy.parseFromDateTime(actualDoseTime).Hm;
     switch (status) {
       case MedicineStatus.pending:
-        return const Text("Потрібно прийняти");
+        return Text(AppLocalizations.instance.translate("necessaryToAccept"));
       case MedicineStatus.taken:
         return Text(
-          "Прийнято о $timeText",
+          "${AppLocalizations.instance.translate("acceptedBy")} $timeText",
           style: const TextStyle(color: green),
         );
       case MedicineStatus.postponed:
         return Text(
-          "Перенесено на $timeText",
+          "${AppLocalizations.instance.translate("postponeTo")} $timeText",
           style: const TextStyle(color: primary700),
         );
       case MedicineStatus.missed:
         return Text(
           (actualDoseTime != doseTime)
-              ? "Перенесено на $timeText"
-              : "Пропущено",
+              ? "${AppLocalizations.instance.translate("postponeTo")} $timeText"
+              : AppLocalizations.instance.translate("skipped"),
           style: const TextStyle(color: red900),
         );
     }

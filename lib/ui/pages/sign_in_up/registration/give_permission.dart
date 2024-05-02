@@ -35,17 +35,19 @@ class _GivePermissionState extends State<GivePermission> {
           ),
           Container(
             constraints: const BoxConstraints(maxHeight: 100),
-            child: Flex(
-              direction: Axis.vertical,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded(
+                Flexible(
                   child: Text(
                     AppLocalizations.instance.translate("iGivePermission"),
                     style: const TextStyle(color: primaryText),
                     maxLines: 2,
                     textAlign: TextAlign.justify,
                     overflow: TextOverflow.ellipsis,
+                    softWrap: true,
                   ),
                 ),
                 SizedBox(

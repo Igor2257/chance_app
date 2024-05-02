@@ -1,6 +1,7 @@
 import 'package:chance_app/resources/app_icons.dart';
 import 'package:chance_app/ui/components/rounded_button.dart';
 import 'package:chance_app/ui/constans.dart';
+import 'package:chance_app/ui/l10n/app_localizations.dart';
 import 'package:chance_app/ux/bloc/add_medicine_bloc/add_medicine_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,24 +34,23 @@ class AddMedicinePageScaffold extends StatelessWidget {
                 color: beige500,
               ),
               const SizedBox(height: 8),
-              const Text(
-                'У Вас є незбережені зміни',
-                style: TextStyle(fontSize: 24),
+              Text(AppLocalizations.instance.translate("youHaveUnsavedData"),
+                style: const TextStyle(fontSize: 24),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
               RoundedButton(
                 onPress: () => Navigator.of(context).pop(false),
                 color: primary1000,
-                child: const Text(
-                  "Продовжити",
-                  style: TextStyle(color: primary50, fontSize: 16),
+                child:  Text(
+                  AppLocalizations.instance.translate("continue"),
+                  style: const TextStyle(color: primary50, fontSize: 16),
                 ),
               ),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: const Text("Завершити"),
+                child:  Text(AppLocalizations.instance.translate("complete")),
               ),
             ],
           ),

@@ -154,7 +154,6 @@ class _ResetPasswordState extends State<ResetPassword> {
               style: const TextStyle(
                   color: primary700,
                   fontSize: 16,
-                  decoration: TextDecoration.underline,
                   decorationColor: primary700),
             ),
             const Spacer(),

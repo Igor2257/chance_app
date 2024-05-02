@@ -9,8 +9,8 @@ class AdHelper {
         return "ca-app-pub-3940256099942544/6300978111"; //дебаг
       }
 
-      return "ca-app-pub-3940256099942544/6300978111"; //релиз
-      //return "ca-app-pub-8751007823546645/5538385601";//релиз
+      //return "ca-app-pub-3940256099942544/6300978111"; //релиз
+      return "ca-app-pub-8751007823546645/5538385601";//релиз
     } else if (Platform.isIOS) {
       if (kDebugMode) {
         return "ca-app-pub-3940256099942544/2934735716";//дебаг

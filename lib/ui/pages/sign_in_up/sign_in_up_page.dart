@@ -106,53 +106,53 @@ class _SignInUpPageState extends State<SignInUpPage> {
                 const SizedBox(
                   height: 16,
                 ),
-                RoundedButton(
-                    color: Colors.transparent,
-                    border: Border.all(color: primary1000),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          AppLocalizations.instance.translate("enterWith"),
-                          style: const TextStyle(
-                              color: primary1000,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        SvgPicture.asset(
-                          "assets/icons/apple.svg",
-                          color: primary1000,
-                        ),
-                      ],
-                    )),
+                //RoundedButton(
+                //    color: Colors.transparent,
+                //    border: Border.all(color: primary1000),
+                //    child: Row(
+                //      mainAxisAlignment: MainAxisAlignment.center,
+                //      children: [
+                //        Text(
+                //          AppLocalizations.instance.translate("enterWith"),
+                //          style: const TextStyle(
+                //              color: primary1000,
+                //              fontSize: 16,
+                //              fontWeight: FontWeight.w500),
+                //        ),
+                //        const SizedBox(
+                //          width: 10,
+                //        ),
+                //        SvgPicture.asset(
+                //          "assets/icons/apple.svg",
+                //          color: primary1000,
+                //        ),
+                //      ],
+                //    )),
                 const SizedBox(
                   height: 16,
                 ),
-                RoundedButton(
-                    color: Colors.transparent,
-                    border: Border.all(color: primary1000),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          AppLocalizations.instance.translate("enterWith"),
-                          style: const TextStyle(
-                              color: primary1000,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        SvgPicture.asset(
-                          "assets/icons/facebook.svg",
-                          color: primary1000,
-                        ),
-                      ],
-                    )),
+                //RoundedButton(
+                //    color: Colors.transparent,
+                //    border: Border.all(color: primary1000),
+                //    child: Row(
+                //      mainAxisAlignment: MainAxisAlignment.center,
+                //      children: [
+                //        Text(
+                //          AppLocalizations.instance.translate("enterWith"),
+                //          style: const TextStyle(
+                //              color: primary1000,
+                //              fontSize: 16,
+                //              fontWeight: FontWeight.w500),
+                //        ),
+                //        const SizedBox(
+                //          width: 10,
+                //        ),
+                //        SvgPicture.asset(
+                //          "assets/icons/facebook.svg",
+                //          color: primary1000,
+                //        ),
+                //      ],
+                //    )),
               ],
             ),
           ),

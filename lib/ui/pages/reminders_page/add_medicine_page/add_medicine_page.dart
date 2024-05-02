@@ -14,6 +14,7 @@ import 'package:chance_app/ui/pages/reminders_page/add_medicine_page/components/
 import 'package:chance_app/ui/pages/reminders_page/add_medicine_page/components/dose_text.dart';
 import 'package:chance_app/ux/bloc/add_medicine_bloc/add_medicine_bloc.dart';
 import 'package:chance_app/ux/bloc/reminders_bloc/reminders_bloc.dart';
+
 // import 'package:chance_app/ux/enum/day_periodicity.dart';
 import 'package:chance_app/ux/enum/instruction.dart';
 import 'package:chance_app/ux/enum/medicine_type.dart';
@@ -278,10 +279,10 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                             color: isSelected ? primary100 : Colors.transparent,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
-                              side: const BorderSide(color: darkNeutral800),
+                              side: const BorderSide(color: beigeBG),
                             ),
                             textStyle: const TextStyle(
-                                fontSize: 22, color: primary800),
+                                fontSize: 18, color: beigeBG),
                             clipBehavior: Clip.hardEdge,
                             child: InkWell(
                               onTap: () {
@@ -331,13 +332,17 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
               child: SizedBox(
                 height: 240,
                 child: DatePicker(
+                  
                   initialDateTime: selectedDate,
                   mode: CupertinoDatePickerMode.date,
                   dateOrder: DatePickerDateOrder.dmy,
                   onDateChanged: (DateTime date) {
                     selectedDate = date;
                   },
-                  textStyle: const TextStyle(fontSize: 28, color: primary800),
+                  textStyle: TextStyle(
+                    fontSize: 28,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
                 ),
               ),
             ),
