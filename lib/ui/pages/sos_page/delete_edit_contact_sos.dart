@@ -231,6 +231,7 @@ class _ContainerButtonWithCheckboxState
               ),
             ),
           ),
+<<<<<<< HEAD:lib/ui/pages/sos_page/delete_edit_contact_sos.dart
           Padding(
             padding: const EdgeInsets.only(left: 12.0),
             child: Text(
@@ -241,6 +242,12 @@ class _ContainerButtonWithCheckboxState
                 fontSize: 16,
               ),
             ),
+=======
+          Text(
+            widget.text,
+            style: const TextStyle(
+                color: primary50, fontWeight: FontWeight.w400, fontSize: 16),
+>>>>>>> main:lib/ui/pages/sos_page/delete_contact_sos.dart
           ),
           const Spacer(),
           if (widget.isGroup)
