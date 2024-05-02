@@ -5,6 +5,7 @@ import 'package:chance_app/ux/bloc/sos_contacts_bloc/sos_contacts_bloc.dart';
 import 'package:chance_app/ux/model/sos_contact_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class EditGroupScreenSos extends StatefulWidget {
   final SosGroupModel groupModel;
@@ -32,7 +33,7 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
     contacts = widget.groupModel.contacts.map((contact) {
       return ContactItem(
         name: contact.name,
-        phone: contact.phone,
+        phone: contact.phone.substring(4),
       );
     }).toList();
 
@@ -44,17 +45,18 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          AppLocalizations.instance.translate("editGroup"),
-          style: const TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: 22,
+          title: Text(
+            AppLocalizations.instance.translate("editGroup"),
+            style: const TextStyle(
+              fontWeight: FontWeight.w400,
+              fontSize: 22,
+            ),
           ),
-        ),
-        leading: BackButton(onPressed: (){
-          Navigator.of(context).pop();
-        },)
-      ),
+          leading: BackButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )),
       body: Padding(
         padding: const EdgeInsets.only(
           top: 25,
@@ -69,9 +71,15 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
                 label: AppLocalizations.instance.translate("enterGroupName"),
                 hintText: AppLocalizations.instance.translate("family"),
                 isPhone: false,
-                onChanged: (value) {},key:  const ValueKey("groupName"),
+                onChanged: (value) {},
+                key: const ValueKey("groupName"),
+                prefixText: '',
               ),
-              const SizedBox(height: 8),
+              const Divider(
+                color: beige300,
+                height: 1,
+              ),
+              const SizedBox(height: 12),
               Column(
                 children: [
                   for (int index = 0; index < contacts.length; index++)
@@ -96,17 +104,13 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
                                   contacts.removeAt(index);
                                 });
                               },
-                              child: Row(
+                              child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Text(
-                                    AppLocalizations.instance
-                                        .translate("deleteContact"),
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                      color: red900,
-                                    ),
+                                  Icon(
+                                    Icons.cancel,
+                                    color: beige500,
+                                    size: 17,
                                   ),
                                 ],
                               ),
@@ -114,22 +118,26 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
                           ],
                         ),
                         const SizedBox(
-                          height: 5,
+                          height: 12,
                         ),
                         LabeledTextField(
                           controller: contacts[index].nameController,
                           label: AppLocalizations.instance.translate("name"),
                           hintText: AppLocalizations.instance.translate("name"),
                           isPhone: false,
-                          onChanged: (value) {},key:  const ValueKey("name"),
+                          onChanged: (value) {},
+                          key: const ValueKey("name"),
+                          prefixText: '',
                         ),
                         LabeledTextField(
                           controller: contacts[index].phoneController,
                           label: AppLocalizations.instance
                               .translate("enterPhoneNumber"),
-                          hintText: '+380',
+                          hintText: '',
                           isPhone: true,
-                          onChanged: (value) {},key:  const ValueKey("phone"),
+                          onChanged: (value) {},
+                          key: const ValueKey("phone"),
+                          prefixText: '+380',
                         ),
                         const SizedBox(
                           height: 28,
@@ -197,6 +205,32 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
   }
 
   void saveChanges() {
+    bool isAllContactsValid = true;
+    for (var contact in contacts) {
+      if (contact.nameController.text.isEmpty ||
+          contact.phoneController.text.isEmpty ||
+          contact.nameController.text.length < 2 ||
+          contact.nameController.text.length > 30) {
+        isAllContactsValid = false;
+        break;
+      }
+      if (contact.phoneController.text.length != 9 ||
+          !RegExp(r'^\d{9}$').hasMatch(contact.phoneController.text)) {
+        isAllContactsValid = false;
+        break;
+      }
+    }
+
+    bool isGroupNameValid = groupNameController.text.isNotEmpty;
+
+    if (!isAllContactsValid || !isGroupNameValid) {
+      Fluttertoast.showToast(
+        msg:
+            AppLocalizations.instance.translate("checkTheCorrectnessOfTheData"),
+      );
+      return;
+    }
+
     List<SosContactModel> updatedContacts = [];
 
     for (int index = 0; index < contacts.length; index++) {
@@ -204,7 +238,7 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
       updatedContacts.add(
         SosContactModel(
           name: contact.nameController.text,
-          phone: contact.phoneController.text,
+          phone: "+380${contact.phoneController.text}",
           id: widget.groupModel.contacts[0].id,
           contactsId: widget.groupModel.contacts[0].contactsId,
         ),
@@ -233,5 +267,5 @@ class ContactItem {
 
   ContactItem({String? name, String? phone})
       : nameController = TextEditingController(text: name),
-        phoneController = TextEditingController(text: phone ?? '+380');
+        phoneController = TextEditingController(text: phone);
 }

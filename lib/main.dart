@@ -31,7 +31,7 @@ import 'package:chance_app/ui/pages/sign_in_up/registration/registration_page.da
 import 'package:chance_app/ui/pages/sign_in_up/sign_in_up_page.dart';
 import 'package:chance_app/ui/pages/sos_page/add_contact_screen.dart';
 import 'package:chance_app/ui/pages/sos_page/add_group_screen.dart';
-import 'package:chance_app/ui/pages/sos_page/delete_contact_sos.dart';
+import 'package:chance_app/ui/pages/sos_page/delete_edit_contact_sos.dart';
 import 'package:chance_app/ui/pages/sos_page/main_page_sos.dart';
 import 'package:chance_app/ui/pages/sos_page/replace_contact_sos.dart';
 import 'package:chance_app/ux/bloc/add_medicine_bloc/add_medicine_bloc.dart';
@@ -405,8 +405,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                                             const OnboardingPage(),
                                         "/onboarding_tutorial": (context) =>
                                             const OnboardingTutorial(),
-                                        "/delete_contact_sos": (context) =>
-                                            const DeleteContactsPage(),
+                                        "/delete_edit_contact_sos": (context) =>
+                                            const DeleteEditContactsSosPage(),
                                         "/my_information": (context) =>
                                             const MyInformation(),
                                         "/replace_contact_sos": (context) =>

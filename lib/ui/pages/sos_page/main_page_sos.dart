@@ -42,7 +42,7 @@ class _MainPageSosState extends State<MainPageSos> {
         ),
         actions: [
           PopupMenuButton<String>(
-            color: beige50,
+            color: darkNeutral800,
             itemBuilder: (BuildContext context) {
               return [
                 PopupMenuItem<String>(
@@ -50,13 +50,15 @@ class _MainPageSosState extends State<MainPageSos> {
                   child: Container(
                     decoration: const BoxDecoration(
                       border: Border(
-                        bottom: BorderSide(width: 1.0, color: Colors.black),
+                        bottom: BorderSide(width: 1.0, color: darkNeutral300),
                       ),
                     ),
                     child: Text(
                       AppLocalizations.instance.translate("editContacts"),
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w400),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: darkNeutral300),
                     ),
                   ),
                 ),
@@ -65,20 +67,22 @@ class _MainPageSosState extends State<MainPageSos> {
                   child: Container(
                     decoration: const BoxDecoration(
                       border: Border(
-                        bottom: BorderSide(width: 1.0, color: Colors.black),
+                        bottom: BorderSide(width: 1.0, color: darkNeutral300),
                       ),
                     ),
                     child: Text(
                       AppLocalizations.instance.translate("deleteContact"),
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w400),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: darkNeutral300),
                     ),
                   ),
                 ),
               ];
             },
             onSelected: (String value) {
-              Navigator.pushNamed(context, "/delete_contact_sos",
+              Navigator.pushNamed(context, "/delete_edit_contact_sos",
                   arguments: value == 'replace' ? false : true);
             },
           )
@@ -177,7 +181,7 @@ class _MainPageSosState extends State<MainPageSos> {
         backgroundColor: beigeBG,
         builder: (BuildContext context) {
           return BottomSheet(
-            backgroundColor: beigeBG,
+            backgroundColor: beige100,
             enableDrag: false,
             onClosing: () {},
             builder: (context) {

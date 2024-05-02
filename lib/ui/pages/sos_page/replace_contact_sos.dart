@@ -28,8 +28,8 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
     contactModel = ModalRoute.of(context)!.settings.arguments as SosGroupModel;
     super.didChangeDependencies();
     nameController = TextEditingController(text: contactModel.contacts[0].name);
-    phoneController =
-        TextEditingController(text: contactModel.contacts[0].phone);
+    phoneController = TextEditingController(
+        text: contactModel.contacts[0].phone.substring(4));
   }
 
   @override
@@ -52,15 +52,17 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
                   isPhone: false,
                   onChanged: (value) {},
                   key: const ValueKey("name"),
+                  prefixText: '',
                 ),
                 const SizedBox(height: 8),
                 LabeledTextField(
                   controller: phoneController,
                   label: AppLocalizations.instance.translate("phone"),
-                  hintText: '+380',
+                  hintText: '',
                   isPhone: true,
                   onChanged: (value) {},
                   key: const ValueKey("phone"),
+                  prefixText: '+380',
                 ),
                 const SizedBox(height: 16),
                 SizedBox(
@@ -75,7 +77,7 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
                               contacts: [
                                 SosContactModel(
                                     name: nameController.text,
-                                    phone: phoneController.text,
+                                    phone: "+380${phoneController.text}",
                                     id: contactModel.id)
                               ],
                             ),
@@ -99,7 +101,7 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
                       ),
                     ),
                     child: Text(
-                      AppLocalizations.instance.translate("saveTheContact"),
+                      AppLocalizations.instance.translate("saveChanges"),
                       style: const TextStyle(
                         color: primary50,
                         fontWeight: FontWeight.w500,
@@ -117,8 +119,12 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
   }
 
   bool _validateForm() {
-    bool isValid =
-        nameController.text.isNotEmpty && phoneController.text.isNotEmpty;
-    return isValid;
+    bool isNameValid = nameController.text.isNotEmpty &&
+        nameController.text.length >= 2 &&
+        nameController.text.length <= 30;
+    bool isPhoneValid = phoneController.text.isNotEmpty &&
+        phoneController.text.length == 9 &&
+        RegExp(r'^\d{9}$').hasMatch(phoneController.text);
+    return isNameValid && isPhoneValid;
   }
 }
