@@ -75,7 +75,11 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
                 key: const ValueKey("groupName"),
                 prefixText: '',
               ),
-              const SizedBox(height: 8),
+              const Divider(
+                color: beige300,
+                height: 1,
+              ),
+              const SizedBox(height: 12),
               Column(
                 children: [
                   for (int index = 0; index < contacts.length; index++)
@@ -100,17 +104,13 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
                                   contacts.removeAt(index);
                                 });
                               },
-                              child: Row(
+                              child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Text(
-                                    AppLocalizations.instance
-                                        .translate("deleteContact"),
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                      color: red900,
-                                    ),
+                                  Icon(
+                                    Icons.cancel,
+                                    color: beige500,
+                                    size: 17,
                                   ),
                                 ],
                               ),
@@ -118,7 +118,7 @@ class _EditGroupScreenSosState extends State<EditGroupScreenSos> {
                           ],
                         ),
                         const SizedBox(
-                          height: 5,
+                          height: 12,
                         ),
                         LabeledTextField(
                           controller: contacts[index].nameController,

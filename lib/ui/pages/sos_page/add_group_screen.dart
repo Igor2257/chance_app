@@ -69,7 +69,11 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                 key: const ValueKey("groupName"),
                 prefixText: '',
               ),
-              const SizedBox(height: 8),
+              const Divider(
+                color: beige300,
+                height: 1,
+              ),
+              const SizedBox(height: 12),
               Column(
                 children: [
                   for (int index = 0; index < contacts.length; index++)

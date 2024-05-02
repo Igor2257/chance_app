@@ -101,7 +101,7 @@ class _ReplaceContactSosState extends State<ReplaceContactSosScreen> {
                       ),
                     ),
                     child: Text(
-                      AppLocalizations.instance.translate("saveTheContact"),
+                      AppLocalizations.instance.translate("saveChanges"),
                       style: const TextStyle(
                         color: primary50,
                         fontWeight: FontWeight.w500,

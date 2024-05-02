@@ -57,7 +57,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
           children: [
             LabeledTextField(
               controller: nameController,
-              label: AppLocalizations.instance.translate("enterYourName"),
+              label: AppLocalizations.instance.translate("enterName"),
               hintText: AppLocalizations.instance.translate("name"),
               isPhone: false,
               onChanged: (value) {},
