@@ -91,9 +91,10 @@ class _MainPageState extends State<MainPage> {
                           setState(() {
                             isLoading = true;
                           });
-                          bool? choose = HiveCRUD.instance.setting?.dontShowInformationDialogBeforeOpenMap;
+                          bool? choose = HiveCRUD.instance.setting
+                              ?.dontShowInformationDialogBeforeOpenMap;
                           print("choose $choose");
-                          if (choose??true) {
+                          if (choose==null||choose==false) {
                             choose = await showDialog(
                                 context: context,
                                 builder: (context) {
@@ -104,8 +105,11 @@ class _MainPageState extends State<MainPage> {
                                       return Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Text(AppLocalizations.instance.translate(
-                                              "allowTheAppToUseGeodataToDetermineYourCurrentLocation"),textAlign: TextAlign.justify,),
+                                          Text(
+                                            AppLocalizations.instance.translate(
+                                                "allowTheAppToUseGeodataToDetermineYourCurrentLocation"),
+                                            textAlign: TextAlign.justify,
+                                          ),
                                           CheckboxListTile(
                                               title: Text(AppLocalizations
                                                   .instance
@@ -116,12 +120,13 @@ class _MainPageState extends State<MainPage> {
                                                   setState1(() {
                                                     dontShowDialogAgain = value;
                                                   });
-                                                  Settings? settings=HiveCRUD().setting;
-                                                  if(settings!=null) {
+                                                  Settings? settings =
+                                                      HiveCRUD().setting;
+                                                  if (settings != null) {
                                                     await HiveCRUD().updateSettings(
-                                                      settings.copyWith(
-                                                          dontShowInformationDialogBeforeOpenMap:
-                                                              value));
+                                                        settings.copyWith(
+                                                            dontShowInformationDialogBeforeOpenMap:
+                                                                value));
                                                   }
                                                 }
                                               }),
