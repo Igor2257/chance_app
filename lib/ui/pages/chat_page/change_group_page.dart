@@ -86,7 +86,9 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
                     label: AppLocalizations.instance.translate('labelName'),
                     hintText: AppLocalizations.instance.translate('name'),
                     isPhone: false,
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      setState(() {});
+                    },
                     key: const ValueKey("name"),
                     prefixText: '',
                   ),
@@ -112,7 +114,7 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
                       color: primary1000,
                       onPress: _controller.text.trim().isNotEmpty &&
                               _controller.text.trim() != room.name
-                          ? () => _updateRoom(context)
+                          ? () => _updateRoom(context, room)
                           : null,
                       child: Text(
                         AppLocalizations.instance.translate('ready'),
@@ -248,10 +250,10 @@ class _ChangeGroupPageState extends State<ChangeGroupPage> {
     }
   }
 
-  Future<void> _updateRoom(BuildContext context) async {
-    RoomCubit cubit = context.read<RoomCubit>();
-
-    cubit.updateRoom(cubit.room.copyWith(name: _controller.text.trim()));
+  Future<void> _updateRoom(BuildContext context, types.Room room) async {
+    context
+        .read<RoomCubit>()
+        .updateRoom(room.copyWith(name: _controller.text.trim()));
 
     if (!context.mounted) return;
 
