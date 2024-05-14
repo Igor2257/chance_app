@@ -8,6 +8,7 @@ class LabeledTextField extends StatefulWidget {
   final String label;
   final String hintText;
   final bool isPhone;
+  final ValueChanged<String>? onChanged;
 
   const LabeledTextField({
     super.key,
@@ -15,7 +16,7 @@ class LabeledTextField extends StatefulWidget {
     required this.hintText,
     required this.isPhone,
     required this.controller,
-    required Null Function(dynamic value) onChanged,
+    this.onChanged,
   });
 
   @override
@@ -101,6 +102,7 @@ class LabeledTextFieldState extends State<LabeledTextField> {
               ),
             ),
             onChanged: (value) {
+              widget.onChanged?.call(value);
               setState(() {
                 errorText = null;
               });
